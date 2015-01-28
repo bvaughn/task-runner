@@ -3,6 +3,9 @@ Task Runner is a JavaScript library designed to simplify the implementation of a
 
 ## Build instructions
 
+Begin by running `bower install` to install the [Closure Compiler](https://github.com/google/closure-compiler) and [Closure Library](https://github.com/google/closure-library) components.
+
+Then run the following command from the root of the Task Runner checkout:
 ```bash
 bower_components/closure-library/closure/bin/build/closurebuilder.py \
   --root=bower_components/closure-library/ \
