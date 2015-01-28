@@ -18,7 +18,7 @@ Task Runner offers a solution to much of the above complexity:
 
 Tasks have 5 basic states, enumerated in TaskState. The diagram below shows these states and how they are related. Each time a task changes state it invokes all registered callbacks that are associated with that state. Available callbacks are enumerated in TaskEvent.
 
-<img src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png" width="1250" height="660" title="Task Runner: Task Lifecycle">
+<img src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png" width="625" height="330" title="Task Runner: Task Lifecycle">
 
 ## Build instructions
 
