@@ -1,3 +1,6 @@
+goog.provide('goog.AbstractTask.test');
+goog.setTestOnly('goog.AbstractTask.test');
+
 goog.require('taskrunner.AbstractTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskEvent');
@@ -13,7 +16,6 @@ goog.require('taskrunner.TaskState');
  * @constructor
  */
 function AbstractTaskTest() {}
-registerTestSuite(AbstractTaskTest);
 
 
 /**

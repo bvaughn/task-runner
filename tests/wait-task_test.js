@@ -1,3 +1,6 @@
+goog.provide('goog.WaitTask.test');
+goog.setTestOnly('goog.WaitTask.test');
+
 goog.require('goog.testing.MockClock');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.WaitTask');
@@ -12,7 +15,6 @@ goog.require('taskrunner.WaitTask');
 function WaitTaskTest() {
   this.mockClock = new goog.testing.MockClock(true);
 }
-registerTestSuite(WaitTaskTest);
 
 
 /**

@@ -1,3 +1,6 @@
+goog.provide('goog.CompositeTask.test');
+goog.setTestOnly('goog.CompositeTask.test');
+
 goog.require('taskrunner.CompositeTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
@@ -21,7 +24,6 @@ function CompositeTaskTest() {
   this.erroredCallback_ = createMockFunction();
   this.interruptedCallback_ = createMockFunction();
 }
-registerTestSuite(CompositeTaskTest);
 
 
 /**

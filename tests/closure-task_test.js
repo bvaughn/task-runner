@@ -1,3 +1,6 @@
+goog.provide('goog.ClosureTask.test');
+goog.setTestOnly('goog.ClosureTask.test');
+
 goog.require('taskrunner.ClosureTask');
 goog.require('taskrunner.TaskState');
 
@@ -9,7 +12,6 @@ goog.require('taskrunner.TaskState');
  * @constructor
  */
 function ClosureTaskTest() {}
-registerTestSuite(ClosureTaskTest);
 
 
 /**

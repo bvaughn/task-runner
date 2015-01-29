@@ -1,0 +1,14 @@
+{
+  "name": "task-runner",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "karma": "~0.12.31",
+    "karma-closure": "~0.1",
+    "karma-chrome-launcher": "~0.1.7",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "phantomjs": "~1.9.13",
+    "jasmine": "~2.1.1",
+    "karma-jasmine": "~0.3.5"
+  }
+}

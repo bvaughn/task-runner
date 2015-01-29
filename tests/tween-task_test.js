@@ -1,3 +1,6 @@
+goog.provide('goog.TweenTask.test');
+goog.setTestOnly('goog.TweenTask.test');
+
 goog.require('goog.testing.MockClock');
 goog.require('goog.testing.recordFunction');
 goog.require('taskrunner.MockAnimationFrame');
@@ -18,7 +21,6 @@ function TweenTaskTest() {
   this.mockAnimationFrame = new taskrunner.MockAnimationFrame();
   this.mockAnimationFrame.install();
 }
-registerTestSuite(TweenTaskTest);
 
 
 /**

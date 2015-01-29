@@ -1,269 +1,218 @@
+goog.provide('goog.ObserverTask.test');
+goog.setTestOnly('goog.ObserverTask.test');
+
 goog.require('taskrunner.CompositeTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.ObserverTask');
 goog.require('taskrunner.TaskState');
 
+describe('goog.ObserverTask', function() {
 
+  it('should fail immediately when fail-upon-first-error is true', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2], true);
 
-/**
- * Tests for ObserverTask class.
- *
- * @constructor
- */
-function ObserverTaskTest() {}
-registerTestSuite(ObserverTaskTest);
+    observerTask.run();
+    task1.run();
+    task2.run();
 
+    var data = {};
+    var message = 'foobar';
+    task1.error(data, message);
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(observerTask.getData()).toBe(data);
+    expect(observerTask.getErrorMessage()).toBe(message);
+  });
 
-/**
- * Tests when failUponFirstError is configured to true.
- */
-ObserverTaskTest.prototype.failUponFirstErrorTrue = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2], true);
+  it('should not fail until all tasks are completed when fail-upon-first-error is false', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2], false);
 
-  observerTask.run();
-  task1.run();
-  task2.run();
+    observerTask.run();
+    task1.run();
+    task2.run();
 
-  var data = {};
-  var message = 'foobar';
-  task1.error(data, message);
-  expectEq(taskrunner.TaskState.ERRORED, observerTask.getState());
-  expectEq(data, observerTask.getData());
-  expectEq(message, observerTask.getErrorMessage());
-};
+    var data = {};
+    var message = 'foobar';
+    task1.error(data, message);
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    task2.complete();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(observerTask.getData()).toBeUndefined();
+    expect(observerTask.getErrorMessage()).toBeUndefined();
+  });
 
-/**
- * Tests when failUponFirstError is configured to true.
- */
-ObserverTaskTest.prototype.failUponFirstErrorFalse = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2], false);
+  it('should completing immediately when no observed task is present', function() {
+    var observerTask = new taskrunner.ObserverTask();
+    observerTask.run();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  observerTask.run();
-  task1.run();
-  task2.run();
+  it('should immediately complete if all observed tasks have already completed', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2]);
 
-  var data = {};
-  var message = 'foobar';
-  task1.error(data, message);
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
+    task1.run();
+    task1.complete();
+    task2.run();
+    task2.complete();
 
-  task2.complete();
-  expectEq(taskrunner.TaskState.ERRORED, observerTask.getState());
-  expectThat(observerTask.getData(), isUndefined);
-  expectThat(observerTask.getErrorMessage(), isUndefined);
-};
+    observerTask.run();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
+  it('should not start any of the observed tasks', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2]);
 
-/**
- * Tests completing a decorated task within timeout.
- */
-ObserverTaskTest.prototype.noTasksToObserve = function() {
-  var observerTask = new taskrunner.ObserverTask();
-  observerTask.run();
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-};
+    observerTask.run();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task1.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+  });
 
+  it('should allow new tasks to be added while running', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1]);
 
-/**
- * Tests when all observed tasks are completed before run.
- */
-ObserverTaskTest.prototype.allTasksCompletedBeforeRun = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2]);
+    observerTask.run();
+    task1.run();
+    task2.run();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task1.run();
-  task1.complete();
-  task2.run();
-  task2.complete();
+    observerTask.observeTask(task2);
 
-  observerTask.run();
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-};
+    task1.complete();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    task2.complete();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-/**
- * Tests that observer task does not start any observed tasks.
- */
-ObserverTaskTest.prototype.doesNotRunObservedTasks = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2]);
+  it('should allow tasks to be removed while running', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2]);
 
-  observerTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, task1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, task2.getState());
-};
+    observerTask.run();
+    task1.run();
+    task2.run();
 
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Tests observing a new task while the observer task is running.
- */
-ObserverTaskTest.prototype.observeNewTaskWhileRunning = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1]);
+    observerTask.stopObservingTask(task2);
 
-  observerTask.run();
-  task1.run();
-  task2.run();
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  observerTask.observeTask(task2);
+    task1.complete();
 
-  task1.complete();
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  task2.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task2.getState());
-};
+  it('should complete if a task is removed leaving no more running tasks', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2]);
 
+    observerTask.run();
+    task1.run();
+    task2.run();
+    task1.complete();
 
-/**
- * Tests removing an observed task while the observer task is running.
- */
-ObserverTaskTest.prototype.removeTaskWhileRunning = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2]);
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  observerTask.run();
-  task1.run();
-  task2.run();
+    observerTask.stopObservingTask(task2);
 
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task2.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  observerTask.stopObservingTask(task2);
+  it('should not observing duplicate tasks.', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task1]);
 
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
+    expect(observerTask.getObservedTasks().length).toBe(1);
 
-  task1.complete();
+    observerTask.observeTask(task2);
+    observerTask.observeTask(task1);
+    observerTask.observeTask(task2);
 
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
-};
+    expect(observerTask.getObservedTasks().length).toBe(2);
+  });
 
+  it('should report the correct number of completed operations', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2]);
 
-/**
- * Tests removing an observed task while the observer task is running leaving
- * only completed tasks.
- */
-ObserverTaskTest.prototype.removeTaskWhileRunningLeavingOnlyCompletedTasks =
-    function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2]);
+    observerTask.run();
+    task1.run();
+    task2.run();
 
-  observerTask.run();
-  task1.run();
-  task2.run();
-  task1.complete();
+    expect(observerTask.getOperationsCount()).toBe(2);
+    expect(observerTask.getCompletedOperationsCount()).toBe(0);
 
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
+    task1.complete();
+    expect(observerTask.getCompletedOperationsCount()).toBe(1);
 
-  observerTask.stopObservingTask(task2);
+    var task3 = new taskrunner.NullTask();
+    var task4 = new taskrunner.NullTask();
+    var task5 = new taskrunner.CompositeTask(true, [task3, task4]);
+    task5.run();
 
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task2.getState());
-};
+    observerTask.observeTask(task5);
+    expect(observerTask.getOperationsCount()).toBe(4);
+    expect(observerTask.getCompletedOperationsCount()).toBe(1);
 
+    task3.complete();
+    expect(observerTask.getCompletedOperationsCount()).toBe(2);
 
-/**
- * Tests not observing duplicate tasks.
- */
-ObserverTaskTest.prototype.doesNotObserveDuplicateTasks = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task1]);
+    task2.complete();
+    task4.complete();
+    expect(observerTask.getCompletedOperationsCount()).toBe(4);
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectEq(1, observerTask.getObservedTasks().length);
+  it('should be re-runnable after an error', function() {
+    var task1 = new taskrunner.NullTask();
+    var task2 = new taskrunner.NullTask();
+    var observerTask = new taskrunner.ObserverTask([task1, task2], true);
 
-  observerTask.observeTask(task2);
-  observerTask.observeTask(task1);
-  observerTask.observeTask(task2);
+    observerTask.run();
+    task1.run();
+    task2.run();
+    task1.error();
 
-  expectEq(2, observerTask.getObservedTasks().length);
-};
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.ERRORED);
 
+    task1.run();
+    task1.complete();
+    observerTask.run();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Tests operations count and completed operations count with both simple and
- * composite tasks.
- */
-ObserverTaskTest.prototype.operationsCount = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2]);
-
-  observerTask.run();
-  task1.run();
-  task2.run();
-
-  expectEq(2, observerTask.getOperationsCount());
-  expectEq(0, observerTask.getCompletedOperationsCount());
-
-  task1.complete();
-  expectEq(1, observerTask.getCompletedOperationsCount());
-
-  var task3 = new taskrunner.NullTask();
-  var task4 = new taskrunner.NullTask();
-  var task5 = new taskrunner.CompositeTask(true, [task3, task4]);
-  task5.run();
-
-  observerTask.observeTask(task5);
-  expectEq(4, observerTask.getOperationsCount());
-  expectEq(1, observerTask.getCompletedOperationsCount());
-
-  task3.complete();
-  expectEq(2, observerTask.getCompletedOperationsCount());
-
-  task2.complete();
-  task4.complete();
-  expectEq(4, observerTask.getCompletedOperationsCount());
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-};
-
-
-/**
- * Tests rerunning after error.
- */
-ObserverTaskTest.prototype.rerunAfterError = function() {
-  var task1 = new taskrunner.NullTask();
-  var task2 = new taskrunner.NullTask();
-  var observerTask = new taskrunner.ObserverTask([task1, task2], true);
-
-  observerTask.run();
-  task1.run();
-  task2.run();
-  task1.error();
-
-  expectEq(taskrunner.TaskState.ERRORED, observerTask.getState());
-
-  task1.run();
-  task1.complete();
-  observerTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, observerTask.getState());
-
-  task2.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, observerTask.getState());
-};
+    task2.complete();
+    expect(observerTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+});

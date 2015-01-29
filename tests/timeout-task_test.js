@@ -1,3 +1,6 @@
+goog.provide('goog.TimeoutTask.test');
+goog.setTestOnly('goog.TimeoutTask.test');
+
 goog.require('goog.testing.MockClock');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
@@ -13,7 +16,6 @@ goog.require('taskrunner.TimeoutTask');
 function TimeoutTaskTest() {
   this.mockClock = new goog.testing.MockClock(true);
 }
-registerTestSuite(TimeoutTaskTest);
 
 
 /**

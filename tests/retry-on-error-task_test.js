@@ -1,3 +1,6 @@
+goog.provide('goog.RetryOnErrorTask.test');
+goog.setTestOnly('goog.RetryOnErrorTask.test');
+
 goog.require('goog.testing.MockClock');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.RetryOnErrorTask');
@@ -13,7 +16,6 @@ goog.require('taskrunner.TaskState');
 function RetryOnErrorTaskTest() {
   this.mockClock = new goog.testing.MockClock(true);
 }
-registerTestSuite(RetryOnErrorTaskTest);
 
 
 /**

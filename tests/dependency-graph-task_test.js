@@ -1,3 +1,6 @@
+goog.provide('goog.DependencyGraphTask.test');
+goog.setTestOnly('goog.DependencyGraphTask.test');
+
 goog.require('taskrunner.DependencyGraphTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
@@ -21,7 +24,6 @@ function DependencyGraphTaskTest() {
   this.erroredCallback_ = createMockFunction();
   this.interruptedCallback_ = createMockFunction();
 }
-registerTestSuite(DependencyGraphTaskTest);
 
 
 /**

@@ -20,7 +20,23 @@ Tasks have 5 basic states, enumerated in TaskState. The diagram below shows thes
 
 <img src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png" width="625" height="330" title="Task Runner: Task Lifecycle">
 
-## Build instructions
+## Task Runner automated tests
+
+Begin by running `npm install` to install [Karma](https://karma-runner.github.io) and other dependencies.
+
+Then run the following command from the root of the Task Runner checkout:
+
+```bash
+./node_modules/karma/bin/karma start karma.conf.js --log-level debug .
+```
+
+At this point, open the following URL in your browser to execute tests: http://localhost:9876/
+
+## Building Task Runner
+
+Begin by running `bower install` to install the [Closure Compiler](https://github.com/google/closure-compiler) and [Closure Library](https://github.com/google/closure-library) components.
+
+Then run the following command from the root of the Task Runner checkout:
 
 ```bash
 bower_components/closure-library/closure/bin/build/closurebuilder.py \

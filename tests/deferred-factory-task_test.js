@@ -1,3 +1,6 @@
+goog.provide('goog.DeferredFactoryTask.test');
+goog.setTestOnly('goog.DeferredFactoryTask.test');
+
 goog.require('taskrunner.DeferredFactoryTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
@@ -10,7 +13,6 @@ goog.require('taskrunner.TaskState');
  * @constructor
  */
 function DeferredFactoryTaskTest() {}
-registerTestSuite(DeferredFactoryTaskTest);
 
 
 /**
