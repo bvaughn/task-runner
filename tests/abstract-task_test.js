@@ -6,8 +6,6 @@ goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskEvent');
 goog.require('taskrunner.TaskState');
 
-
-
 describe('goog.AbstractTask', function() {
 
   it('should report the correct name', function() {
