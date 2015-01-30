@@ -5,946 +5,840 @@ goog.require('taskrunner.CompositeTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
 
-
-
-/**
- * Tests for CompositeTask class.
- *
- * Some of the following tests make use of NullTask for convenience purposes.
- *
- * @constructor
- */
-function CompositeTaskTest() {
-  // These mock functions are shared between the test methods below. We attach
-  // them to this test rather than the Tasks themselves because the tasks are
-  // structs. Use the helper method, this.attachMockCallbacks_,
-  // below to attach callbacks to a particular task.
-  this.startedCallback_ = createMockFunction();
-  this.completedCallback_ = createMockFunction();
-  this.erroredCallback_ = createMockFunction();
-  this.interruptedCallback_ = createMockFunction();
-}
-
-
-/**
- * CompositeTask sub-class used to expose protected methods for testing.
- * @extends {taskrunner.CompositeTask}
- * @constructor
- * @struct
- */
-taskrunner.TestCompositeTask = function(parallel, opt_tasks) {
-  goog.base(this, parallel, opt_tasks);
-};
-goog.inherits(taskrunner.TestCompositeTask, taskrunner.CompositeTask);
-
-
-/**
- * Exposes flushTaskQueue() method for testing.
- */
-taskrunner.TestCompositeTask.prototype.flushForTest = function(doNotComplete) {
-  this.flushTaskQueue(doNotComplete);
-};
-
-
-/**
- * Helper function for attaching task callbacks to be used by later
- * expectations.
- * @private
- */
-CompositeTaskTest.prototype.attachMockCallbacks_ = function(task) {
-  task.started(this.startedCallback_);
-  task.interrupted(this.interruptedCallback_);
-  task.completed(this.completedCallback_);
-  task.errored(this.erroredCallback_);
-
-  return task;
-};
-
-
-/**
- * Composite tasks with no children should automatically complete when run.
- */
-CompositeTaskTest.prototype.emptyTaskCompletes = function() {
-  var task = new taskrunner.CompositeTask(true);
-  task.run();
-
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Trying to add a task more than once throws an error.
- */
-CompositeTaskTest.prototype.cannotAddTaskMoreThanOnce = function() {
-  var nullTask1 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false, [nullTask1]);
-
-  expectThat(function() {
-    task.addTask(nullTask1);
-  }, throwsError(/Cannot add task more than once./));
-};
-
-
-/**
- * Trying to remove a task that is not within the throws an error.
- */
-CompositeTaskTest.prototype.cannotRemoveTaskNotInComposite = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false, [nullTask1]);
-
-  expectThat(function() {
-    task.removeTask(nullTask2);
-  }, throwsError(/Attempted to remove an invalid task./));
-};
-
-
-/**
- * Resetting a Composite tasks that has not been run does nothing.
- */
-CompositeTaskTest.prototype.resetDoesNothingIfNotRun = function() {
-  var nullTask1 = new taskrunner.NullTask();
-
-  this.attachMockCallbacks_(nullTask1);
-
-  var task = new taskrunner.CompositeTask(true, [nullTask1]);
-
-  this.attachMockCallbacks_(task);
-
-  task.reset();
-};
-
-
-/**
- * Tests parallel Composite task from run() to complete.
- */
-CompositeTaskTest.prototype.parallelSuccessfulCompletion = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(true,
-      [nullTask1, nullTask2, nullTask3]);
-
-  this.attachMockCallbacks_(task);
-
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.completedCallback_)(task);
-
-  nullTask3.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests parallel Composite task's error handling.
- */
-CompositeTaskTest.prototype.parallelErrorHandling = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-  var nullTask4 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(true,
-      [nullTask1, nullTask2, nullTask3, nullTask4]);
-
-  this.attachMockCallbacks_(task);
-
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask4.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask4.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.error();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.ERRORED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask4.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask3.complete();
-
-  expectCall(this.erroredCallback_)(task);
-
-  nullTask4.error();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.ERRORED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.ERRORED, nullTask4.getState());
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-};
-
-
-/**
- * Tests parallel Composite task's interruption handling.
- */
-CompositeTaskTest.prototype.parallelInterruptionHandling = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2]);
-
-  this.attachMockCallbacks_(task);
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(nullTask2);
-
-  expectCall(this.startedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(nullTask2);
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.interruptedCallback_)(nullTask1);
-  expectCall(this.interruptedCallback_)(nullTask2);
-  expectCall(this.interruptedCallback_)(task);
-
-  task.interrupt();
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-};
-
-
-/**
- * Tests parallel Composite task's reset handling.
- */
-CompositeTaskTest.prototype.parallelResetHandling = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2]);
-
-  task.run();
-  nullTask1.complete();
-  task.interrupt();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-
-  task.reset();
-
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
-
-
-/**
- * Tests serial Composite task from run() to complete.
- */
-CompositeTaskTest.prototype.serialSuccessfulCompletion = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false,
-      [nullTask1, nullTask2, nullTask3]);
-
-  this.attachMockCallbacks_(task);
-
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.completedCallback_)(task);
-
-  nullTask3.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests serial Composite task's error handling.
- */
-CompositeTaskTest.prototype.serialErrorHandling = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
-
-  this.attachMockCallbacks_(task);
-
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.erroredCallback_)(task);
-
-  nullTask1.error();
-
-  expectEq(taskrunner.TaskState.ERRORED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-};
-
-
-/**
- * Tests serial Composite task's interruption handling.
- */
-CompositeTaskTest.prototype.serialInterruptionHandling = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
-
-  this.attachMockCallbacks_(task);
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(nullTask2);
-
-  expectCall(this.startedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.interruptedCallback_)(nullTask1);
-  expectCall(this.interruptedCallback_)(task);
-
-  task.interrupt();
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-};
-
-
-/**
- * Tests serial Composite task's reset handling.
- */
-CompositeTaskTest.prototype.serialResetHandling = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false,
-      [nullTask1, nullTask2, nullTask3]);
-
-  task.run();
-  nullTask1.complete();
-  task.interrupt();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-
-  task.reset();
-
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
-
-
-/**
- * Completing a child task while the composite is interrupted does not run
- * the next task. This test covers an edge-case where a child task's completion
- * handler causes the parent composite to be interrupted. We're testing to
- * ensure that the completion of the child task doesn't un-pause the composite.
- */
-CompositeTaskTest.prototype.serialDoesNotRunNextTaskIfInterrupted = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
-
-  nullTask1.completed(function() {
-    task.interrupt();
+describe('goog.CompositeTask', function() {
+
+  // These mock functions are shared between the test methods below.
+  // We attach them to this test rather than the Tasks themselves because the tasks are structs.
+  // Use the helper method, attachMockCallbacks(), below to attach callbacks to a particular task.
+  var startedCallback;
+  var completedCallback;
+  var erroredCallback;
+  var interruptedCallback;
+
+  beforeEach(function() {
+    startedCallback = jasmine.createSpy();
+    completedCallback = jasmine.createSpy();
+    erroredCallback = jasmine.createSpy();
+    interruptedCallback = jasmine.createSpy();
   });
 
-  task.run();
+  /**
+   * Helper function for attaching task callbacks to be used by later expectations.
+   * @private
+   */
+  var attachMockCallbacks = function(task) {
+    task.started(startedCallback);
+    task.interrupted(interruptedCallback);
+    task.completed(completedCallback);
+    task.errored(erroredCallback);
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    return task;
+  };
 
-  nullTask1.complete();
+  /**
+   * CompositeTask sub-class used to expose protected methods for testing.
+   * @extends {taskrunner.CompositeTask}
+   * @constructor
+   * @struct
+   */
+  taskrunner.TestCompositeTask = function(parallel, opt_tasks) {
+    goog.base(this, parallel, opt_tasks);
+  };
+  goog.inherits(taskrunner.TestCompositeTask, taskrunner.CompositeTask);
+
+  /**
+   * Exposes flushTaskQueue() method for testing.
+   */
+  taskrunner.TestCompositeTask.prototype.flushForTest = function(doNotComplete) {
+    this.flushTaskQueue(doNotComplete);
+  };
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
+  it('should automatically complete when run with no children', function() {
+    var task = new taskrunner.CompositeTask(true);
+    task.run();
+
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  task.run();
+  it('should error if a task is added more than once', function() {
+    var nullTask1 = new taskrunner.NullTask();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    var task = new taskrunner.CompositeTask(false, [nullTask1]);
+
+    expect(function() {
+      task.addTask(nullTask1);
+    }).toThrow();
+  });
 
-  nullTask2.complete();
+  it('should error if a task that is not within the composite is removed', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    var task = new taskrunner.CompositeTask(false, [nullTask1]);
+
+    expect(function() {
+      task.removeTask(nullTask2);
+    }).toThrow();
+  });
+
+  it('should not do anything when a task that has not been run has been reset', function() {
+    var nullTask1 = new taskrunner.NullTask();
+
+    attachMockCallbacks(nullTask1);
+
+    var task = new taskrunner.CompositeTask(true, [nullTask1]);
+
+    attachMockCallbacks(task);
+
+    task.reset();
+
+    expect(startedCallback.calls.count()).toEqual(0);
+    expect(completedCallback.calls.count()).toEqual(0);
+    expect(interruptedCallback.calls.count()).toEqual(0);
+    expect(erroredCallback.calls.count()).toEqual(0);
+  });
 
+  it('should complete when tasks being run in parallel complete', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
 
-/**
- * Adding a task to a parallel CompositeTask that's running should run the task.
- */
-CompositeTaskTest.prototype.parallelAddTaskToRunningComposite = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+    var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2, nullTask3]);
 
-  var task = new taskrunner.CompositeTask(true, [nullTask1]);
-  task.run();
+    attachMockCallbacks(task);
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    task.run();
 
-  task.addTask(nullTask2);
+    expect(startedCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    nullTask1.complete();
 
-  nullTask1.complete();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    nullTask2.complete();
 
-  nullTask2.complete();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    nullTask3.complete();
 
+    expect(completedCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-/**
- * Adding a task to a serial CompositeTask that's running should run the task.
- */
-CompositeTaskTest.prototype.serialAddTaskToRunningComposite = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+  it('should error when tasks being run in parallel error', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+    var nullTask4 = new taskrunner.NullTask();
 
-  var task = new taskrunner.CompositeTask(false, [nullTask1]);
-  task.run();
+    var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2, nullTask3, nullTask4]);
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    attachMockCallbacks(task);
 
-  task.addTask(nullTask2);
+    task.run();
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(startedCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  nullTask1.complete();
+    nullTask1.complete();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  nullTask2.complete();
+    nullTask2.error();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    nullTask3.complete();
+    nullTask4.error();
 
-/**
- * A child task removed before running the composite should not be run.
- */
-CompositeTaskTest.prototype.removeTaskBeforeRunning = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-  var nullTask4 = new taskrunner.NullTask();
-  var nullTask5 = new taskrunner.NullTask();
+    expect(erroredCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
-  var task = new taskrunner.CompositeTask(true,
-      [nullTask1, nullTask2, nullTask3, nullTask4, nullTask5]);
-  task.removeTask(nullTask1);
-  task.removeTask(nullTask3);
-  task.removeTask(nullTask5);
-  task.run();
-
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask4.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask5.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
-
-
-/**
- * A child task removed while the composite is running should not preven the
- * composite from completing once all other children complete.
- */
-CompositeTaskTest.prototype.parallelRemoveTaskAtRuntime = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-  var nullTask4 = new taskrunner.NullTask();
-  var nullTask5 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(true,
-      [nullTask1, nullTask2, nullTask3, nullTask4, nullTask5]);
-  task.run();
-  task.removeTask(nullTask1);
-  task.removeTask(nullTask3);
-  task.removeTask(nullTask5);
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask4.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-  nullTask4.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask4.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Removing a task within a serial sequence of tasks at runtime should not
- * prevent the sequence from continuing to the next task.
- */
-CompositeTaskTest.prototype.serialRemoveCurrentTaskAtRuntime = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.removeTask(nullTask1);
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
+  it('should interrupt parallel children when interrupted', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
+    var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2]);
 
-/**
- * Removing a future task within a serial sequence of tasks at runtime should
- * not prevent the sequence from continuing to the next task.
- */
-CompositeTaskTest.prototype.serialRemoveFutureTaskAtRuntime = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
+    attachMockCallbacks(task);
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(nullTask2);
 
-  var task = new taskrunner.CompositeTask(false,
-      [nullTask1, nullTask2, nullTask3]);
-  task.run();
+    task.run();
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).toHaveBeenCalledWith(task);
 
-  task.removeTask(nullTask2);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  nullTask1.complete();
+    task.interrupt();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
+    expect(interruptedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(interruptedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(interruptedCallback).toHaveBeenCalledWith(task);
 
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+  });
 
-/**
- * Removing the final task within a serial sequence of tasks at runtime should
- * cause the composite to complete.
- */
-CompositeTaskTest.prototype.serialRemoveLastTaskAtRuntime = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+  it('should reset children when reset and rerun them when restarted', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
-  task.run();
+    var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2]);
 
-  nullTask1.complete();
+    task.run();
+    nullTask1.complete();
+    task.interrupt();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-  task.removeTask(nullTask2);
+    task.reset();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
 
+    task.run();
 
-/**
- * Running a composite multiple times does not re-run tasks that have completed.
- */
-CompositeTaskTest.prototype.safeToRunMultipleTimes = function() {
-  var nullTask1 = new taskrunner.NullTask();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  var task = new taskrunner.CompositeTask(true, [nullTask1]);
-  task.run();
+  it('should complete when tasks being run in serial complete', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
 
-  nullTask1.complete();
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2, nullTask3]);
 
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(task);
+    attachMockCallbacks(task);
 
-  task.run();
-};
+    task.run();
 
+    expect(startedCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Composite tasks accurately report the number of internal operations and the
- * number of completed operations.
- */
-CompositeTaskTest.prototype.getOperationsCountForNestedTasks = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
+    nullTask1.complete();
 
-  var compositeTask1 = new taskrunner.CompositeTask(true);
-  var compositeTask2 = new taskrunner.CompositeTask(true);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  compositeTask2.addAllTasks([nullTask2, nullTask3]);
+    nullTask2.complete();
 
-  compositeTask1.addAllTasks([nullTask1, compositeTask2]);
-  compositeTask1.run();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(3, compositeTask1.getOperationsCount());
-  expectEq(0, compositeTask1.getCompletedOperationsCount());
+    nullTask3.complete();
 
-  nullTask1.complete();
+    expect(completedCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectEq(3, compositeTask1.getOperationsCount());
-  expectEq(1, compositeTask1.getCompletedOperationsCount());
+  it('should error when a serial child task errors', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  nullTask2.complete();
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
 
-  expectEq(3, compositeTask1.getOperationsCount());
-  expectEq(2, compositeTask1.getCompletedOperationsCount());
+    attachMockCallbacks(task);
 
-  nullTask3.complete();
+    task.run();
 
-  expectEq(3, compositeTask1.getOperationsCount());
-  expectEq(3, compositeTask1.getCompletedOperationsCount());
-};
+    expect(startedCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    nullTask1.error();
 
-/**
- * The current queue of tasks can be flushed.
- */
-CompositeTaskTest.prototype.flushQueueAndTriggerCallbacks = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+    expect(erroredCallback).toHaveBeenCalled();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
-  var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+  it('should interrupt serial children when interrupted', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  this.attachMockCallbacks_(task);
-  this.attachMockCallbacks_(nullTask1);
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
 
-  expectCall(this.startedCallback_)(task);
-  expectCall(this.startedCallback_)(nullTask1);
+    attachMockCallbacks(task);
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(nullTask2);
 
-  task.run();
+    task.run();
 
-  // The current task should be interrupted and the composite completed.
-  expectCall(this.interruptedCallback_)(nullTask1);
-  expectCall(this.completedCallback_)(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).toHaveBeenCalledWith(task);
 
-  task.flushForTest(false);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    task.interrupt();
 
+    expect(interruptedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask2);
+    expect(interruptedCallback).toHaveBeenCalledWith(task);
 
-/**
- * The current queue of tasks can be flushed without triggering completion of
- * the composite. This is a special behavior intended to allow sub-classes
- * additional runtime flexibility.
- */
-CompositeTaskTest.prototype.flushQueueWithoutTriggeringCallbacks = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+  });
 
-  var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+  it('should reset serial children that have been run when composite is reset', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
 
-  this.attachMockCallbacks_(task);
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(nullTask2);
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2, nullTask3]);
 
-  expectCall(this.startedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(task);
+    task.run();
+    nullTask1.complete();
+    task.interrupt();
 
-  task.run();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-  // The currently-running task should be interrupted,
-  // But no other callbacks should be invoked.
-  // The composite task should still be running once the queue is empty.
-  expectCall(this.interruptedCallback_)(nullTask1);
+    task.reset();
 
-  task.flushForTest(true);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
 
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
+    task.run();
 
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-/**
- * Flush queue when composite is not running should not trigger complete event.
- */
-CompositeTaskTest.prototype.flushQueueWhenNotRunning = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+  /**
+   * Completing a child task while the composite is interrupted does not run the next task.
+   * This test covers an edge-case where a child task's completion handler causes the parent composite to be interrupted.
+   * We're testing to ensure that the completion of the child task doesn't un-pause the composite.
+   */
+  it('should not trigger the next task when a child task completes while a serial composite is interrupted', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
 
-  this.attachMockCallbacks_(task);
+    nullTask1.completed(function() {
+      task.interrupt();
+    });
 
-  expectCall(this.startedCallback_)(task);
+    task.run();
 
-  task.flushForTest(false);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectCall(this.completedCallback_)(task);
+    nullTask1.complete();
 
-  task.run();
-};
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
+    task.run();
 
-/**
- * Flush queue and add new set of child tasks.
- */
-CompositeTaskTest.prototype.flushAndRepopulateQueue = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-  var nullTask4 = new taskrunner.NullTask();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+    nullTask2.complete();
 
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(nullTask2);
-  this.attachMockCallbacks_(nullTask3);
-  this.attachMockCallbacks_(nullTask4);
-  this.attachMockCallbacks_(task);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectCall(this.startedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(task);
+  it('should auto-run a parallel task added while the composite is running', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  task.run();
+    var task = new taskrunner.CompositeTask(true, [nullTask1]);
+    task.run();
 
-  expectCall(this.completedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(nullTask2);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  nullTask1.complete();
+    task.addTask(nullTask2);
 
-  expectCall(this.interruptedCallback_)(nullTask2);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.flushForTest(true);
+    nullTask1.complete();
 
-  expectCall(this.startedCallback_)(nullTask3);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.addAllTasks([nullTask3, nullTask4]);
+    nullTask2.complete();
 
-  expectCall(this.completedCallback_)(nullTask3);
-  expectCall(this.startedCallback_)(nullTask4);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  nullTask3.complete();
+  it('should not auto-run a task added at runtime to a serial composite', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  expectCall(this.completedCallback_)(nullTask4);
-  expectCall(this.completedCallback_)(task);
+    var task = new taskrunner.CompositeTask(false, [nullTask1]);
+    task.run();
 
-  nullTask4.complete();
-};
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    task.addTask(nullTask2);
 
-/**
- * Serial composite task resumes correctly after a child task has errored.
- */
-CompositeTaskTest.prototype.serialResumeAfterSingleChild = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  var task = new taskrunner.TestCompositeTask(false,
-      [nullTask1, nullTask2, nullTask3]);
+    nullTask1.complete();
 
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(nullTask2);
-  this.attachMockCallbacks_(nullTask3);
-  this.attachMockCallbacks_(task);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectCall(this.startedCallback_)(task);
-  expectCall(this.startedCallback_)(nullTask1);
+    nullTask2.complete();
 
-  task.run();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectCall(this.completedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(nullTask2);
+  it('should not run a task that is removed before being run', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+    var nullTask4 = new taskrunner.NullTask();
+    var nullTask5 = new taskrunner.NullTask();
 
-  nullTask1.complete();
+    var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2, nullTask3, nullTask4, nullTask5]);
+    task.removeTask(nullTask1);
+    task.removeTask(nullTask3);
+    task.removeTask(nullTask5);
+    task.run();
 
-  expectCall(this.erroredCallback_)(nullTask2);
-  expectCall(this.erroredCallback_)(task);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask5.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  nullTask2.error();
+  it('should complete even after a child task is removed while running a parallel composite', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+    var nullTask4 = new taskrunner.NullTask();
+    var nullTask5 = new taskrunner.NullTask();
 
-  expectCall(this.startedCallback_)(task);
-  expectCall(this.startedCallback_)(nullTask2);
+    var task = new taskrunner.CompositeTask(true, [nullTask1, nullTask2, nullTask3, nullTask4, nullTask5]);
+    task.run();
+    task.removeTask(nullTask1);
+    task.removeTask(nullTask3);
+    task.removeTask(nullTask5);
 
-  task.run();
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectCall(this.completedCallback_)(nullTask2);
-  expectCall(this.startedCallback_)(nullTask3);
+    nullTask2.complete();
+    nullTask4.complete();
 
-  nullTask2.complete();
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask4.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectCall(this.completedCallback_)(nullTask3);
-  expectCall(this.completedCallback_)(task);
+  it('should complete even after a child task is removed while running a serial composite', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  nullTask3.complete();
-};
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
+    task.run();
 
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Parallel composite task resumes correctly after a child task has errored.
- */
-CompositeTaskTest.prototype.parallelResumeAfterErroredChild = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
+    task.removeTask(nullTask1);
 
-  var task = new taskrunner.TestCompositeTask(true,
-      [nullTask1, nullTask2, nullTask3]);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(nullTask2);
-  this.attachMockCallbacks_(nullTask3);
-  this.attachMockCallbacks_(task);
+  it('should continue to the next task after a task that is removed from a running serial', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
 
-  expectCall(this.startedCallback_)(task);
-  expectCall(this.startedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(nullTask2);
-  expectCall(this.startedCallback_)(nullTask3);
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2, nullTask3]);
+    task.run();
 
-  task.run();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  // A parallel composite task will continue running until all children have
-  // completed or errored.
-  expectCall(this.erroredCallback_)(nullTask2);
+    task.removeTask(nullTask2);
 
-  nullTask2.error();
+    nullTask1.complete();
 
-  expectCall(this.completedCallback_)(nullTask1);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  nullTask1.complete();
+  it('should complete successfully if the final task in a serial is removed at runtime', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  expectCall(this.completedCallback_)(nullTask3);
-  expectCall(this.erroredCallback_)(task);
+    var task = new taskrunner.CompositeTask(false, [nullTask1, nullTask2]);
+    task.run();
 
-  nullTask3.complete();
+    nullTask1.complete();
 
-  // Restarting the composite should only restart errored tasks.
-  // Running tasks should be allowed to complete; completed tasks left alone.
-  expectCall(this.startedCallback_)(nullTask2);
-  expectCall(this.startedCallback_)(task);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.run();
+    task.removeTask(nullTask2);
 
-  // Once the remaining inner tasks complete, the composite should complete.
-  expectCall(this.completedCallback_)(nullTask2);
-  expectCall(this.completedCallback_)(task);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  nullTask2.complete();
-};
+  it('should not rerun completed task if the composite is rerun', function() {
+    var nullTask1 = new taskrunner.NullTask();
+
+    var task = new taskrunner.CompositeTask(true, [nullTask1]);
+
+    attachMockCallbacks(nullTask1);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalled();
+    expect(startedCallback.calls.count()).toEqual(1);
+
+    nullTask1.complete();
+
+    task.run();
+
+    expect(startedCallback.calls.count()).toEqual(1);
+  });
+
+  it('should accurately report the number of internal operations', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var compositeTask1 = new taskrunner.CompositeTask(true);
+    var compositeTask2 = new taskrunner.CompositeTask(true);
+
+    compositeTask2.addAllTasks([nullTask2, nullTask3]);
+
+    compositeTask1.addAllTasks([nullTask1, compositeTask2]);
+    compositeTask1.run();
+
+    expect(compositeTask1.getOperationsCount()).toBe(3);
+    expect(compositeTask1.getCompletedOperationsCount()).toBe(0);
+
+    nullTask1.complete();
+
+    expect(compositeTask1.getOperationsCount()).toBe(3);
+    expect(compositeTask1.getCompletedOperationsCount()).toBe(1);
+
+    nullTask2.complete();
+
+    expect(compositeTask1.getOperationsCount()).toBe(3);
+    expect(compositeTask1.getCompletedOperationsCount()).toBe(2);
+
+    nullTask3.complete();
+
+    expect(compositeTask1.getOperationsCount()).toBe(3);
+    expect(compositeTask1.getCompletedOperationsCount()).toBe(3);
+  });
+
+  it('should support flushing the current queue of tasks', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+
+    attachMockCallbacks(task);
+    attachMockCallbacks(nullTask1);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask2);
+
+    task.flushForTest(false);
+
+    // The current task should be interrupted and the composite completed.
+    expect(completedCallback).toHaveBeenCalledWith(task);
+    expect(interruptedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask2);
+
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+
+  /**
+   * The current queue of tasks can be flushed without triggering completion of the composite.
+   * This is a special behavior intended to allow sub-classes additional runtime flexibility.
+   */
+  it('should enable flushing of the current queue without completing', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+
+    attachMockCallbacks(task);
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(nullTask2);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask2);
+
+    task.flushForTest(true);
+
+    // The currently-running task should be interrupted, but no other callbacks should be invoked.
+    // The composite task should still be running once the queue is empty.
+    expect(interruptedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask2);
+
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
+
+  it('should not complete if the queue is flushed when the task is not running', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+
+    attachMockCallbacks(task);
+
+    task.flushForTest(false);
+
+    expect(startedCallback).not.toHaveBeenCalled();
+    expect(completedCallback).not.toHaveBeenCalled();
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalled();
+    expect(completedCallback).toHaveBeenCalled();
+  });
+
+  it('should run correct if queue is flushed and a new queue of tasks is added', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+    var nullTask4 = new taskrunner.NullTask();
+
+    var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2]);
+
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(nullTask2);
+    attachMockCallbacks(nullTask3);
+    attachMockCallbacks(nullTask4);
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask3);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask4);
+
+    nullTask1.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask3);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask4);
+
+    task.flushForTest(true);
+
+    expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask1);
+    expect(interruptedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask3);
+    expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask4);
+
+    task.addAllTasks([nullTask3, nullTask4]);
+
+    expect(startedCallback).toHaveBeenCalledWith(nullTask3);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask4);
+
+    nullTask3.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask3);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask4);
+
+    nullTask4.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask4);
+    expect(completedCallback).toHaveBeenCalledWith(task);
+  });
+
+  it('should resume correctly after a serial child has errored', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var task = new taskrunner.TestCompositeTask(false, [nullTask1, nullTask2, nullTask3]);
+
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(nullTask2);
+    attachMockCallbacks(nullTask3);
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask3);
+
+    nullTask1.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask2);
+
+    nullTask2.error();
+
+    expect(erroredCallback).toHaveBeenCalledWith(nullTask2);
+    expect(erroredCallback).toHaveBeenCalledWith(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).not.toHaveBeenCalledWith(nullTask3);
+
+    nullTask2.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask3);
+
+    nullTask3.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask3);
+    expect(completedCallback).toHaveBeenCalledWith(task);
+  });
+
+  it('should resume correctly after a parallel child has errored', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var task = new taskrunner.TestCompositeTask(true, [nullTask1, nullTask2, nullTask3]);
+
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(nullTask2);
+    attachMockCallbacks(nullTask3);
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask3);
+
+    nullTask2.error();
+
+    // A parallel composite task will continue running until all children have completed or errored.
+    expect(erroredCallback).toHaveBeenCalledWith(nullTask2);
+    expect(erroredCallback).not.toHaveBeenCalledWith(task);
+
+    nullTask1.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(erroredCallback).not.toHaveBeenCalledWith(task);
+
+    nullTask3.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask3);
+    expect(erroredCallback).toHaveBeenCalledWith(task);
+
+    task.run();
+
+    // Restarting the composite should only restart errored tasks.
+    // Running tasks should be allowed to complete; completed tasks left alone.
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask2);
+
+    nullTask2.complete();
+
+    // Once the remaining inner tasks complete, the composite should complete.
+    expect(completedCallback).toHaveBeenCalledWith(nullTask2);
+    expect(completedCallback).toHaveBeenCalledWith(task);
+  });
+});

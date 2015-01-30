@@ -8,601 +8,460 @@ goog.require('taskrunner.TaskState');
 
 
 
-/**
- * Tests for AbstractTask class.
- *
- * Some of the following tests make use of NullTask for convenience purposes.
- *
- * @constructor
- */
-function AbstractTaskTest() {}
+describe('goog.AbstractTask', function() {
 
+  it('should report the correct name', function() {
+    var fooTask = new taskrunner.AbstractTask('foo');
+    var barTask = new taskrunner.AbstractTask('bar');
 
-/**
- * Test task names.
- */
-AbstractTaskTest.prototype.taskName = function() {
-  var fooTask = new taskrunner.AbstractTask('foo');
-  var barTask = new taskrunner.AbstractTask('bar');
-
-  expectEq('foo', fooTask.getTaskName());
-  expectEq('bar', barTask.getTaskName());
-};
-
-
-/**
- * Test that task IDs are unique.
- */
-AbstractTaskTest.prototype.uniqueID = function() {
-  var task1 = new taskrunner.AbstractTask();
-  var task2 = new taskrunner.AbstractTask();
-
-  expectNe(task1.getUniqueID(), task2.getUniqueID());
-};
-
-
-/**
- * Test that runImpl function must be implemented to run a task.
- */
-AbstractTaskTest.prototype.runImplRequired = function() {
-  var task = new taskrunner.AbstractTask();
-
-  expectThat(function() {
-    task.run();
-  }, throwsError(/.+/));
-};
-
-
-/**
- * Test that trying to complete a non-running task throws an error.
- */
-AbstractTaskTest.prototype.taskMustBeRunningToComplete = function() {
-  var task = new taskrunner.NullTask();
-
-  expectThat(function() {
-    task.complete();
-  }, throwsError(/Cannot complete an inactive task\./));
-};
-
-
-/**
- * Test that trying to error a non-running task throws an error.
- */
-AbstractTaskTest.prototype.taskMustBeRunningToError = function() {
-  var task = new taskrunner.NullTask();
-
-  expectThat(function() {
-    task.error();
-  }, throwsError(/Cannot error an inactive task\./));
-};
-
-
-/**
- * Test start callback handlers.
- */
-AbstractTaskTest.prototype.startCallbacks = function() {
-  var task = new taskrunner.NullTask();
-  var callback1 = createMockFunction();
-  var callback2 = createMockFunction();
-
-  task.started(callback1);
-  task.started(callback2);
-
-  expectCall(callback1)(task);
-  expectCall(callback2)(task);
-
-  task.run();
-};
-
-
-/**
- * Test complete callback handlers.
- */
-AbstractTaskTest.prototype.completeCallbacks = function() {
-  var task = new taskrunner.NullTask();
-  var callback1 = createMockFunction();
-  var callback2 = createMockFunction();
-  var data = {};
-
-  task.completed(callback1);
-  task.completed(callback2);
-
-  task.run();
-
-  expectCall(callback1)(task);
-  expectCall(callback2)(task);
-
-  task.complete(data);
-};
-
-
-/**
- * Test error callback handlers.
- */
-AbstractTaskTest.prototype.errorCallbacks = function() {
-  var task = new taskrunner.NullTask();
-  var callback1 = createMockFunction();
-  var callback2 = createMockFunction();
-  var data = {};
-  var message = 'foobar';
-
-  task.errored(callback1);
-  task.errored(callback2);
-
-  task.run();
-
-  expectCall(callback1)(task);
-  expectCall(callback2)(task);
-
-  task.error(data, message);
-};
-
-
-/**
- * Test final callback handlers.
- */
-AbstractTaskTest.prototype.finalCallbacks = function() {
-  var task = new taskrunner.NullTask();
-  var callback1 = createMockFunction();
-  var callback2 = createMockFunction();
-
-  task.final(callback1);
-  task.final(callback2);
-
-  task.run();
-
-  expectCall(callback1)(task);
-  expectCall(callback2)(task);
-
-  task.complete();
-};
-
-
-/**
- * Test adding callback with scope.
- */
-AbstractTaskTest.prototype.callbackWithScope = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  var callback = createMockFunction();
-  var scope = {};
-  task.on(taskrunner.TaskEvent.COMPLETED, callback, scope);
-
-  expectCall(callback)(task).willOnce(function(t) {
-    expectEq(scope, this);
+    expect(fooTask.getTaskName()).toBe('foo');
+    expect(barTask.getTaskName()).toBe('bar');
   });
-  task.complete();
-};
 
+  it('should generate unique ids for each task', function() {
+    var task1 = new taskrunner.AbstractTask();
+    var task2 = new taskrunner.AbstractTask();
 
-/**
- * Test removing callbacks.
- */
-AbstractTaskTest.prototype.removingCallbacks = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
+    expect(task1.getUniqueID()).not.toBe(task2.getUniqueID());
+  });
 
-  var callback = createMockFunction();
-  var scope = {};
-  task.on(taskrunner.TaskEvent.COMPLETED, callback, scope);
+  it('should require runImpl method to be implemented', function() {
+    var task = new taskrunner.AbstractTask();
 
-  task.off(taskrunner.TaskEvent.COMPLETED, callback); // missing scope
-  expectCall(callback)(task);
-  task.complete();
+    expect(function() {
+      task.run();
+    }).toThrow();
+  });
 
-  task.reset();
-  task.run();
+  it('should error if a task that is not running is told to enter an complete-state', function() {
+    var task = new taskrunner.NullTask();
 
-  task.off(taskrunner.TaskEvent.COMPLETED, callback, scope);
-  task.complete();
-};
+    expect(function() {
+      task.complete();
+    }).toThrow();
+  });
 
+  it('should error if a task that is not running is told to enter an error-state', function() {
+    var task = new taskrunner.NullTask();
 
-/**
- * Test preventing duplicate callbacks.
- */
-AbstractTaskTest.prototype.preventDuplicateCallbacks = function() {
-  var task = new taskrunner.NullTask();
-  var startCallback = createMockFunction();
-  var errorCallback = createMockFunction();
-  var completeCallback = createMockFunction();
-  var finalCallback = createMockFunction();
+    expect(function() {
+      task.error();
+    }).toThrow();
+  });
 
-  task.started(startCallback).
-       started(startCallback).
-       errored(errorCallback).
-       errored(errorCallback).
-       errored(errorCallback).
-       completed(completeCallback).
-       completed(completeCallback).
-       final(finalCallback).
-       final(finalCallback).
-       final(finalCallback);
+  it('should call started callback handlers', function() {
+    var task = new taskrunner.NullTask();
+    var callback1 = jasmine.createSpy();
+    var callback2 = jasmine.createSpy();
 
-  expectCall(startCallback)(task);
-  task.run();
-
-  expectCall(errorCallback)(task);
-  expectCall(finalCallback)(task);
-  task.error();
-
-  task.reset();
-
-  expectCall(startCallback)(task);
-  task.run();
-
-  expectCall(completeCallback)(task);
-  expectCall(finalCallback)(task);
-  task.complete();
-};
-
-
-/**
- * Test adding the same callback but with duplicate scopes.
- */
-AbstractTaskTest.prototype.sameCallbackWithDifferentScopes = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  var callback = createMockFunction();
-  var scope1 = {};
-  var scope2 = {};
-  task.final(callback, scope1).
-       final(callback, scope2);
-
-  expectCall(callback)(task).times(2);
-  task.complete();
-};
-
-
-/**
- * Test that completed operations count are updated when a task is completed.
- */
-AbstractTaskTest.prototype.operationsCount = function() {
-  var task = new taskrunner.NullTask();
-  expectEq(1, task.getOperationsCount());
-  expectEq(0, task.getCompletedOperationsCount());
-
-  task.run();
-  task.complete();
-
-  expectEq(1, task.getOperationsCount());
-  expectEq(1, task.getCompletedOperationsCount());
-};
-
-
-/**
- * Test resetting a completed task and its state changes.
- */
-AbstractTaskTest.prototype.resetCompletedTask = function() {
-  var task = new taskrunner.NullTask();
-  var data = {};
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.complete(data);
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-  expectEq(data, task.getData());
-
-  task.reset();
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-  expectThat(task.getData(), isUndefined);
-};
-
-
-/**
- * Test resetting an errored task and its state changes.
- */
-AbstractTaskTest.prototype.resetErroredTask = function() {
-  var task = new taskrunner.NullTask();
-  var data = {};
-  var message = 'foobar';
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.error(data, message);
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-  expectEq(data, task.getData());
-  expectEq(message, task.getErrorMessage());
-
-  task.reset();
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-  expectThat(task.getData(), isUndefined);
-  expectThat(task.getErrorMessage(), isUndefined);
-};
-
-
-/**
- * Test that resetting a running task throws an error.
- */
-AbstractTaskTest.prototype.cannotResetARunningTask = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  expectThat(function() {
-    task.reset();
-  }, throwsError(/Cannot reset a running task\./));
-};
-
-
-/**
- * Test that rerunning a running task throws an error.
- */
-AbstractTaskTest.prototype.cannotRunARunningTask = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  expectThat(function() {
+    task.started(callback1);
+    task.started(callback2);
     task.run();
-  }, throwsError(/Cannot run a running task\./));
-};
 
+    expect(callback1).toHaveBeenCalledWith(task);
+    expect(callback2).toHaveBeenCalledWith(task);
+  });
 
-/**
- * Test rerunning a complted task.
- */
-AbstractTaskTest.prototype.rerunAfterComplte = function() {
-  var task = new taskrunner.NullTask();
-  var data = {};
+  it('should call completed callback handlers', function() {
+    var task = new taskrunner.NullTask();
+    var callback1 = jasmine.createSpy();
+    var callback2 = jasmine.createSpy();
+    var data = {};
 
-  task.run();
-  task.complete(data);
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-  expectEq(data, task.getData());
+    task.completed(callback1);
+    task.completed(callback2);
+    task.run();
+    task.complete(data);
 
-  task.run();
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-  expectEq(data, task.getData());
-};
+    expect(callback1).toHaveBeenCalledWith(task);
+    expect(callback2).toHaveBeenCalledWith(task);
+  });
 
+  it('should call errored callback handlers', function() {
+    var task = new taskrunner.NullTask();
+    var callback1 = jasmine.createSpy();
+    var callback2 = jasmine.createSpy();
+    var data = {};
+    var message = 'foobar';
 
-/**
- * Test rerunning an errored task.
- */
-AbstractTaskTest.prototype.rerunAfterError = function() {
-  var task = new taskrunner.NullTask();
-  var data = {};
-  var message = 'foobar';
+    task.errored(callback1);
+    task.errored(callback2);
+    task.run();
+    task.error(data, message);
 
-  task.run();
-  task.error(data, message);
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-  expectEq(data, task.getData());
-  expectEq(message, task.getErrorMessage());
+    expect(callback1).toHaveBeenCalledWith(task);
+    expect(callback2).toHaveBeenCalledWith(task);
+  });
 
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-  expectThat(task.getData(), isUndefined);
-  expectThat(task.getErrorMessage(), isUndefined);
+  it('should call final callback handlers', function() {
+    var task = new taskrunner.NullTask();
+    var callback1 = jasmine.createSpy();
+    var callback2 = jasmine.createSpy();
 
-  task.complete(data);
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-  expectEq(data, task.getData());
-};
+    task.final(callback1);
+    task.final(callback2);
+    task.run();
+    task.complete();
 
+    expect(callback1).toHaveBeenCalledWith(task);
+    expect(callback2).toHaveBeenCalledWith(task);
+  });
 
-/**
- * Tasks can only be interrupted when they are running.
- */
-AbstractTaskTest.prototype.onlyInterruptWhenRunning = function() {
-  var task = new taskrunner.NullTask();
+  it('should trigger callbacks with the correct scope if one is provided', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
 
-  expectThat(function() {
+    var scope = {};
+    var calledWithScope;
+
+    var callback = function() {
+      calledWithScope = this;
+    };
+
+    task.on(taskrunner.TaskEvent.COMPLETED, callback, scope);
+    task.complete();
+
+    expect(calledWithScope).toBe(scope);
+  });
+
+  it('should allow callbacks to be removed', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
+
+    var callback = jasmine.createSpy();
+    var scope = {};
+    task.on(taskrunner.TaskEvent.COMPLETED, callback, scope);
+
+    task.off(taskrunner.TaskEvent.COMPLETED, callback); // missing scope
+    task.complete();
+
+    expect(callback).toHaveBeenCalledWith(task);
+    expect(callback.calls.count()).toEqual(1);
+
+    task.reset();
+    task.run();
+
+    task.off(taskrunner.TaskEvent.COMPLETED, callback, scope);
+    task.complete();
+    
+    expect(callback.calls.count()).toEqual(1);
+  });
+
+  it('should not trigger a duplicate callback multiple times per state-change', function() {
+    var task = new taskrunner.NullTask();
+    var startCallback = jasmine.createSpy();
+    var errorCallback = jasmine.createSpy();
+    var completeCallback = jasmine.createSpy();
+    var finalCallback = jasmine.createSpy();
+
+    task.started(startCallback).
+         started(startCallback).
+         errored(errorCallback).
+         errored(errorCallback).
+         errored(errorCallback).
+         completed(completeCallback).
+         completed(completeCallback).
+         final(finalCallback).
+         final(finalCallback).
+         final(finalCallback);
+
+    task.run();
+
+    expect(startCallback).toHaveBeenCalledWith(task);
+    expect(startCallback.calls.count()).toEqual(1);
+
+    task.error();
+
+    expect(errorCallback).toHaveBeenCalledWith(task);
+    expect(errorCallback.calls.count()).toEqual(1);
+    expect(finalCallback).toHaveBeenCalledWith(task);
+    expect(finalCallback.calls.count()).toEqual(1);
+
+    task.reset();
+    task.run();
+
+    expect(startCallback).toHaveBeenCalledWith(task);
+    expect(startCallback.calls.count()).toEqual(2);
+
+    task.complete();
+
+    expect(completeCallback).toHaveBeenCalledWith(task);
+    expect(completeCallback.calls.count()).toEqual(1);
+    expect(finalCallback).toHaveBeenCalledWith(task);
+    expect(finalCallback.calls.count()).toEqual(2);
+  });
+
+  it('should enable a callback to be registered multiple times with unique scopes', function() {
+    var callback = jasmine.createSpy();
+    var scope1 = {};
+    var scope2 = {};
+    
+    var task = new taskrunner.NullTask();
+    task.run();
+    task.final(callback, scope1).
+         final(callback, scope2);
+    task.complete();
+
+    expect(callback).toHaveBeenCalledWith(task);
+    expect(callback.calls.count()).toEqual(2);
+  });
+
+  it('should update completed operations count when a task is completed', function() {
+    var task = new taskrunner.NullTask();
+    expect(task.getOperationsCount()).toBe(1);
+    expect(task.getCompletedOperationsCount()).toBe(0);
+
+    task.run();
+    task.complete();
+
+    expect(task.getOperationsCount()).toBe(1);
+    expect(task.getCompletedOperationsCount()).toBe(1);
+  });
+
+  it('should reset task state to initialized when a completed task is reset', function() {
+    var task = new taskrunner.NullTask();
+    var data = {};
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.complete(data);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getData()).toBe(data);
+
+    task.reset();
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getData()).toBeUndefined();
+  });
+
+  it('should reset task state to initialized when an errored task is reset', function() {
+    var task = new taskrunner.NullTask();
+    var data = {};
+    var message = 'foobar';
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.error(data, message);
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(task.getData()).toBe(data);
+    expect(task.getErrorMessage()).toBe(message);
+
+    task.reset();
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getData()).toBeUndefined();
+    expect(task.getErrorMessage()).toBeUndefined();
+  });
+
+  it('should not allow a running task to be reset', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
+
+    expect(function() {
+      task.reset();
+    }).toThrow();
+  });
+
+  it('should not allow a running task to be run again', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
+
+    expect(function() {
+      task.run();
+    }).toThrow();
+  });
+
+  it('should allow a completed task to be reset and rerun', function() {
+    var task = new taskrunner.NullTask();
+    var data = {};
+
+    task.run();
+    task.complete(data);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getData()).toBe(data);
+
+    task.reset();
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getData()).toBeUndefined();
+
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
+
+  it('should allow an errored task to be reset and rerun', function() {
+    var task = new taskrunner.NullTask();
+    var data = {};
+    var message = 'foobar';
+
+    task.run();
+    task.error(data, message);
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(task.getData()).toBe(data);
+    expect(task.getErrorMessage()).toBe(message);
+
+    task.reset();
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getData()).toBeUndefined();
+
+    task.run();
+    expect(taskrunner.TaskState.RUNNING, task.getState());
+    expect(task.getData()).toBeUndefined();
+    expect(task.getErrorMessage()).toBeUndefined();
+
+    task.complete(data);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getData()).toBe(data);
+  });
+
+  it('should only allow running tasks to be interrupted', function() {
+    var task = new taskrunner.NullTask();
+
+    expect(function() {
+      task.interrupt();
+    }).toThrow();
+  });
+
+  it('should allow running tasks to be interrupted', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
+
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
     task.interrupt();
-  }, throwsError(/Cannot interrupt a task that is not running\./));
-};
 
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-/**
- * Tasks can be interrupted and resumed.
- */
-AbstractTaskTest.prototype.interruptAndResume = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
+    task.run();
 
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  task.interrupt();
+  it('should invoke interrupted callbacks when a task is interrupted', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
 
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
+    var callback1 = jasmine.createSpy();
+    var callback2 = jasmine.createSpy();
 
-  task.run();
+    task.interrupted(callback1);
+    task.interrupted(callback2);
+    task.interrupt();
 
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
+    expect(callback1).toHaveBeenCalledWith(task);
+    expect(callback2).toHaveBeenCalledWith(task);
+  });
 
+  it('should only trigger callbacks that are added and not removed', function() {
+    var task = new taskrunner.NullTask();
 
-/**
- * Interruption callbacks are invoked when a task is interrupted.
- */
-AbstractTaskTest.prototype.interruptCallback = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
+    var callback1 = jasmine.createSpy();
+    var callback2 = jasmine.createSpy();
 
-  var callback1 = createMockFunction();
-  var callback2 = createMockFunction();
+    task.started(callback1, task);
+    task.started(callback2, task);
 
-  task.interrupted(callback1);
-  task.interrupted(callback2);
+    task.off(taskrunner.TaskEvent.STARTED, callback1, task);
+    task.run();
 
-  expectCall(callback1)(task);
-  expectCall(callback2)(task);
+    expect(callback1).not.toHaveBeenCalled();
+    expect(callback2).toHaveBeenCalledWith(task);
+  });
 
-  task.interrupt();
-};
+  it('should only trigger a callback once even if added multiple times', function() {
+    var task = new taskrunner.NullTask();
 
+    var callback = jasmine.createSpy();
 
-/**
- * Callbacks that have been removed should not be trigged.
- */
-AbstractTaskTest.prototype.removedCallbacksAreNotCalled = function() {
-  var task = new taskrunner.NullTask();
+    task.started(callback, task);
+    task.started(callback, task);
 
-  var callback1 = createMockFunction();
-  var callback2 = createMockFunction();
+    task.run();
 
-  task.started(callback1, task);
-  task.started(callback2, task);
+    expect(callback).toHaveBeenCalledWith(task);
+    expect(callback.calls.count()).toEqual(1);
+  });
 
-  task.off(taskrunner.TaskEvent.STARTED, callback1, task);
+  it('should resume after an interrupting task completes', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
 
-  expectCall(callback2)(task);
+    var interruptingTask = new taskrunner.NullTask();
+    interruptingTask.run();
 
-  task.run();
-};
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    task.interruptForTask(interruptingTask);
 
-/**
- * Callbacks will only be triggered once per event even if added multiple times.
- */
-AbstractTaskTest.prototype.callbacksAreOnlyCalledOnce = function() {
-  var task = new taskrunner.NullTask();
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(interruptingTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  var callback = createMockFunction();
+    interruptingTask.complete();
 
-  task.started(callback, task);
-  task.started(callback, task);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(interruptingTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectCall(callback)(task).times(1);
+  it('should error after an interrupting task errors', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
 
-  task.run();
-};
+    var interruptingTask = new taskrunner.NullTask();
+    interruptingTask.run();
 
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Callbacks will be executed on the proper scope, if provided.
- */
-AbstractTaskTest.prototype.callbacksRespectScope = function() {
-  var task = new taskrunner.NullTask();
+    task.interruptForTask(interruptingTask);
 
-  var that = {};
-  var callback = function() {
-    expectEq(that, this);
-  };
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(interruptingTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.started(callback, that);
-  task.run();
-};
+    interruptingTask.error();
 
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(interruptingTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
-/**
- * Callbacks will respect a scope, if provided. The same callback may be reused
- * multiple times if different scopes are provided.
- */
-AbstractTaskTest.prototype.callbacksCanSharedWithDifferentScopes = function() {
-  var task = new taskrunner.NullTask();
+  it('should be manually re-startable after being interrupted by another task', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
 
-  var scope = {};
+    var interruptingTask = new taskrunner.NullTask();
+    interruptingTask.run();
 
-  var callback = createMockFunction();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.started(callback, task);
-  task.started(callback, scope);
-  task.started(callback);
+    task.interruptForTask(interruptingTask);
 
-  expectCall(callback)(task).times(3);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-  task.run();
-};
+    task.run();
 
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * A task should resume after an interrupting task completes.
- */
-AbstractTaskTest.prototype.interruptForTaskThatCompletes = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
+    // This should be ignored now that the task has been manually restarted
+    interruptingTask.complete();
 
-  var interruptingTask = new taskrunner.NullTask();
-  interruptingTask.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
 
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+  it('should not try to run its interrupted task', function() {
+    var task = new taskrunner.NullTask();
+    task.run();
 
-  task.interruptForTask(interruptingTask);
+    var interruptingTask = new taskrunner.NullTask();
 
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-  expectEq(taskrunner.TaskState.RUNNING, interruptingTask.getState());
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  interruptingTask.complete();
+    task.interruptForTask(interruptingTask);
 
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, interruptingTask.getState());
-};
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(interruptingTask.getState()).toBe(taskrunner.TaskState.INITIALIZED);
 
+    interruptingTask.run();
+    interruptingTask.complete();
 
-/**
- * A task should error after an interrupting task errors.
- */
-AbstractTaskTest.prototype.interruptForTaskThatErrors = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  var interruptingTask = new taskrunner.NullTask();
-  interruptingTask.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.interruptForTask(interruptingTask);
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-  expectEq(taskrunner.TaskState.RUNNING, interruptingTask.getState());
-
-  interruptingTask.error();
-
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-  expectEq(taskrunner.TaskState.ERRORED, interruptingTask.getState());
-};
-
-
-/**
- * A task can be manually re-started after being interrupted by another task.
- */
-AbstractTaskTest.prototype.interruptedByMultipleTasks = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  var interruptingTask = new taskrunner.NullTask();
-  interruptingTask.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.interruptForTask(interruptingTask);
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  interruptingTask.complete();
-
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
-
-
-/**
- * A task does not try to run its interrupted task.
- */
-AbstractTaskTest.prototype.interruptingTaskIsNotAutoRun = function() {
-  var task = new taskrunner.NullTask();
-  task.run();
-
-  var interruptingTask = new taskrunner.NullTask();
-
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.interruptForTask(interruptingTask);
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, interruptingTask.getState());
-
-  interruptingTask.run();
-  interruptingTask.complete();
-
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-};
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+  });
+});

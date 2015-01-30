@@ -4,93 +4,67 @@ goog.setTestOnly('goog.ClosureTask.test');
 goog.require('taskrunner.ClosureTask');
 goog.require('taskrunner.TaskState');
 
+describe('goog.ClosureTask', function() {
 
+  it('should auto completing upon running when enabled', function() {
+    var method = jasmine.createSpy();
 
-/**
- * Tests for ClosureTask class.
- *
- * @constructor
- */
-function ClosureTaskTest() {}
+    var task = new taskrunner.ClosureTask(method, true);
+    task.run();
 
-
-/**
- * Test auto completing upon running a closure task.
- */
-ClosureTaskTest.prototype.autoComplete = function() {
-  var runImplFn = createMockFunction();
-  var closureTask = new taskrunner.ClosureTask(runImplFn, true);
-
-  var executed = false;
-  expectCall(runImplFn)().willOnce(function() {
-    executed = true;
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(method).toHaveBeenCalled();
+    expect(method.calls.count()).toEqual(1);
   });
-  closureTask.run();
-  expectTrue(executed);
-  expectEq(taskrunner.TaskState.COMPLETED, closureTask.getState());
-};
 
+  it('should not auto completing upon running when disabled', function() {
+    var method = jasmine.createSpy();
 
-/**
- * Test not auto completing upon running a closure task.
- */
-ClosureTaskTest.prototype.notAutoComplete = function() {
-  var runImplFn = createMockFunction();
-  var closureTask = new taskrunner.ClosureTask(runImplFn);
+    var task = new taskrunner.ClosureTask(method, false);
+    task.run();
 
-  var executed = false;
-  expectCall(runImplFn)().willOnce(function() {
-    executed = true;
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(method).toHaveBeenCalled();
+    expect(method.calls.count()).toEqual(1);
+
+    task.complete();
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
   });
-  closureTask.run();
-  expectTrue(executed);
-  expectEq(taskrunner.TaskState.RUNNING, closureTask.getState());
 
-  closureTask.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, closureTask.getState());
-};
+  it('should error if wrapped function throws an error', function() {
+    var error = new Error('test');
 
+    var method = function() {
+      throw error;
+    };
 
-/**
- * Test runtime error handling in closure function.
- */
-ClosureTaskTest.prototype.handleRuntimeError = function() {
-  var runImplFn = createMockFunction();
-  var closureTask = new taskrunner.ClosureTask(runImplFn, true);
+    var task = new taskrunner.ClosureTask(method, true);
+    task.run();
 
-  var error = new Error('test');
-  expectCall(runImplFn)().willOnce(function() {
-    throw error;
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(task.getData()).toBe(error);
+    expect(task.getErrorMessage()).toBe('test');
   });
-  closureTask.run();
-  expectEq(taskrunner.TaskState.ERRORED, closureTask.getState());
-  expectEq(error, closureTask.getData());
-  expectEq('test', closureTask.getErrorMessage());
-};
 
+  it('should rerun wrapped function if reset and rerun', function() {
+    var method = jasmine.createSpy();
 
-/**
- * Test reset and re-run a closure task.
- */
-ClosureTaskTest.prototype.resetAndRerun = function() {
-  var runImplFn = createMockFunction();
-  var closureTask = new taskrunner.ClosureTask(runImplFn);
+    var task = new taskrunner.ClosureTask(method);
+    task.run();
 
-  expectCall(runImplFn)();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(method).toHaveBeenCalled();
+    expect(method.calls.count()).toEqual(1);
 
-  closureTask.run();
+    task.complete();
 
-  expectEq(taskrunner.TaskState.RUNNING, closureTask.getState());
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
 
-  closureTask.complete();
+    task.reset();
 
-  expectEq(taskrunner.TaskState.COMPLETED, closureTask.getState());
+    task.run();
 
-  closureTask.reset();
-
-  expectCall(runImplFn)();
-
-  closureTask.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, closureTask.getState());
-};
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(method.calls.count()).toEqual(2);
+  });
+});
