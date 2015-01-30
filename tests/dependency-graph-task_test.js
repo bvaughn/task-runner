@@ -5,665 +5,581 @@ goog.require('taskrunner.DependencyGraphTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
 
+describe('goog.DependencyGraphTask', function() {
 
+  // These mock functions are shared between the test methods below.
+  // We attach them to this test rather than the Tasks themselves because the tasks are structs.
+  // Use the helper method, attachMockCallbacks(), below to attach callbacks to a particular task.
+  var startedCallback;
+  var completedCallback;
+  var erroredCallback;
+  var interruptedCallback;
 
-/**
- * Tests for DependencyGraphTask class.
- *
- * Some of the following tests make use of NullTask for convenience purposes.
- *
- * @constructor
- */
-function DependencyGraphTaskTest() {
-  // These mock functions are shared between the test methods below. We attach
-  // them to this test rather than the Tasks themselves because the tasks are
-  // structs. Use the helper method, this.attachMockCallbacks_,
-  // below to attach callbacks to a particular task.
-  this.startedCallback_ = createMockFunction();
-  this.completedCallback_ = createMockFunction();
-  this.erroredCallback_ = createMockFunction();
-  this.interruptedCallback_ = createMockFunction();
-}
+  beforeEach(function() {
+    startedCallback = jasmine.createSpy();
+    completedCallback = jasmine.createSpy();
+    erroredCallback = jasmine.createSpy();
+    interruptedCallback = jasmine.createSpy();
+  });
 
+  /**
+   * Helper function for attaching task callbacks to be used by later expectations.
+   * @private
+   */
+  var attachMockCallbacks = function(task) {
+    task.started(startedCallback);
+    task.interrupted(interruptedCallback);
+    task.completed(completedCallback);
+    task.errored(erroredCallback);
 
-/**
- * Test task that errors immediately (synchronously) after running.
- * @extends {taskrunner.ClosureTask}
- * @constructor
- * @struct
- */
-taskrunner.TestSynchrousErrorTask = function() {
-  goog.base(this, goog.bind(function() {
-    this.error();
-  }, this));
-};
-goog.inherits(taskrunner.TestSynchrousErrorTask, taskrunner.ClosureTask);
+    return task;
+  };
 
+  /**
+   * Test task that errors immediately (synchronously) after running.
+   * @extends {taskrunner.ClosureTask}
+   * @constructor
+   * @struct
+   */
+  taskrunner.TestSynchrousErrorTask = function() {
+    goog.base(this, goog.bind(function() {
+      this.error();
+    }, this));
+  };
+  goog.inherits(taskrunner.TestSynchrousErrorTask, taskrunner.ClosureTask);
 
-/**
- * Helper function for attaching task callbacks to be used by later
- * expectations.
- * @private
- */
-DependencyGraphTaskTest.prototype.attachMockCallbacks_ = function(task) {
-  task.started(this.startedCallback_);
-  task.interrupted(this.interruptedCallback_);
-  task.completed(this.completedCallback_);
-  task.errored(this.erroredCallback_);
+  it('should complete when run without children', function() {
+    var task = new taskrunner.DependencyGraphTask();
+    task.run();
 
-  return task;
-};
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
+  it('should error if a task is added more than once', function() {
+    var nullTask1 = new taskrunner.NullTask();
 
-/**
- * Composite tasks with no children should automatically complete when run.
- */
-DependencyGraphTaskTest.prototype.emptyTaskCompletes = function() {
-  var task = new taskrunner.DependencyGraphTask();
-  task.run();
-
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Trying to add a task more than once throws an error.
- */
-DependencyGraphTaskTest.prototype.cannotAddTaskMoreThanOnce = function() {
-  var nullTask1 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-
-  expectThat(function() {
+    var task = new taskrunner.DependencyGraphTask();
     task.addTask(nullTask1);
-  }, throwsError(/Cannot add task more than once./));
-};
 
+    expect(function() {
+      task.addTask(nullTask1);
+    }).toThrow();
+  });
 
-/**
- * Trying to remove a task that is not within the throws an error.
- */
-DependencyGraphTaskTest.prototype.cannotRemoveTaskNotInComposite = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
+  it('should error if a task that is not within the graph is removed', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
 
-  expectThat(function() {
+    expect(function() {
+      task.removeTask(nullTask2);
+    }).toThrow();
+  });
+
+  it('should complete successfully when a parallel graph completes', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
+    task.addTask(nullTask3);
+
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask3.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(task);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should complete successfully when a serial graph completes', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2, [nullTask1]);
+    task.addTask(nullTask3, [nullTask1, nullTask2]); // nt1 not strictly necessary
+
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask3.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(task);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should not change state due to state-changes with inactive tasks within the graph', function() {
+    var nullTask1 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+
+    attachMockCallbacks(nullTask1);
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback.calls.count()).toEqual(2);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(task);
+    expect(completedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(completedCallback.calls.count()).toEqual(2);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+
+    nullTask1.reset();
+    nullTask1.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(startedCallback.calls.count()).toEqual(3);
+
+    nullTask1.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(nullTask1);
+    expect(completedCallback.calls.count()).toEqual(3);
+  });
+
+  it('should complete successfully if a child task is interrupted and rerun', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
+
+    attachMockCallbacks(task);
+
+    task.run();
+
+    expect(startedCallback).toHaveBeenCalledWith(task);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.interrupt();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+    nullTask2.complete();
+
+    expect(completedCallback).toHaveBeenCalledWith(task);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should rerun interrupted child tasks if graph is rerun', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.interrupt();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.interrupt();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should not rerun completed children when a graph is interrupted and rerun', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.interrupt();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should error when a task is added that depends on itself', function() {
+    var nullTask1 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+
+    expect(function() {
+      task.addTask(nullTask1, [nullTask1]);
+    }).toThrow();
+  });
+
+  it('should error when a task is added that depends on anothert ask not within the graph', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+
+    expect(function() {
+      task.addTask(nullTask1, [nullTask2]);
+    }).toThrow();
+  });
+
+  it('should error if a task is removed that leaves the graph in an invalid state', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2, [nullTask1]);
+
+    expect(function() {
+      task.removeTask(nullTask1);
+    }).toThrow();
+  });
+
+  it('should run a task that is added to the graph at runtime that does not have dependencies', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.addTask(nullTask2);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should not run a task that is added to the graph at runtime with blocking dependencies', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.addTask(nullTask2, [nullTask1]);
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should error if a task with invalid dependencies is added at runtime', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    expect(function() {
+      task.addTask(nullTask2, [nullTask3]);
+    }).toThrow();
+  });
+
+  it('should allow tasks to be removed at runtime', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
     task.removeTask(nullTask2);
-  }, throwsError(/Cannot find the specified task./));
-};
 
+    nullTask1.complete();
 
-/**
- * Tests parallel tasks from run() to complete.
- */
-DependencyGraphTaskTest.prototype.parallelSuccessfulCompletion = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2);
-  task.addTask(nullTask3);
+  it('should complete if the last incomplete task ir removed at runtime', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
 
-  this.attachMockCallbacks_(task);
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
 
-  expectCall(this.startedCallback_)(task);
+    task.run();
 
-  task.run();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    nullTask1.complete();
 
-  nullTask1.complete();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    task.removeTask(nullTask2);
 
-  nullTask2.complete();
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+  it('should report the correct number of internal operations', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
 
-  expectCall(this.completedCallback_)(task);
+    var graphTask1 = new taskrunner.DependencyGraphTask();
+    var graphTask2 = new taskrunner.DependencyGraphTask();
 
-  nullTask3.complete();
+    graphTask2.addTask(nullTask2);
+    graphTask2.addTask(nullTask3);
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    graphTask1.addTask(nullTask1);
+    graphTask1.addTask(graphTask2);
+    graphTask1.run();
 
+    expect(graphTask1.getOperationsCount()).toBe(3);
+    expect(graphTask1.getCompletedOperationsCount()).toBe(0);
 
-/**
- * Tests serial graph from run() to complete.
- */
-DependencyGraphTaskTest.prototype.serialSuccessfulCompletion = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
+    nullTask1.complete();
 
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2, [nullTask1]);
-  task.addTask(nullTask3, [nullTask1, nullTask2]); // nt1 not strictly necessary
+    expect(graphTask1.getOperationsCount()).toBe(3);
+    expect(graphTask1.getCompletedOperationsCount()).toBe(1);
 
-  this.attachMockCallbacks_(task);
+    nullTask2.complete();
 
-  expectCall(this.startedCallback_)(task);
+    expect(graphTask1.getOperationsCount()).toBe(3);
+    expect(graphTask1.getCompletedOperationsCount()).toBe(2);
 
-  task.run();
+    nullTask3.complete();
 
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(graphTask1.getOperationsCount()).toBe(3);
+    expect(graphTask1.getCompletedOperationsCount()).toBe(3);
+  });
 
-  nullTask1.complete();
+  it('should resume correctly after a child task errors', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2, [nullTask1]);
+    task.addTask(nullTask3);
 
-  nullTask2.complete();
+    task.run();
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  expectCall(this.completedCallback_)(task);
+    nullTask1.error();
+    nullTask3.complete();
 
-  nullTask3.complete();
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
 
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    task.run();
 
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Callbacks are removed from non-running tasks such that events triggered when
- * graph is not running do not affect the graph.
- */
-DependencyGraphTaskTest.prototype.callbacksRemovedWhenNotRunning = function() {
-  var nullTask1 = new taskrunner.NullTask();
+    nullTask1.complete();
 
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-
-  this.attachMockCallbacks_(nullTask1);
-  this.attachMockCallbacks_(task);
-
-  expectCall(this.startedCallback_)(nullTask1);
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.completedCallback_)(nullTask1);
-  expectCall(this.completedCallback_)(task);
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-
-  nullTask1.reset();
-
-  expectCall(this.startedCallback_)(nullTask1);
-
-  nullTask1.run();
-
-  expectCall(this.completedCallback_)(nullTask1);
-
-  nullTask1.complete();
-};
-
-
-/**
- * Tests interrupting and resuming a child task while graph is running. This
- * should not cause the graph task to hang.
- */
-DependencyGraphTaskTest.prototype.interruptAndResumeChildTask = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2);
-
-  this.attachMockCallbacks_(task);
-
-  expectCall(this.startedCallback_)(task);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.interrupt();
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectCall(this.completedCallback_)(task);
-
-  nullTask1.complete();
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests interrupting a child task and resuming the parent graph re-runs child.
- */
-DependencyGraphTaskTest.prototype.interruptChildAndResumeGraph = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2);
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.interrupt();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.interrupt();
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests interrupting and resuming a graph doesn't re-start completed children.
- */
-DependencyGraphTaskTest.prototype.resumeGraphWithCompletedChild = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2);
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.interrupt();
-
-  expectEq(taskrunner.TaskState.INTERRUPTED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests ludicrous cyclic dependency case with a task that depends on itself.
- */
-DependencyGraphTaskTest.prototype.cyclicReferenceTaskBlocksSelf = function() {
-  var nullTask1 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-
-  expectThat(function() {
-    task.addTask(nullTask1, [nullTask1]);
-  }, throwsError(/Cyclic dependency detected./));
-};
-
-
-/**
- * Tests invalid dependency on a task that is not within the graph.
- */
-DependencyGraphTaskTest.prototype.taskBlockedByMissingTask = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-
-  expectThat(function() {
-    task.addTask(nullTask1, [nullTask2]);
-  }, throwsError(/Invalid dependency detected./));
-};
-
-
-/**
- * Tests removing a dependency that results in an invalid dependency graph.
- */
-DependencyGraphTaskTest.prototype.twoTasksBlockEachOther = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2, [nullTask1]);
-
-  expectThat(function() {
-    task.removeTask(nullTask1);
-  }, throwsError(/Invalid dependency detected./));
-};
-
-
-/**
- * Tests adding a task (without blockers) at runtime.
- */
-DependencyGraphTaskTest.prototype.addTaskAtRuntimeWithoutBlockers = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.addTask(nullTask2);
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests adding a task (with blockers) at runtime.
- */
-DependencyGraphTaskTest.prototype.addTaskAtRuntimeWithBlockers = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.addTask(nullTask2, [nullTask1]);
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests adding a task with invalid dependencies at runtime.
- */
-DependencyGraphTaskTest.prototype.addRuntimeTaskInvalidBlockers = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  expectThat(function() {
-    task.addTask(nullTask2, [nullTask3]);
-  }, throwsError(/Invalid dependency detected./));
-};
-
-
-/**
- * Tests removing a task at runtime.
- */
-DependencyGraphTaskTest.prototype.removeTaskAtRuntime = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.removeTask(nullTask2);
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Tests removing the last task at runtime.
- */
-DependencyGraphTaskTest.prototype.removeLastTaskAtRuntime = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  task.removeTask(nullTask2);
-
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Graph task reports the current number of internal operations.
- */
-DependencyGraphTaskTest.prototype.getOperationsCount = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-
-  var graphTask1 = new taskrunner.DependencyGraphTask();
-  var graphTask2 = new taskrunner.DependencyGraphTask();
-
-  graphTask2.addTask(nullTask2);
-  graphTask2.addTask(nullTask3);
-
-  graphTask1.addTask(nullTask1);
-  graphTask1.addTask(graphTask2);
-  graphTask1.run();
-
-  expectEq(3, graphTask1.getOperationsCount());
-  expectEq(0, graphTask1.getCompletedOperationsCount());
-
-  nullTask1.complete();
-
-  expectEq(3, graphTask1.getOperationsCount());
-  expectEq(1, graphTask1.getCompletedOperationsCount());
-
-  nullTask2.complete();
-
-  expectEq(3, graphTask1.getOperationsCount());
-  expectEq(2, graphTask1.getCompletedOperationsCount());
-
-  nullTask3.complete();
-
-  expectEq(3, graphTask1.getOperationsCount());
-  expectEq(3, graphTask1.getCompletedOperationsCount());
-};
-
-
-/**
- * Graph resumes correctly after a child task has errored.
- */
-DependencyGraphTaskTest.prototype.resumeGraphAfterChildErrors = function() {
-  var nullTask1 = new taskrunner.NullTask();
-  var nullTask2 = new taskrunner.NullTask();
-  var nullTask3 = new taskrunner.NullTask();
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2, [nullTask1]);
-  task.addTask(nullTask3);
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.error();
-  nullTask3.complete();
-
-  expectEq(taskrunner.TaskState.ERRORED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-
-  task.run();
-
-  expectEq(taskrunner.TaskState.RUNNING, nullTask1.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask1.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.RUNNING, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  nullTask2.complete();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Make sure the graph does not incorrectly proceed after synchronous errors.
- */
-DependencyGraphTaskTest.prototype.synchronousCompletionsAndErrors = function() {
-  var nullTask1 = new taskrunner.NullTask(true); // Succeeds immediately
-  var nullTask2 = new taskrunner.TestSynchrousErrorTask(); // Fails immediately
-  var nullTask3 = new taskrunner.NullTask(true); // Succeeds immediately
-
-  var task = new taskrunner.DependencyGraphTask();
-  task.addTask(nullTask1);
-  task.addTask(nullTask2, [nullTask1]);
-  task.addTask(nullTask3, [nullTask2]);
-  task.run();
-
-  expectEq(taskrunner.TaskState.COMPLETED, nullTask1.getState());
-  expectEq(taskrunner.TaskState.ERRORED, nullTask2.getState());
-  expectEq(taskrunner.TaskState.INITIALIZED, nullTask3.getState());
-  expectEq(taskrunner.TaskState.ERRORED, task.getState());
-};
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask2.complete();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+
+  it('should not proceed after synchronous errors', function() {
+    var nullTask1 = new taskrunner.NullTask(true); // Succeeds immediately
+    var nullTask2 = new taskrunner.TestSynchrousErrorTask(); // Fails immediately
+    var nullTask3 = new taskrunner.NullTask(true); // Succeeds immediately
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2, [nullTask1]);
+    task.addTask(nullTask3, [nullTask2]);
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
+});
