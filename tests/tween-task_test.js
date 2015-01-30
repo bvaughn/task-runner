@@ -7,232 +7,202 @@ goog.require('taskrunner.MockAnimationFrame');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.TweenTask');
 
+describe('goog.TweenTask', function() {
 
+  var mockAnimationFrame;
+  var mockClock;
+  
+  beforeEach(function() {
+    mockClock = new goog.testing.MockClock(true);
+    mockClock.install();
 
-/**
- * Tests for TweenTask class.
- *
- * @constructor
- */
-function TweenTaskTest() {
-  this.mockClock = new goog.testing.MockClock(true);
-  this.mockClock.install();
-
-  this.mockAnimationFrame = new taskrunner.MockAnimationFrame();
-  this.mockAnimationFrame.install();
-}
-
-
-/**
- * Helper function updates system time and calls an animation frame.
- *
- * @param {!number} elapsedTime
- * @param {number=} id
- * @private
- */
-TweenTaskTest.prototype.callAfter_ = function(elapsedTime, id) {
-  this.mockClock.tick(elapsedTime);
-
-  if (id) {
-    this.mockAnimationFrame.call(id);
-  } else {
-    this.mockAnimationFrame.callMostRecent();
-  }
-};
-
-
-/**
- * Test built-in linear tween.
- */
-TweenTaskTest.prototype.linearEaseCallback = function() {
-  var lastValue;
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+    mockAnimationFrame = new taskrunner.MockAnimationFrame();
+    mockAnimationFrame.install();
+  });
+  
+  afterEach(function() {
+    mockClock.uninstall();
   });
 
-  var task = new taskrunner.TweenTask(callback, 100);
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+  /**
+   * Helper function updates system time and calls an animation frame.
+   *
+   * @param {!number} elapsedTime
+   * @param {number=} id
+   * @private
+   */
+  var callAfter = function(elapsedTime, id) {
+    mockClock.tick(elapsedTime);
 
-  this.callAfter_(50);
-  expectEq(1, callback.getCallCount());
-  expectEq(.5, lastValue);
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-
-  this.callAfter_(50);
-  expectEq(2, callback.getCallCount());
-  expectEq(1, lastValue);
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
-
-
-/**
- * Test custom easing function.
- */
-TweenTaskTest.prototype.customEaseCallback = function() {
-  var lastValue;
-  var easing = function(value) {
-    return value / 2;
+    if (id) {
+      mockAnimationFrame.call(id);
+    } else {
+      mockAnimationFrame.callMostRecent();
+    }
   };
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+
+  it('should use a linear-tween by default', function() {
+    var lastValue;
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
+
+    var task = new taskrunner.TweenTask(callback, 100);
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    callAfter(50);
+    expect(callback.getCallCount()).toBe(1);
+    expect(lastValue).toBe(.5);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    callAfter(50);
+    expect(callback.getCallCount()).toBe(2);
+    expect(lastValue).toBe(1);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
   });
 
-  var task = new taskrunner.TweenTask(callback, 100, easing);
-  task.run();
+  it('should support a custom easing function if provided', function() {
+    var lastValue;
+    var easing = function(value) {
+      return value / 2;
+    };
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
 
-  this.callAfter_(50);
-  expectEq(.25, lastValue);
+    var task = new taskrunner.TweenTask(callback, 100, easing);
+    task.run();
 
-  this.callAfter_(50);
-  expectEq(.5, lastValue);
-};
+    callAfter(50);
+    expect(lastValue).toBe(.25);
 
-
-/**
- * Reset tween task.
- */
-TweenTaskTest.prototype.resetRestoresInitialState = function() {
-  var lastValue;
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+    callAfter(50);
+    expect(lastValue).toBe(.5);
   });
 
-  var task = new taskrunner.TweenTask(callback, 100);
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+  it('should reset tween on task reset', function() {
+    var lastValue;
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
 
-  this.callAfter_(50);
-  expectEq(1, callback.getCallCount());
-  expectEq(.5, lastValue);
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    var task = new taskrunner.TweenTask(callback, 100);
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.interrupt();
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
+    callAfter(50);
+    expect(callback.getCallCount()).toBe(1);
+    expect(lastValue).toBe(.5);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.reset();
-  this.callAfter_(50);
-  expectEq(2, callback.getCallCount());
-  expectEq(0, lastValue);
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-};
+    task.interrupt();
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-
-/**
- * Interrupting a task when an animation frame is registered cancels the pending
- * animation frame.
- */
-TweenTaskTest.prototype.interruptCancelsPendingAnimationFrame = function() {
-  var lastValue;
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+    task.reset();
+    callAfter(50);
+    expect(callback.getCallCount()).toBe(2);
+    expect(lastValue).toBe(0);
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
   });
 
-  var task = new taskrunner.TweenTask(callback, 100);
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-  expectEq(1, this.mockAnimationFrame.getAnimationFrameCount());
+  it('should cancel pending animation frames on task interruption', function() {
+    var lastValue;
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
 
-  task.interrupt();
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-  expectEq(0, this.mockAnimationFrame.getAnimationFrameCount());
-};
+    var task = new taskrunner.TweenTask(callback, 100);
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(1);
 
-
-/**
- * Resuming an interrupted animation frame does not cause the tween to exceed
- * its initial duration.
- */
-TweenTaskTest.prototype.interruptAndResumeDoesNotExceedDuration = function() {
-  var lastValue;
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+    task.interrupt();
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(0);
   });
 
-  var task = new taskrunner.TweenTask(callback, 100);
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+  it('should not exceed initial duration when interrupted and resumed', function() {
+    var lastValue;
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
 
-  this.callAfter_(25);
-  expectEq(1, callback.getCallCount());
-  expectEq(.25, lastValue);
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    var task = new taskrunner.TweenTask(callback, 100);
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  task.interrupt();
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-  expectEq(0, this.mockAnimationFrame.getAnimationFrameCount());
+    callAfter(25);
+    expect(callback.getCallCount()).toBe(1);
+    expect(lastValue).toBe(.25);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  this.mockClock.tick(25);
+    task.interrupt();
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(0);
 
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    mockClock.tick(25);
 
-  this.callAfter_(50);
-  expectEq(2, callback.getCallCount());
-  expectEq(.75, lastValue);
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  this.callAfter_(25);
-  expectEq(3, callback.getCallCount());
-  expectEq(1, lastValue);
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    callAfter(50);
+    expect(callback.getCallCount()).toBe(2);
+    expect(lastValue).toBe(.75);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-
-/**
- * Animation frames executed after the max-duration has elapsed are not called
- * with a progress greater than 1.
- */
-TweenTaskTest.prototype.lastAnimationFrameAfterDuration = function() {
-  var lastValue;
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+    callAfter(25);
+    expect(callback.getCallCount()).toBe(3);
+    expect(lastValue).toBe(1);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
   });
 
-  var task = new taskrunner.TweenTask(callback, 100);
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
+  it('should not call tweening function with a value greater than 1 if animation frame executes after max-duration', function() {
+    var lastValue;
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
 
-  this.callAfter_(150);
-  expectEq(1, callback.getCallCount());
-  expectEq(1, lastValue);
-  expectEq(taskrunner.TaskState.COMPLETED, task.getState());
-};
+    var task = new taskrunner.TweenTask(callback, 100);
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-
-/**
- * Running an interrupted TweenTask while an animation frame is pending cancels
- * the pending frame and schedules a new frame.
- */
-TweenTaskTest.prototype.runWhileResetAnimationFramePending = function() {
-  var lastValue;
-  var callback = goog.testing.recordFunction(function(value) {
-    lastValue = value;
+    callAfter(150);
+    expect(callback.getCallCount()).toBe(1);
+    expect(lastValue).toBe(1);
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
   });
 
-  var task = new taskrunner.TweenTask(callback, 100);
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-  expectEq(1, this.mockAnimationFrame.getAnimationFrameCount());
+  it('should cancel pending animation frames and reschedule a new frame if a tween task is interrupte dand rerun', function() {
+    var lastValue;
+    var callback = goog.testing.recordFunction(function(value) {
+      lastValue = value;
+    });
 
-  // interrupt() cancels any pending animation frames.
-  task.interrupt();
-  expectEq(taskrunner.TaskState.INTERRUPTED, task.getState());
-  expectEq(0, this.mockAnimationFrame.getAnimationFrameCount());
+    var task = new taskrunner.TweenTask(callback, 100);
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(1);
 
-  // reset() queues an animation frame for resettings progress to 0.
-  task.reset();
-  expectEq(taskrunner.TaskState.INITIALIZED, task.getState());
-  expectEq(1, this.mockAnimationFrame.getAnimationFrameCount());
-  expectEq(0, callback.getCallCount());
+    // interrupt() cancels any pending animation frames.
+    task.interrupt();
+    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(0);
 
-  // run() queues a new animation frame and cancels the reset frame.
-  task.run();
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-  expectEq(1, this.mockAnimationFrame.getAnimationFrameCount());
-  expectEq(0, callback.getCallCount());
+    // reset() queues an animation frame for resettings progress to 0.
+    task.reset();
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(1);
+    expect(callback.getCallCount()).toBe(0);
 
-  this.callAfter_(50);
-  expectEq(taskrunner.TaskState.RUNNING, task.getState());
-  expectEq(1, callback.getCallCount());
-};
+    // run() queues a new animation frame and cancels the reset frame.
+    task.run();
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(mockAnimationFrame.getAnimationFrameCount()).toBe(1);
+    expect(callback.getCallCount()).toBe(0);
+
+    callAfter(50);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(callback.getCallCount()).toBe(1);
+  });
+});

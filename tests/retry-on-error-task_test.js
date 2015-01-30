@@ -6,140 +6,117 @@ goog.require('taskrunner.NullTask');
 goog.require('taskrunner.RetryOnErrorTask');
 goog.require('taskrunner.TaskState');
 
+describe('goog.RetryOnErrorTask', function() {
 
+  var mockClock;
+  
+  beforeEach(function() {
+    mockClock = new goog.testing.MockClock(true);
+  });
+  
+  afterEach(function() {
+    mockClock.uninstall();
+  });
 
-/**
- * Tests for RetryOnErrorTask class.
- *
- * @constructor
- */
-function RetryOnErrorTaskTest() {
-  this.mockClock = new goog.testing.MockClock(true);
-}
+  it('should (synchronously) retry in the event of errors when configured to be synchronous', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 3, -1);
 
+    retryOnErrorTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Test cleanup.
- */
-RetryOnErrorTaskTest.prototype.tearDown = function() {
-  this.mockClock.uninstall();
-};
+    // 1st retry
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    // 2nd retry
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Tests synchronously retrying on error.
- */
-RetryOnErrorTaskTest.prototype.synchronouslyRetryOnError = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 3, -1);
+    // 3rd retry
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  retryOnErrorTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+    // Error
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
-  // 1st retry
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+  it('should (asynchronously) retry in the event of errors when configured to be asynchronous', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 2, 10);
 
-  // 2nd retry
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+    retryOnErrorTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  // 3rd retry
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+    // 1st retry
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    mockClock.tick(5);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    mockClock.tick(5);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  // Error
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.ERRORED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.ERRORED, retryOnErrorTask.getState());
-};
+    // 2nd retry
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    mockClock.tick(10);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    // Complete
+    decoratedTask.complete();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-/**
- * Tests asynchronously retrying on error.
- */
-RetryOnErrorTaskTest.prototype.asynchronouslyRetryOnError = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 2, 10);
+  it('should reset retry count on interruption', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 1, -1);
 
-  retryOnErrorTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+    retryOnErrorTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  // 1st retry
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.ERRORED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
-  this.mockClock.tick(5);
-  expectEq(taskrunner.TaskState.ERRORED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
-  this.mockClock.tick(5);
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+    decoratedTask.error();
+    expect(retryOnErrorTask.getRetries()).toBe(1);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  // 2nd retry
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.ERRORED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
-  this.mockClock.tick(10);
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
+    retryOnErrorTask.interrupt();
+    expect(retryOnErrorTask.getRetries()).toBe(0);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+  });
 
-  // Complete
-  decoratedTask.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, retryOnErrorTask.getState());
-};
+  it('should not complete if decorated task completes while retry task is interrupted', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 1, -1);
 
+    retryOnErrorTask.run();
+    retryOnErrorTask.interrupt();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-/**
- * Tests that interruption should reset the number of retries.
- */
-RetryOnErrorTaskTest.prototype.interruptionResetRetries = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 1, -1);
+    // Completing the decorated task while the retry task in interrupted.
+    decoratedTask.run();
+    decoratedTask.complete();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-  retryOnErrorTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
-
-  decoratedTask.error();
-  expectEq(1, retryOnErrorTask.getRetries());
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, retryOnErrorTask.getState());
-
-  retryOnErrorTask.interrupt();
-  expectEq(0, retryOnErrorTask.getRetries());
-  expectEq(taskrunner.TaskState.INTERRUPTED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, retryOnErrorTask.getState());
-};
-
-
-/**
- * Tests completing decorated task during interruption.
- */
-RetryOnErrorTaskTest.prototype.completingDecoratedTaskDuringInterruption =
-    function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var retryOnErrorTask = new taskrunner.RetryOnErrorTask(decoratedTask, 1, -1);
-
-  retryOnErrorTask.run();
-  retryOnErrorTask.interrupt();
-  expectEq(taskrunner.TaskState.INTERRUPTED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, retryOnErrorTask.getState());
-
-  // Completing the decorated task while the retry task in interrupted.
-  decoratedTask.run();
-  decoratedTask.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, retryOnErrorTask.getState());
-
-  // Retry task should auto complete upon rerun.
-  retryOnErrorTask.run();
-  expectEq(taskrunner.TaskState.COMPLETED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, retryOnErrorTask.getState());
-};
+    // Retry task should auto complete upon rerun.
+    retryOnErrorTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(retryOnErrorTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+});

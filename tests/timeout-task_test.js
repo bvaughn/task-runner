@@ -6,123 +6,96 @@ goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.TimeoutTask');
 
+describe('goog.TimeoutTask', function() {
 
+  var mockClock;
+  
+  beforeEach(function() {
+    mockClock = new goog.testing.MockClock(true);
+  });
+  
+  afterEach(function() {
+    mockClock.uninstall();
+  });
 
-/**
- * Tests for TimeoutTask class.
- *
- * @constructor
- */
-function TimeoutTaskTest() {
-  this.mockClock = new goog.testing.MockClock(true);
-}
+  it('should complete if decorated task completes within timeout', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
 
+    timeoutTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Test cleanup.
- */
-TimeoutTaskTest.prototype.tearDown = function() {
-  this.mockClock.uninstall();
-};
+    mockClock.tick(500);
 
+    decoratedTask.complete();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-/**
- * Tests completing a decorated task within timeout.
- */
-TimeoutTaskTest.prototype.completingBeforeTimeout = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
+  it('should error if decorated task errors within timeout', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
 
-  timeoutTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, timeoutTask.getState());
+    timeoutTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  this.mockClock.tick(500);
+    mockClock.tick(500);
 
-  decoratedTask.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, timeoutTask.getState());
-};
+    decoratedTask.error();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
+  it('should error if decorated task does not complete within timeout', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
 
-/**
- * Tests erroring a decorated task within timeout.
- */
-TimeoutTaskTest.prototype.erroringBeforeTimeout = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
+    timeoutTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  timeoutTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, timeoutTask.getState());
+    mockClock.tick(1500);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
-  this.mockClock.tick(500);
+  it('should not error if timeout is exceeded after wrapper task is interrupted', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
 
-  decoratedTask.error();
-  expectEq(taskrunner.TaskState.ERRORED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.ERRORED, timeoutTask.getState());
-};
+    timeoutTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    mockClock.tick(500);
+    timeoutTask.interrupt();
 
-/**
- * Tests not finishing a decorated task within timeout.
- */
-TimeoutTaskTest.prototype.finishingAfterTimeout = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
+    timeoutTask.run();
+    mockClock.tick(500);
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
 
-  timeoutTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, timeoutTask.getState());
+  it('should not complete if a decorated task completes while wrapper task is interrupted', function() {
+    var decoratedTask = new taskrunner.NullTask();
+    var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
 
-  this.mockClock.tick(1500);
-  expectEq(taskrunner.TaskState.INTERRUPTED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.ERRORED, timeoutTask.getState());
-};
+    timeoutTask.run();
+    timeoutTask.interrupt();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
+    // Completing the decorated task while the timeout task in interrupted.
+    decoratedTask.run();
+    decoratedTask.complete();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-/**
- * Tests not finishing a decorated task within timeout after an interruption.
- */
-TimeoutTaskTest.prototype.finishingAfterTimeoutAndInterruption = function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
-
-  timeoutTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.RUNNING, timeoutTask.getState());
-
-  this.mockClock.tick(500);
-  timeoutTask.interrupt();
-
-  timeoutTask.run();
-  this.mockClock.tick(500);
-  expectEq(taskrunner.TaskState.INTERRUPTED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.ERRORED, timeoutTask.getState());
-};
-
-
-/**
- * Tests completing decorated task during interruption.
- */
-TimeoutTaskTest.prototype.completingDecoratedTaskDuringInterruption =
-    function() {
-  var decoratedTask = new taskrunner.NullTask();
-  var timeoutTask = new taskrunner.TimeoutTask(decoratedTask, 1000);
-
-  timeoutTask.run();
-  timeoutTask.interrupt();
-  expectEq(taskrunner.TaskState.INTERRUPTED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, timeoutTask.getState());
-
-  // Completing the decorated task while the timeout task in interrupted.
-  decoratedTask.run();
-  decoratedTask.complete();
-  expectEq(taskrunner.TaskState.COMPLETED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.INTERRUPTED, timeoutTask.getState());
-
-  // Timeout task should auto complete upon rerun.
-  timeoutTask.run();
-  expectEq(taskrunner.TaskState.COMPLETED, decoratedTask.getState());
-  expectEq(taskrunner.TaskState.COMPLETED, timeoutTask.getState());
-};
+    // Timeout task should auto complete upon rerun.
+    timeoutTask.run();
+    expect(decoratedTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(timeoutTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+});

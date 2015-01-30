@@ -5,18 +5,17 @@ goog.require('taskrunner.DeferredFactoryTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.TaskState');
 
-describe('goog.ObserverTask', function() {
+describe('goog.DeferredFactoryTask', function() {
 
   var stubTask;
   var method;
-  
+
   beforeEach(function() {
     stubTask = new taskrunner.NullTask();
 
     method = jasmine.createSpy();
     method.and.returnValue(stubTask);
   });
-
 
   it('should work without any arguments or scope', function() {
     var deferredFactoryTask = new taskrunner.DeferredFactoryTask(method);

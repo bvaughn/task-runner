@@ -5,77 +5,59 @@ goog.require('goog.testing.MockClock');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.WaitTask');
 
+describe('goog.WaitTask', function() {
 
+  var mockClock;
+  
+  beforeEach(function() {
+    mockClock = new goog.testing.MockClock(true);
+  });
+  
+  afterEach(function() {
+    mockClock.uninstall();
+  });
 
-/**
- * Tests for WaitTask class.
- *
- * @constructor
- */
-function WaitTaskTest() {
-  this.mockClock = new goog.testing.MockClock(true);
-}
+  it('should complete after the appropriate amount of time ellapses', function() {
+    var waitTask = new taskrunner.WaitTask(1000);
 
+    waitTask.run();
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-/**
- * Test cleanup.
- */
-WaitTaskTest.prototype.tearDown = function() {
-  this.mockClock.uninstall();
-};
+    mockClock.tick(500);
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
+    mockClock.tick(500);
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
-/**
- * Tests completing a wait task after timeout.
- */
-WaitTaskTest.prototype.completingAfterTimeout = function() {
-  var waitTask = new taskrunner.WaitTask(1000);
+  it('should resume timer after an interruption', function() {
+    var waitTask = new taskrunner.WaitTask(1000, false);
 
-  waitTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, waitTask.getState());
+    waitTask.run();
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  this.mockClock.tick(500);
-  expectEq(taskrunner.TaskState.RUNNING, waitTask.getState());
+    mockClock.tick(500);
+    waitTask.interrupt();
 
-  this.mockClock.tick(500);
-  expectEq(taskrunner.TaskState.COMPLETED, waitTask.getState());
-};
+    waitTask.run();
+    mockClock.tick(500);
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
 
+  it('should reset timer after interruption', function() {
+    var waitTask = new taskrunner.WaitTask(1000, true);
 
-/**
- * Tests resume the timer after interruption.
- */
-WaitTaskTest.prototype.resumeTimerAfterInterruption = function() {
-  var waitTask = new taskrunner.WaitTask(1000, false);
+    waitTask.run();
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  waitTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, waitTask.getState());
+    mockClock.tick(500);
+    waitTask.interrupt();
 
-  this.mockClock.tick(500);
-  waitTask.interrupt();
+    waitTask.run();
+    mockClock.tick(500);
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-  waitTask.run();
-  this.mockClock.tick(500);
-  expectEq(taskrunner.TaskState.COMPLETED, waitTask.getState());
-};
-
-
-/**
- * Tests reset the timer after interruption.
- */
-WaitTaskTest.prototype.resetTimerAfterInterruption = function() {
-  var waitTask = new taskrunner.WaitTask(1000, true);
-
-  waitTask.run();
-  expectEq(taskrunner.TaskState.RUNNING, waitTask.getState());
-
-  this.mockClock.tick(500);
-  waitTask.interrupt();
-
-  waitTask.run();
-  this.mockClock.tick(500);
-  expectEq(taskrunner.TaskState.RUNNING, waitTask.getState());
-
-  this.mockClock.tick(500);
-  expectEq(taskrunner.TaskState.COMPLETED, waitTask.getState());
-};
+    mockClock.tick(500);
+    expect(waitTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
+  });
+});
