@@ -24,13 +24,15 @@ Tasks have 5 basic states, enumerated in TaskState. The diagram below shows thes
 
 Begin by running `npm install` to install [Karma](https://karma-runner.github.io) and other dependencies.
 
-Then run the following command from the root of the Task Runner checkout:
-
+You can then run tests once using:
 ```bash
-./node_modules/karma/bin/karma start karma.conf.js --log-level debug .
+gulp test
 ```
 
-At this point, open the following URL in your browser to execute tests: http://localhost:9876/
+Or you can run tests each time a file in the `source` or `tests` directory changes using:
+```bash
+gulp
+```
 
 ## Building Task Runner
 
