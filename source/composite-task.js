@@ -1,6 +1,5 @@
 goog.provide('taskrunner.CompositeTask');
 
-goog.require('goog.array');
 goog.require('taskrunner.AbstractTask');
 goog.require('taskrunner.TaskEvent');
 goog.require('taskrunner.TaskState');
@@ -55,10 +54,9 @@ goog.inherits(taskrunner.CompositeTask, taskrunner.AbstractTask);
  * @throws {Error} if tasks have been added more than once
  */
 taskrunner.CompositeTask.prototype.addAllTasks = function(tasks) {
-  goog.array.forEach(tasks,
-    goog.bind(function(task) {
-      this.addTask(task);
-    }, this));
+  for (var i = 0; i < tasks.length; i++) {
+    this.addTask(tasks[i]);
+  }
 
   return this;
 };
@@ -74,7 +72,9 @@ taskrunner.CompositeTask.prototype.addAllTasks = function(tasks) {
 taskrunner.CompositeTask.prototype.addTask = function(task) {
   var index = this.taskQueue_.indexOf(task);
 
-  goog.asserts.assert(index < 0, 'Cannot add task more than once.');
+  if (index >= 0) {
+    throw 'Cannot add task more than once.';
+  }
 
   this.taskQueue_.push(task);
 
@@ -103,7 +103,9 @@ taskrunner.CompositeTask.prototype.addTask = function(task) {
 taskrunner.CompositeTask.prototype.removeTask = function(task) {
   var index = this.taskQueue_.indexOf(task);
 
-  goog.asserts.assert(index >= 0, 'Attempted to remove an invalid task.');
+  if (index < 0) {
+    throw 'Attempted to remove an invalid task.';
+  }
 
   this.removeTaskCallbacks_(task);
   this.taskQueue_.splice(this.taskQueue_.indexOf(task), 1);
@@ -129,9 +131,10 @@ taskrunner.CompositeTask.prototype.removeTask = function(task) {
 taskrunner.CompositeTask.prototype.getOperationsCount = function() {
   var operationsCount = 0;
 
-  goog.array.forEach(this.taskQueue_, function(task) {
-    operationsCount += task.getOperationsCount();
-  });
+  this.eachTaskInQueue_(
+    function(task) {
+      operationsCount += task.getOperationsCount();
+    });
 
   return operationsCount;
 };
@@ -143,9 +146,10 @@ taskrunner.CompositeTask.prototype.getOperationsCount = function() {
 taskrunner.CompositeTask.prototype.getCompletedOperationsCount = function() {
   var completedOperationsCount = 0;
 
-  goog.array.forEach(this.taskQueue_, function(task) {
-    completedOperationsCount += task.getCompletedOperationsCount();
-  });
+  this.eachTaskInQueue_(
+    function(task) {
+      completedOperationsCount += task.getCompletedOperationsCount();
+    });
 
   return completedOperationsCount;
 };
@@ -159,7 +163,7 @@ taskrunner.CompositeTask.prototype.runImpl = function() {
     this.erroredTasks_ = [];
 
     if (this.parallel_) {
-      goog.array.forEach(this.taskQueue_,
+      this.eachTaskInQueue_(
         goog.bind(function(task) {
           this.addTaskCallbacks_(task);
 
@@ -178,11 +182,12 @@ taskrunner.CompositeTask.prototype.runImpl = function() {
 
 /** @override */
 taskrunner.CompositeTask.prototype.interruptImpl = function() {
-  goog.array.forEach(this.taskQueue_, function(task) {
-    if (task.getState() == taskrunner.TaskState.RUNNING) {
-      task.interrupt();
-    }
-  });
+  this.eachTaskInQueue_(
+    function(task) {
+      if (task.getState() == taskrunner.TaskState.RUNNING) {
+        task.interrupt();
+      }
+    });
 };
 
 
@@ -192,9 +197,10 @@ taskrunner.CompositeTask.prototype.resetImpl = function() {
   this.completedTasks_ = [];
   this.erroredTasks_ = [];
 
-  goog.array.forEach(this.taskQueue_, function(task) {
-    task.reset();
-  });
+  this.eachTaskInQueue_(
+    function(task) {
+      task.reset();
+    });
 };
 
 
@@ -226,12 +232,12 @@ taskrunner.CompositeTask.prototype.flushTaskQueue = function(doNotComplete) {
   this.flushTaskQueueInProgress_ = !!doNotComplete;
 
   // Manually interrupt any Task that are running.
-  goog.array.forEach(this.taskQueue_,
-    goog.bind(function(task) {
+  this.eachTaskInQueue_(
+    function(task) {
       if (task.getState() == taskrunner.TaskState.RUNNING) {
         task.interrupt();
       }
-    }, this));
+    });
 
   // Remove Tasks in reverse order to avoid running the next Task(s).
   while (this.taskQueue_.length > 0) {
@@ -344,6 +350,21 @@ taskrunner.CompositeTask.prototype.taskCompletedOrRemoved_ = function(task) {
 
       nextTask.run();
     }
+  }
+};
+
+
+/**
+ * Invoke a callback once for each Task in the queue.
+ *
+ * @param {function(!taskrunner.Task)} callback Callback function
+ * @private
+ */
+taskrunner.CompositeTask.prototype.eachTaskInQueue_ = function(callback) {
+  for (var i = 0; i < this.taskQueue_.length; i++) {
+    var task = this.taskQueue_[i];
+
+    callback(task);
   }
 };
 

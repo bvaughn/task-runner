@@ -1,6 +1,5 @@
 goog.provide('taskrunner.TimeoutTask');
 
-goog.require('goog.asserts');
 goog.require('taskrunner.AbstractTask');
 goog.require('taskrunner.TaskEvent');
 goog.require('taskrunner.TaskState');
@@ -95,8 +94,9 @@ taskrunner.TimeoutTask.prototype.interruptImpl = function() {
 
 /** @override */
 taskrunner.TimeoutTask.prototype.runImpl = function() {
-  goog.asserts.assert(this.timeoutId_ === null,
-      'A timeout for this task already exists.');
+  if (this.timeoutId_ !== null) {
+    throw 'A timeout for this task already exists.';
+  }
 
   var timeout = this.timeout_;
   if (this.timeoutStart_ > -1 && this.timeoutPause_ > -1) {

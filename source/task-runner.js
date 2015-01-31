@@ -6,7 +6,6 @@ goog.require('taskrunner.CompositeTask');
 goog.require('taskrunner.DecoratorTask');
 goog.require('taskrunner.DeferredFactoryTask');
 goog.require('taskrunner.DependencyGraphTask');
-goog.require('taskrunner.MockAnimationFrame');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.ObserverTask');
 goog.require('taskrunner.RetryOnErrorTask');

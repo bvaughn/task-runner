@@ -1,6 +1,5 @@
 goog.provide('taskrunner.AbstractTask');
 
-goog.require('goog.asserts');
 goog.require('taskrunner.Task');
 goog.require('taskrunner.TaskEvent');
 goog.require('taskrunner.TaskState');
@@ -119,8 +118,9 @@ taskrunner.AbstractTask.prototype.executeCallbacks_ = function(taskEvent) {
 
 /** @override */
 taskrunner.AbstractTask.prototype.run = function() {
-  goog.asserts.assert(this.state_ != taskrunner.TaskState.RUNNING,
-      'Cannot run a running task.');
+  if (this.state_ == taskrunner.TaskState.RUNNING) {
+    throw 'Cannot run a running task.';
+  }
 
   if (this.state_ != taskrunner.TaskState.COMPLETED) {
     this.interruptingTask_ = null;
@@ -139,8 +139,9 @@ taskrunner.AbstractTask.prototype.run = function() {
 
 /** @override */
 taskrunner.AbstractTask.prototype.interrupt = function() {
-  goog.asserts.assert(this.state_ == taskrunner.TaskState.RUNNING,
-      'Cannot interrupt a task that is not running.');
+  if (this.state_ != taskrunner.TaskState.RUNNING) {
+    throw 'Cannot interrupt a task that is not running.';
+  }
 
   this.state_ = taskrunner.TaskState.INTERRUPTED;
 
@@ -182,8 +183,9 @@ taskrunner.AbstractTask.prototype.interruptForTask = function(task) {
 
 /** @override */
 taskrunner.AbstractTask.prototype.reset = function() {
-  goog.asserts.assert(this.state_ != taskrunner.TaskState.RUNNING,
-      'Cannot reset a running task.');
+  if (this.state_ == taskrunner.TaskState.RUNNING) {
+    throw 'Cannot reset a running task.';
+  }
 
   if (this.state_ != taskrunner.TaskState.INITIALIZED) {
     this.data_ = undefined;
@@ -300,8 +302,9 @@ taskrunner.AbstractTask.prototype.resetImpl = goog.nullFunction;
  * @protected
  */
 taskrunner.AbstractTask.prototype.completeInternal = function(data) {
-  goog.asserts.assert(this.state_ == taskrunner.TaskState.RUNNING,
-      'Cannot complete an inactive task.');
+  if (this.state_ != taskrunner.TaskState.RUNNING) {
+    throw 'Cannot complete an inactive task.';
+  }
 
   this.data_ = data;
   this.state_ = taskrunner.TaskState.COMPLETED;
@@ -320,8 +323,9 @@ taskrunner.AbstractTask.prototype.completeInternal = function(data) {
  * @protected
  */
 taskrunner.AbstractTask.prototype.errorInternal = function(data, errorMessage) {
-  goog.asserts.assert(this.state_ == taskrunner.TaskState.RUNNING,
-      'Cannot error an inactive task.');
+  if (this.state_ != taskrunner.TaskState.RUNNING) {
+    throw 'Cannot error an inactive task.';
+  }
 
   this.data_ = data;
   this.errorMessage_ = errorMessage;

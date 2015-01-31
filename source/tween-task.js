@@ -1,6 +1,5 @@
 goog.provide('taskrunner.TweenTask');
 
-goog.require('goog.dom.animationFrame.polyfill');
 goog.require('taskrunner.AbstractTask');
 
 

@@ -1,6 +1,5 @@
 goog.provide('taskrunner.DependencyGraphTask');
 
-goog.require('goog.array');
 goog.require('taskrunner.AbstractTask');
 
 
@@ -99,9 +98,9 @@ taskrunner.DependencyGraphTask.prototype.removeTask = function(task) {
 taskrunner.DependencyGraphTask.prototype.getOperationsCount = function() {
   var operationsCount = 0;
 
-  goog.array.forEach(this.tasks_, function(task) {
-    operationsCount += task.getOperationsCount();
-  });
+  for (var i in this.tasks_) {
+    operationsCount += this.tasks_[i].getOperationsCount();
+  }
 
   return operationsCount;
 };
@@ -114,9 +113,9 @@ taskrunner.DependencyGraphTask.prototype.getCompletedOperationsCount =
     function() {
   var completedOperationsCount = 0;
 
-  goog.array.forEach(this.tasks_, function(task) {
-    completedOperationsCount += task.getCompletedOperationsCount();
-  });
+  for (var i in this.tasks_) {
+    completedOperationsCount += this.tasks_[i].getCompletedOperationsCount();
+  }
 
   return completedOperationsCount;
 };
@@ -148,9 +147,9 @@ taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
 taskrunner.DependencyGraphTask.prototype.resetImpl = function() {
   this.erroredTasks_ = [];
 
-  goog.array.forEach(this.tasks_, function(task) {
+  for (var task in this.tasks_) {
     task.reset();
-  });
+  }
 };
 
 

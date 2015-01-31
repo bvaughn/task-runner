@@ -1,6 +1,5 @@
 goog.provide('taskrunner.ObserverTask');
 
-goog.require('goog.asserts');
 goog.require('taskrunner.AbstractTask');
 goog.require('taskrunner.TaskEvent');
 goog.require('taskrunner.TaskState');
