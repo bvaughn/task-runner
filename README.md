@@ -31,7 +31,7 @@ gulp test
 
 Or you can run tests each time a file in the `source` or `tests` directory changes using:
 ```bash
-gulp
+gulp watch
 ```
 
 ## Building Task Runner
@@ -42,4 +42,14 @@ Then run the following command from the root of the Task Runner checkout:
 
 ```bash
 gulp build
+```
+
+## Generating Documentation
+
+Begin by running `npm install` to install [Karma](https://karma-runner.github.io) and other dependencies.
+
+Documentation is generated using with [JsDoc3](https://github.com/jsdoc3/jsdoc) special thanks to [jaguarjs-jsdoc templates](https://github.com/davidshimjs/jaguarjs-jsdoc).
+
+```bash
+node_modules/.bin/jsdoc -t node_modules/jaguarjs-jsdoc/ -d docs/ ./source/
 ```

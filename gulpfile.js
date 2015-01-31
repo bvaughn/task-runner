@@ -29,8 +29,8 @@ gulp.task('build', function() {
     }))
     .pipe(gulp.dest('dist'));
 });
- 
-gulp.task('default', function() {
+
+gulp.task('watch', function() {
   gulp.src(testFiles)
     .pipe(karma({
       configFile: 'karma.conf.js',
