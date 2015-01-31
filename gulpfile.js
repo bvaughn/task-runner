@@ -16,6 +16,20 @@ gulp.task('test', function() {
     });
 });
  
+gulp.task('build', function() {
+  var closureCompiler = require('gulp-closure-compiler');
+
+  gulp.src('source/*.js')
+    .pipe(closureCompiler({
+      compilerPath: 'bower_components/closure-compiler/compiler.jar',
+      fileName: 'task-runner.js',
+      compilerFlags: {
+        language_in: 'ECMASCRIPT5'
+      }
+    }))
+    .pipe(gulp.dest('dist'));
+});
+ 
 gulp.task('default', function() {
   gulp.src(testFiles)
     .pipe(karma({

@@ -36,13 +36,10 @@ gulp
 
 ## Building Task Runner
 
-Begin by running `bower install` to install the [Closure Compiler](https://github.com/google/closure-compiler) and [Closure Library](https://github.com/google/closure-library) components.
+Begin by running `bower install` to install the [Closure Compiler](https://github.com/google/closure-compiler) and [Closure Library](https://github.com/google/closure-library) components and `npm install` to install gulp dependencies.
 
 Then run the following command from the root of the Task Runner checkout:
 
 ```bash
-java -jar bower_components/closure-compiler/compiler.jar \
-    --language_in=ECMASCRIPT5 \
-    --js source/*.js \
-    --js_output_file dist/task-runner.js
+gulp build
 ```
