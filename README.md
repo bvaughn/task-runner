@@ -1,6 +1,10 @@
 # Task Runner
 Task Runner is a JavaScript library designed to simplify the implementation of asynchronous processes.
 
+Here are some links of interest:
+* [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)
+* [Example usage](https://gist.github.com/bvaughn/0e178b3fe5ef916d0389)
+
 ## Why use Task Runner?
 
 Web programming often requires coordination between multiple, asynchronous operations (e.g. load a file then play a sound then prompt the user for input). For the purposes of this document, we’ll refer to these operations as *tasks*.
