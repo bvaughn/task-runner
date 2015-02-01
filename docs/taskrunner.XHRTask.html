@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: ClosureTask</title>
+    <title>Class: XHRTask</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -974,7 +974,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="taskrunner.ClosureTask.html">Class: ClosureTask</h1>
+        <h1 class="page-title" data-filename="taskrunner.XHRTask.html">Class: XHRTask</h1>
         
 
 
@@ -983,7 +983,7 @@
     
 <header>
     <h2>
-    ClosureTask
+    XHRTask
     </h2>
     
 </header>  
@@ -996,14 +996,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="ClosureTask">
+        <h4 class="name" id="XHRTask">
             
-            new taskrunner.ClosureTask<span class="signature">(runImplFn, <span class="optional">opt_autoCompleteUponRun</span>, <span class="optional">opt_taskName</span>)</span>
+            new taskrunner.XHRTask<span class="signature">(url, <span class="optional">opt_data</span>, <span class="optional">opt_taskName</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line22">line 22</a>
+            <a href="xhr-task.js.html">xhr-task.js</a>, <a href="xhr-task.js.html#line21">line 21</a>
         </div>
         
     </div>
@@ -1014,10 +1014,10 @@
     
     
     <div class="description">
-        Task that invokes a specified function upon execution. This type of Task can
-be synchronous or asynchronous. It autoCompleteUponRun is true, it will
-complete after the function is run. Otherwise it will not complete until
-specifically instructed to do so.
+        Creates an XHR request and completes upon successful response from the server.
+The type of request created depends on whether a data object is provided.
+If one is provided, it will be converted to a URL-args string and a POST request will be created.
+Else a GET request will be created.
     </div>
     
 
@@ -1048,13 +1048,13 @@ specifically instructed to do so.
 	
         <tr>
             
-                <td class="name"><code>runImplFn</code></td>
+                <td class="name"><code>url</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
             
@@ -1069,21 +1069,20 @@ specifically instructed to do so.
                         
                     
                 
-                The function to be executed when this Task is
-    run.</td>
+                URL to load.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>opt_autoCompleteUponRun</code></td>
+                <td class="name"><code>opt_data</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1100,8 +1099,7 @@ specifically instructed to do so.
                         
                     
                 
-                Whether this task will
-    auto-complete when run.</td>
+                Object containing POST data; if undefined a GET request will be used.</td>
         </tr>
 	
 	
@@ -1346,129 +1344,6 @@ Call completeInternal() or errorInternal() when the task is finished.
         <dl>
             
 <dt>
-    <div class="nameContainer">
-        <h4 class="name" id="complete">
-            
-            complete<span class="signature">(<span class="optional">data</span>)</span>
-        </h4>
-    
-        
-        <div class="tag-source">
-            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line54">line 54</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Complete this task.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Task data.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <div class="nameContainer inherited">
         <h4 class="name" id="completed">
             
@@ -1691,14 +1566,14 @@ Call completeInternal() or errorInternal() when the task is finished.
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="error">
+        <h4 class="name" id="createPostDataString_">
             
-            error<span class="signature">(<span class="optional">data</span>, <span class="optional">errorMessage</span>)</span>
+            createPostDataString_<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line65">line 65</a>
+            <a href="xhr-task.js.html">xhr-task.js</a>, <a href="xhr-task.js.html#line92">line 92</a>
         </div>
         
     </div>
@@ -1708,97 +1583,11 @@ Call completeInternal() or errorInternal() when the task is finished.
 <dd>
     
     
-    <div class="description">
-        Error this task.
-    </div>
-    
 
     
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Task data.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>errorMessage</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                Error message.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -2933,6 +2722,73 @@ Call completeInternal() or errorInternal() when the task is finished.
         
         <div class="tag-source">
             <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line203">line 203</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="onReadyStateChange_">
+            
+            onReadyStateChange_<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="xhr-task.js.html">xhr-task.js</a>, <a href="xhr-task.js.html#line78">line 78</a>
         </div>
         
     </div>

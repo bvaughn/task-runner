@@ -688,6 +688,26 @@ taskrunner.TweenTask.prototype.updateRunning_ = function(a) {
   this.callback_(a);
   this.elapsed_ >= this.duration_ ? this.completeInternal() : this.queueAnimationFrame_(this.updateRunning_);
 };
+taskrunner.WaitForEventTask = function(a, b, c) {
+  taskrunner.AbstractTask.call(this, c);
+  this.eventTarget_ = a;
+  this.eventType_ = b;
+  this.listener_ = void 0;
+};
+goog.inherits(taskrunner.WaitForEventTask, taskrunner.AbstractTask);
+taskrunner.WaitForEventTask.prototype.resetImpl = function() {
+};
+taskrunner.WaitForEventTask.prototype.interruptImpl = function() {
+  this.eventTarget_.removeEventListener(this.eventType, this.listener_);
+};
+taskrunner.WaitForEventTask.prototype.runImpl = function() {
+  var a = this;
+  this.listener_ = function(b) {
+    a.eventTarget_.removeEventListener(a.eventType, a.listener_);
+    a.completeInternal(b);
+  };
+  this.eventTarget_.addEventListener(this.eventType, this.listener_);
+};
 taskrunner.WaitTask = function(a, b, c) {
   taskrunner.AbstractTask.call(this, c);
   this.resetTimerAfterInterruption_ = !!b;
@@ -725,26 +745,40 @@ taskrunner.XHRTask = function(a, b, c) {
   taskrunner.AbstractTask.call(this, c);
   this.url_ = a;
   this.postData_ = b;
+  this.xhrHttpRequest_ = void 0;
 };
 goog.inherits(taskrunner.XHRTask, taskrunner.AbstractTask);
+taskrunner.XHRTask.prototype.resetImpl = function() {
+  this.xhrHttpRequest_ = void 0;
+};
+taskrunner.XHRTask.prototype.interruptImpl = function() {
+  void 0 !== this.xhrHttpRequest_ && (this.xhrHttpRequest_.abort(), this.xhrHttpRequest_ = void 0);
+};
 taskrunner.XHRTask.prototype.runImpl = function() {
   try {
-    var a = this, b = new XMLHttpRequest;
-    b.onreadystatechange = function() {
-      4 == b.readyState && (200 == b.status ? a.completeInternal(b.responseText) : a.errorInternal(b.status, b.responseText));
-    };
-    if (void 0 !== this.postData_) {
-      var c = [], d;
-      for (d in this.postData_) {
-        c.push(d + "=" + this.postData_[d]);
-      }
-      b.open("POST", this.url_, !0);
-      b.send(c.join("&"));
+    if (void 0 !== this.xhrHttpRequest_) {
+      this.checkForCompletedOrErrored_();
     } else {
-      b.open("GET", this.url_, !0), b.send();
+      var a = this.createPostDataString_(), b = void 0 === a ? "GET" : "POST";
+      this.xhrHttpRequest_ = new XMLHttpRequest;
+      this.xhrHttpRequest_.onreadystatechange = this.onReadyStateChange_.bind(this);
+      this.xhrHttpRequest_.open(b, this.url_, !0);
+      this.xhrHttpRequest_.send(a);
     }
-  } catch (e) {
-    this.state_ == taskrunner.TaskState.RUNNING && this.errorInternal(e, e.message);
+  } catch (c) {
+    this.state_ === taskrunner.TaskState.RUNNING && this.errorInternal(c, c.message);
+  }
+};
+taskrunner.XHRTask.prototype.onReadyStateChange_ = function() {
+  this.state_ === taskrunner.TaskState.RUNNING && 4 === this.xhrHttpRequest_.readyState && (200 === this.xhrHttpRequest_.status ? this.completeInternal(this.xhrHttpRequest_.responseText) : this.errorInternal(this.xhrHttpRequest_.status, this.xhrHttpRequest_.responseText));
+};
+taskrunner.XHRTask.prototype.createPostDataString_ = function() {
+  if (void 0 !== this.postData_) {
+    var a = [], b;
+    for (b in this.postData_) {
+      a.push(b + "=" + this.postData_[b]);
+    }
+    return a.join("&");
   }
 };
 

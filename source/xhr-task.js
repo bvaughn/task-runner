@@ -26,44 +26,79 @@ taskrunner.XHRTask = function(url, opt_data, opt_taskName) {
 
   /** @private {Object|undefined} */
   this.postData_ = opt_data;
+
+  /** @private {XMLHttpRequest|undefined} */
+  this.xhrHttpRequest_ = undefined;
 };
 goog.inherits(taskrunner.XHRTask, taskrunner.AbstractTask);
 
 
 /** @override */
+taskrunner.XHRTask.prototype.resetImpl = function() {
+  this.xhrHttpRequest_ = undefined;
+};
+
+
+/** @override */
+taskrunner.XHRTask.prototype.interruptImpl = function() {
+  if (this.xhrHttpRequest_ !== undefined) {
+    this.xhrHttpRequest_.abort();
+    this.xhrHttpRequest_ = undefined;
+  }
+};
+
+
+/** @override */
 taskrunner.XHRTask.prototype.runImpl = function() {
   try {
-    var that = this;
 
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4) {
-        if (xhr.status == 200) {
-          that.completeInternal(xhr.responseText);
-        } else {
-          that.errorInternal(xhr.status, xhr.responseText);
-        }
-      }
-    }
-
-    if (this.postData_ !== undefined) {
-      var dataStrings = [];
-
-      for (var key in this.postData_) {
-        dataStrings.push(key + '=' + this.postData_[key]);
-      }
-
-      xhr.open("POST", this.url_, true);
-      xhr.send(dataStrings.join("&"));
+    // Check if XHR completed while interrupted
+    if (this.xhrHttpRequest_ !== undefined) {
+      this.checkForCompletedOrErrored_();
 
     } else {
-      xhr.open("GET", this.url_, true);
-      xhr.send();
+      var postDataString = this.createPostDataString_();
+      var method = postDataString === undefined ? 'GET' : 'POST';
+
+      this.xhrHttpRequest_ = new XMLHttpRequest();
+      this.xhrHttpRequest_.onreadystatechange = this.onReadyStateChange_.bind(this);
+      this.xhrHttpRequest_.open(method, this.url_, true);
+      this.xhrHttpRequest_.send(postDataString);
     }
 
   } catch (error) {
-    if (this.state_ == taskrunner.TaskState.RUNNING) {
+    if (this.state_ === taskrunner.TaskState.RUNNING) {
       this.errorInternal(error, error.message);
     }
   }
+};
+
+
+/** @override */
+taskrunner.XHRTask.prototype.onReadyStateChange_ = function() {
+  if (this.state_ === taskrunner.TaskState.RUNNING) {
+    if (this.xhrHttpRequest_.readyState === 4) {
+      if (this.xhrHttpRequest_.status === 200) {
+        this.completeInternal(this.xhrHttpRequest_.responseText);
+      } else {
+        this.errorInternal(this.xhrHttpRequest_.status, this.xhrHttpRequest_.responseText);
+      }
+    }
+  }
+};
+
+
+/** @override */
+taskrunner.XHRTask.prototype.createPostDataString_ = function() {
+  if (this.postData_ !== undefined) {
+    var dataStrings = [];
+
+    for (var key in this.postData_) {
+      dataStrings.push(key + '=' + this.postData_[key]);
+    }
+
+    return dataStrings.join("&");
+  }
+
+  return undefined;
 };
