@@ -161,8 +161,8 @@ taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
 taskrunner.DependencyGraphTask.prototype.resetImpl = function() {
   this.erroredTasks_ = [];
 
-  for (var task in this.tasks_) {
-    task.reset();
+  for (var i in this.tasks_) {
+    this.tasks_[i].reset();
   }
 };
 

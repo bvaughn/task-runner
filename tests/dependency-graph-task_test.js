@@ -582,4 +582,26 @@ describe('goog.DependencyGraphTask', function() {
     expect(nullTask3.getState()).toBe(taskrunner.TaskState.INITIALIZED);
     expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
   });
+
+  it('should reset all children when the graph is reset', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+
+    var task = new taskrunner.DependencyGraphTask();
+    task.addTask(nullTask1);
+    task.addTask(nullTask2);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.interrupt();
+    task.reset();
+
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+    expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+  });
 });
