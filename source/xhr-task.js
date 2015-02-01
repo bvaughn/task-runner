@@ -7,9 +7,17 @@ goog.require('taskrunner.TaskState');
 
 /**
  * Creates an XHR request and completes upon successful response from the server.
- * The type of request created depends on whether a data object is provided.
- * If one is provided, it will be converted to a URL-args string and a POST request will be created.
- * Else a GET request will be created.
+ *
+ * <p>The type of request created depends on whether a data object is provided:
+ * <ul>
+ * <li>If a data object is provided it will be converted to a URL-args string and a POST request will be created.
+ * <li>If a data object is provided a GET request will be created.
+ * </ul>
+ *
+ * @example
+ * // Sends a POST request to "foo" with URL args "bar=1&baz=two"
+ * var task = new taskrunner.XHRTask("foo", {bar: 1, baz: "two"});
+ * task.run();
  *
  * @param {!string} url URL to load.
  * @param {Object=} opt_data Object containing POST data; if undefined a GET request will be used.

@@ -7,25 +7,27 @@ goog.require('taskrunner.TaskState');
 
 
 /**
- * Observes (but does not execute) a collection of Tasks. This task can be used
- * to monitor the execution of 1 or more running Tasks. Tasks can be added (or
- * removed) while the observer is running. It will complete only once all
- * observed Tasks has completed.
+ * Observes (but does not execute) a collection of Tasks.
+ * This task can be used to monitor the execution of 1 or more running Tasks.
+ * Tasks can be added (or removed) while the observer is running.
+ * It will complete only once all observed Tasks has completed.
  *
- * If this Task is executed with no observed Tasks it will instantly complete.
- * The same is true if all of its observed Tasks have already completed by the
- * time it has been executed.
+ * <p>If this Task is executed with no observed Tasks it will instantly complete.
+ * The same is true if all of its observed Tasks have already completed by the time it has been executed.
+ *
+ * @example
+ * // Observes the pair of tasks provided to it and completes or errors when they do.
+ * var task = new taskrunner.ObserverTask([observedTask1, observedTask2]);
+ * task.run();
  *
  * @param {!Array.<!taskrunner.Task>=} opt_tasks The array of Tasks to observe.
- * @param {boolean=} opt_failUponFirstError Whether to error the observer task
- *     immediately when one of the observed tasks errors.
+ * @param {boolean=} opt_failUponFirstError Whether to error the observer task immediately when one of the observed tasks errors.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct
  */
-taskrunner.ObserverTask = function(
-    opt_tasks, opt_failUponFirstError, opt_taskName) {
+taskrunner.ObserverTask = function(opt_tasks, opt_failUponFirstError, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {boolean} */

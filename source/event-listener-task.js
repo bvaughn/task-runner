@@ -1,4 +1,4 @@
-goog.provide('taskrunner.WaitForEventTask');
+goog.provide('taskrunner.EventListenerTask');
 
 goog.require('taskrunner.AbstractTask');
 goog.require('taskrunner.TaskState');
@@ -9,6 +9,11 @@ goog.require('taskrunner.TaskState');
  * Waits for an event-dispatching target to trigger a specific type of event, then completes.
  * For example, this type of task can be used to wait for a DOM element to be clicked.
  *
+ * @example
+ * // Watches a DOM element until a "click" event is dispatched.
+ * var task = new taskrunner.EventListenerTask(element, "click");
+ * task.run();
+ *
  * @param {Object} eventTarget Event-dispatching target.
  * @param {string} eventType Type of event to wait for.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
@@ -16,7 +21,7 @@ goog.require('taskrunner.TaskState');
  * @constructor
  * @struct
  */
-taskrunner.WaitForEventTask = function(eventTarget, eventType, opt_taskName) {
+taskrunner.EventListenerTask = function(eventTarget, eventType, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {Object} */
@@ -29,23 +34,23 @@ taskrunner.WaitForEventTask = function(eventTarget, eventType, opt_taskName) {
   this.listener_ = undefined;
 
 };
-goog.inherits(taskrunner.WaitForEventTask, taskrunner.AbstractTask);
+goog.inherits(taskrunner.EventListenerTask, taskrunner.AbstractTask);
 
 
 /** @override */
-taskrunner.WaitForEventTask.prototype.resetImpl = function() {
+taskrunner.EventListenerTask.prototype.resetImpl = function() {
   // No-op
 };
 
 
 /** @override */
-taskrunner.WaitForEventTask.prototype.interruptImpl = function() {
+taskrunner.EventListenerTask.prototype.interruptImpl = function() {
   this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
 };
 
 
 /** @override */
-taskrunner.WaitForEventTask.prototype.runImpl = function() {
+taskrunner.EventListenerTask.prototype.runImpl = function() {
   var that = this;
 
   this.listener_ = function(event) {

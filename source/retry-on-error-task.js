@@ -9,29 +9,32 @@ goog.require('taskrunner.TaskState');
 /**
  * Decorator for Tasks that should be retried on error.
  *
- * For example, you may wish to decorator a Task that relies on Internet
- * connectivity in order to complete. The decorated Task is allowed to fail a
- * specified number of times before the error condition is reported externally.
+ * <p>For example, you may wish to decorator a Task that relies on Internet connectivity in order to complete.
+ * The decorated Task is allowed to fail a specified number of times before the error condition is reported externally.
  *
- * This decorator can also be configured to delay for a set amount of time
- * before re-running its internal tasks. This delay may allow certain types of
- * external error conditions (e.g. temporary loss of Internet connectivity) to
- * resolve before the operation is attempted again.
+ * <p>This decorator can also be configured to delay for a set amount of time before re-running its internal tasks.
+ * This delay may allow certain types of external error conditions (e.g. temporary loss of Internet connectivity)
+ * to resolve before the operation is attempted again.
+ *
+ * @example
+ * // Wraps the decorated task and restarts it in the event of an error.
+ * // This task allows 1 second to pass in between each retry, and gives up after 3 retries.
+ * var task = new taskrunner.opt_taskName(taskThatMayFail, 3, 1000);
+ * task.run();
  *
  * @param {!taskrunner.Task} task The task to decorate.
- * @param {number=} maxRetries Number of times to reset and re-run the decorated
- *     Task before erroring the retry task. If not specified this defaults to 5.
- * @param {number=} retryDelay The amount of time to delay before resetting and
- *     re-running the decorated Task. A value < 0 seconds will result in a
- *     synchronous retry. If not specified this defaults to 1000 ms.
+ * @param {number=} maxRetries Number of times to reset and re-run the decorated Task before erroring the retry task.
+ *                             If not specified this defaults to 5.
+ * @param {number=} retryDelay The amount of time to delay before resetting and re-running the decorated Task.
+ *                             A value < 0 seconds will result in a synchronous retry.
+ *                             If not specified this defaults to 1000 ms.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @implements {taskrunner.DecoratorTask}
  * @constructor
  * @struct
  */
-taskrunner.RetryOnErrorTask = function(
-    task, maxRetries, retryDelay, opt_taskName) {
+taskrunner.RetryOnErrorTask = function(task, maxRetries, retryDelay, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {!taskrunner.Task} */

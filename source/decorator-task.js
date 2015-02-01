@@ -4,8 +4,7 @@ goog.provide('taskrunner.DecoratorTask');
 
 /**
  * This type of task decorates another task.
- * Exposing the decorated task via the interface allows for useful debugging and
- * reporting of error conditions.
+ * Exposing the decorated task via the interface allows for useful debugging and reporting of error conditions.
  *
  * @extends {taskrunner.Task}
  * @interface

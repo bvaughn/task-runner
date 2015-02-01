@@ -7,25 +7,28 @@ goog.require('taskrunner.TaskState');
 
 
 /**
- * Decorates a Task returned by the specified factory method. This Task is
- * deferred and will be invoked the provided factory method until it is actually
- * executed. This allows for just-in-time evaluation of data set by previous
- * Tasks.
+ * Decorates a Task returned by the specified factory method.
+ * This Task is deferred and will be invoked the provided factory method until it is actually executed.
+ * This allows for just-in-time evaluation of data set by previous Tasks.
  *
- * @param {function(*):taskrunner.Task} taskFactoryFn The function to
- *     create an Task object.
- * @param {?=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn
- *     with.
- * @param {!Array=} opt_argsArray Optional arguments array to invoke
- *     taskFactoryFn with.
+ * @example
+ * // Asynchronously executes the supplied task-factory-function.
+ * var task = new taskrunner.DeferredFactoryTask(
+ *   function() {
+ *     // Creates a new Task
+ *   });
+ * task.run();
+ *
+ * @param {function(*):taskrunner.Task} taskFactoryFn The function to create an Task object.
+ * @param {?=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn with.
+ * @param {!Array=} opt_argsArray Optional arguments array to invoke taskFactoryFn with.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @implements {taskrunner.DecoratorTask}
  * @constructor
  * @struct
  */
-taskrunner.DeferredFactoryTask = function(
-    taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
+taskrunner.DeferredFactoryTask = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {function(*):taskrunner.Task} */

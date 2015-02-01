@@ -1,10 +1,10 @@
-goog.provide('goog.WaitForEventTask.test');
-goog.setTestOnly('goog.WaitForEventTask.test');
+goog.provide('goog.EventListenerTask.test');
+goog.setTestOnly('goog.EventListenerTask.test');
 
 goog.require('taskrunner.TaskState');
-goog.require('taskrunner.WaitForEventTask');
+goog.require('taskrunner.EventListenerTask');
 
-describe('goog.WaitForEventTask', function() {
+describe('goog.EventListenerTask', function() {
 
   var eventTarget;
   var eventType = 'click';
@@ -29,7 +29,7 @@ describe('goog.WaitForEventTask', function() {
       }
     };
 
-    waitForEventTask = new taskrunner.WaitForEventTask(eventTarget, eventType);
+    waitForEventTask = new taskrunner.EventListenerTask(eventTarget, eventType);
   });
 
   it('should complete when an event of the correct type is received', function() {

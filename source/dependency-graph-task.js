@@ -5,10 +5,19 @@ goog.require('taskrunner.AbstractTask');
 
 
 /**
- * Executes of a set of interdependent Tasks in the appropriate order to satisfy
- * all blocking dependencies. This task will complete once all child tasks
- * complete or error when a child task fails. In the event of an error, no
- * additional tasks will be run until this task has been told to resume.
+ * Executes of a set of interdependent Tasks in the appropriate order to satisfy all blocking dependencies.
+ * This task will complete once all child tasks  complete or error when a child task fails.
+ * In the event of an error, no additional tasks will be run until this task has been told to resume.
+ *
+ * @example
+ * // Creates a graph task that will execute tasks in the order required by their dependencies.
+ * var task = new taskrunner.DependencyGraphTask();
+ * task.addTask(childTaskA);
+ * task.addTask(childTaskB);
+ * task.addTask(childTaskC, [childTaskA]);
+ * task.addTask(childTaskD, [childTaskB]);
+ * task.addTask(childTaskE, [childTaskC, childTaskD]);
+ * task.run();
  *
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}

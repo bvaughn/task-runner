@@ -5,22 +5,36 @@ goog.require('taskrunner.AbstractTask');
 
 
 /**
- * Task that invokes a specified function upon execution. This type of Task can
- * be synchronous or asynchronous. It autoCompleteUponRun is true, it will
- * complete after the function is run. Otherwise it will not complete until
- * specifically instructed to do so.
+ * Task that invokes a specified function upon execution.
+ * This type of Task can be synchronous or asynchronous.
+ * It autoCompleteUponRun is true, it will complete after the function is run.
+ * Otherwise it will not complete until specifically instructed to do so.
  *
- * @param {function()} runImplFn The function to be executed when this Task is
- *     run.
- * @param {boolean=} opt_autoCompleteUponRun Whether this task will
- *     auto-complete when run.
+ * @example
+ * // Executes the supplied closure and auto-completes after running it.
+ * var task = new taskrunner.ClosureTask(
+ *   function() {
+ *     // Do stuff
+ *   }, true);
+ * task.run();
+ *
+ * @example
+ * // Executes the supplied closure and waits to be completed.
+ * var task = new taskrunner.ClosureTask(
+ *   function() {
+ *     // Do stuff
+ *     task.complete('foo');
+ *   }, false);
+ * task.run();
+ *
+ * @param {function()} runImplFn The function to be executed when this Task is run.
+ * @param {boolean=} opt_autoCompleteUponRun Whether this task will auto-complete when run.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct
  */
-taskrunner.ClosureTask = function(
-    runImplFn, opt_autoCompleteUponRun, opt_taskName) {
+taskrunner.ClosureTask = function(runImplFn, opt_autoCompleteUponRun, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {function()} */

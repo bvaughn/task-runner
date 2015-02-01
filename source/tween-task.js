@@ -5,24 +5,28 @@ goog.require('taskrunner.AbstractTask');
 
 
 /**
- * Animation-frame-based task for tweening properties. This task invokes a
- * callback on each animation frame and passes a 0..1 value representing the
- * progress of hte overall tween.
+ * Animation-frame-based task for tweening properties.
+ * This task invokes a callback on each animation frame and passes a 0..1 value representing the progress of the overall tween.
  *
- * @param {function(!number)} callback Callback invoked on animation frame with
- *     a number (0..1) representing the position of the tween.
+ * @example
+ * // Creates a 2-second tween that fades out an element.
+ * var task = new taskrunner.TweenTask(
+ *   function(value) {
+ *     element.style.opacity = value;
+ *   }, 2000);
+ * task.run();
+ *
+ * @param {function(!number)} callback Callback invoked on animation frame with a number (0..1) representing the position of the tween.
  * @param {number} duration Duration of tween in milliseconds.
- * @param {function(!number)=} opt_easingFunction Optional easing function used
- *     to convert input time to an eased time. If no function is specified, a
- *     linear ease (no ease) will be used.
+ * @param {function(!number)=} opt_easingFunction Optional easing function used to convert input time to an eased time.
+ *                                                If no function is specified, a linear ease (no ease) will be used.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @throws {Error} if an invalid duration is provided
  * @struct
  */
-taskrunner.TweenTask = function(
-    callback, duration, opt_easingFunction, opt_taskName) {
+taskrunner.TweenTask = function(callback, duration, opt_easingFunction, opt_taskName) {
   goog.base(this, opt_taskName);
 
   goog.asserts.assert(duration > 0, 'Invalid tween duration provided.');

@@ -465,6 +465,26 @@ taskrunner.DependencyGraphTask.prototype.childTaskErrored_ = function(a) {
   this.erroredTasks_.push(a);
   this.completeOrRunNext_();
 };
+taskrunner.EventListenerTask = function(a, b, c) {
+  taskrunner.AbstractTask.call(this, c);
+  this.eventTarget_ = a;
+  this.eventType_ = b;
+  this.listener_ = void 0;
+};
+goog.inherits(taskrunner.EventListenerTask, taskrunner.AbstractTask);
+taskrunner.EventListenerTask.prototype.resetImpl = function() {
+};
+taskrunner.EventListenerTask.prototype.interruptImpl = function() {
+  this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
+};
+taskrunner.EventListenerTask.prototype.runImpl = function() {
+  var a = this;
+  this.listener_ = function(b) {
+    a.eventTarget_.removeEventListener(a.eventType_, a.listener_);
+    a.completeInternal(b);
+  };
+  this.eventTarget_.addEventListener(this.eventType_, this.listener_);
+};
 taskrunner.NullTask = function(a, b) {
   taskrunner.ClosureTask.call(this, goog.nullFunction, a, b);
 };
@@ -691,26 +711,6 @@ taskrunner.TweenTask.prototype.updateRunning_ = function(a) {
   a = this.easingFunction_(Math.min(1, this.elapsed_ / this.duration_));
   this.callback_(a);
   this.elapsed_ >= this.duration_ ? this.completeInternal() : this.queueAnimationFrame_(this.updateRunning_);
-};
-taskrunner.WaitForEventTask = function(a, b, c) {
-  taskrunner.AbstractTask.call(this, c);
-  this.eventTarget_ = a;
-  this.eventType_ = b;
-  this.listener_ = void 0;
-};
-goog.inherits(taskrunner.WaitForEventTask, taskrunner.AbstractTask);
-taskrunner.WaitForEventTask.prototype.resetImpl = function() {
-};
-taskrunner.WaitForEventTask.prototype.interruptImpl = function() {
-  this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
-};
-taskrunner.WaitForEventTask.prototype.runImpl = function() {
-  var a = this;
-  this.listener_ = function(b) {
-    a.eventTarget_.removeEventListener(a.eventType_, a.listener_);
-    a.completeInternal(b);
-  };
-  this.eventTarget_.addEventListener(this.eventType_, this.listener_);
 };
 taskrunner.WaitTask = function(a, b, c) {
   taskrunner.AbstractTask.call(this, c);
