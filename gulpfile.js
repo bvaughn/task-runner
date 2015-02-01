@@ -19,12 +19,18 @@ gulp.task('test', function() {
 gulp.task('build', function() {
   var closureCompiler = require('gulp-closure-compiler');
 
-  gulp.src('source/*.js')
+  gulp.src([
+      //'bower_components/closure-library/closure/goog/**/*.js',
+      'source/**/*.js'
+    ])
     .pipe(closureCompiler({
       compilerPath: 'bower_components/closure-compiler/compiler.jar',
       fileName: 'task-runner.js',
       compilerFlags: {
-        language_in: 'ECMASCRIPT5'
+        closure_entry_point: 'taskrunner',
+        language_in: 'ECMASCRIPT5',
+        only_closure_dependencies: true,
+        formatting: 'pretty_print'
       }
     }))
     .pipe(gulp.dest('dist'));

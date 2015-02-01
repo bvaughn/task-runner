@@ -15,3 +15,4 @@ goog.require('taskrunner.Task');
 goog.require('taskrunner.TimeoutTask');
 goog.require('taskrunner.TweenTask');
 goog.require('taskrunner.WaitTask');
+goog.require('taskrunner.XHRTask');
