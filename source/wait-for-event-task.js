@@ -40,7 +40,7 @@ taskrunner.WaitForEventTask.prototype.resetImpl = function() {
 
 /** @override */
 taskrunner.WaitForEventTask.prototype.interruptImpl = function() {
-  this.eventTarget_.removeEventListener(this.eventType, this.listener_);
+  this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
 };
 
 
@@ -49,9 +49,9 @@ taskrunner.WaitForEventTask.prototype.runImpl = function() {
   var that = this;
 
   this.listener_ = function(event) {
-    that.eventTarget_.removeEventListener(that.eventType, that.listener_);
+    that.eventTarget_.removeEventListener(that.eventType_, that.listener_);
     that.completeInternal(event);
   };
 
-  this.eventTarget_.addEventListener(this.eventType, this.listener_);
+  this.eventTarget_.addEventListener(this.eventType_, this.listener_);
 };

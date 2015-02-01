@@ -698,15 +698,15 @@ goog.inherits(taskrunner.WaitForEventTask, taskrunner.AbstractTask);
 taskrunner.WaitForEventTask.prototype.resetImpl = function() {
 };
 taskrunner.WaitForEventTask.prototype.interruptImpl = function() {
-  this.eventTarget_.removeEventListener(this.eventType, this.listener_);
+  this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
 };
 taskrunner.WaitForEventTask.prototype.runImpl = function() {
   var a = this;
   this.listener_ = function(b) {
-    a.eventTarget_.removeEventListener(a.eventType, a.listener_);
+    a.eventTarget_.removeEventListener(a.eventType_, a.listener_);
     a.completeInternal(b);
   };
-  this.eventTarget_.addEventListener(this.eventType, this.listener_);
+  this.eventTarget_.addEventListener(this.eventType_, this.listener_);
 };
 taskrunner.WaitTask = function(a, b, c) {
   taskrunner.AbstractTask.call(this, c);
