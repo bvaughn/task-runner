@@ -61,6 +61,20 @@ taskrunner.DependencyGraphTask.prototype.addTask = function(task, blockers) {
 
 
 /**
+ * Convenience method for adding a task to the "end" of the depepdency graph.
+ * In othe words, this task will be blocked by all tasks already in the graph.
+ *
+ * @param {!taskrunner.Task} task Child task to be run when this task is run.
+ * @return {!taskrunner.DependencyGraphTask} a reference to the current task.
+ * @throws {Error} if task has been added more than once.
+ * @throws {Error} if cyclic dependencies are detected.
+ */
+taskrunner.DependencyGraphTask.prototype.addTaskToEnd = function(task) {
+  return this.addTask(task, this.tasks_.slice());
+};
+
+
+/**
  * Removes a child task from the dependency graph and ensures that the remaining
  * dependencies are still valid.
  *

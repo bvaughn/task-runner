@@ -131,7 +131,7 @@ describe('goog.DependencyGraphTask', function() {
     var task = new taskrunner.DependencyGraphTask();
     task.addTask(nullTask1);
     task.addTask(nullTask2, [nullTask1]);
-    task.addTask(nullTask3, [nullTask1, nullTask2]); // nt1 not strictly necessary
+    task.addTaskToEnd(nullTask3);
 
     attachMockCallbacks(task);
 

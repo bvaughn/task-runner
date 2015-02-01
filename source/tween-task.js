@@ -18,11 +18,14 @@ goog.require('taskrunner.AbstractTask');
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
+ * @throws {Error} if an invalid duration is provided
  * @struct
  */
 taskrunner.TweenTask = function(
     callback, duration, opt_easingFunction, opt_taskName) {
   goog.base(this, opt_taskName);
+
+  goog.asserts.assert(duration > 0, 'Invalid tween duration provided.');
 
   /** @private {!number} */
   this.animationFrameId_ = 0;

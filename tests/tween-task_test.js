@@ -41,6 +41,22 @@ describe('goog.TweenTask', function() {
     }
   };
 
+  it('should error if an invalid duration is specified', function() {
+    var callback = function(value) {};
+
+    expect(function() {
+      new taskrunner.TweenTask(callback);
+    }).toThrow();
+
+    expect(function() {
+      new taskrunner.TweenTask(callback, -1);
+    }).toThrow();
+
+    expect(function() {
+      new taskrunner.TweenTask(callback, 0);
+    }).toThrow();
+  });
+
   it('should use a linear-tween by default', function() {
     var lastValue;
     var callback = goog.testing.recordFunction(function(value) {

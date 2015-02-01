@@ -359,6 +359,9 @@ taskrunner.DependencyGraphTask.prototype.addTask = function(a, b) {
   this.getState() == taskrunner.TaskState.RUNNING && this.runAllReadyTasks_();
   return this;
 };
+taskrunner.DependencyGraphTask.prototype.addTaskToEnd = function(a) {
+  return this.addTask(a, this.tasks_.slice());
+};
 taskrunner.DependencyGraphTask.prototype.removeTask = function(a) {
   var b = this.tasks_.indexOf(a);
   goog.asserts.assert(0 <= b, "Cannot find the specified task.");
@@ -646,6 +649,7 @@ taskrunner.TimeoutTask.prototype.onDecoratedTaskErrored_ = function(a) {
 };
 taskrunner.TweenTask = function(a, b, c, d) {
   taskrunner.AbstractTask.call(this, d);
+  goog.asserts.assert(0 < b, "Invalid tween duration provided.");
   this.animationFrameId_ = 0;
   this.callback_ = a;
   this.duration_ = b;
