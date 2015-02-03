@@ -1,6 +1,8 @@
 # Task Runner
 Task Runner is a JavaScript library designed to simplify the implementation of asynchronous processes.
 
+It was built using the [Closure Compiler](https://github.com/google/closure-compiler) but does not require the [Closure Library](https://github.com/google/closure-library) runtime. It can be used in any JavaScript project- including ones built with Angular, React, jQuery, etc.
+
 Here are some links of interest:
 * [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)
 * [Example usage](https://gist.github.com/bvaughn/0e178b3fe5ef916d0389)
@@ -23,6 +25,13 @@ Task Runner offers a solution to much of the above complexity:
 Tasks have 5 basic states, enumerated in TaskState. The diagram below shows these states and how they are related. Each time a task changes state it invokes all registered callbacks that are associated with that state. Available callbacks are enumerated in TaskEvent.
 
 <img src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png" width="625" height="330" title="Task Runner: Task Lifecycle">
+
+## Browser Support
+
+Task Runner currently supports IE9 and newer. Polyfills will be required for older browers for:
+* XMLHttpRequest
+* [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill)
+* requestAnimationFrame + cancelAnimationFrame
 
 ## Task Runner automated tests
 
