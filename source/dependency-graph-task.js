@@ -149,7 +149,7 @@ taskrunner.DependencyGraphTask.prototype.getCompletedOperationsCount =
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.DependencyGraphTask.prototype.runImpl = function() {
   this.erroredTasks_ = [];
@@ -165,7 +165,7 @@ taskrunner.DependencyGraphTask.prototype.runImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
   for (var i in this.tasks_) {
@@ -182,7 +182,7 @@ taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.DependencyGraphTask.prototype.resetImpl = function() {
   this.erroredTasks_ = [];

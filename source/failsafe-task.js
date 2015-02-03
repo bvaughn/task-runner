@@ -39,7 +39,7 @@ taskrunner.FailsafeTask.prototype.getDecoratedTask = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.FailsafeTask.prototype.interruptImpl = function() {
   this.decoratedTask_.interrupt();
@@ -48,7 +48,7 @@ taskrunner.FailsafeTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.FailsafeTask.prototype.resetImpl = function() {
   this.decoratedTask_.reset();
@@ -57,7 +57,7 @@ taskrunner.FailsafeTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.FailsafeTask.prototype.runImpl = function() {
   this.decoratedTask_.completed(

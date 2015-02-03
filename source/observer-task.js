@@ -117,7 +117,7 @@ taskrunner.ObserverTask.prototype.getCompletedOperationsCount = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.ObserverTask.prototype.runImpl = function() {
   if (!this.tryToFinalize_()) {

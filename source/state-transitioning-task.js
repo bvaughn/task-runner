@@ -46,7 +46,10 @@ taskrunner.StateTransitioningTask = function(applicationTask, opt_taskName) {
 goog.inherits(taskrunner.StateTransitioningTask, taskrunner.StateTask);
 
 
-/** * @inheritDoc */
+/**
+ * @override
+ * @inheritDoc
+ */
 taskrunner.StateTransitioningTask.prototype.addTasksBeforeFirstRun = function() {
   this.addTask(this.blockingTasks_);
   
@@ -64,7 +67,6 @@ taskrunner.StateTransitioningTask.prototype.addTasksBeforeFirstRun = function() 
  * 
  * @param {!StateTask} stateTask State task to be entered if all of the specified blockers succeed.
  * @param {Array.<!taskrunner.Task>=} blockers Tasks that are pre-requisites to complete before the target state can be entered.
- * @private
  */
 taskrunner.StateTransitioningTask.prototype.addTargetState = function(stateTask, blockingTasks) {
   this.prioritizedStateTasks_.push(stateTask);

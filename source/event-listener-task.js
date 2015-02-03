@@ -39,7 +39,7 @@ goog.inherits(taskrunner.EventListenerTask, taskrunner.AbstractTask);
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.EventListenerTask.prototype.resetImpl = function() {
   // No-op
@@ -48,7 +48,7 @@ taskrunner.EventListenerTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.EventListenerTask.prototype.interruptImpl = function() {
   this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
@@ -57,7 +57,7 @@ taskrunner.EventListenerTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.EventListenerTask.prototype.runImpl = function() {
   var that = this;

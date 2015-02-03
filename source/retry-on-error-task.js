@@ -120,7 +120,7 @@ taskrunner.RetryOnErrorTask.prototype.stopTimer_ = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.RetryOnErrorTask.prototype.resetImpl = function() {
   this.stopTimer_();
@@ -133,7 +133,7 @@ taskrunner.RetryOnErrorTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.RetryOnErrorTask.prototype.interruptImpl = function() {
   this.stopTimer_();
@@ -148,7 +148,7 @@ taskrunner.RetryOnErrorTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.RetryOnErrorTask.prototype.runImpl = function() {
   this.decoratedTask_.completed(this.onDecoratedTaskCompleted_, this);

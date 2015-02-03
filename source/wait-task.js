@@ -57,7 +57,7 @@ taskrunner.WaitTask.prototype.stopTimer_ = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.WaitTask.prototype.resetImpl = function() {
   this.stopTimer_();
@@ -69,7 +69,7 @@ taskrunner.WaitTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.WaitTask.prototype.interruptImpl = function() {
   this.stopTimer_();
@@ -80,7 +80,7 @@ taskrunner.WaitTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.WaitTask.prototype.runImpl = function() {
   if (this.timeoutId_ !== null) {

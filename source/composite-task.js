@@ -169,7 +169,7 @@ taskrunner.CompositeTask.prototype.getCompletedOperationsCount = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.CompositeTask.prototype.runImpl = function() {
   if (this.allTasksAreCompleted_()) {
@@ -197,7 +197,7 @@ taskrunner.CompositeTask.prototype.runImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.CompositeTask.prototype.interruptImpl = function() {
   this.eachTaskInQueue_(
@@ -211,7 +211,7 @@ taskrunner.CompositeTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.CompositeTask.prototype.resetImpl = function() {
   this.taskQueueIndex_ = 0;

@@ -43,7 +43,7 @@ goog.inherits(taskrunner.XHRTask, taskrunner.AbstractTask);
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.XHRTask.prototype.resetImpl = function() {
   this.xhrHttpRequest_ = undefined;
@@ -52,7 +52,7 @@ taskrunner.XHRTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.XHRTask.prototype.interruptImpl = function() {
   if (this.xhrHttpRequest_ !== undefined) {
@@ -64,7 +64,7 @@ taskrunner.XHRTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.XHRTask.prototype.runImpl = function() {
   try {

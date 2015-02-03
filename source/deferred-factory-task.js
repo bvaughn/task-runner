@@ -97,7 +97,7 @@ taskrunner.DeferredFactoryTask.prototype.removeCallbacks_ = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.DeferredFactoryTask.prototype.resetImpl = function() {
   this.removeCallbacks_();
@@ -110,7 +110,7 @@ taskrunner.DeferredFactoryTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.DeferredFactoryTask.prototype.interruptImpl = function() {
   if (!this.deferredTask_) {
@@ -123,7 +123,7 @@ taskrunner.DeferredFactoryTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.DeferredFactoryTask.prototype.runImpl = function() {
   if (!this.deferredTask_ ||

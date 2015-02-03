@@ -80,7 +80,7 @@ taskrunner.TimeoutTask.prototype.stopTimer_ = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.TimeoutTask.prototype.resetImpl = function() {
   this.stopTimer_();
@@ -94,7 +94,7 @@ taskrunner.TimeoutTask.prototype.resetImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.TimeoutTask.prototype.interruptImpl = function() {
   this.stopTimer_();
@@ -107,7 +107,7 @@ taskrunner.TimeoutTask.prototype.interruptImpl = function() {
 
 /**
  * @override
- * @ignore
+ * @inheritDoc
  */
 taskrunner.TimeoutTask.prototype.runImpl = function() {
   if (this.timeoutId_ !== null) {
