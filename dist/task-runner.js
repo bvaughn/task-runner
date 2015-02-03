@@ -292,6 +292,20 @@ taskrunner.CompositeTask.prototype.childTaskErrored_ = function(a) {
   this.erroredTasks_.push(a);
   this.parallel_ ? this.checkForTaskCompletion_() : this.errorInternal(a.getData(), a.getErrorMessage());
 };
+taskrunner.ApplicationTask = function() {
+  taskrunner.CompositeTask.call(this, !1);
+};
+goog.inherits(taskrunner.ApplicationTask, taskrunner.CompositeTask);
+taskrunner.ApplicationTask.prototype.enterState = function(a) {
+  var b = this.stateTask_;
+  this.stateTask_ = a;
+  this.addTask(this.stateTask_);
+  void 0 !== b && (this.removeTask(b), b.interrupt());
+  this.getState() !== taskrunner.TaskState.RUNNING && this.run();
+};
+taskrunner.ApplicationTask.prototype.getStateTask = function() {
+  return this.stateTask_;
+};
 taskrunner.DeferredFactoryTask = function(a, b, c, d) {
   taskrunner.AbstractTask.call(this, d);
   this.taskFactoryFn_ = a;
@@ -348,6 +362,7 @@ taskrunner.DependencyGraphTask = function(a) {
   this.taskIdToDependenciesMap_ = {};
   this.tasks_ = [];
   this.erroredTasks_ = [];
+  this.addTasksBeforeFirstRunInvoked_ = !1;
 };
 goog.inherits(taskrunner.DependencyGraphTask, taskrunner.AbstractTask);
 taskrunner.DependencyGraphTask.prototype.addTask = function(a, b) {
@@ -390,6 +405,7 @@ taskrunner.DependencyGraphTask.prototype.getCompletedOperationsCount = function(
 };
 taskrunner.DependencyGraphTask.prototype.runImpl = function() {
   this.erroredTasks_ = [];
+  this.addTasksBeforeFirstRunInvoked_ || (this.addTasksBeforeFirstRun(), this.addTasksBeforeFirstRunInvoked_ = !0);
   this.completeOrRunNext_();
 };
 taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
@@ -404,6 +420,7 @@ taskrunner.DependencyGraphTask.prototype.resetImpl = function() {
     this.tasks_[a].reset();
   }
 };
+taskrunner.DependencyGraphTask.prototype.addTasksBeforeFirstRun = goog.nullFunction;
 taskrunner.DependencyGraphTask.prototype.addCallbacksTo_ = function(a) {
   a.completed(this.childTaskCompleted_, this);
   a.errored(this.childTaskErrored_, this);
@@ -484,6 +501,29 @@ taskrunner.EventListenerTask.prototype.runImpl = function() {
     a.completeInternal(b);
   };
   this.eventTarget_.addEventListener(this.eventType_, this.listener_);
+};
+taskrunner.FailsafeTask = function(a, b) {
+  taskrunner.AbstractTask.call(this, b);
+  this.decoratedTask_ = a;
+};
+goog.inherits(taskrunner.FailsafeTask, taskrunner.AbstractTask);
+taskrunner.FailsafeTask.prototype.getDecoratedTask = function() {
+  return this.decoratedTask_;
+};
+taskrunner.FailsafeTask.prototype.interruptImpl = function() {
+  this.decoratedTask_.interrupt();
+};
+taskrunner.FailsafeTask.prototype.resetImpl = function() {
+  this.decoratedTask_.reset();
+};
+taskrunner.FailsafeTask.prototype.runImpl = function() {
+  this.decoratedTask_.completed(function(a) {
+    this.completeInternal();
+  }.bind(this));
+  this.decoratedTask_.errored(function(a) {
+    this.completeInternal();
+  }.bind(this));
+  this.decoratedTask_.run();
 };
 taskrunner.NullTask = function(a, b) {
   taskrunner.ClosureTask.call(this, goog.nullFunction, a, b);
@@ -744,6 +784,46 @@ taskrunner.WaitTask.prototype.runImpl = function() {
 taskrunner.WaitTask.prototype.onTimeout_ = function() {
   this.stopTimer_();
   this.completeInternal();
+};
+taskrunner.StateTask = function(a, b) {
+  taskrunner.DependencyGraphTask.call(this, b);
+  this.applicationTask_ = a;
+  this.waitTask_ = new taskrunner.WaitTask;
+  this.addTask(this.waitTask_);
+};
+goog.inherits(taskrunner.StateTask, taskrunner.DependencyGraphTask);
+taskrunner.StateTransitioningTask = function(a, b) {
+  taskrunner.StateTask.call(this, a, b);
+  this.blockingTasks_ = new taskrunner.CompositeTask(!0);
+  this.prioritizedStateTasks_ = [];
+  this.taskIdToBlockingTasksMap_ = {};
+};
+goog.inherits(taskrunner.StateTransitioningTask, taskrunner.StateTask);
+taskrunner.StateTransitioningTask.prototype.addTasksBeforeFirstRun = function() {
+  this.addTask(this.blockingTasks_);
+  this.addTask(new taskrunner.ClosureTask(this.chooseState_.bind(this)), [this.blockingTasks_]);
+};
+taskrunner.StateTransitioningTask.prototype.addTargetState = function(a, b) {
+  this.prioritizedStateTasks_.push(a);
+  this.taskIdToBlockingTasksMap_[a.getUniqueID()] = b;
+  for (var c = 0;c < b.length;c++) {
+    this.blockingTasks_.addTask(new taskrunner.FailsafeTask(b[c]));
+  }
+};
+taskrunner.StateTransitioningTask.prototype.chooseState_ = function() {
+  for (var a = 0;a < this.prioritizedStateTasks_.length;a++) {
+    for (var b = this.prioritizedStateTasks_[a], c = this.taskIdToBlockingTasksMap_[b.getUniqueID()], d = !0, e = 0;e < c.length;e++) {
+      if (c[e].getState() === taskrunner.TaskState.ERRORED) {
+        d = !1;
+        break;
+      }
+    }
+    if (d) {
+      this.applicationTask_.enterState(b);
+      return;
+    }
+  }
+  this.errorInternal("No valid application states found");
 };
 taskrunner.XHRTask = function(a, b, c) {
   taskrunner.AbstractTask.call(this, c);

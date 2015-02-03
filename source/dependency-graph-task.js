@@ -35,6 +35,9 @@ taskrunner.DependencyGraphTask = function(opt_taskName) {
 
   /** @private {!Array.<!taskrunner.Task>} */
   this.erroredTasks_ = [];
+
+  /** @private {boolean} */
+  this.addTasksBeforeFirstRunInvoked_ = false;
 };
 goog.inherits(taskrunner.DependencyGraphTask, taskrunner.AbstractTask);
 
@@ -148,6 +151,11 @@ taskrunner.DependencyGraphTask.prototype.getCompletedOperationsCount =
 taskrunner.DependencyGraphTask.prototype.runImpl = function() {
   this.erroredTasks_ = [];
 
+  if ( !this.addTasksBeforeFirstRunInvoked_ ) {
+    this.addTasksBeforeFirstRun();
+    this.addTasksBeforeFirstRunInvoked_ = true;
+  }
+
   this.completeOrRunNext_();
 };
 
@@ -174,6 +182,12 @@ taskrunner.DependencyGraphTask.prototype.resetImpl = function() {
     this.tasks_[i].reset();
   }
 };
+
+
+/**
+ * Subclasses may override this method to just-in-time add child Tasks before the composite is run.
+ */
+taskrunner.DependencyGraphTask.prototype.addTasksBeforeFirstRun = goog.nullFunction;
 
 
 /**

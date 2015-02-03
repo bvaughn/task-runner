@@ -35,6 +35,7 @@ describe('goog.DependencyGraphTask', function() {
     return task;
   };
 
+
   /**
    * Test task that errors immediately (synchronously) after running.
    * @extends {taskrunner.ClosureTask}
@@ -47,6 +48,26 @@ describe('goog.DependencyGraphTask', function() {
     }, this));
   };
   goog.inherits(taskrunner.TestSynchrousErrorTask, taskrunner.ClosureTask);
+
+
+  /**
+   * Test task that tracks the number of times 'addTasksBeforeFirstRun' has been run.
+   * @extends {taskrunner.DependencyGraphTask}
+   * @constructor
+   * @struct
+   */
+  taskrunner.TestDependencyGraphTask = function() {
+    goog.base(this);
+
+    this.addTasksBeforeFirstRunCount_ = 0;
+  };
+  goog.inherits(taskrunner.TestDependencyGraphTask, taskrunner.DependencyGraphTask);
+
+  /** @override */
+  taskrunner.TestDependencyGraphTask.prototype.addTasksBeforeFirstRun = function() {
+    this.addTasksBeforeFirstRunCount_++;
+  };
+
 
   it('should complete when run without children', function() {
     var task = new taskrunner.DependencyGraphTask();
@@ -603,5 +624,32 @@ describe('goog.DependencyGraphTask', function() {
     expect(nullTask1.getState()).toBe(taskrunner.TaskState.INITIALIZED);
     expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
     expect(task.getState()).toBe(taskrunner.TaskState.INITIALIZED);
+  });
+
+  it('should invoke addTasksBeforeFirstRun before running', function() {
+    var task = new taskrunner.TestDependencyGraphTask();
+    task.addTask(new taskrunner.NullTask());
+    task.run();
+
+    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+  });
+
+  it('should only invoke addTasksBeforeFirstRun once', function() {
+    var task = new taskrunner.TestDependencyGraphTask();
+    task.addTask(new taskrunner.NullTask());
+    task.run();
+
+    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+
+    task.interrupt();
+    task.run();
+
+    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+
+    task.interrupt();
+    task.reset();
+    task.run();
+
+    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
   });
 });
