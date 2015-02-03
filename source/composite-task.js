@@ -167,7 +167,10 @@ taskrunner.CompositeTask.prototype.getCompletedOperationsCount = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.CompositeTask.prototype.runImpl = function() {
   if (this.allTasksAreCompleted_()) {
     this.completeInternal();
@@ -192,7 +195,10 @@ taskrunner.CompositeTask.prototype.runImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.CompositeTask.prototype.interruptImpl = function() {
   this.eachTaskInQueue_(
     function(task) {
@@ -203,7 +209,10 @@ taskrunner.CompositeTask.prototype.interruptImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.CompositeTask.prototype.resetImpl = function() {
   this.taskQueueIndex_ = 0;
   this.completedTasks_ = [];

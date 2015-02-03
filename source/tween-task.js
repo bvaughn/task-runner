@@ -52,13 +52,19 @@ taskrunner.TweenTask = function(callback, duration, opt_easingFunction, opt_task
 goog.inherits(taskrunner.TweenTask, taskrunner.AbstractTask);
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.TweenTask.prototype.interruptImpl = function() {
   this.cancelCurrentAnimationFrame_();
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.TweenTask.prototype.resetImpl = function() {
   this.elapsed_ = 0;
   this.lastUpdateTimestamp_ = 0;
@@ -68,7 +74,10 @@ taskrunner.TweenTask.prototype.resetImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.TweenTask.prototype.runImpl = function() {
   this.lastUpdateTimestamp_ = goog.now();
 

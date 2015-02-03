@@ -28,25 +28,37 @@ taskrunner.FailsafeTask = function(decoratedTask, opt_taskName) {
 goog.inherits(taskrunner.FailsafeTask, taskrunner.AbstractTask);
 
 
-/** @inheritDoc */
+/**
+ * @override
+ * @inheritDoc
+ */
 taskrunner.FailsafeTask.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.FailsafeTask.prototype.interruptImpl = function() {
   this.decoratedTask_.interrupt();
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.FailsafeTask.prototype.resetImpl = function() {
   this.decoratedTask_.reset();
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.FailsafeTask.prototype.runImpl = function() {
   this.decoratedTask_.completed(
     function(task) {

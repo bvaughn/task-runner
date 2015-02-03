@@ -55,7 +55,10 @@ taskrunner.WaitTask.prototype.stopTimer_ = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.WaitTask.prototype.resetImpl = function() {
   this.stopTimer_();
 
@@ -64,7 +67,10 @@ taskrunner.WaitTask.prototype.resetImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.WaitTask.prototype.interruptImpl = function() {
   this.stopTimer_();
 
@@ -72,7 +78,10 @@ taskrunner.WaitTask.prototype.interruptImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.WaitTask.prototype.runImpl = function() {
   if (this.timeoutId_ !== null) {
     throw 'A timeout for this task already exists.';

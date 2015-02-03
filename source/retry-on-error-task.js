@@ -76,7 +76,10 @@ taskrunner.RetryOnErrorTask.MAX_RETRIES_ = 5;
 taskrunner.RetryOnErrorTask.RETRY_DELAY_ = 5;
 
 
-/** @override */
+/**
+ * @override
+ * @inheritDoc
+ */
 taskrunner.RetryOnErrorTask.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;
 };
@@ -115,7 +118,10 @@ taskrunner.RetryOnErrorTask.prototype.stopTimer_ = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.RetryOnErrorTask.prototype.resetImpl = function() {
   this.stopTimer_();
   this.retries_ = 0;
@@ -125,7 +131,10 @@ taskrunner.RetryOnErrorTask.prototype.resetImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.RetryOnErrorTask.prototype.interruptImpl = function() {
   this.stopTimer_();
   this.retries_ = 0; // Interruption resets the number of retries.
@@ -137,7 +146,10 @@ taskrunner.RetryOnErrorTask.prototype.interruptImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.RetryOnErrorTask.prototype.runImpl = function() {
   this.decoratedTask_.completed(this.onDecoratedTaskCompleted_, this);
   this.decoratedTask_.errored(this.onDecoratedTaskErrored_, this);

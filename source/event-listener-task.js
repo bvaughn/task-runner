@@ -37,19 +37,28 @@ taskrunner.EventListenerTask = function(eventTarget, eventType, opt_taskName) {
 goog.inherits(taskrunner.EventListenerTask, taskrunner.AbstractTask);
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.EventListenerTask.prototype.resetImpl = function() {
   // No-op
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.EventListenerTask.prototype.interruptImpl = function() {
   this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.EventListenerTask.prototype.runImpl = function() {
   var that = this;
 

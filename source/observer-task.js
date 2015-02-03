@@ -87,7 +87,10 @@ taskrunner.ObserverTask.prototype.stopObservingTask = function(task) {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @inheritDoc
+ */
 taskrunner.ObserverTask.prototype.getOperationsCount = function() {
   var count = 0;
   for (var i in this.observedTasks_) {
@@ -98,7 +101,10 @@ taskrunner.ObserverTask.prototype.getOperationsCount = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @inheritDoc
+ */
 taskrunner.ObserverTask.prototype.getCompletedOperationsCount = function() {
   var count = 0;
   for (var i in this.observedTasks_) {
@@ -109,7 +115,10 @@ taskrunner.ObserverTask.prototype.getCompletedOperationsCount = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.ObserverTask.prototype.runImpl = function() {
   if (!this.tryToFinalize_()) {
     for (var i in this.observedTasks_) {

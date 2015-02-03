@@ -45,7 +45,10 @@ taskrunner.TimeoutTask = function(task, timeout, opt_taskName) {
 goog.inherits(taskrunner.TimeoutTask, taskrunner.AbstractTask);
 
 
-/** @override */
+/**
+ * @override
+ * @inheritDoc
+ */
 taskrunner.TimeoutTask.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;
 };
@@ -75,7 +78,10 @@ taskrunner.TimeoutTask.prototype.stopTimer_ = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.TimeoutTask.prototype.resetImpl = function() {
   this.stopTimer_();
   this.removeCallbacks_();
@@ -86,7 +92,10 @@ taskrunner.TimeoutTask.prototype.resetImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.TimeoutTask.prototype.interruptImpl = function() {
   this.stopTimer_();
   this.removeCallbacks_();
@@ -96,7 +105,10 @@ taskrunner.TimeoutTask.prototype.interruptImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.TimeoutTask.prototype.runImpl = function() {
   if (this.timeoutId_ !== null) {
     throw 'A timeout for this task already exists.';

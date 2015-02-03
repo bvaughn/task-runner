@@ -147,7 +147,10 @@ taskrunner.DependencyGraphTask.prototype.getCompletedOperationsCount =
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.DependencyGraphTask.prototype.runImpl = function() {
   this.erroredTasks_ = [];
 
@@ -160,7 +163,10 @@ taskrunner.DependencyGraphTask.prototype.runImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
   for (var i in this.tasks_) {
     var task = this.tasks_[i];
@@ -174,7 +180,10 @@ taskrunner.DependencyGraphTask.prototype.interruptImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.DependencyGraphTask.prototype.resetImpl = function() {
   this.erroredTasks_ = [];
 

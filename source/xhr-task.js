@@ -41,13 +41,19 @@ taskrunner.XHRTask = function(url, opt_data, opt_taskName) {
 goog.inherits(taskrunner.XHRTask, taskrunner.AbstractTask);
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.XHRTask.prototype.resetImpl = function() {
   this.xhrHttpRequest_ = undefined;
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.XHRTask.prototype.interruptImpl = function() {
   if (this.xhrHttpRequest_ !== undefined) {
     this.xhrHttpRequest_.abort();
@@ -56,7 +62,10 @@ taskrunner.XHRTask.prototype.interruptImpl = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @ignore
+ */
 taskrunner.XHRTask.prototype.runImpl = function() {
   try {
 
@@ -82,7 +91,7 @@ taskrunner.XHRTask.prototype.runImpl = function() {
 };
 
 
-/** @override */
+/** @private */
 taskrunner.XHRTask.prototype.onReadyStateChange_ = function() {
   if (this.state_ === taskrunner.TaskState.RUNNING) {
     if (this.xhrHttpRequest_.readyState === 4) {
@@ -96,7 +105,7 @@ taskrunner.XHRTask.prototype.onReadyStateChange_ = function() {
 };
 
 
-/** @override */
+/** @private */
 taskrunner.XHRTask.prototype.createPostDataString_ = function() {
   if (this.postData_ !== undefined) {
     var dataStrings = [];
