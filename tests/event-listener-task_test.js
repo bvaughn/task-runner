@@ -1,6 +1,7 @@
 goog.provide('goog.EventListenerTask.test');
 goog.setTestOnly('goog.EventListenerTask.test');
 
+goog.require('goog.events.EventTarget');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.EventListenerTask');
 
@@ -11,23 +12,7 @@ describe('goog.EventListenerTask', function() {
   var waitForEventTask;
 
   beforeEach(function() {
-    eventTarget = {
-      addEventListener: function(type, listener) {
-        this.type_ = type;
-        this.listener_ = listener;
-      },
-      dispatchEvent: function() {
-        if (this.listener_) {
-          this.dispatchedEvent_ = {type: eventType};
-
-          this.listener_(this.dispatchedEvent_);
-        }
-      },
-      removeEventListener: function(type, listener) {
-        this.type_ = undefined;
-        this.listener_ = undefined;
-      }
-    };
+    eventTarget = new goog.events.EventTarget();
 
     waitForEventTask = new taskrunner.EventListenerTask(eventTarget, eventType);
   });
@@ -37,24 +22,34 @@ describe('goog.EventListenerTask', function() {
 
     expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-    eventTarget.dispatchEvent();
+    eventTarget.dispatchEvent(eventType);
 
     expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
-    expect(waitForEventTask.getData()).toBe(eventTarget.dispatchedEvent_);
+    expect(waitForEventTask.getData()).toBeTruthy();
+  });
+
+  it('should not complete when an event of the incorrect type is received', function() {
+    waitForEventTask.run();
+
+    expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    eventTarget.dispatchEvent('incorrect-type');
+
+    expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.RUNNING);
   });
 
   it('should only complete once even if multiple matching events are dispatched', function() {
     waitForEventTask.run();
 
-    eventTarget.dispatchEvent();
+    eventTarget.dispatchEvent(eventType);
 
     expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
 
-    eventTarget.dispatchEvent(); // Will error if task tries to complete again
+    eventTarget.dispatchEvent(eventType); // Will error if task tries to complete again
   });
 
   it('should not complete when an event is dispatched before running', function() {
-    eventTarget.dispatchEvent();
+    eventTarget.dispatchEvent(eventType);
 
     waitForEventTask.run();
     
@@ -67,7 +62,7 @@ describe('goog.EventListenerTask', function() {
 
     expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
 
-    eventTarget.dispatchEvent();
+    eventTarget.dispatchEvent(eventType);
 
     expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
   });
@@ -80,7 +75,7 @@ describe('goog.EventListenerTask', function() {
 
     waitForEventTask.run();
 
-    eventTarget.dispatchEvent();
+    eventTarget.dispatchEvent(eventType);
 
     expect(waitForEventTask.getState()).toBe(taskrunner.TaskState.COMPLETED);
   });

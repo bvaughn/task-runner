@@ -1,55 +1,41 @@
 goog.provide('goog.XHRTask.test');
 goog.setTestOnly('goog.XHRTask.test');
 
+goog.require('goog.net.XhrIo');
+goog.require('goog.net.XhrManager');
+goog.require('goog.testing.net.XhrIoPool');
 goog.require('goog.testing.PropertyReplacer');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.XHRTask');
 
 describe('goog.XHRTask', function() {
 
-  var mockXMLHttpRequest;
-  var xhrIoPool;
+  var xhrIo;
+  var xhrManager;
   
   beforeEach(function() {
-    mockXMLHttpRequest = function() {
-      mockXMLHttpRequest = this; // Give test a reference to the active XHR
-    };
-    mockXMLHttpRequest.prototype.abort = function() {
-      this.aborted_ = true;
-    };
-    mockXMLHttpRequest.prototype.open = function(method, url, asynchronous) {
-      this.asynchronous_ = asynchronous;
-      this.method_ = method;
-      this.url_ = url;
-    };
-    mockXMLHttpRequest.prototype.send = function(data) {
-      this.sent_ = true;
-      this.data_ = data;
-    };
-    mockXMLHttpRequest.prototype.simulateResponse = function(status, responseText) {
-      this.readyState = 4;
-      this.status = status;
-      this.responseText = responseText;
+    //xhrManager = new goog.net.XhrManager();
+    //xhrManager.xhrPool_ = new goog.testing.net.XhrIoPool();
+    //xhrIo = xhrManager.xhrPool_.getXhr();
 
-      this.onreadystatechange();
-    };
+    goog.net.XhrIo = goog.testing.net.XhrIo;
 
-    var replacer = new goog.testing.PropertyReplacer();
-    replacer.set(goog.global, 'XMLHttpRequest', mockXMLHttpRequest);
+    //var replacer = new goog.testing.PropertyReplacer();
+    //replacer.replace(goog.net.XhrIo, 'send', goog.testing.net.XhrIo.send);
   });
 
   it('should send a GET request if no post data is provided', function() {
     var task = new taskrunner.XHRTask('http://fake/url');
     task.run();
 
-    expect(mockXMLHttpRequest.method_).toBe('GET');
+    expect(task.xhrRequest_.getLastMethod()).toBe('GET');
   });
 
   it('should send a POST request if post data is provided', function() {
     var task = new taskrunner.XHRTask('http://fake/url', {});
     task.run();
 
-    expect(mockXMLHttpRequest.method_).toBe('POST');
+    expect(task.xhrRequest_.getLastMethod()).toBe('POST');
   });
 
   it('should complete after a successful request', function() {
@@ -58,7 +44,7 @@ describe('goog.XHRTask', function() {
 
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-    mockXMLHttpRequest.simulateResponse(200, 'fake response');
+    task.xhrRequest_.simulateResponse(200, 'fake response', {});
 
     expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
     expect(task.getData()).toBe('fake response');
@@ -70,11 +56,22 @@ describe('goog.XHRTask', function() {
 
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-    mockXMLHttpRequest.simulateResponse(500, 'fake error');
+    task.xhrRequest_.simulateResponse(500, '', {});
 
     expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
-    expect(task.getData()).toBe(500);
-    expect(task.getErrorMessage()).toBe('fake error');
+    expect(task.getData()).toBe(goog.net.ErrorCode.HTTP_ERROR);
+  });
+
+  it('should error after a timed-out request', function() {
+    var task = new taskrunner.XHRTask('http://fake/url');
+    task.run();
+
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.xhrRequest_.simulateTimeout();
+
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(task.getData()).toBe(goog.net.ErrorCode.TIMEOUT);
   });
 
   it('should ignore XHR events that occur while interrupted', function() {
@@ -86,11 +83,7 @@ describe('goog.XHRTask', function() {
     task.interrupt();
 
     expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
-    expect(mockXMLHttpRequest.aborted_).toBe(true);
-
-    mockXMLHttpRequest.simulateResponse(200, 'fake response');
-
-    expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(task.xhrRequest_).toBeFalsy();
   });
 
   it('should rerun after being interrupted', function() {
@@ -98,14 +91,13 @@ describe('goog.XHRTask', function() {
     task.run();
     task.interrupt();
 
-    mockXMLHttpRequest.simulateResponse(200, 'fake response');
-
     expect(task.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
-    expect(mockXMLHttpRequest.aborted_).toBe(true);
+    expect(task.xhrRequest_).toBeFalsy();
 
     task.run();
 
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(task.xhrRequest_).toBeTruthy();
   });
 
   it('should clear data on a reset and refetch data on a rerun', function() {
@@ -114,7 +106,7 @@ describe('goog.XHRTask', function() {
 
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-    mockXMLHttpRequest.simulateResponse(200, 'fake response 1');
+    task.xhrRequest_.simulateResponse(200, 'fake response 1');
 
     expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
     expect(task.getData()).toBe('fake response 1');
@@ -128,7 +120,7 @@ describe('goog.XHRTask', function() {
 
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-    mockXMLHttpRequest.simulateResponse(200, 'fake response 2');
+    task.xhrRequest_.simulateResponse(200, 'fake response 2');
 
     expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
     expect(task.getData()).toBe('fake response 2');

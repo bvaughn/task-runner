@@ -1,5 +1,9 @@
 goog.provide('taskrunner.XHRTask');
 
+goog.require('goog.net.ErrorCode');
+goog.require('goog.net.XhrIo');
+goog.require('goog.structs.Map');
+goog.require('goog.Uri.QueryData');
 goog.require('taskrunner.AbstractTask');
 goog.require('taskrunner.TaskState');
 
@@ -35,8 +39,8 @@ taskrunner.XHRTask = function(url, opt_data, opt_taskName) {
   /** @private {Object|undefined} */
   this.postData_ = opt_data;
 
-  /** @private {XMLHttpRequest|undefined} */
-  this.xhrHttpRequest_ = undefined;
+  /** @private {goog.net.XhrIo|undefined} */
+  this.xhrRequest_ = undefined;
 };
 goog.inherits(taskrunner.XHRTask, taskrunner.AbstractTask);
 
@@ -46,7 +50,7 @@ goog.inherits(taskrunner.XHRTask, taskrunner.AbstractTask);
  * @inheritDoc
  */
 taskrunner.XHRTask.prototype.resetImpl = function() {
-  this.xhrHttpRequest_ = undefined;
+  this.xhrRequest_ = undefined;
 };
 
 
@@ -55,9 +59,9 @@ taskrunner.XHRTask.prototype.resetImpl = function() {
  * @inheritDoc
  */
 taskrunner.XHRTask.prototype.interruptImpl = function() {
-  if (this.xhrHttpRequest_ !== undefined) {
-    this.xhrHttpRequest_.abort();
-    this.xhrHttpRequest_ = undefined;
+  if (this.xhrRequest_ !== undefined) {
+    this.xhrRequest_.abort();
+    this.xhrRequest_ = undefined;
   }
 };
 
@@ -68,20 +72,16 @@ taskrunner.XHRTask.prototype.interruptImpl = function() {
  */
 taskrunner.XHRTask.prototype.runImpl = function() {
   try {
+    var postDataString = this.createPostDataString_();
+    var method = postDataString === undefined ? 'GET' : 'POST';
 
-    // Check if XHR completed while interrupted
-    if (this.xhrHttpRequest_ !== undefined) {
-      this.checkForCompletedOrErrored_();
+    this.xhrRequest_ = new goog.net.XhrIo();
 
-    } else {
-      var postDataString = this.createPostDataString_();
-      var method = postDataString === undefined ? 'GET' : 'POST';
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, this.onXhrRequestErrorOrTimeout.bind(this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, this.onXhrRequestSuccess.bind(this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, this.onXhrRequestErrorOrTimeout.bind(this));
 
-      this.xhrHttpRequest_ = new XMLHttpRequest();
-      this.xhrHttpRequest_.onreadystatechange = this.onReadyStateChange_.bind(this);
-      this.xhrHttpRequest_.open(method, this.url_, true);
-      this.xhrHttpRequest_.send(postDataString);
-    }
+    this.xhrRequest_.send(this.url_, method, postDataString);
 
   } catch (error) {
     if (this.state_ === taskrunner.TaskState.RUNNING) {
@@ -92,15 +92,20 @@ taskrunner.XHRTask.prototype.runImpl = function() {
 
 
 /** @private */
-taskrunner.XHRTask.prototype.onReadyStateChange_ = function() {
+taskrunner.XHRTask.prototype.onXhrRequestSuccess = function() {
   if (this.state_ === taskrunner.TaskState.RUNNING) {
-    if (this.xhrHttpRequest_.readyState === 4) {
-      if (this.xhrHttpRequest_.status === 200) {
-        this.completeInternal(this.xhrHttpRequest_.responseText);
-      } else {
-        this.errorInternal(this.xhrHttpRequest_.status, this.xhrHttpRequest_.responseText);
-      }
-    }
+    this.completeInternal(
+      this.xhrRequest_.getResponseText() || this.xhrRequest_.getResponseXml());
+  }
+};
+
+
+/** @private */
+taskrunner.XHRTask.prototype.onXhrRequestErrorOrTimeout = function() {
+  if (this.state_ === taskrunner.TaskState.RUNNING) {
+    this.errorInternal(
+      this.xhrRequest_.getLastErrorCode(),
+      this.xhrRequest_.getLastError());
   }
 };
 
@@ -108,13 +113,8 @@ taskrunner.XHRTask.prototype.onReadyStateChange_ = function() {
 /** @private */
 taskrunner.XHRTask.prototype.createPostDataString_ = function() {
   if (this.postData_ !== undefined) {
-    var dataStrings = [];
-
-    for (var key in this.postData_) {
-      dataStrings.push(key + '=' + this.postData_[key]);
-    }
-
-    return dataStrings.join("&");
+    return goog.Uri.QueryData.createFromMap(
+      new goog.structs.Map(this.postData_)).toString();
   }
 
   return undefined;

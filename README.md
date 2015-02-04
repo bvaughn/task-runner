@@ -1,7 +1,9 @@
 # Task Runner
 Task Runner is a JavaScript library designed to simplify the implementation of asynchronous processes.
 
-It was built using the [Closure Compiler](https://github.com/google/closure-compiler) but does not require the [Closure Library](https://github.com/google/closure-library) runtime. It can be used in any JavaScript project- including ones built with Angular, React, jQuery, etc.
+Task Runner is built with the [Closure Compiler](https://github.com/google/closure-compiler). It uses a subset of the [Closure Library](https://github.com/google/closure-library) runtime (included with the distro) so that it can be used with any JavaScript framework- Angular, React, jQuery, etc.
+
+If your project uses the full Closure library, you should use the Task Runner source and let Closure compile it along with the rest of your application.
 
 Here are some links of interest:
 * [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)
@@ -28,10 +30,10 @@ Tasks have 5 basic states, enumerated in TaskState. The diagram below shows thes
 
 ## Browser Support
 
-Task Runner currently supports IE9 and newer. Polyfills will be required for older browers for:
-* XMLHttpRequest
-* [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill)
-* requestAnimationFrame + cancelAnimationFrame
+Task Runner supports IE8+ except as noted below:
+* Function.prototype.bind ([IE9+](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Browser_compatibility), [polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill))
+* [TweenTask](file:///Users/bvaughn/Documents/git/task-runner/docs/taskrunner.TweenTask.html) only: requestAnimationFrame, cancelAnimationFrame ([IE10+](http://caniuse.com/#feat=requestanimationframe), [polyfill](https://gist.github.com/mrdoob/838785#file-requestanimationframe-js))
+* [XHRTask](file:///Users/bvaughn/Documents/git/task-runner/docs/taskrunner.XHRTask.html) only: XMLHttpRequest ([IE10+](http://caniuse.com/#feat=xhr2), [polyfill](https://github.com/moxiecode/moxie))
 
 ## Task Runner automated tests
 

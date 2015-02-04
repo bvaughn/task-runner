@@ -51,7 +51,7 @@ taskrunner.EventListenerTask.prototype.resetImpl = function() {
  * @inheritDoc
  */
 taskrunner.EventListenerTask.prototype.interruptImpl = function() {
-  this.eventTarget_.removeEventListener(this.eventType_, this.listener_);
+  goog.events.unlisten(this.eventTarget_, this.eventType_, this.listener_);
 };
 
 
@@ -63,9 +63,10 @@ taskrunner.EventListenerTask.prototype.runImpl = function() {
   var that = this;
 
   this.listener_ = function(event) {
-    that.eventTarget_.removeEventListener(that.eventType_, that.listener_);
+    goog.events.unlisten(that.eventTarget_, that.eventType_, that.listener_);
+
     that.completeInternal(event);
   };
 
-  this.eventTarget_.addEventListener(this.eventType_, this.listener_);
+  goog.events.listen(this.eventTarget_, this.eventType_, this.listener_);
 };

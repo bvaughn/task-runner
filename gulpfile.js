@@ -20,7 +20,7 @@ gulp.task('build', function() {
   var closureCompiler = require('gulp-closure-compiler');
 
   gulp.src([
-      //'bower_components/closure-library/closure/goog/**/*.js',
+      'bower_components/closure-library/closure/goog/**/*.js',
       'source/**/*.js'
     ])
     .pipe(closureCompiler({
