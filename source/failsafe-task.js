@@ -61,14 +61,16 @@ taskrunner.FailsafeTask.prototype.resetImpl = function() {
  */
 taskrunner.FailsafeTask.prototype.runImpl = function() {
   this.decoratedTask_.completed(
-    function(task) {
-      this.completeInternal();
-    }.bind(this));
+    goog.bind(
+      function(task) {
+        this.completeInternal();
+      }, this));
 
   this.decoratedTask_.errored(
-    function(task) {
-      this.completeInternal();
-    }.bind(this));
+    goog.bind(
+      function(task) {
+        this.completeInternal();
+      }, this));
 
   this.decoratedTask_.run();
 };

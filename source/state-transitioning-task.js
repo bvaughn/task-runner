@@ -56,7 +56,7 @@ taskrunner.StateTransitioningTask.prototype.addTasksBeforeFirstRun = function() 
   // Once all of the blocker-tasks have completed, choose the most appropriate state.
   this.addTask(
     new taskrunner.ClosureTask(
-      this.chooseState_.bind(this)),
+      goog.bind(this.chooseState_, this)),
     [this.blockingTasks_]);
 };
 

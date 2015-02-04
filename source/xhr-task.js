@@ -77,9 +77,9 @@ taskrunner.XHRTask.prototype.runImpl = function() {
 
     this.xhrRequest_ = new goog.net.XhrIo();
 
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, this.onXhrRequestErrorOrTimeout.bind(this));
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, this.onXhrRequestSuccess.bind(this));
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, this.onXhrRequestErrorOrTimeout.bind(this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, goog.bind(this.onXhrRequestErrorOrTimeout, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, goog.bind(this.onXhrRequestSuccess, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, goog.bind(this.onXhrRequestErrorOrTimeout, this));
 
     this.xhrRequest_.send(this.url_, method, postDataString);
 

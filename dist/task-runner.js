@@ -7122,12 +7122,12 @@ taskrunner.FailsafeTask.prototype.resetImpl = function() {
   this.decoratedTask_.reset();
 };
 taskrunner.FailsafeTask.prototype.runImpl = function() {
-  this.decoratedTask_.completed(function(a) {
+  this.decoratedTask_.completed(goog.bind(function(a) {
     this.completeInternal();
-  }.bind(this));
-  this.decoratedTask_.errored(function(a) {
+  }, this));
+  this.decoratedTask_.errored(goog.bind(function(a) {
     this.completeInternal();
-  }.bind(this));
+  }, this));
   this.decoratedTask_.run();
 };
 taskrunner.NullTask = function(a, b) {
@@ -7407,7 +7407,7 @@ taskrunner.StateTransitioningTask = function(a, b) {
 goog.inherits(taskrunner.StateTransitioningTask, taskrunner.StateTask);
 taskrunner.StateTransitioningTask.prototype.addTasksBeforeFirstRun = function() {
   this.addTask(this.blockingTasks_);
-  this.addTask(new taskrunner.ClosureTask(this.chooseState_.bind(this)), [this.blockingTasks_]);
+  this.addTask(new taskrunner.ClosureTask(goog.bind(this.chooseState_, this)), [this.blockingTasks_]);
 };
 taskrunner.StateTransitioningTask.prototype.addTargetState = function(a, b) {
   this.prioritizedStateTasks_.push(a);
@@ -7448,9 +7448,9 @@ taskrunner.XHRTask.prototype.runImpl = function() {
   try {
     var a = this.createPostDataString_(), b = void 0 === a ? "GET" : "POST";
     this.xhrRequest_ = new goog.net.XhrIo;
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, this.onXhrRequestErrorOrTimeout.bind(this));
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, this.onXhrRequestSuccess.bind(this));
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, this.onXhrRequestErrorOrTimeout.bind(this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, goog.bind(this.onXhrRequestErrorOrTimeout, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, goog.bind(this.onXhrRequestSuccess, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, goog.bind(this.onXhrRequestErrorOrTimeout, this));
     this.xhrRequest_.send(this.url_, b, a);
   } catch (c) {
     this.state_ === taskrunner.TaskState.RUNNING && this.errorInternal(c, c.message);
