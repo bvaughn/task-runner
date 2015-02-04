@@ -36,6 +36,21 @@ gulp.task('build', function() {
     .pipe(gulp.dest('dist'));
 });
 
+gulp.task('deps', function() {
+  var closureDeps = require('gulp-closure-deps');
+
+  gulp.src([
+      'bower_components/closure-library/closure/goog/**/*.js',
+      'source/**/*.js'
+    ])
+    .pipe(closureDeps({
+      fileName: 'task-runner-deps.js',
+      prefix: '../',
+      baseDir: 'source/'
+    }))
+    .pipe(gulp.dest('dist'));
+});
+
 gulp.task('watch', function() {
   gulp.src(testFiles)
     .pipe(karma({

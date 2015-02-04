@@ -13,6 +13,7 @@
     "phantomjs": "~1.9.13",
     "gulp-closure-compiler": "~0.2.16",
     "jaguarjs-jsdoc": "0.0.1",
-    "jsdoc": "~3.3.0-beta1"
+    "jsdoc": "~3.3.0-beta1",
+    "gulp-closure-deps": "~0.4.0"
   }
 }
