@@ -890,100 +890,6 @@ goog.functions.cacheReturnValue = function(a) {
     return c;
   };
 };
-goog.json = {};
-goog.json.USE_NATIVE_JSON = !1;
-goog.json.isValid = function(a) {
-  return/^\s*$/.test(a) ? !1 : /^[\],:{}\s\u2028\u2029]*$/.test(a.replace(/\\["\\\/bfnrtu]/g, "@").replace(/"[^"\\\n\r\u2028\u2029\x00-\x08\x0a-\x1f]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:[\s\u2028\u2029]*\[)+/g, ""));
-};
-goog.json.parse = goog.json.USE_NATIVE_JSON ? goog.global.JSON.parse : function(a) {
-  a = String(a);
-  if (goog.json.isValid(a)) {
-    try {
-      return eval("(" + a + ")");
-    } catch (b) {
-    }
-  }
-  throw Error("Invalid JSON string: " + a);
-};
-goog.json.unsafeParse = goog.json.USE_NATIVE_JSON ? goog.global.JSON.parse : function(a) {
-  return eval("(" + a + ")");
-};
-goog.json.serialize = goog.json.USE_NATIVE_JSON ? goog.global.JSON.stringify : function(a, b) {
-  return(new goog.json.Serializer(b)).serialize(a);
-};
-goog.json.Serializer = function(a) {
-  this.replacer_ = a;
-};
-goog.json.Serializer.prototype.serialize = function(a) {
-  var b = [];
-  this.serializeInternal(a, b);
-  return b.join("");
-};
-goog.json.Serializer.prototype.serializeInternal = function(a, b) {
-  switch(typeof a) {
-    case "string":
-      this.serializeString_(a, b);
-      break;
-    case "number":
-      this.serializeNumber_(a, b);
-      break;
-    case "boolean":
-      b.push(a);
-      break;
-    case "undefined":
-      b.push("null");
-      break;
-    case "object":
-      if (null == a) {
-        b.push("null");
-        break;
-      }
-      if (goog.isArray(a)) {
-        this.serializeArray(a, b);
-        break;
-      }
-      this.serializeObject_(a, b);
-      break;
-    case "function":
-      break;
-    default:
-      throw Error("Unknown type: " + typeof a);;
-  }
-};
-goog.json.Serializer.charToJsonCharCache_ = {'"':'\\"', "\\":"\\\\", "/":"\\/", "\b":"\\b", "\f":"\\f", "\n":"\\n", "\r":"\\r", "\t":"\\t", "\x0B":"\\u000b"};
-goog.json.Serializer.charsToReplace_ = /\uffff/.test("\uffff") ? /[\\\"\x00-\x1f\x7f-\uffff]/g : /[\\\"\x00-\x1f\x7f-\xff]/g;
-goog.json.Serializer.prototype.serializeString_ = function(a, b) {
-  b.push('"', a.replace(goog.json.Serializer.charsToReplace_, function(a) {
-    if (a in goog.json.Serializer.charToJsonCharCache_) {
-      return goog.json.Serializer.charToJsonCharCache_[a];
-    }
-    var b = a.charCodeAt(0), e = "\\u";
-    16 > b ? e += "000" : 256 > b ? e += "00" : 4096 > b && (e += "0");
-    return goog.json.Serializer.charToJsonCharCache_[a] = e + b.toString(16);
-  }), '"');
-};
-goog.json.Serializer.prototype.serializeNumber_ = function(a, b) {
-  b.push(isFinite(a) && !isNaN(a) ? a : "null");
-};
-goog.json.Serializer.prototype.serializeArray = function(a, b) {
-  var c = a.length;
-  b.push("[");
-  for (var d = "", e = 0;e < c;e++) {
-    b.push(d), d = a[e], this.serializeInternal(this.replacer_ ? this.replacer_.call(a, String(e), d) : d, b), d = ",";
-  }
-  b.push("]");
-};
-goog.json.Serializer.prototype.serializeObject_ = function(a, b) {
-  b.push("{");
-  var c = "", d;
-  for (d in a) {
-    if (Object.prototype.hasOwnProperty.call(a, d)) {
-      var e = a[d];
-      "function" != typeof e && (b.push(c), this.serializeString_(d, b), b.push(":"), this.serializeInternal(this.replacer_ ? this.replacer_.call(a, d, e) : e, b), c = ",");
-    }
-  }
-  b.push("}");
-};
 goog.i18n = {};
 goog.i18n.bidi = {};
 goog.i18n.bidi.FORCE_RTL = !1;
@@ -1103,6 +1009,100 @@ goog.i18n.bidi.setElementDirAndAlign = function(a, b) {
   a && (b = goog.i18n.bidi.toDir(b)) && (a.style.textAlign = b == goog.i18n.bidi.Dir.RTL ? goog.i18n.bidi.RIGHT : goog.i18n.bidi.LEFT, a.dir = b == goog.i18n.bidi.Dir.RTL ? "rtl" : "ltr");
 };
 goog.i18n.bidi.DirectionalString = function() {
+};
+goog.json = {};
+goog.json.USE_NATIVE_JSON = !1;
+goog.json.isValid = function(a) {
+  return/^\s*$/.test(a) ? !1 : /^[\],:{}\s\u2028\u2029]*$/.test(a.replace(/\\["\\\/bfnrtu]/g, "@").replace(/"[^"\\\n\r\u2028\u2029\x00-\x08\x0a-\x1f]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:[\s\u2028\u2029]*\[)+/g, ""));
+};
+goog.json.parse = goog.json.USE_NATIVE_JSON ? goog.global.JSON.parse : function(a) {
+  a = String(a);
+  if (goog.json.isValid(a)) {
+    try {
+      return eval("(" + a + ")");
+    } catch (b) {
+    }
+  }
+  throw Error("Invalid JSON string: " + a);
+};
+goog.json.unsafeParse = goog.json.USE_NATIVE_JSON ? goog.global.JSON.parse : function(a) {
+  return eval("(" + a + ")");
+};
+goog.json.serialize = goog.json.USE_NATIVE_JSON ? goog.global.JSON.stringify : function(a, b) {
+  return(new goog.json.Serializer(b)).serialize(a);
+};
+goog.json.Serializer = function(a) {
+  this.replacer_ = a;
+};
+goog.json.Serializer.prototype.serialize = function(a) {
+  var b = [];
+  this.serializeInternal(a, b);
+  return b.join("");
+};
+goog.json.Serializer.prototype.serializeInternal = function(a, b) {
+  switch(typeof a) {
+    case "string":
+      this.serializeString_(a, b);
+      break;
+    case "number":
+      this.serializeNumber_(a, b);
+      break;
+    case "boolean":
+      b.push(a);
+      break;
+    case "undefined":
+      b.push("null");
+      break;
+    case "object":
+      if (null == a) {
+        b.push("null");
+        break;
+      }
+      if (goog.isArray(a)) {
+        this.serializeArray(a, b);
+        break;
+      }
+      this.serializeObject_(a, b);
+      break;
+    case "function":
+      break;
+    default:
+      throw Error("Unknown type: " + typeof a);;
+  }
+};
+goog.json.Serializer.charToJsonCharCache_ = {'"':'\\"', "\\":"\\\\", "/":"\\/", "\b":"\\b", "\f":"\\f", "\n":"\\n", "\r":"\\r", "\t":"\\t", "\x0B":"\\u000b"};
+goog.json.Serializer.charsToReplace_ = /\uffff/.test("\uffff") ? /[\\\"\x00-\x1f\x7f-\uffff]/g : /[\\\"\x00-\x1f\x7f-\xff]/g;
+goog.json.Serializer.prototype.serializeString_ = function(a, b) {
+  b.push('"', a.replace(goog.json.Serializer.charsToReplace_, function(a) {
+    if (a in goog.json.Serializer.charToJsonCharCache_) {
+      return goog.json.Serializer.charToJsonCharCache_[a];
+    }
+    var b = a.charCodeAt(0), e = "\\u";
+    16 > b ? e += "000" : 256 > b ? e += "00" : 4096 > b && (e += "0");
+    return goog.json.Serializer.charToJsonCharCache_[a] = e + b.toString(16);
+  }), '"');
+};
+goog.json.Serializer.prototype.serializeNumber_ = function(a, b) {
+  b.push(isFinite(a) && !isNaN(a) ? a : "null");
+};
+goog.json.Serializer.prototype.serializeArray = function(a, b) {
+  var c = a.length;
+  b.push("[");
+  for (var d = "", e = 0;e < c;e++) {
+    b.push(d), d = a[e], this.serializeInternal(this.replacer_ ? this.replacer_.call(a, String(e), d) : d, b), d = ",";
+  }
+  b.push("]");
+};
+goog.json.Serializer.prototype.serializeObject_ = function(a, b) {
+  b.push("{");
+  var c = "", d;
+  for (d in a) {
+    if (Object.prototype.hasOwnProperty.call(a, d)) {
+      var e = a[d];
+      "function" != typeof e && (b.push(c), this.serializeString_(d, b), b.push(":"), this.serializeInternal(this.replacer_ ? this.replacer_.call(a, d, e) : e, b), c = ",");
+    }
+  }
+  b.push("}");
 };
 goog.object = {};
 goog.object.forEach = function(a, b, c) {
@@ -1327,28 +1327,6 @@ goog.dom.tags.VOID_TAGS_ = goog.object.createSet("area base br col command embed
 goog.dom.tags.isVoidTag = function(a) {
   return!0 === goog.dom.tags.VOID_TAGS_[a];
 };
-goog.promise = {};
-goog.promise.Resolver = function() {
-};
-goog.Thenable = function() {
-};
-goog.Thenable.prototype.then = function(a, b, c) {
-};
-goog.Thenable.IMPLEMENTED_BY_PROP = "$goog_Thenable";
-goog.Thenable.addImplementation = function(a) {
-  goog.exportProperty(a.prototype, "then", a.prototype.then);
-  COMPILED ? a.prototype[goog.Thenable.IMPLEMENTED_BY_PROP] = !0 : a.prototype.$goog_Thenable = !0;
-};
-goog.Thenable.isImplementedBy = function(a) {
-  if (!a) {
-    return!1;
-  }
-  try {
-    return COMPILED ? !!a[goog.Thenable.IMPLEMENTED_BY_PROP] : !!a.$goog_Thenable;
-  } catch (b) {
-    return!1;
-  }
-};
 goog.net = {};
 goog.net.ErrorCode = {NO_ERROR:0, ACCESS_DENIED:1, FILE_NOT_FOUND:2, FF_SILENT_ERROR:3, CUSTOM_ERROR:4, EXCEPTION:5, HTTP_ERROR:6, ABORT:7, TIMEOUT:8, OFFLINE:9};
 goog.net.ErrorCode.getDebugMessage = function(a) {
@@ -1431,6 +1409,28 @@ goog.net.WrapperXmlHttpFactory.prototype.createInstance = function() {
 };
 goog.net.WrapperXmlHttpFactory.prototype.getOptions = function() {
   return this.optionsFactory_();
+};
+goog.promise = {};
+goog.promise.Resolver = function() {
+};
+goog.Thenable = function() {
+};
+goog.Thenable.prototype.then = function(a, b, c) {
+};
+goog.Thenable.IMPLEMENTED_BY_PROP = "$goog_Thenable";
+goog.Thenable.addImplementation = function(a) {
+  goog.exportProperty(a.prototype, "then", a.prototype.then);
+  COMPILED ? a.prototype[goog.Thenable.IMPLEMENTED_BY_PROP] = !0 : a.prototype.$goog_Thenable = !0;
+};
+goog.Thenable.isImplementedBy = function(a) {
+  if (!a) {
+    return!1;
+  }
+  try {
+    return COMPILED ? !!a[goog.Thenable.IMPLEMENTED_BY_PROP] : !!a.$goog_Thenable;
+  } catch (b) {
+    return!1;
+  }
 };
 goog.reflect = {};
 goog.reflect.object = function(a, b) {
@@ -5371,6 +5371,58 @@ goog.events.wrapListener = function(a) {
 goog.debug.entryPointRegistry.register(function(a) {
   goog.events.handleBrowserEvent_ = a(goog.events.handleBrowserEvent_);
 });
+goog.async.AnimationDelay = function(a, b, c) {
+  goog.Disposable.call(this);
+  this.listener_ = a;
+  this.handler_ = c;
+  this.win_ = b || window;
+  this.callback_ = goog.bind(this.doAction_, this);
+};
+goog.inherits(goog.async.AnimationDelay, goog.Disposable);
+goog.async.AnimationDelay.prototype.id_ = null;
+goog.async.AnimationDelay.prototype.usingListeners_ = !1;
+goog.async.AnimationDelay.TIMEOUT = 20;
+goog.async.AnimationDelay.MOZ_BEFORE_PAINT_EVENT_ = "MozBeforePaint";
+goog.async.AnimationDelay.prototype.start = function() {
+  this.stop();
+  this.usingListeners_ = !1;
+  var a = this.getRaf_(), b = this.getCancelRaf_();
+  a && !b && this.win_.mozRequestAnimationFrame ? (this.id_ = goog.events.listen(this.win_, goog.async.AnimationDelay.MOZ_BEFORE_PAINT_EVENT_, this.callback_), this.win_.mozRequestAnimationFrame(null), this.usingListeners_ = !0) : this.id_ = a && b ? a.call(this.win_, this.callback_) : this.win_.setTimeout(goog.functions.lock(this.callback_), goog.async.AnimationDelay.TIMEOUT);
+};
+goog.async.AnimationDelay.prototype.stop = function() {
+  if (this.isActive()) {
+    var a = this.getRaf_(), b = this.getCancelRaf_();
+    a && !b && this.win_.mozRequestAnimationFrame ? goog.events.unlistenByKey(this.id_) : a && b ? b.call(this.win_, this.id_) : this.win_.clearTimeout(this.id_);
+  }
+  this.id_ = null;
+};
+goog.async.AnimationDelay.prototype.fire = function() {
+  this.stop();
+  this.doAction_();
+};
+goog.async.AnimationDelay.prototype.fireIfActive = function() {
+  this.isActive() && this.fire();
+};
+goog.async.AnimationDelay.prototype.isActive = function() {
+  return null != this.id_;
+};
+goog.async.AnimationDelay.prototype.doAction_ = function() {
+  this.usingListeners_ && this.id_ && goog.events.unlistenByKey(this.id_);
+  this.id_ = null;
+  this.listener_.call(this.handler_, goog.now());
+};
+goog.async.AnimationDelay.prototype.disposeInternal = function() {
+  this.stop();
+  goog.async.AnimationDelay.superClass_.disposeInternal.call(this);
+};
+goog.async.AnimationDelay.prototype.getRaf_ = function() {
+  var a = this.win_;
+  return a.requestAnimationFrame || a.webkitRequestAnimationFrame || a.mozRequestAnimationFrame || a.oRequestAnimationFrame || a.msRequestAnimationFrame || null;
+};
+goog.async.AnimationDelay.prototype.getCancelRaf_ = function() {
+  var a = this.win_;
+  return a.cancelAnimationFrame || a.cancelRequestAnimationFrame || a.webkitCancelRequestAnimationFrame || a.mozCancelRequestAnimationFrame || a.oCancelRequestAnimationFrame || a.msCancelRequestAnimationFrame || null;
+};
 goog.events.EventTarget = function() {
   goog.Disposable.call(this);
   this.eventTargetListeners_ = new goog.events.ListenerMap(this);
@@ -7263,7 +7315,7 @@ taskrunner.TimeoutTask.prototype.onDecoratedTaskErrored_ = function(a) {
 taskrunner.TweenTask = function(a, b, c, d) {
   taskrunner.AbstractTask.call(this, d);
   goog.asserts.assert(0 < b, "Invalid tween duration provided.");
-  this.animationFrameId_ = 0;
+  this.animationDelay_ = 0;
   this.callback_ = a;
   this.duration_ = b;
   this.elapsed_ = 0;
@@ -7286,19 +7338,20 @@ taskrunner.TweenTask.prototype.linearEase_ = function(a) {
   return a;
 };
 taskrunner.TweenTask.prototype.cancelCurrentAnimationFrame_ = function() {
-  this.animationFrameId_ && goog.global.cancelAnimationFrame(this.animationFrameId_);
+  this.animationDelay_ && (this.animationDelay_.stop(), this.animationDelay_.dispose());
 };
 taskrunner.TweenTask.prototype.queueAnimationFrame_ = function(a) {
   this.cancelCurrentAnimationFrame_();
-  this.animationFrameId_ = goog.global.requestAnimationFrame(goog.bind(a, this));
+  this.animationDelay_ = new goog.async.AnimationDelay(goog.bind(a, this));
+  this.animationDelay_.start();
 };
 taskrunner.TweenTask.prototype.updateReset_ = function(a) {
-  this.animationFrameId_ = 0;
+  this.animationDelay_ = void 0;
   this.callback_(this.easingFunction_(0));
 };
 taskrunner.TweenTask.prototype.updateRunning_ = function(a) {
   a = goog.now();
-  this.animationFrameId_ = 0;
+  this.animationDelay_ = void 0;
   this.elapsed_ += a - this.lastUpdateTimestamp_;
   this.lastUpdateTimestamp_ = a;
   a = this.easingFunction_(Math.min(1, this.elapsed_ / this.duration_));

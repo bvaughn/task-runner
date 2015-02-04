@@ -32,7 +32,6 @@ Tasks have 5 basic states, enumerated in TaskState. The diagram below shows thes
 
 Task Runner supports IE8+ except as noted below:
 * Function.prototype.bind ([IE9+](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Browser_compatibility), [polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill))
-* [TweenTask](file:///Users/bvaughn/Documents/git/task-runner/docs/taskrunner.TweenTask.html) only: requestAnimationFrame, cancelAnimationFrame ([IE10+](http://caniuse.com/#feat=requestanimationframe), [polyfill](https://gist.github.com/mrdoob/838785#file-requestanimationframe-js))
 * [XHRTask](file:///Users/bvaughn/Documents/git/task-runner/docs/taskrunner.XHRTask.html) only: XMLHttpRequest ([IE10+](http://caniuse.com/#feat=xhr2), [polyfill](https://github.com/moxiecode/moxie))
 
 ## Task Runner automated tests

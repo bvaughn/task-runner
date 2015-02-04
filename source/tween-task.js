@@ -1,5 +1,6 @@
 goog.provide('taskrunner.TweenTask');
 
+goog.require('goog.async.AnimationDelay');
 goog.require('taskrunner.AbstractTask');
 
 
@@ -31,8 +32,8 @@ taskrunner.TweenTask = function(callback, duration, opt_easingFunction, opt_task
 
   goog.asserts.assert(duration > 0, 'Invalid tween duration provided.');
 
-  /** @private {!number} */
-  this.animationFrameId_ = 0;
+  /** @private {goog.async.AnimationDelay|undefined} */
+  this.animationDelay_ = 0;
 
   /** @private {function(!number)} */
   this.callback_ = callback;
@@ -97,8 +98,9 @@ taskrunner.TweenTask.prototype.linearEase_ = function(value) {
 
 /** @private */
 taskrunner.TweenTask.prototype.cancelCurrentAnimationFrame_ = function() {
-  if (this.animationFrameId_) {
-    goog.global.cancelAnimationFrame(this.animationFrameId_);
+  if (this.animationDelay_) {
+    this.animationDelay_.stop();
+    this.animationDelay_.dispose();
   }
 };
 
@@ -110,8 +112,8 @@ taskrunner.TweenTask.prototype.cancelCurrentAnimationFrame_ = function() {
 taskrunner.TweenTask.prototype.queueAnimationFrame_ = function(callback) {
   this.cancelCurrentAnimationFrame_();
 
-  this.animationFrameId_ = goog.global.requestAnimationFrame(
-      goog.bind(callback, this));
+  this.animationDelay_ = new goog.async.AnimationDelay(goog.bind(callback, this));
+  this.animationDelay_.start();
 };
 
 
@@ -120,7 +122,7 @@ taskrunner.TweenTask.prototype.queueAnimationFrame_ = function(callback) {
  * @private
  */
 taskrunner.TweenTask.prototype.updateReset_ = function(timestamp) {
-  this.animationFrameId_ = 0;
+  this.animationDelay_ = undefined;
 
   this.callback_(this.easingFunction_(0));
 };
@@ -133,7 +135,7 @@ taskrunner.TweenTask.prototype.updateReset_ = function(timestamp) {
 taskrunner.TweenTask.prototype.updateRunning_ = function(timestamp) {
   timestamp = goog.now();
 
-  this.animationFrameId_ = 0;
+  this.animationDelay_ = undefined;
   this.elapsed_ += timestamp - this.lastUpdateTimestamp_;
   this.lastUpdateTimestamp_ = timestamp;
 
