@@ -28,11 +28,6 @@ Tasks have 5 basic states, enumerated in TaskState. The diagram below shows thes
 
 <img src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png" width="625" height="330" title="Task Runner: Task Lifecycle">
 
-## Browser Support
-
-Task Runner supports IE8+ except as noted below:
-* [XHRTask](file:///Users/bvaughn/Documents/git/task-runner/docs/taskrunner.XHRTask.html) only: XMLHttpRequest ([IE10+](http://caniuse.com/#feat=xhr2), [polyfill](https://github.com/moxiecode/moxie))
-
 ## Task Runner automated tests
 
 Begin by running `npm install` to install [Karma](https://karma-runner.github.io) and other dependencies.
