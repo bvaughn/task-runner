@@ -119,6 +119,18 @@ describe('goog.XHRTask', function() {
     expect(task.getData()).toBe(goog.net.ErrorCode.TIMEOUT);
   });
 
+  it('should error (but not throw) if invalid JSON is returned', function() {
+    var task = new taskrunner.XHRTask('http://fake/url', undefined, taskrunner.XHRTask.ResponseType.JSON);
+    task.run();
+
+    expect(task.ResponseType_).toBe(taskrunner.XHRTask.ResponseType.JSON);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.xhrRequest_.simulateResponse(200, 'invalid', {});
+
+    expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
+  });
+
   it('should ignore XHR events that occur while interrupted', function() {
     var task = new taskrunner.XHRTask('http://fake/url');
     task.run();

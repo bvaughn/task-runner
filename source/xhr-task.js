@@ -105,21 +105,25 @@ taskrunner.XHRTask.prototype.runImpl = function() {
 /** @private */
 taskrunner.XHRTask.prototype.onXhrRequestSuccess = function() {
   if (this.state_ === taskrunner.TaskState.RUNNING) {
-    var data;
+    try {
+      var data;
 
-    switch (this.ResponseType_) {
-      case taskrunner.XHRTask.ResponseType.JSON:
-        data = this.xhrRequest_.getResponseJson();
-        break;
-      case taskrunner.XHRTask.ResponseType.TEXT:
-        data = this.xhrRequest_.getResponseText();
-        break;
-      case taskrunner.XHRTask.ResponseType.XML:
-        data = this.xhrRequest_.getResponseXml();
-        break;
+      switch (this.ResponseType_) {
+        case taskrunner.XHRTask.ResponseType.JSON:
+          data = this.xhrRequest_.getResponseJson();
+          break;
+        case taskrunner.XHRTask.ResponseType.TEXT:
+          data = this.xhrRequest_.getResponseText();
+          break;
+        case taskrunner.XHRTask.ResponseType.XML:
+          data = this.xhrRequest_.getResponseXml();
+          break;
+      }
+
+      this.completeInternal(data);
+    } catch (error) {
+      this.errorInternal(error, "Invalid response");
     }
-
-    this.completeInternal(data);
   }
 };
 
