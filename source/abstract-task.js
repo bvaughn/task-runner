@@ -358,7 +358,7 @@ taskrunner.AbstractTask.prototype.errorInternal = function(data, errorMessage) {
  * should be called with.
  *
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @constructor
  * @struct
  * @private

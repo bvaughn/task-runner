@@ -22,7 +22,7 @@ goog.require('taskrunner.TaskState');
  *   });
  *
  * @param {function(*):taskrunner.Task} taskFactoryFn The function to create an Task object.
- * @param {?=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn with.
+ * @param {Object=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn with.
  * @param {!Array=} opt_argsArray Optional arguments array to invoke taskFactoryFn with.
  * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}

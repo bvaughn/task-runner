@@ -10,6 +10,7 @@ goog.require('taskrunner.TaskState');
  * Observes (but does not execute) a collection of Tasks.
  * 
  * <p>This task can be used to monitor the execution of 1 or more running Tasks.
+ * These tasks do not have to be related in any way.
  * Tasks can be added (or removed) while the observer is running.
  * It will complete only once all observed Tasks has completed.
  *

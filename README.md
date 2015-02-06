@@ -11,7 +11,7 @@ A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/e
 
 Tasks help break complex problems down into smaller, simpler problems.
 
-This library provides several building-block tasks to get you started. (More on this in the [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)).
+This library provides several building-block tasks to get you started. You can read more about them [here](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
 
 ## Why use Task Runner?
 
@@ -69,5 +69,9 @@ Begin by running `npm install` to install [Karma](https://karma-runner.github.io
 Documentation is generated using with [JsDoc3](https://github.com/jsdoc3/jsdoc) special thanks to [jaguarjs-jsdoc templates](https://github.com/davidshimjs/jaguarjs-jsdoc).
 
 ```bash
-node_modules/.bin/jsdoc -t node_modules/jaguarjs-jsdoc/ -d docs/ ./source/
+node_modules/.bin/jsdoc \
+  -t node_modules/jaguarjs-jsdoc/ \
+  -d docs/ \
+  --readme source/README.md \
+  source/
 ```

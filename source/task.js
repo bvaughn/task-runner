@@ -148,7 +148,7 @@ taskrunner.Task.prototype.reset = goog.abstractMethod;
  *
  * @param {!taskrunner.TaskEvent} taskEvent
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.on = goog.abstractMethod;
@@ -159,7 +159,7 @@ taskrunner.Task.prototype.on = goog.abstractMethod;
  *
  * @param {!taskrunner.TaskEvent} taskEvent
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.off = goog.abstractMethod;
@@ -169,7 +169,7 @@ taskrunner.Task.prototype.off = goog.abstractMethod;
  * This callback will be invoked when a task is started.
  *
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.started = goog.abstractMethod;
@@ -179,7 +179,7 @@ taskrunner.Task.prototype.started = goog.abstractMethod;
  * This callback will be invoked whenever this task is interrupted.
  *
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.interrupted = goog.abstractMethod;
@@ -191,7 +191,7 @@ taskrunner.Task.prototype.interrupted = goog.abstractMethod;
  * Multiple callbacks may be registered with a task as well.
  *
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.completed = goog.abstractMethod;
@@ -203,7 +203,7 @@ taskrunner.Task.prototype.completed = goog.abstractMethod;
  * Multiple callbacks may be registered with a task as well.
  *
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.errored = goog.abstractMethod;
@@ -213,7 +213,7 @@ taskrunner.Task.prototype.errored = goog.abstractMethod;
  * This callback will be invoked after a task has completed or errorred.
  *
  * @param {function(!taskrunner.Task)} callback
- * @param {?=} opt_scope
+ * @param {Object=} opt_scope
  * @return {!taskrunner.Task} a reference to the current task
  */
 taskrunner.Task.prototype.final = goog.abstractMethod;
