@@ -1073,12 +1073,12 @@
     <div class="nameContainer">
         <h4 class="name" id="ClosureTask">
             
-            new taskrunner.ClosureTask<span class="signature">(runImplFn, <span class="optional">opt_autoCompleteUponRun</span>, <span class="optional">opt_taskName</span>)</span>
+            new taskrunner.ClosureTask<span class="signature">(runImplFn, <span class="optional">opt_synchronous</span>, <span class="optional">opt_taskName</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line37">line 37</a>
+            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line51">line 51</a>
         </div>
         
     </div>
@@ -1089,10 +1089,17 @@
     
     
     <div class="description">
-        Task that invokes a specified function upon execution.
-This type of Task can be synchronous or asynchronous.
-It autoCompleteUponRun is true, it will complete after the function is run.
-Otherwise it will not complete until specifically instructed to do so.
+        Invokes a callback function when run.
+
+<p>This type of Task can be asynchronous or asynchronous.
+<ul>
+<li>Set <code>opt_synchronous</code> to TRUE for synchronous tasks.
+This type of task will automatically complete itself after the callback function is called.
+If an error occurs in the callback function, this type of task will error.
+<li>Set <code>opt_synchronous</code> to FALSE for asynchronous tasks.
+In this case the task not complete until specifically instructed to do so.
+To complete the task, your callback should call either complete() or error().
+</ul>
     </div>
     
 
@@ -1151,7 +1158,7 @@ Otherwise it will not complete until specifically instructed to do so.
 	
         <tr>
             
-                <td class="name"><code>opt_autoCompleteUponRun</code></td>
+                <td class="name"><code>opt_synchronous</code></td>
             
             
             <td class="type">
@@ -1174,7 +1181,7 @@ Otherwise it will not complete until specifically instructed to do so.
                         
                     
                 
-                Whether this task will auto-complete when run.</td>
+                This task should auto-complete when run.</td>
         </tr>
 	
 	
@@ -1204,7 +1211,7 @@ Otherwise it will not complete until specifically instructed to do so.
                         
                     
                 
-                Optional semantically meaningful task name.</td>
+                Optional task name.</td>
         </tr>
 	
 	
@@ -1264,10 +1271,17 @@ task.run();</code></pre>
 
     
     <pre class="prettyprint"><code>// Executes the supplied closure and waits to be completed.
+// You should probably use taskrunner.XHRTask instead of $.ajax ;)
 var task = new taskrunner.ClosureTask(
   function() {
-    // Do stuff
-    task.complete('foo');
+     $.ajax("demo/url", {
+       success: function(data) {
+         task.complete(data);
+       },
+       error: function() {
+         task.error('An error occurred');
+       }
+     });
   }, false);
 task.run();</code></pre>
     
@@ -1451,7 +1465,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line68">line 68</a>
+            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line82">line 82</a>
         </div>
         
     </div>
@@ -1576,7 +1590,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line278">line 278</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line277">line 277</a>
         </div>
         
     </div>
@@ -1645,7 +1659,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line322">line 322</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line321">line 321</a>
         </div>
         
     </div>
@@ -1795,7 +1809,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line79">line 79</a>
+            <a href="closure-task.js.html">closure-task.js</a>, <a href="closure-task.js.html#line93">line 93</a>
         </div>
         
     </div>
@@ -1950,7 +1964,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line284">line 284</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line283">line 283</a>
         </div>
         
     </div>
@@ -2019,7 +2033,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line343">line 343</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line342">line 342</a>
         </div>
         
     </div>
@@ -2201,7 +2215,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line290">line 290</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line289">line 289</a>
         </div>
         
     </div>
@@ -2270,7 +2284,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line97">line 97</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line96">line 96</a>
         </div>
         
     </div>
@@ -2339,7 +2353,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line79">line 79</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line78">line 78</a>
         </div>
         
     </div>
@@ -2408,7 +2422,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line85">line 85</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line84">line 84</a>
         </div>
         
     </div>
@@ -2477,7 +2491,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line91">line 91</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line90">line 90</a>
         </div>
         
     </div>
@@ -2546,7 +2560,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line103">line 103</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line102">line 102</a>
         </div>
         
     </div>
@@ -2615,7 +2629,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line109">line 109</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line108">line 108</a>
         </div>
         
     </div>
@@ -2684,7 +2698,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line115">line 115</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line114">line 114</a>
         </div>
         
     </div>
@@ -2753,7 +2767,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line159">line 159</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line158">line 158</a>
         </div>
         
     </div>
@@ -2822,7 +2836,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line272">line 272</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line271">line 271</a>
         </div>
         
     </div>
@@ -2891,7 +2905,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line175">line 175</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line174">line 174</a>
         </div>
         
     </div>
@@ -2960,7 +2974,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line244">line 244</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line243">line 243</a>
         </div>
         
     </div>
@@ -3029,7 +3043,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line221">line 221</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line220">line 220</a>
         </div>
         
     </div>
@@ -3098,7 +3112,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line203">line 203</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line202">line 202</a>
         </div>
         
     </div>
@@ -3167,7 +3181,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line138">line 138</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line137">line 137</a>
         </div>
         
     </div>
@@ -3236,7 +3250,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line266">line 266</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line265">line 265</a>
         </div>
         
     </div>
@@ -3309,7 +3323,7 @@ Call completeInternal() or errorInternal() when the task is finished.
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Thu Feb 05 2015 22:43:49 GMT-0800 (PST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Thu Feb 05 2015 23:31:50 GMT-0800 (PST)
         </footer>
     </div>
 </div>

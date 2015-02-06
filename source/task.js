@@ -3,27 +3,33 @@ goog.provide('taskrunner.Task');
 
 
 /**
- * A Task represents a job.
- * Tasks can be either synchronous or asynchronous.
+ * Represents a unit of work.
+ * 
+ * <p>Tasks can be either synchronous or asynchronous.
  * They can be a single operation or a composite of other tasks.
  * This interface defines the minimum API that must be implemented by any job
  * within the Task Runner framework.
  *
- * The lifecycle of a task is as follows:
- * First, to start a task the run() method is called.
- * Once a task is running 3 things can happen:
- * (1) It can complete successfully
- * (2) It can fail
- * (3) It can be interrupted (or paused)
+ * 
+ * <p>The lifecycle of a task is as follows:
+ * <ol>
+ * <li>First, to start a task the run() method is called.
+ * <li>Once a task is running 3 things can happen:
+ * <ol>
+ * <li>It can complete successfully
+ * <li>It can fail
+ * <li>It can be interrupted (or paused)
+ * </ol>
+ * </ol>
  *
- * When a task fails or is explicitly interrupted, it goes into an idle state.
+ * <p>When a task fails or is explicitly interrupted, it goes into an idle state.
  * It can be resumed from this state by calling run() again.
  * Tasks that complete (successfully) may also be run again if desired.
  *
- * Tasks may also be reset explicitly (using the reset() method) in which case
+ * <p>Tasks may also be reset explicitly (using the reset() method) in which case
  * they should discard any pending data and go back to their initialized state.
  *
- * It is important to design your task with the above concepts in mind.
+ * <p>It is important to design your task with the above concepts in mind.
  * Plan for the fact that your task may be executed more than once, or
  * interrupted before it is ever able to complete execution.
  *

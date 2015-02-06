@@ -7,7 +7,8 @@ goog.require('taskrunner.AbstractTask');
 
 /**
  * Animation-frame-based task for tweening properties.
- * This task invokes a callback on each animation frame and passes a 0..1 value representing the progress of the overall tween.
+ * 
+ * <p>This task invokes a callback on each animation frame and passes a 0..1 value representing the progress of the overall tween.
  *
  * @example
  * // Creates a 2-second tween that fades out an element.
@@ -21,7 +22,7 @@ goog.require('taskrunner.AbstractTask');
  * @param {number} duration Duration of tween in milliseconds.
  * @param {function(!number)=} opt_easingFunction Optional easing function used to convert input time to an eased time.
  *                                                If no function is specified, a linear ease (no ease) will be used.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @throws {Error} if an invalid duration is provided

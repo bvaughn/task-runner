@@ -5,10 +5,17 @@ goog.require('taskrunner.AbstractTask');
 
 
 /**
- * Task that invokes a specified function upon execution.
- * This type of Task can be synchronous or asynchronous.
- * It autoCompleteUponRun is true, it will complete after the function is run.
- * Otherwise it will not complete until specifically instructed to do so.
+ * Invokes a callback function when run.
+ * 
+ * <p>This type of Task can be asynchronous or asynchronous.
+ * <ul>
+ * <li>Set <code>opt_synchronous</code> to TRUE for synchronous tasks.
+ * This type of task will automatically complete itself after the callback function is called.
+ * If an error occurs in the callback function, this type of task will error.
+ * <li>Set <code>opt_synchronous</code> to FALSE for asynchronous tasks.
+ * In this case the task not complete until specifically instructed to do so.
+ * To complete the task, your callback should call either complete() or error().
+ * </ul>
  *
  * @example
  * // Executes the supplied closure and auto-completes after running it.
@@ -20,28 +27,35 @@ goog.require('taskrunner.AbstractTask');
  *
  * @example
  * // Executes the supplied closure and waits to be completed.
+ * // You should probably use taskrunner.XHRTask instead of $.ajax ;)
  * var task = new taskrunner.ClosureTask(
  *   function() {
- *     // Do stuff
- *     task.complete('foo');
+*      $.ajax("demo/url", {
+*        success: function(data) {
+*          task.complete(data);
+*        },
+*        error: function() {
+*          task.error('An error occurred');
+*        }
+*      });
  *   }, false);
  * task.run();
  *
  * @param {function()} runImplFn The function to be executed when this Task is run.
- * @param {boolean=} opt_autoCompleteUponRun Whether this task will auto-complete when run.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {boolean=} opt_synchronous This task should auto-complete when run.
+ * @param {string=} opt_taskName Optional task name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct
  */
-taskrunner.ClosureTask = function(runImplFn, opt_autoCompleteUponRun, opt_taskName) {
+taskrunner.ClosureTask = function(runImplFn, opt_synchronous, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {function()} */
   this.runImplFn_ = runImplFn;
 
   /** @private {boolean} */
-  this.autoCompleteUponRun_ = !!opt_autoCompleteUponRun;
+  this.autoCompleteUponRun_ = !!opt_synchronous;
 };
 goog.inherits(taskrunner.ClosureTask, taskrunner.AbstractTask);
 

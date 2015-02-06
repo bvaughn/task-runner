@@ -6,9 +6,9 @@ goog.require('taskrunner.TaskState');
 
 
 /**
- * Task that delays for a specified time before completion.
+ * Waits for an amount of time to pass before completing.
  *
- * <p>Resuming an interrupted WaitTask can either re-start the Timer at the beginning or resume from the interrupted point.
+ * <p>Resuming an interrupted WaitTask can either re-start the timer at the beginning or resume from the interrupted point.
  *
  * @example
  * // Waits 500ms; restarts the timer after an interruption.
@@ -17,7 +17,7 @@ goog.require('taskrunner.TaskState');
  *
  * @param {number} timeout Time in milliseconds to wait before completing.
  * @param {boolean} opt_resetTimerAfterInterruption Reset the timer after interruption; defaults to false.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct

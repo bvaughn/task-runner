@@ -33,7 +33,7 @@ goog.require('taskrunner.TaskState');
  * @param {taskrunner.XHRTask.ResponseType=} Expected reponse type.
  *     If undefined the static value set with taskrunner.XHRTask.setDefaultResponseType will be used.
  *     If no default response-type is set this value defaults to taskrunner.XHRTask.ResponseType.TEXT.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct

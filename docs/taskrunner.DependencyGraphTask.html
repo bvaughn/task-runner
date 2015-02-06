@@ -1078,7 +1078,7 @@
     
         
         <div class="tag-source">
-            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line27">line 27</a>
+            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line33">line 33</a>
         </div>
         
     </div>
@@ -1089,9 +1089,15 @@
     
     
     <div class="description">
-        Executes of a set of interdependent Tasks in the appropriate order to satisfy all blocking dependencies.
-This task will complete once all child tasks  complete or error when a child task fails.
-In the event of an error, no additional tasks will be run until this task has been told to resume.
+        Executes of a set of Tasks in a specific order.
+
+<p>This type of task allows a dependency graph (of child tasks) to be created.
+It then executes all of its children in the order needed to satisfy dependencies,
+and completes (or fails) once the child tasks have completed (or failed).
+
+<p>In the event of an error, the graph will stop and error.
+All tasks that are running will be interrupted.
+If the graph is re-run, any incomplete child tasks will be resumed.
     </div>
     
 
@@ -1145,7 +1151,7 @@ In the event of an error, no additional tasks will be run until this task has be
                         
                     
                 
-                Optional semantically meaningful task name.</td>
+                Optional defaulttask name.</td>
         </tr>
 	
 	
@@ -1428,7 +1434,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line57">line 57</a>
+            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line63">line 63</a>
         </div>
         
     </div>
@@ -1643,7 +1649,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line84">line 84</a>
+            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line90">line 90</a>
         </div>
         
     </div>
@@ -1823,7 +1829,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line278">line 278</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line277">line 277</a>
         </div>
         
     </div>
@@ -1892,7 +1898,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line322">line 322</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line321">line 321</a>
         </div>
         
     </div>
@@ -2044,7 +2050,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line284">line 284</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line283">line 283</a>
         </div>
         
     </div>
@@ -2113,7 +2119,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line343">line 343</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line342">line 342</a>
         </div>
         
     </div>
@@ -2295,7 +2301,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line290">line 290</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line289">line 289</a>
         </div>
         
     </div>
@@ -2364,7 +2370,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line97">line 97</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line96">line 96</a>
         </div>
         
     </div>
@@ -2433,7 +2439,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line79">line 79</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line78">line 78</a>
         </div>
         
     </div>
@@ -2502,7 +2508,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line85">line 85</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line84">line 84</a>
         </div>
         
     </div>
@@ -2571,7 +2577,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line91">line 91</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line90">line 90</a>
         </div>
         
     </div>
@@ -2640,7 +2646,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line103">line 103</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line102">line 102</a>
         </div>
         
     </div>
@@ -2709,7 +2715,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line109">line 109</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line108">line 108</a>
         </div>
         
     </div>
@@ -2778,7 +2784,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line115">line 115</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line114">line 114</a>
         </div>
         
     </div>
@@ -2847,7 +2853,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line159">line 159</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line158">line 158</a>
         </div>
         
     </div>
@@ -2916,7 +2922,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line272">line 272</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line271">line 271</a>
         </div>
         
     </div>
@@ -2985,7 +2991,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line175">line 175</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line174">line 174</a>
         </div>
         
     </div>
@@ -3054,7 +3060,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line244">line 244</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line243">line 243</a>
         </div>
         
     </div>
@@ -3123,7 +3129,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line221">line 221</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line220">line 220</a>
         </div>
         
     </div>
@@ -3190,7 +3196,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line98">line 98</a>
+            <a href="dependency-graph-task.js.html">dependency-graph-task.js</a>, <a href="dependency-graph-task.js.html#line104">line 104</a>
         </div>
         
     </div>
@@ -3346,7 +3352,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line203">line 203</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line202">line 202</a>
         </div>
         
     </div>
@@ -3415,7 +3421,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line138">line 138</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line137">line 137</a>
         </div>
         
     </div>
@@ -3484,7 +3490,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line266">line 266</a>
+            <a href="abstract-task.js.html">abstract-task.js</a>, <a href="abstract-task.js.html#line265">line 265</a>
         </div>
         
     </div>
@@ -3557,7 +3563,7 @@ reference to the current task.
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Thu Feb 05 2015 22:43:49 GMT-0800 (PST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Thu Feb 05 2015 23:31:50 GMT-0800 (PST)
         </footer>
     </div>
 </div>

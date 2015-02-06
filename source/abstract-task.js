@@ -9,8 +9,7 @@ goog.require('taskrunner.TaskState');
 /**
  * Abstract implementation of Task.
  *
- * <p>To create a Task, extend this class and override runImpl().
- * You may also override resetImpl() to perform custom cleanup between runs.
+ * <p>To create a Task extend this class and override runImpl(), interruptImpl(), and resetImpl().
  *
  * <p>Your Task should call completeInternal() or errorInternal() when it is done.
  *
@@ -32,7 +31,7 @@ goog.require('taskrunner.TaskState');
  *   // Start the task
  * };
  *
- * @param {string=} opt_taskName Optional semantically meaningful task name,
+ * @param {string=} opt_taskName Optional defaulttask name,
  *     useful for automated testing or debugging.
  * @implements {taskrunner.Task}
  * @constructor

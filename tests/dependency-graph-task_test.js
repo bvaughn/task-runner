@@ -558,14 +558,15 @@ describe('goog.DependencyGraphTask', function() {
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
     nullTask1.error();
-    nullTask3.complete();
 
     expect(nullTask1.getState()).toBe(taskrunner.TaskState.ERRORED);
     expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
-    expect(nullTask3.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
     expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
 
     task.run();
+    
+    nullTask3.complete();
 
     expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
     expect(nullTask2.getState()).toBe(taskrunner.TaskState.INITIALIZED);
@@ -651,5 +652,36 @@ describe('goog.DependencyGraphTask', function() {
     task.run();
 
     expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+  });
+
+  it('should interrupt any children running in parallel in the event of an error', function() {
+    var nullTask1 = new taskrunner.NullTask();
+    var nullTask2 = new taskrunner.NullTask();
+    var nullTask3 = new taskrunner.NullTask();
+
+    var graphTask = new taskrunner.DependencyGraphTask();
+    graphTask.addTask(nullTask1);
+    graphTask.addTask(nullTask2);
+    graphTask.addTask(nullTask3);
+    graphTask.run();
+
+    expect(graphTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask1.complete();
+
+    expect(graphTask.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.RUNNING);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    nullTask3.error();
+
+    expect(graphTask.getState()).toBe(taskrunner.TaskState.ERRORED);
+    expect(nullTask1.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(nullTask2.getState()).toBe(taskrunner.TaskState.INTERRUPTED);
+    expect(nullTask3.getState()).toBe(taskrunner.TaskState.ERRORED);
   });
 });

@@ -7,7 +7,7 @@ goog.require('taskrunner.TaskState');
 
 
 /**
- * Decorator for Tasks that should be retried on error.
+ * Decorator for tasks that should be retried on error.
  *
  * <p>For example, you may wish to decorator a Task that relies on Internet connectivity in order to complete.
  * The decorated Task is allowed to fail a specified number of times before the error condition is reported externally.
@@ -28,7 +28,7 @@ goog.require('taskrunner.TaskState');
  * @param {number=} retryDelay The amount of time to delay before resetting and re-running the decorated Task.
  *                             A value < 0 seconds will result in a synchronous retry.
  *                             If not specified this defaults to 1000 ms.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @implements {taskrunner.DecoratorTask}
  * @constructor

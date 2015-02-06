@@ -8,21 +8,23 @@ goog.require('taskrunner.TaskState');
 
 /**
  * Decorates a Task returned by the specified factory method.
- * This Task is deferred and will be invoked the provided factory method until it is actually executed.
- * This allows for just-in-time evaluation of data set by previous Tasks.
+ *
+ * <p>Use this type of task when an important decision needs to be deferred.
+ * For example if you need a task to load some data, but the specifics aren't known when your application is initialized.
+ * This type of task allows for just-in-time evaluation of data resolved by previous Tasks.
  *
  * @example
- * // Asynchronously executes the supplied task-factory-function.
+ * // Creates and runs a new XHRTask only when the outer deferred task is run.
+ * // In this example, the variable `someUrl` is not yet set when the task is defined.
  * var task = new taskrunner.DeferredFactoryTask(
  *   function() {
- *     // Creates a new Task
+ *     return new taskrunner.XHRTask(someUrl);
  *   });
- * task.run();
  *
  * @param {function(*):taskrunner.Task} taskFactoryFn The function to create an Task object.
  * @param {?=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn with.
  * @param {!Array=} opt_argsArray Optional arguments array to invoke taskFactoryFn with.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @implements {taskrunner.DecoratorTask}
  * @constructor

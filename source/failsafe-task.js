@@ -6,11 +6,13 @@ goog.require('taskrunner.AbstractTask');
 
 /**
  * Decorates a task and re-dispatches errors as successful completions.
- * This can be used to decorate tasks that should be run at a particular time, but are not essential.
+ *
+ * <p>This can be used to decorate tasks that are not essential.
  *
  * @example
- * // Runs the decoratedTask and successfully completes as soon as it errors or completes.
- * var task = new taskrunner.FailsafeTask(decoratedTask);
+ * // Sends a fire-and-forget style XHR to log data (and ignores failures)
+ * var task = new taskrunner.FailsafeTask(
+ *   return new taskrunner.XHRTask('some-logging-url', someLoggingData));
  * task.run();
  *
  * @param {!taskrunner.Task} decoratedTask Decorated task to be run when this task is run.

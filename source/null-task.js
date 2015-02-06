@@ -5,14 +5,13 @@ goog.require('taskrunner.ClosureTask');
 
 
 /**
- * No-op Task useful primarily for unit testing.
- * It can also be useful in factory situations when no-op behavior is desired.
- * If certain implementations wish to provide behavior they can replace the placeholder Stub task with one that does work.
+ * No-op task primarily useful for unit testing.
  *
- * <p>This Task can be configured to auto-complete when it is executed.
+ * <p>This type of task can also be useful in a composite when a default, no-op behavior is desired.
+ * Simply replace the placeholder null task with one that does actual work.
+ *
+ * <p>This task can be configured to auto-complete when it is executed.
  * Otherwise it will not complete or error until specifically told to do so.
- *
- * <p>This task is also interruptible although it does nothing when interrupted.
  *
  * @example
  * // Creates a dummy task that will auto-complete when run.
@@ -20,7 +19,7 @@ goog.require('taskrunner.ClosureTask');
  * task.run();
  *
  * @param {boolean=} opt_autoCompleteUponRun Task should auto-complete when run.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.ClosureTask}
  * @constructor
  * @struct

@@ -8,7 +8,8 @@ goog.require('taskrunner.TaskState');
 
 /**
  * Decorates a Task and enforces a max-execution time limit.
- * If specified time interval elapses before the decorated Task has complete it is considered to be an error.
+ * 
+ * <p>If specified time interval elapses before the decorated Task has complete it is considered to be an error.
  * The decorated Task will be interrupted in that event.
  *
  * @example
@@ -18,7 +19,7 @@ goog.require('taskrunner.TaskState');
  *
  * @param {!taskrunner.Task} task The task to decorate.
  * @param {number} timeout Time in milliseconds to wait before timing out the decorated task.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @implements {taskrunner.DecoratorTask}
  * @constructor

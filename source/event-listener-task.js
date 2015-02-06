@@ -6,9 +6,8 @@ goog.require('taskrunner.TaskState');
 
 
 /**
- * Waits for an event-dispatching target to trigger a specific type of event, then completes.
- * For example, this type of task can be used to wait for a DOM element to be clicked.
- *
+ * Waits for an event-dispatching target to trigger a specific type of event.
+ * 
  * @example
  * // Watches a DOM element until a "click" event is dispatched.
  * var task = new taskrunner.EventListenerTask(element, "click");
@@ -16,7 +15,7 @@ goog.require('taskrunner.TaskState');
  *
  * @param {Object} eventTarget Event-dispatching target.
  * @param {string} eventType Type of event to wait for.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct

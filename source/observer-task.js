@@ -8,7 +8,8 @@ goog.require('taskrunner.TaskState');
 
 /**
  * Observes (but does not execute) a collection of Tasks.
- * This task can be used to monitor the execution of 1 or more running Tasks.
+ * 
+ * <p>This task can be used to monitor the execution of 1 or more running Tasks.
  * Tasks can be added (or removed) while the observer is running.
  * It will complete only once all observed Tasks has completed.
  *
@@ -22,7 +23,7 @@ goog.require('taskrunner.TaskState');
  *
  * @param {!Array.<!taskrunner.Task>=} opt_tasks The array of Tasks to observe.
  * @param {boolean=} opt_failUponFirstError Whether to error the observer task immediately when one of the observed tasks errors.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct

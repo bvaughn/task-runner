@@ -7,7 +7,7 @@ goog.require('taskrunner.TaskState');
 
 
 /**
- * Executes a set of Tasks either in parallel or serial, as specified by a constructor parameter.
+ * Executes a set of Tasks either in parallel or one after another.
  *
  * @example
  * // Creates a composite task that will execute child tasks A, B, and C in parallel
@@ -18,14 +18,14 @@ goog.require('taskrunner.TaskState');
  * task.run();
  *
  * @example
- * // Creates a composite task that will execute child tasks A, B, and C in serial
+ * // Creates a composite task that will execute child tasks A, then B, then C in order
  * var task = new taskrunner.CompositeTask(false, [childTaskA, childTaskB, childTaskC]);
  * task.run();
  *
  * @param {boolean} parallel If TRUE, child tasks are run simultaneously;
  *                           otherwise they are run serially, in the order they were added.
  * @param {!Array.<!taskrunner.Task>=} opt_tasks Initial set of child tasks.
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct

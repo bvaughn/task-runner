@@ -5,9 +5,15 @@ goog.require('taskrunner.AbstractTask');
 
 
 /**
- * Executes of a set of interdependent Tasks in the appropriate order to satisfy all blocking dependencies.
- * This task will complete once all child tasks  complete or error when a child task fails.
- * In the event of an error, no additional tasks will be run until this task has been told to resume.
+ * Executes of a set of Tasks in a specific order.
+ * 
+ * <p>This type of task allows a dependency graph (of child tasks) to be created.
+ * It then executes all of its children in the order needed to satisfy dependencies,
+ * and completes (or fails) once the child tasks have completed (or failed).
+ * 
+ * <p>In the event of an error, the graph will stop and error.
+ * All tasks that are running will be interrupted.
+ * If the graph is re-run, any incomplete child tasks will be resumed.
  *
  * @example
  * // Creates a graph task that will execute tasks in the order required by their dependencies.
@@ -19,7 +25,7 @@ goog.require('taskrunner.AbstractTask');
  * task.addTask(childTaskE, [childTaskC, childTaskD]);
  * task.run();
  *
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct
@@ -295,7 +301,15 @@ taskrunner.DependencyGraphTask.prototype.completeOrRunNext_ = function() {
     this.completeInternal();
   } else if (this.erroredTasks_.length == 0) {
     this.runAllReadyTasks_();
-  } else if (!this.isAnyTaskRunning_()) {
+  } else {
+    for (var i in this.tasks_) {
+      var task = this.tasks_[i];
+
+      if (task.getState() === taskrunner.TaskState.RUNNING) {
+        task.interrupt();
+      }
+    }
+
     this.errorInternal();
   }
 };
