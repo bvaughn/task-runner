@@ -1437,7 +1437,6 @@ goog.addDependency('../../bower_components/closure-library/closure/goog/webgl/we
 goog.addDependency('../../bower_components/closure-library/closure/goog/window/window.js', ['goog.window'], ['goog.string', 'goog.userAgent'], false);
 goog.addDependency('../../bower_components/closure-library/closure/goog/window/window_test.js', ['goog.windowTest'], ['goog.dom', 'goog.events', 'goog.string', 'goog.testing.AsyncTestCase', 'goog.testing.jsunit', 'goog.window'], false);
 goog.addDependency('../abstract-task.js', ['taskrunner.AbstractTask'], ['taskrunner.Task', 'taskrunner.TaskEvent', 'taskrunner.TaskState'], false);
-goog.addDependency('../application-task.js', ['taskrunner.ApplicationTask'], ['taskrunner.CompositeTask', 'taskrunner.TaskState'], false);
 goog.addDependency('../closure-task.js', ['taskrunner.ClosureTask'], ['taskrunner.AbstractTask'], false);
 goog.addDependency('../composite-task.js', ['taskrunner.CompositeTask'], ['taskrunner.AbstractTask', 'taskrunner.TaskEvent', 'taskrunner.TaskState'], false);
 goog.addDependency('../decorator-task.js', ['taskrunner.DecoratorTask'], [], false);
@@ -1448,10 +1447,8 @@ goog.addDependency('../failsafe-task.js', ['taskrunner.FailsafeTask'], ['taskrun
 goog.addDependency('../null-task.js', ['taskrunner.NullTask'], ['taskrunner.ClosureTask'], false);
 goog.addDependency('../observer-task.js', ['taskrunner.ObserverTask'], ['taskrunner.AbstractTask', 'taskrunner.TaskEvent', 'taskrunner.TaskState'], false);
 goog.addDependency('../retry-on-error-task.js', ['taskrunner.RetryOnErrorTask'], ['taskrunner.AbstractTask', 'taskrunner.TaskEvent', 'taskrunner.TaskState'], false);
-goog.addDependency('../state-task.js', ['taskrunner.StateTask'], ['taskrunner.DependencyGraphTask', 'taskrunner.TaskState', 'taskrunner.WaitTask'], false);
-goog.addDependency('../state-transitioning-task.js', ['taskrunner.StateTransitioningTask'], ['taskrunner.ClosureTask', 'taskrunner.FailsafeTask', 'taskrunner.StateTask', 'taskrunner.TaskState'], false);
 goog.addDependency('../task-event.js', ['taskrunner.TaskEvent'], [], false);
-goog.addDependency('../task-runner.js', ['taskrunner'], ['taskrunner.AbstractTask', 'taskrunner.ApplicationTask', 'taskrunner.ClosureTask', 'taskrunner.CompositeTask', 'taskrunner.DecoratorTask', 'taskrunner.DeferredFactoryTask', 'taskrunner.DependencyGraphTask', 'taskrunner.EventListenerTask', 'taskrunner.NullTask', 'taskrunner.ObserverTask', 'taskrunner.RetryOnErrorTask', 'taskrunner.StateTask', 'taskrunner.StateTransitioningTask', 'taskrunner.Task', 'taskrunner.TaskEvent', 'taskrunner.TaskState', 'taskrunner.TimeoutTask', 'taskrunner.TweenTask', 'taskrunner.WaitTask', 'taskrunner.XHRTask'], false);
+goog.addDependency('../task-runner.js', ['taskrunner'], ['taskrunner.AbstractTask', 'taskrunner.ClosureTask', 'taskrunner.CompositeTask', 'taskrunner.DecoratorTask', 'taskrunner.DeferredFactoryTask', 'taskrunner.DependencyGraphTask', 'taskrunner.EventListenerTask', 'taskrunner.FailsafeTask', 'taskrunner.NullTask', 'taskrunner.ObserverTask', 'taskrunner.RetryOnErrorTask', 'taskrunner.Task', 'taskrunner.TaskEvent', 'taskrunner.TaskState', 'taskrunner.TimeoutTask', 'taskrunner.TweenTask', 'taskrunner.WaitTask', 'taskrunner.XHRTask'], false);
 goog.addDependency('../task-state.js', ['taskrunner.TaskState'], [], false);
 goog.addDependency('../task.js', ['taskrunner.Task'], [], false);
 goog.addDependency('../timeout-task.js', ['taskrunner.TimeoutTask'], ['taskrunner.AbstractTask', 'taskrunner.TaskEvent', 'taskrunner.TaskState'], false);

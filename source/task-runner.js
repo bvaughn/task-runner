@@ -1,18 +1,16 @@
 goog.provide('taskrunner');
 
 goog.require('taskrunner.AbstractTask');
-goog.require('taskrunner.ApplicationTask');
 goog.require('taskrunner.ClosureTask');
 goog.require('taskrunner.CompositeTask');
 goog.require('taskrunner.DecoratorTask');
 goog.require('taskrunner.DeferredFactoryTask');
 goog.require('taskrunner.DependencyGraphTask');
 goog.require('taskrunner.EventListenerTask');
+goog.require('taskrunner.FailsafeTask');
 goog.require('taskrunner.NullTask');
 goog.require('taskrunner.ObserverTask');
 goog.require('taskrunner.RetryOnErrorTask');
-goog.require('taskrunner.StateTask');
-goog.require('taskrunner.StateTransitioningTask');
 goog.require('taskrunner.TaskEvent');
 goog.require('taskrunner.TaskState');
 goog.require('taskrunner.Task');
