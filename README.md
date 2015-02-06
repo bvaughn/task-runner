@@ -1,15 +1,17 @@
+
 # Task Runner
-Task Runner is a JavaScript library designed to simplify the implementation of asynchronous processes.
+---
+**[API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)** |
+**[Samples &amp; Demos](https://github.com/bvaughn/task-runner/blob/master/SAMPLES.md)** |
+**[Report an issue](https://github.com/bvaughn/task-runner/issues/new)**
 
-Task Runner is built with the [Closure Compiler](https://github.com/google/closure-compiler). It uses a subset of the [Closure Library](https://github.com/google/closure-library) runtime (included with the distro) so that it can be used with any JavaScript framework- Angular, React, jQuery, etc.
+---
 
-If your project uses the full Closure library, you should use the Task Runner source and let Closure compile it along with the rest of your application.
+A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual task.
 
-Here are some links of interest:
-* [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)
-* Code examples:
- * [Demo application 1](https://gist.github.com/bvaughn/0e178b3fe5ef916d0389)
- * [Demo application 2](https://gist.github.com/bvaughn/23749a3464d94a162205)
+Tasks help break complex problems down into smaller, simpler problems.
+
+This library provides several building-block tasks to get you started. (More on this in the [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)).
 
 ## Why use Task Runner?
 
@@ -29,6 +31,12 @@ Task Runner offers a solution to much of the above complexity:
 Tasks have 5 basic states, enumerated in TaskState. The diagram below shows these states and how they are related. Each time a task changes state it invokes all registered callbacks that are associated with that state. Available callbacks are enumerated in TaskEvent.
 
 <img src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png" width="625" height="330" title="Task Runner: Task Lifecycle">
+
+## Task Runner compatibility
+
+This library is built with the [Closure Compiler](https://github.com/google/closure-compiler). It uses a subset of the [Closure Library](https://github.com/google/closure-library) runtime (included with the distro) so that it can be used with any JavaScript framework- Angular, React, jQuery, etc.
+
+If your project uses the full Closure library, you should use the Task Runner source and let Closure compile it along with the rest of your application.
 
 ## Task Runner automated tests
 
