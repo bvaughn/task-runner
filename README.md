@@ -2,7 +2,7 @@
 # Task Runner
 ---
 **[API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)** |
-**[Samples &amp; Demos](https://github.com/bvaughn/task-runner/blob/master/SAMPLES.md)** |
+**[Samples &amp; Demos](http://bvaughn.github.io/task-runner/)** |
 **[Report an issue](https://github.com/bvaughn/task-runner/issues/new)**
 
 ---
