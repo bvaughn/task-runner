@@ -7,7 +7,9 @@ If your project uses the full Closure library, you should use the Task Runner so
 
 Here are some links of interest:
 * [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)
-* [Example usage](https://gist.github.com/bvaughn/0e178b3fe5ef916d0389)
+* Code examples:
+ * [Demo application 1](https://gist.github.com/bvaughn/0e178b3fe5ef916d0389)
+ * [Demo application 2](https://gist.github.com/bvaughn/23749a3464d94a162205)
 
 ## Why use Task Runner?
 

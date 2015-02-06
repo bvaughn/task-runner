@@ -19,18 +19,26 @@ goog.require('taskrunner.TaskState');
  * </ul>
  *
  * @example
- * // Sends a POST request to "foo" with URL args "bar=1&baz=two"
- * var task = new taskrunner.XHRTask("foo", {bar: 1, baz: "two"});
+ * // Sends a POST request to "returns-json" with URL args "bar=1&baz=two"
+ * var task = new taskrunner.XHRTask("returns-json", {bar: 1, baz: "two"});
+ * task.run();
+ *
+ * @example
+ * // Sends a GET request to that returns XML
+ * var task = new taskrunner.XHRTask("returns-xml", null, taskrunner.XHRTask.ResponseType.XML);
  * task.run();
  *
  * @param {!string} url URL to load.
  * @param {Object=} opt_data Object containing POST data; if undefined a GET request will be used.
+ * @param {taskrunner.XHRTask.ResponseType=} Expected reponse type.
+ *     If undefined the static value set with taskrunner.XHRTask.setDefaultResponseType will be used.
+ *     If no default response-type is set this value defaults to taskrunner.XHRTask.ResponseType.TEXT.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {taskrunner.AbstractTask}
  * @constructor
  * @struct
  */
-taskrunner.XHRTask = function(url, opt_data, opt_taskName) {
+taskrunner.XHRTask = function(url, opt_data, opt_responseType, opt_taskName) {
   goog.base(this, opt_taskName);
 
   /** @private {!string} */
@@ -38,6 +46,9 @@ taskrunner.XHRTask = function(url, opt_data, opt_taskName) {
 
   /** @private {Object|undefined} */
   this.postData_ = opt_data;
+
+  /** @private {!taskrunner.XHRTask.ResponseType} */
+  this.ResponseType_ = opt_responseType || taskrunner.XHRTask.DEFAULT_RESPONSE_TYPE_ || taskrunner.XHRTask.ResponseType.TEXT;
 
   /** @private {goog.net.XhrIo|undefined} */
   this.xhrRequest_ = undefined;
@@ -94,8 +105,21 @@ taskrunner.XHRTask.prototype.runImpl = function() {
 /** @private */
 taskrunner.XHRTask.prototype.onXhrRequestSuccess = function() {
   if (this.state_ === taskrunner.TaskState.RUNNING) {
-    this.completeInternal(
-      this.xhrRequest_.getResponseText() || this.xhrRequest_.getResponseXml());
+    var data;
+
+    switch (this.ResponseType_) {
+      case taskrunner.XHRTask.ResponseType.JSON:
+        data = this.xhrRequest_.getResponseJson();
+        break;
+      case taskrunner.XHRTask.ResponseType.TEXT:
+        data = this.xhrRequest_.getResponseText();
+        break;
+      case taskrunner.XHRTask.ResponseType.XML:
+        data = this.xhrRequest_.getResponseXml();
+        break;
+    }
+
+    this.completeInternal(data);
   }
 };
 
@@ -118,4 +142,23 @@ taskrunner.XHRTask.prototype.createPostDataString_ = function() {
   }
 
   return undefined;
+};
+
+
+/**
+ * Set the default response-type for all XHR requests that do not otherwise specify a response-type.
+ */
+taskrunner.XHRTask.setDefaultResponseType = function(responseType) {
+  taskrunner.XHRTask.DEFAULT_RESPONSE_TYPE_ = responseType;
+};
+
+
+/**
+ * Enumeration of XHR requestion response types.
+ * @enum {number}
+ */
+taskrunner.XHRTask.ResponseType = {
+  JSON: 1,
+  TEXT: 2,
+  XML: 3
 };

@@ -14,14 +14,9 @@ describe('goog.XHRTask', function() {
   var xhrManager;
   
   beforeEach(function() {
-    //xhrManager = new goog.net.XhrManager();
-    //xhrManager.xhrPool_ = new goog.testing.net.XhrIoPool();
-    //xhrIo = xhrManager.xhrPool_.getXhr();
-
     goog.net.XhrIo = goog.testing.net.XhrIo;
 
-    //var replacer = new goog.testing.PropertyReplacer();
-    //replacer.replace(goog.net.XhrIo, 'send', goog.testing.net.XhrIo.send);
+    taskrunner.XHRTask.setDefaultResponseType(undefined);
   });
 
   it('should send a GET request if no post data is provided', function() {
@@ -38,10 +33,38 @@ describe('goog.XHRTask', function() {
     expect(task.xhrRequest_.getLastMethod()).toBe('POST');
   });
 
-  it('should complete after a successful request', function() {
+  it('should default to JSON response-type if default response-type set and no override specified', function() {
+    taskrunner.XHRTask.setDefaultResponseType(taskrunner.XHRTask.ResponseType.JSON);
+
     var task = new taskrunner.XHRTask('http://fake/url');
+
+    expect(task.ResponseType_).toBe(taskrunner.XHRTask.ResponseType.JSON);
+  });
+
+  it('should default to text response-type if no override specified', function() {
+    var task = new taskrunner.XHRTask('http://fake/url');
+
+    expect(task.ResponseType_).toBe(taskrunner.XHRTask.ResponseType.TEXT);
+  });
+
+  it('should complete after a successful request that returns JSON', function() {
+    var task = new taskrunner.XHRTask('http://fake/url', undefined, taskrunner.XHRTask.ResponseType.JSON);
     task.run();
 
+    expect(task.ResponseType_).toBe(taskrunner.XHRTask.ResponseType.JSON);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    task.xhrRequest_.simulateResponse(200, '{ "foo": { "bar": "baz" } }', {});
+
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getData()).toEqual({foo: {bar: "baz"}});
+  });
+
+  it('should complete after a successful request that returns TEXT', function() {
+    var task = new taskrunner.XHRTask('http://fake/url', undefined, taskrunner.XHRTask.ResponseType.TEXT);
+    task.run();
+
+    expect(task.ResponseType_).toBe(taskrunner.XHRTask.ResponseType.TEXT);
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
     task.xhrRequest_.simulateResponse(200, 'fake response', {});
@@ -50,13 +73,35 @@ describe('goog.XHRTask', function() {
     expect(task.getData()).toBe('fake response');
   });
 
+  it('should complete after a successful request that returns XML', function() {
+    var task = new taskrunner.XHRTask('http://fake/url', undefined, taskrunner.XHRTask.ResponseType.XML);
+    task.run();
+
+    expect(task.ResponseType_).toBe(taskrunner.XHRTask.ResponseType.XML);
+    expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
+
+    var foo = document.createElement("foo");
+    var bar = document.createElement("bar");
+    var baz = document.createTextNode("baz");
+
+    var xml = document.createElement("xml");
+    xml.appendChild(foo);
+    foo.appendChild(bar);
+    bar.appendChild(baz);
+
+    task.xhrRequest_.simulateResponse(200, xml, {});
+
+    expect(task.getState()).toBe(taskrunner.TaskState.COMPLETED);
+    expect(task.getData()).toBe(xml);
+  });
+
   it('should error after a failed request', function() {
     var task = new taskrunner.XHRTask('http://fake/url');
     task.run();
 
     expect(task.getState()).toBe(taskrunner.TaskState.RUNNING);
 
-    task.xhrRequest_.simulateResponse(500, '', {});
+    task.xhrRequest_.simulateResponse(500, null, {});
 
     expect(task.getState()).toBe(taskrunner.TaskState.ERRORED);
     expect(task.getData()).toBe(goog.net.ErrorCode.HTTP_ERROR);

@@ -982,6 +982,8 @@
             
             <span class="subtitle">Members</span>
             
+                <li data-name="taskrunner.XHRTask.ResponseType"><a href="taskrunner.XHRTask.html#.ResponseType">ResponseType</a></li>
+            
                 <li data-name="taskrunner.XHRTask#interruptImpl"><a href="taskrunner.XHRTask.html#interruptImpl">interruptImpl</a></li>
             
                 <li data-name="taskrunner.XHRTask#resetImpl"><a href="taskrunner.XHRTask.html#resetImpl">resetImpl</a></li>
@@ -995,6 +997,8 @@
             <ul class="methods itemMembers">
             
             <span class="subtitle">Methods</span>
+            
+                <li data-name="taskrunner.XHRTask.setDefaultResponseType"><a href="taskrunner.XHRTask.html#.setDefaultResponseType">setDefaultResponseType</a></li>
             
                 <li data-name="taskrunner.XHRTask#completed"><a href="taskrunner.XHRTask.html#completed">completed</a></li>
             
@@ -1069,12 +1073,12 @@
     <div class="nameContainer">
         <h4 class="name" id="XHRTask">
             
-            new taskrunner.XHRTask<span class="signature">(url, <span class="optional">opt_data</span>, <span class="optional">opt_taskName</span>)</span>
+            new taskrunner.XHRTask<span class="signature">(url, <span class="optional">opt_data</span>, <span class="optional">Expected</span>, <span class="optional">opt_taskName</span>)</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="xhr-task.js.html">xhr-task.js</a>, <a href="xhr-task.js.html#line33">line 33</a>
+            <a href="xhr-task.js.html">xhr-task.js</a>, <a href="xhr-task.js.html#line41">line 41</a>
         </div>
         
     </div>
@@ -1180,6 +1184,38 @@
 	
         <tr>
             
+                <td class="name"><code>Expected</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="taskrunner.XHRTask.html#.ResponseType">taskrunner.XHRTask.ResponseType</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                reponse type.
+    If undefined the static value set with taskrunner.XHRTask.setDefaultResponseType will be used.
+    If no default response-type is set this value defaults to taskrunner.XHRTask.ResponseType.TEXT.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>opt_taskName</code></td>
             
             
@@ -1248,12 +1284,19 @@
     
     
     
-        <h5>Example</h5>
+        <h5>Examples</h5>
         
 
     
-    <pre class="prettyprint"><code>// Sends a POST request to "foo" with URL args "bar=1&baz=two"
-var task = new taskrunner.XHRTask("foo", {bar: 1, baz: "two"});
+    <pre class="prettyprint"><code>// Sends a POST request to "returns-json" with URL args "bar=1&baz=two"
+var task = new taskrunner.XHRTask("returns-json", {bar: 1, baz: "two"});
+task.run();</code></pre>
+    
+
+
+    
+    <pre class="prettyprint"><code>// Sends a GET request to that returns XML
+var task = new taskrunner.XHRTask("returns-xml", null, taskrunner.XHRTask.ResponseType.XML);
 task.run();</code></pre>
     
 
@@ -1283,6 +1326,168 @@ task.run();</code></pre>
         <h3 class="subsection-title">Members</h3>
         
         <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".ResponseType"><span class="type-signature static">static</span>taskrunner.XHRTask.ResponseType<span class="type-signature type number">number</span> </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Enumeration of XHR requestion response types.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>JSON</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>TEXT</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+                <td class="default">
+                
+                    2
+                
+                </td>
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>XML</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+                <td class="default">
+                
+                    3
+                
+                </td>
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <div class="nameContainer">
@@ -1426,6 +1631,77 @@ Call completeInternal() or errorInternal() when the task is finished.
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".setDefaultResponseType">
+            
+            <span class="type-signature static">static</span>taskrunner.XHRTask.setDefaultResponseType<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="xhr-task.js.html">xhr-task.js</a>, <a href="xhr-task.js.html#line151">line 151</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Set the default response-type for all XHR requests that do not otherwise specify a response-type.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
             
 <dt>
     <div class="nameContainer inherited">
@@ -3018,7 +3294,7 @@ Call completeInternal() or errorInternal() when the task is finished.
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Thu Feb 05 2015 21:36:38 GMT-0800 (PST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Thu Feb 05 2015 22:43:49 GMT-0800 (PST)
         </footer>
     </div>
 </div>
