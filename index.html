@@ -1,30 +1,124 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" ng-app="taskRunner">
   <head>
-    <title>Task Runner</title>
+    <meta charset="utf-8">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <title>Task Runner JS - More powerful JavaScript promises!</title>
+
+    <!-- TODO
+    <link rel="apple-touch-icon" sizes="57x57" href="app/images/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="app/images/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="app/images/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="app/images/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="app/images/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="app/images/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="app/images/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="app/images/favicon/apple-touch-icon-152x152.png">
+    <link rel="icon" type="image/png" href="app/images/favicon/favicon-196x196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="app/images/favicon/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="app/images/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="app/images/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="app/images/favicon/favicon-32x32.png" sizes="32x32">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="app/images/favicon/mstile-144x144.png">
+    -->
+
+    <!-- Open Graph metadata -->
+    <!-- TODO
+    <meta property="og:image" content="http://bvaughn.github.io/task-runner/..." />
+    <meta property="og:image:secure_url" content="https://bvaughn.github.io/task-runner/..." />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1000" />
+    <meta property="og:image:height" content="1062" />
+    -->
+    <meta property="og:url" content="https://bvaughn.github.io/task-runner/">
+    <meta property="twitter:domain" content="bvaughn.github.io">
+    <meta name="twitter:card" content="photo">
+    <meta name="twitter:creator" content="@brian_d_vaughn">
+    <meta property="og:title" content="Task Runner JS">
+    <meta property="og:description" content="More powerful JavaScript promises!">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/plugins/prism/prism.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/prism.css">
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
+    <script type="text/javascript" src="//rawgit.com/bvaughn/task-runner/master/dist/task-runner.js"></script>
+    <script type="text/javascript" src="//snapsvg.io/assets/js/snap.svg.js"></script>
+    <script type="text/javascript" src="//rawgit.com/danro/easing-js/master/easing.js"></script>
+
+    <script type="text/javascript" src="app/scripts/prism.js"></script>
+    <script type="text/javascript" src="app/scripts/app.js"></script>
+    <script type="text/javascript" src="app/scripts/services.js"></script>
+    <script type="text/javascript" src="app/scripts/controllers.js"></script>
+    <script type="text/javascript" src="app/scripts/directives.js"></script>
   </head>
-  <body>
-    <div class="container bs-docs-container">
-      <h1>
-        Task Runner Samples &amp; Demos
-      </h1>
+  <body data-spy="scroll">
 
-      <p>Here are some example uses of the Task Runner library:</p>
+    <header id="header" class="header">  
+        <div class="container">            
+            <h1 class="logo pull-left">
+                <a class="scrollto" href="#promo">
+                    <span class="logo-title">Task Runner</span>
+                </a>
+            </h1><!--//logo-->              
+            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button><!--//nav-toggle-->
+                </div><!--//navbar-header-->            
+                <div class="navbar-collapse collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item">
+                            <a ui-sref="index" ui-sref-active="active">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="samples" ui-sref-active="active">Samples</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="http://rawgit.com/bvaughn/task-runner/master/docs/index.html" target="_blank">API Documentation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a ui-sref="license" ui-sref-active="active">License</a>
+                        </li>
+                        <li class="nav-item last">
+                            <a ui-sref="contact" ui-sref-active="active">Contact</a>
+                        </li>
+                    </ul><!--//nav-->
+                </div><!--//navabr-collapse-->
+            </nav><!--//main-nav-->
+        </div>
+    </header><!--//header-->
+    
+    <div ui-view></div>
 
-      <ul>
-        <li>
-          <a href="demos/demo-1-overview.html">Demo application 1</a>
-        </li>
-        <li>
-          <a href="demos/demo-2-overview.html">Demo application 2</a>
-        </li>
-        <li>
-          <a href="demos/animation-1-overview.html">Sample Animation</a>
-        </li>
-      </ul>
+    <footer class="footer">
+        <div class="container text-center">
+            <small class="copyright">
+                Created by <a href="http://www.briandavidvaughn.com" target="_blank">Brian Vaughn</a>.
+                Check out my <a href="github.com/bvaughn/" target="_blank">other projects</a>.
+            </small>
+        </div><!--//container-->
+    </footer>
 
-      <p>More examples coming soon!</p>
-    </div>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.js"></script>
+    <script type="text/javascript" src="assets/plugins/prism/prism.js"></script>
+    <script type="text/javascript" src="assets/js/main.js"></script>
   </body>
 </html>
