@@ -28,8 +28,8 @@ goog.require('tr.Abstract');
  * @example
  * // Executes the supplied closure and waits to be completed.
  * // You should probably use tr.Xhr instead of $.ajax ;)
- * var task = new tr.Closure(
- *   function() {
+ * new tr.Closure(
+ *   function(task) {
 *      $.ajax("demo/url", {
 *        success: function(data) {
 *          task.complete(data);
@@ -38,10 +38,10 @@ goog.require('tr.Abstract');
 *          task.error('An error occurred');
 *        }
 *      });
- *   }, false);
- * task.run();
+ *   }, false).run();
  *
- * @param {function()} runImplFn The function to be executed when this Task is run.
+ * @param {function(!tr.ClosureTask)} runImplFn The function to be executed when this Task is run.
+ *                                              ClosureTask will pass a reference to itself to the function.
  * @param {boolean=} opt_synchronous This task should auto-complete when run.
  * @param {string=} opt_taskName Optional task name.
  * @extends {tr.Abstract}
@@ -63,7 +63,7 @@ goog.inherits(tr.Closure, tr.Abstract);
 /** @override */
 tr.Closure.prototype.runImpl = function() {
   try {
-    this.runImplFn_();
+    this.runImplFn_(this);
 
     if (this.autoCompleteUponRun_) {
       this.completeInternal();

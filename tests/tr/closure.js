@@ -31,6 +31,15 @@ describe('tr.Closure', function() {
     expect(task.getState()).toBe(tr.enums.State.COMPLETED);
   });
 
+  it('should pass a reference to itself to runImpl', function() {
+    var method = jasmine.createSpy();
+
+    var task = new tr.Closure(method, false);
+    task.run();
+
+    expect(method).toHaveBeenCalledWith(task);
+  });
+
   it('should error if wrapped function throws an error', function() {
     var error = new Error('test');
 
