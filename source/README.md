@@ -29,7 +29,7 @@ This type of task lets you treat a collection of tasks as a single tr.
 * [tr.Stub](http://rawgit.com/bvaughn/task-runner/master/docs/tr.Stub.html): No-op task primarily useful for unit testing of default, op-op values (that can be replaced with meaningful tasks to customize behavior).
 * [tr.Retry](http://rawgit.com/bvaughn/task-runner/master/docs/tr.Retry.html): Decorator for tasks that should be retried on error. This can be useful for tasks that might fail intermittently due to things like a temporary loss of Internet connectivity.
 * [tr.Timeout](http://rawgit.com/bvaughn/task-runner/master/docs/tr.Timeout.html): Decorates a Task and enforces a timeout. If the decorated task has not completed within the specified time limits, the decorator errors.
-* [tr.Sleep](http://rawgit.com/bvaughn/task-runner/master/docs/tr.Sleep.html): Waits for an amount of time to pass before completing.
+* [tr.Sleep](http://rawgit.com/bvaughn/task-runner/master/docs/tr.Sleep.html): Sleeps for an amount of time to pass before completing.
 
 ## Tasks that can be used to create new custom tasks
 

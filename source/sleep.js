@@ -11,8 +11,8 @@ goog.require('tr.enums.State');
  * <p>Resuming an interrupted Sleep can either re-start the timer at the beginning or resume from the interrupted point.
  *
  * @example
- * // Waits 500ms; restarts the timer after an interruption.
- * var task = new tr.Sleep(500, true);
+ * // Sleeps 500ms before completing
+ * var task = new tr.Sleep(500);
  * task.run();
  *
  * @param {number} timeout Time in milliseconds to wait before completing.

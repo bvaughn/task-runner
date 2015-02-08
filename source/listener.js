@@ -6,7 +6,7 @@ goog.require('tr.enums.State');
 
 
 /**
- * Waits for an event-dispatching target to trigger a specific type of event.
+ * Sleeps for an event-dispatching target to trigger a specific type of event.
  * 
  * @example
  * // Watches a DOM element until a "click" event is dispatched.
