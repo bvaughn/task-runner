@@ -49,8 +49,7 @@ goog.inherits(tr.Graph, tr.Abstract);
 
 
 /**
- * Adds a child task to the dependency graph and ensures that its blocking
- * dependencies (if any) are valid.
+ * Adds a child task to the dependency graph and ensures that its blocking dependencies (if any) are valid.
  *
  * @param {!tr.Task} task Child task to be run when this task is run.
  * @param {Array.<!tr.Task>=} blockers Blocking tasks that must complete
@@ -79,6 +78,26 @@ tr.Graph.prototype.add = function(task, blockers) {
 
 
 /**
+ * Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.
+ *
+ * @param {!Array.<!tr.Task>} tasks Child tasks to be run when this task is run.
+ * @param {Array.<!tr.Task>=} blockers Blocking tasks that must complete
+ *     successfully before this task can be run. This parameter can be ommitted
+ *     for tasks that do not have blocking dependencies.
+ * @return {!tr.Graph} a reference to the current task.
+ * @throws {Error} if task has been added more than once.
+ * @throws {Error} if cyclic dependencies are detected.
+ */
+tr.Graph.prototype.addAll = function(tasks, blockers) {
+  for (var i = 0, length = tasks.length; i < length; i++) {
+    this.add(tasks[i], blockers);
+  }
+
+  return this;
+};
+
+
+/**
  * Convenience method for adding a task to the "end" of the depepdency graph.
  * In othe words, this task will be blocked by all tasks already in the graph.
  *
@@ -93,21 +112,16 @@ tr.Graph.prototype.addToEnd = function(task) {
 
 
 /**
- * TODO
+ * Convenience method for adding multiple tasks to the "end" of the depepdency graph.
+ * In othe words, these tasks will be blocked by all tasks already in the graph.
  *
- * @param {!tr.Task} task Child task to be run when this task is run.
+ * @param {!Array.<!tr.Task>} tasks Child tasks to be run when this task is run.
  * @return {!tr.Graph} a reference to the current task.
  * @throws {Error} if task has been added more than once.
  * @throws {Error} if cyclic dependencies are detected.
  */
 tr.Graph.prototype.addAllToEnd = function(tasks) {
-  var blockers = this.tasks_.slice();
-
-  for (var i = 0, length = tasks.length; i < length; i++) {
-    this.add(tasks[i], blockers);
-  }
-
-  return this;
+  return this.addAll(tasks, this.tasks_.slice());
 };
 
 

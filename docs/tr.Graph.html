@@ -424,6 +424,8 @@
             
                 <li data-name="tr.Graph#add"><a href="tr.Graph.html#add">add</a></li>
             
+                <li data-name="tr.Graph#addAll"><a href="tr.Graph.html#addAll">addAll</a></li>
+            
                 <li data-name="tr.Graph#addAllToEnd"><a href="tr.Graph.html#addAllToEnd">addAllToEnd</a></li>
             
                 <li data-name="tr.Graph#addToEnd"><a href="tr.Graph.html#addToEnd">addToEnd</a></li>
@@ -1436,7 +1438,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
         
         <div class="tag-source">
-            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line63">line 63</a>
+            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line62">line 62</a>
         </div>
         
     </div>
@@ -1447,8 +1449,7 @@ Call completeInternal() or errorInternal() when the task is finished.
     
     
     <div class="description">
-        Adds a child task to the dependency graph and ensures that its blocking
-dependencies (if any) are valid.
+        Adds a child task to the dependency graph and ensures that its blocking dependencies (if any) are valid.
     </div>
     
 
@@ -1644,14 +1645,14 @@ reference to the current task.
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="addAllToEnd">
+        <h4 class="name" id="addAll">
             
-            addAllToEnd<span class="signature">(task)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="tr.Graph.html">tr.Graph</a>}</span>
+            addAll<span class="signature">(tasks, <span class="optional">blockers</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="tr.Graph.html">tr.Graph</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line103">line 103</a>
+            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line91">line 91</a>
         </div>
         
     </div>
@@ -1662,7 +1663,7 @@ reference to the current task.
     
     
     <div class="description">
-        TODO
+        Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.
     </div>
     
 
@@ -1693,13 +1694,13 @@ reference to the current task.
 	
         <tr>
             
-                <td class="name"><code>task</code></td>
+                <td class="name"><code>tasks</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="tr.Task.html">tr.Task</a></span>
+<span class="param-type">Array.&lt;!<a href="tr.Task.html">tr.Task</a>></span>
 
 
             
@@ -1709,7 +1710,222 @@ reference to the current task.
             
             <td class="description last">
                 
-                Child task to be run when this task is run.</td>
+                    
+                    
+                        
+                    
+                
+                Child tasks to be run when this task is run.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>blockers</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;!<a href="tr.Task.html">tr.Task</a>></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Blocking tasks that must complete
+    successfully before this task can be run. This parameter can be ommitted
+    for tasks that do not have blocking dependencies.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        if task has been added more than once.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        
+            <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        if cyclic dependencies are detected.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+</li>
+        </ul>
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+reference to the current task.
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addAllToEnd">
+            
+            addAllToEnd<span class="signature">(tasks)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="tr.Graph.html">tr.Graph</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line123">line 123</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Convenience method for adding multiple tasks to the "end" of the depepdency graph.
+In othe words, these tasks will be blocked by all tasks already in the graph.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tasks</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;!<a href="tr.Task.html">tr.Task</a>></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Child tasks to be run when this task is run.</td>
         </tr>
 	
 	
@@ -1828,7 +2044,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line90">line 90</a>
+            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line109">line 109</a>
         </div>
         
     </div>
@@ -3375,7 +3591,7 @@ reference to the current task.
     
         
         <div class="tag-source">
-            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line123">line 123</a>
+            <a href="graph.js.html">graph.js</a>, <a href="graph.js.html#line137">line 137</a>
         </div>
         
     </div>
@@ -3742,7 +3958,7 @@ reference to the current task.
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Sat Feb 07 2015 20:05:32 GMT-0800 (PST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Sat Feb 07 2015 22:06:35 GMT-0800 (PST)
         </footer>
     </div>
 </div>

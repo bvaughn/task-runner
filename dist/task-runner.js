@@ -6989,14 +6989,17 @@ tr.Graph.prototype.add = function(a, b) {
   this.getState() == tr.enums.State.RUNNING && this.runAllReadyTasks_();
   return this;
 };
+tr.Graph.prototype.addAll = function(a, b) {
+  for (var c = 0, d = a.length;c < d;c++) {
+    this.add(a[c], b);
+  }
+  return this;
+};
 tr.Graph.prototype.addToEnd = function(a) {
   return this.add(a, this.tasks_.slice());
 };
 tr.Graph.prototype.addAllToEnd = function(a) {
-  for (var b = this.tasks_.slice(), c = 0, d = a.length;c < d;c++) {
-    this.add(a[c], b);
-  }
-  return this;
+  return this.addAll(a, this.tasks_.slice());
 };
 tr.Graph.prototype.remove = function(a) {
   var b = this.tasks_.indexOf(a);

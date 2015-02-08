@@ -716,4 +716,32 @@ describe('tr.Graph', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.COMPLETED);
     expect(nullTask3.getState()).toBe(tr.enums.State.COMPLETED);
   });
+
+  it('should add a set of tasks with their blockers', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+    var nullTask3 = new tr.Stub();
+    var nullTask4 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2);
+    task.addAll([nullTask3, nullTask4], [nullTask1]);
+
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask3.getState()).toBe(tr.enums.State.INITIALIZED);
+    expect(nullTask4.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    nullTask1.complete();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask3.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask4.getState()).toBe(tr.enums.State.RUNNING);
+  });
 });
