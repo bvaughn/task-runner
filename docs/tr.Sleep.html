@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: task.js</title>
+    <title>Class: Sleep</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1049,236 +1049,1965 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="task.js.html">Source: task.js</h1>
+        <h1 class="page-title" data-filename="tr.Sleep.html">Class: Sleep</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source "><code>goog.provide('tr.Task');
+<header>
+    <h2>
+    Sleep
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="Sleep">
+            
+            new tr.Sleep<span class="signature">(timeout, opt_resetTimerAfterInterruption, <span class="optional">opt_taskName</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="sleep.js.html">sleep.js</a>, <a href="sleep.js.html#line25">line 25</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Waits for an amount of time to pass before completing.
+
+<p>Resuming an interrupted Sleep can either re-start the timer at the beginning or resume from the interrupted point.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
 
 
-
-/**
- * Represents a unit of work.
- * 
- * &lt;p>Tasks can be either synchronous or asynchronous.
- * They can be a single operation or a composite of other tasks.
- * This interface defines the minimum API that must be implemented by any job
- * within the Task Runner framework.
- *
- * 
- * &lt;p>The lifecycle of a task is as follows:
- * &lt;ol>
- * &lt;li>First, to start a task the run() method is called.
- * &lt;li>Once a task is running 3 things can happen:
- * &lt;ol>
- * &lt;li>It can complete successfully
- * &lt;li>It can fail
- * &lt;li>It can be interrupted (or paused)
- * &lt;/ol>
- * &lt;/ol>
- *
- * &lt;p>When a task fails or is explicitly interrupted, it goes into an idle state.
- * It can be resumed from this state by calling run() again.
- * Tasks that complete (successfully) may also be run again if desired.
- *
- * &lt;p>Tasks may also be reset explicitly (using the reset() method) in which case
- * they should discard any pending data and go back to their initialized state.
- *
- * &lt;p>It is important to design your task with the above concepts in mind.
- * Plan for the fact that your task may be executed more than once, or
- * interrupted before it is ever able to complete execution.
- *
- * @interface
- */
-tr.Task = function() {};
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                Time in milliseconds to wait before completing.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_resetTimerAfterInterruption</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
 
 
-/**
- * Optional data value passed to the Task complete/error/interruption method.
- *
- * @return {!Object|undefined}
- */
-tr.Task.prototype.getData = goog.abstractMethod;
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                Reset the timer after interruption; defaults to false.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_taskName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
-/**
- * Additional information about the cause of a task error.
- *
- * @return {string|undefined}
- */
-tr.Task.prototype.getErrorMessage = goog.abstractMethod;
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Optional defaulttask name.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>// Waits 500ms; restarts the timer after an interruption.
+var task = new tr.Sleep(500, true);
+task.run();</code></pre>
+    
+
+    
+</dd>
+
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="tr.Abstract.html">tr.Abstract</a></li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="interruptImpl">interruptImpl</h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        This method is called each time a task is interrupted.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="resetImpl">resetImpl</h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        This method is called each time a task is reset.
+Override it to perform custom cleanup between task-runs.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="runImpl">runImpl</h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        This method is called each time a task is run.
+Call completeInternal() or errorInternal() when the task is finished.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="completed">
+            
+                <span class="inherited"><a href="tr.Abstract.html#completed">inherited</a></span>
+            
+            completed<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line277">line 277</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="completeInternal">
+            
+                <span class="inherited"><a href="tr.Abstract.html#completeInternal">inherited</a></span>
+            
+            <span class="type-signature ">protected</span>completeInternal<span class="signature">(<span class="optional">data</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line321">line 321</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Call this method to mark the task as complete.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
 
 
-/**
- * Number of internal operations conducted by this tr.
- *
- * @return {number}
- */
-tr.Task.prototype.getOperationsCount = goog.abstractMethod;
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Task data.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        if called while a task is not running.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
 
 
-/**
- * Number of internal operations that have completed.
- *
- * @return {number}
- */
-tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
+            </dd>
+        </dl>
+    </dt>
+</dl>
 
 
-/**
- * Returns the state of the tr.
- *
- * @return {!tr.enums.State}
- */
-tr.Task.prototype.getState = goog.abstractMethod;
+        
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="errored">
+            
+                <span class="inherited"><a href="tr.Abstract.html#errored">inherited</a></span>
+            
+            errored<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line283">line 283</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="errorInternal">
+            
+                <span class="inherited"><a href="tr.Abstract.html#errorInternal">inherited</a></span>
+            
+            <span class="type-signature ">protected</span>errorInternal<span class="signature">(<span class="optional">data</span>, <span class="optional">errorMessage</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line342">line 342</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Call this method to mark the task as errored.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
 
 
-/**
- * Optional human-readable name, typically useful for debug purposes.
- *
- * @return {string|undefined}
- */
-tr.Task.prototype.getTaskName = goog.abstractMethod;
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Task data.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>errorMessage</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
-/**
- * Globally unique ID for the current Task-instance.
- *
- * Tasks should be assigned a unique ID when they are created.
- * IDs remain with their Tasks as long as the Tasks exist and are not reused.
- *
- * @return {number}
- */
-tr.Task.prototype.getUniqueID = goog.abstractMethod;
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Error message.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        if called while a task is not running.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
 
 
-/**
- * Starts a tr.
- * This method may also be used to re-run a task that has errorred or to resume
- * a task that has been interrupted.
- *
- * @throws {Error} if run() is called while a task is already running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.run = goog.abstractMethod;
+            </dd>
+        </dl>
+    </dt>
+</dl>
 
 
-/**
- * Interrupts a running tr.
- * An interrupted task can be resumed by calling run().
- *
- * @throws {Error} if called while a task is not running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interrupt = goog.abstractMethod;
+        
+    
+    
+    
+    
+</dd>
 
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="final">
+            
+                <span class="inherited"><a href="tr.Abstract.html#final">inherited</a></span>
+            
+            final<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line289">line 289</a>
+        </div>
+        
+    </div>
 
-/**
- * Interrupts a running task until another task has completed.
- * There can only be 1 active interrupting Task at a time.
- * Use a composite to interrupt for multiple tasks.
- *
- * This method will not start an interrupting tr.
- * It must be run by the caller.
- *
- * @param {!tr.Task} task to wait for
- * @throws {Error} if called while a task is not running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interruptForTask = goog.abstractMethod;
+    
+</dt>
+<dd>
+    
+    
 
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-/**
- * Resets the task to it's initialized TaskState so that it can be re-run.
- * This method should not be called on a task that is running.
- *
- * @throws {Error} if reset() is for a task that is currently running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.reset = goog.abstractMethod;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
+    
+    
 
-/**
- * Attach a callback function to a task event.
- *
- * @param {!tr.enums.Event} taskEvent
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.on = goog.abstractMethod;
+    
 
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
-/**
- * Dettach a callback function from a task event.
- *
- * @param {!tr.enums.Event} taskEvent
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.off = goog.abstractMethod;
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getCompletedOperationsCount">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getCompletedOperationsCount">inherited</a></span>
+            
+            getCompletedOperationsCount<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line96">line 96</a>
+        </div>
+        
+    </div>
 
+    
+</dt>
+<dd>
+    
+    
 
-/**
- * This callback will be invoked when a task is started.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.started = goog.abstractMethod;
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
-/**
- * This callback will be invoked whenever this task is interrupted.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interrupted = goog.abstractMethod;
+    
+    
 
+    
 
-/**
- * This callback will be invoked only upon successful completion of the tr.
- * Callbacks may be called multiple times (if the task is run more than once).
- * Multiple callbacks may be registered with a task as well.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.completed = goog.abstractMethod;
+    
+    
+    
+    
+    
+    
+    
+</dd>
 
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getData">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getData">inherited</a></span>
+            
+            getData<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line78">line 78</a>
+        </div>
+        
+    </div>
 
-/**
- * This callback will be invoked only upon a task error.
- * Callbacks may be called multiple times (if the task is run more than once).
- * Multiple callbacks may be registered with a task as well.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.errored = goog.abstractMethod;
+    
+</dt>
+<dd>
+    
+    
 
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-/**
- * This callback will be invoked after a task has completed or errorred.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.final = goog.abstractMethod;
-</code></pre>
-        </article>
-    </section>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getErrorMessage">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getErrorMessage">inherited</a></span>
+            
+            getErrorMessage<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line84">line 84</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getOperationsCount">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getOperationsCount">inherited</a></span>
+            
+            getOperationsCount<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line90">line 90</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getState">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getState">inherited</a></span>
+            
+            getState<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line102">line 102</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getTaskName">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getTaskName">inherited</a></span>
+            
+            getTaskName<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line108">line 108</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getUniqueID">
+            
+                <span class="inherited"><a href="tr.Abstract.html#getUniqueID">inherited</a></span>
+            
+            getUniqueID<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line114">line 114</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="interrupt">
+            
+                <span class="inherited"><a href="tr.Abstract.html#interrupt">inherited</a></span>
+            
+            interrupt<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line158">line 158</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="interrupted">
+            
+                <span class="inherited"><a href="tr.Abstract.html#interrupted">inherited</a></span>
+            
+            interrupted<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line271">line 271</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="interruptForTask">
+            
+                <span class="inherited"><a href="tr.Abstract.html#interruptForTask">inherited</a></span>
+            
+            interruptForTask<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line174">line 174</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="off">
+            
+                <span class="inherited"><a href="tr.Abstract.html#off">inherited</a></span>
+            
+            off<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line243">line 243</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="on">
+            
+                <span class="inherited"><a href="tr.Abstract.html#on">inherited</a></span>
+            
+            on<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line220">line 220</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="reset">
+            
+                <span class="inherited"><a href="tr.Abstract.html#reset">inherited</a></span>
+            
+            reset<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line202">line 202</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="run">
+            
+                <span class="inherited"><a href="tr.Abstract.html#run">inherited</a></span>
+            
+            run<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line137">line 137</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="started">
+            
+                <span class="inherited"><a href="tr.Abstract.html#started">inherited</a></span>
+            
+            started<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="abstract.js.html">abstract.js</a>, <a href="abstract.js.html#line265">line 265</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
 
 
 
@@ -1287,7 +3016,7 @@ tr.Task.prototype.final = goog.abstractMethod;
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Sat Feb 07 2015 17:00:38 GMT-0800 (PST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Sat Feb 07 2015 17:00:39 GMT-0800 (PST)
         </footer>
     </div>
 </div>

@@ -27,7 +27,7 @@ gulp.task('build', function() {
       compilerPath: 'bower_components/closure-compiler/compiler.jar',
       fileName: 'task-runner.js',
       compilerFlags: {
-        closure_entry_point: 'taskrunner',
+        closure_entry_point: 'tr',
         language_in: 'ECMASCRIPT5',
         only_closure_dependencies: true,
         //formatting: 'pretty_print'
@@ -45,7 +45,7 @@ gulp.task('deps', function() {
     ])
     .pipe(closureDeps({
       fileName: 'task-runner-deps.js',
-      prefix: '../',
+      prefix: '',
       baseDir: 'source/'
     }))
     .pipe(gulp.dest('dist'));

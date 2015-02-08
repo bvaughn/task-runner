@@ -17,10 +17,15 @@ module.exports = function(config) {
     ],
 
     //what kinda reports one wants to see
-    reporters: ['coverage','progress'],
+    reporters: [
+      'coverage',
+      'progress'
+    ],
 
     //use phantomJS as a browser
-    browsers: ['PhantomJS'],
+    browsers: [
+      'PhantomJS'
+    ],
 
     // Auto run tests on start (when browsers are captured) and exit
     // CLI --single-run --no-single-run
@@ -31,9 +36,21 @@ module.exports = function(config) {
     reportSlowerThan: 500,
 
     preprocessors: {
-      'tests/*.js': ['closure', 'closure-iit'], // preprocessed for dependencies (closure) and for iits
-      'source/*.js': ['closure'], // preprocessed for dependencies
-      'bower_components/closure-library/closure/goog/deps.js': ['closure-deps'] // external deps
+      // preprocessed for dependencies (closure) and for iits
+      'tests/**/*.js': [
+        'closure',
+        'closure-iit'
+      ],
+
+      // preprocessed for dependencies
+      'source/**/*.js': [
+        'closure'
+      ],
+
+      // external deps
+      'bower_components/closure-library/closure/goog/deps.js': [
+        'closure-deps'
+      ]
     }
   });
 };

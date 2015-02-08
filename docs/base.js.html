@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: task.js</title>
+    <title>Source: base.js</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -34,56 +34,56 @@
     </div>
     <ul class="list">
     
-        <li class="item" data-name="tr.Abstract">
+        <li class="item" data-name="tr.Base">
             <span class="title">
-                <a href="tr.Abstract.html">tr.Abstract</a>
+                <a href="tr.Base.html">tr.Base</a>
                 
             </span>
             <ul class="members itemMembers">
             
             <span class="subtitle">Members</span>
             
-                <li data-name="tr.Abstract#completed"><a href="tr.Abstract.html#completed">completed</a></li>
+                <li data-name="tr.Base#completed"><a href="tr.Base.html#completed">completed</a></li>
             
-                <li data-name="tr.Abstract#errored"><a href="tr.Abstract.html#errored">errored</a></li>
+                <li data-name="tr.Base#errored"><a href="tr.Base.html#errored">errored</a></li>
             
-                <li data-name="tr.Abstract#final"><a href="tr.Abstract.html#final">final</a></li>
+                <li data-name="tr.Base#final"><a href="tr.Base.html#final">final</a></li>
             
-                <li data-name="tr.Abstract#getCompletedOperationsCount"><a href="tr.Abstract.html#getCompletedOperationsCount">getCompletedOperationsCount</a></li>
+                <li data-name="tr.Base#getCompletedOperationsCount"><a href="tr.Base.html#getCompletedOperationsCount">getCompletedOperationsCount</a></li>
             
-                <li data-name="tr.Abstract#getData"><a href="tr.Abstract.html#getData">getData</a></li>
+                <li data-name="tr.Base#getData"><a href="tr.Base.html#getData">getData</a></li>
             
-                <li data-name="tr.Abstract#getErrorMessage"><a href="tr.Abstract.html#getErrorMessage">getErrorMessage</a></li>
+                <li data-name="tr.Base#getErrorMessage"><a href="tr.Base.html#getErrorMessage">getErrorMessage</a></li>
             
-                <li data-name="tr.Abstract#getOperationsCount"><a href="tr.Abstract.html#getOperationsCount">getOperationsCount</a></li>
+                <li data-name="tr.Base#getOperationsCount"><a href="tr.Base.html#getOperationsCount">getOperationsCount</a></li>
             
-                <li data-name="tr.Abstract#getState"><a href="tr.Abstract.html#getState">getState</a></li>
+                <li data-name="tr.Base#getState"><a href="tr.Base.html#getState">getState</a></li>
             
-                <li data-name="tr.Abstract#getTaskName"><a href="tr.Abstract.html#getTaskName">getTaskName</a></li>
+                <li data-name="tr.Base#getTaskName"><a href="tr.Base.html#getTaskName">getTaskName</a></li>
             
-                <li data-name="tr.Abstract#getUniqueID"><a href="tr.Abstract.html#getUniqueID">getUniqueID</a></li>
+                <li data-name="tr.Base#getUniqueID"><a href="tr.Base.html#getUniqueID">getUniqueID</a></li>
             
-                <li data-name="tr.Abstract#interrupt"><a href="tr.Abstract.html#interrupt">interrupt</a></li>
+                <li data-name="tr.Base#interrupt"><a href="tr.Base.html#interrupt">interrupt</a></li>
             
-                <li data-name="tr.Abstract#interrupted"><a href="tr.Abstract.html#interrupted">interrupted</a></li>
+                <li data-name="tr.Base#interrupted"><a href="tr.Base.html#interrupted">interrupted</a></li>
             
-                <li data-name="tr.Abstract#interruptForTask"><a href="tr.Abstract.html#interruptForTask">interruptForTask</a></li>
+                <li data-name="tr.Base#interruptForTask"><a href="tr.Base.html#interruptForTask">interruptForTask</a></li>
             
-                <li data-name="tr.Abstract#interruptImpl"><a href="tr.Abstract.html#interruptImpl">interruptImpl</a></li>
+                <li data-name="tr.Base#interruptImpl"><a href="tr.Base.html#interruptImpl">interruptImpl</a></li>
             
-                <li data-name="tr.Abstract#off"><a href="tr.Abstract.html#off">off</a></li>
+                <li data-name="tr.Base#off"><a href="tr.Base.html#off">off</a></li>
             
-                <li data-name="tr.Abstract#on"><a href="tr.Abstract.html#on">on</a></li>
+                <li data-name="tr.Base#on"><a href="tr.Base.html#on">on</a></li>
             
-                <li data-name="tr.Abstract#reset"><a href="tr.Abstract.html#reset">reset</a></li>
+                <li data-name="tr.Base#reset"><a href="tr.Base.html#reset">reset</a></li>
             
-                <li data-name="tr.Abstract#resetImpl"><a href="tr.Abstract.html#resetImpl">resetImpl</a></li>
+                <li data-name="tr.Base#resetImpl"><a href="tr.Base.html#resetImpl">resetImpl</a></li>
             
-                <li data-name="tr.Abstract#run"><a href="tr.Abstract.html#run">run</a></li>
+                <li data-name="tr.Base#run"><a href="tr.Base.html#run">run</a></li>
             
-                <li data-name="tr.Abstract#runImpl"><a href="tr.Abstract.html#runImpl">runImpl</a></li>
+                <li data-name="tr.Base#runImpl"><a href="tr.Base.html#runImpl">runImpl</a></li>
             
-                <li data-name="tr.Abstract#started"><a href="tr.Abstract.html#started">started</a></li>
+                <li data-name="tr.Base#started"><a href="tr.Base.html#started">started</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -93,9 +93,9 @@
             
             <span class="subtitle">Methods</span>
             
-                <li data-name="tr.Abstract#completeInternal"><a href="tr.Abstract.html#completeInternal">completeInternal</a></li>
+                <li data-name="tr.Base#completeInternal"><a href="tr.Base.html#completeInternal">completeInternal</a></li>
             
-                <li data-name="tr.Abstract#errorInternal"><a href="tr.Abstract.html#errorInternal">errorInternal</a></li>
+                <li data-name="tr.Base#errorInternal"><a href="tr.Base.html#errorInternal">errorInternal</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -1049,232 +1049,398 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="task.js.html">Source: task.js</h1>
+        <h1 class="page-title" data-filename="base.js.html">Source: base.js</h1>
         
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source "><code>goog.provide('tr.Task');
+            <pre class="prettyprint source "><code>goog.provide('tr.Base');
+
+goog.require('tr.Task');
+goog.require('tr.enums.Event');
+goog.require('tr.enums.State');
 
 
 
 /**
- * Represents a unit of work.
+ * Abstract implementation of Task.
+ *
+ * &lt;p>To create a Task extend this class and override runImpl(), interruptImpl(), and resetImpl().
+ *
+ * &lt;p>Your Task should call completeInternal() or errorInternal() when it is done.
+ *
+ * @example
+ * tr.CustomTask = function() {
+ *   goog.base(this);
+ * };
+ * goog.inherits(tr.CustomTask, tr.Base);
  * 
- * &lt;p>Tasks can be either synchronous or asynchronous.
- * They can be a single operation or a composite of other tasks.
- * This interface defines the minimum API that must be implemented by any job
- * within the Task Runner framework.
- *
+ * tr.CustomTask.prototype.resetImpl = function() {
+ *   // Reset state
+ * };
  * 
- * &lt;p>The lifecycle of a task is as follows:
- * &lt;ol>
- * &lt;li>First, to start a task the run() method is called.
- * &lt;li>Once a task is running 3 things can happen:
- * &lt;ol>
- * &lt;li>It can complete successfully
- * &lt;li>It can fail
- * &lt;li>It can be interrupted (or paused)
- * &lt;/ol>
- * &lt;/ol>
+ * tr.CustomTask.prototype.interruptImpl = function() {
+ *   // Interrupt any moving parts
+ * };
+ * 
+ * tr.CustomTask.prototype.runImpl = function() {
+ *   // Start the task
+ * };
  *
- * &lt;p>When a task fails or is explicitly interrupted, it goes into an idle state.
- * It can be resumed from this state by calling run() again.
- * Tasks that complete (successfully) may also be run again if desired.
- *
- * &lt;p>Tasks may also be reset explicitly (using the reset() method) in which case
- * they should discard any pending data and go back to their initialized state.
- *
- * &lt;p>It is important to design your task with the above concepts in mind.
- * Plan for the fact that your task may be executed more than once, or
- * interrupted before it is ever able to complete execution.
- *
- * @interface
+ * @param {string=} opt_taskName Optional defaulttask name,
+ *     useful for automated testing or debugging.
+ * @implements {tr.Task}
+ * @constructor
+ * @struct
  */
-tr.Task = function() {};
+tr.Base = function(opt_taskName) {
+  /** @private {string|undefined} */
+  this.taskName_ = opt_taskName;
+
+  /** @private {number} */
+  this.uniqueID_ = tr.Base.ID_++;
+
+  /** @private {!tr.enums.State} */
+  this.state_ = tr.enums.State.INITIALIZED;
+
+  /** @private {!Object|undefined} */
+  this.data_ = undefined;
+
+  /** @private {string|undefined} */
+  this.errorMessage_ = undefined;
+
+  /** @private {tr.Task} */
+  this.interruptingTask_ = null;
+
+  /**
+   * A map from task events to its corresponding callbacks.
+   * @private {!Object.&lt;
+   *             !tr.enums.Event,
+   *             !Array.&lt;!tr.Base.TaskCallback_>>}
+   */
+  this.taskCallbackMap_ = {};
+};
 
 
 /**
- * Optional data value passed to the Task complete/error/interruption method.
+ * Auto-incremeted unique ID managed by AbstractTask.
  *
- * @return {!Object|undefined}
+ * @private
  */
-tr.Task.prototype.getData = goog.abstractMethod;
+tr.Base.ID_ = 0;
+
+
+/** @override */
+tr.Base.prototype.getData = function() {
+  return this.data_;
+};
+
+
+/** @override */
+tr.Base.prototype.getErrorMessage = function() {
+  return this.errorMessage_;
+};
+
+
+/** @override */
+tr.Base.prototype.getOperationsCount = function() {
+  return 1;
+};
+
+
+/** @override */
+tr.Base.prototype.getCompletedOperationsCount = function() {
+  return this.state_ == tr.enums.State.COMPLETED ? 1 : 0;
+};
+
+
+/** @override */
+tr.Base.prototype.getState = function() {
+  return this.state_;
+};
+
+
+/** @override */
+tr.Base.prototype.getTaskName = function() {
+  return this.taskName_;
+};
+
+
+/** @override */
+tr.Base.prototype.getUniqueID = function() {
+  return this.uniqueID_;
+};
 
 
 /**
- * Additional information about the cause of a task error.
- *
- * @return {string|undefined}
- */
-tr.Task.prototype.getErrorMessage = goog.abstractMethod;
-
-
-/**
- * Number of internal operations conducted by this tr.
- *
- * @return {number}
- */
-tr.Task.prototype.getOperationsCount = goog.abstractMethod;
-
-
-/**
- * Number of internal operations that have completed.
- *
- * @return {number}
- */
-tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
-
-
-/**
- * Returns the state of the tr.
- *
- * @return {!tr.enums.State}
- */
-tr.Task.prototype.getState = goog.abstractMethod;
-
-
-/**
- * Optional human-readable name, typically useful for debug purposes.
- *
- * @return {string|undefined}
- */
-tr.Task.prototype.getTaskName = goog.abstractMethod;
-
-
-/**
- * Globally unique ID for the current Task-instance.
- *
- * Tasks should be assigned a unique ID when they are created.
- * IDs remain with their Tasks as long as the Tasks exist and are not reused.
- *
- * @return {number}
- */
-tr.Task.prototype.getUniqueID = goog.abstractMethod;
-
-
-/**
- * Starts a tr.
- * This method may also be used to re-run a task that has errorred or to resume
- * a task that has been interrupted.
- *
- * @throws {Error} if run() is called while a task is already running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.run = goog.abstractMethod;
-
-
-/**
- * Interrupts a running tr.
- * An interrupted task can be resumed by calling run().
- *
- * @throws {Error} if called while a task is not running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interrupt = goog.abstractMethod;
-
-
-/**
- * Interrupts a running task until another task has completed.
- * There can only be 1 active interrupting Task at a time.
- * Use a composite to interrupt for multiple tasks.
- *
- * This method will not start an interrupting tr.
- * It must be run by the caller.
- *
- * @param {!tr.Task} task to wait for
- * @throws {Error} if called while a task is not running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interruptForTask = goog.abstractMethod;
-
-
-/**
- * Resets the task to it's initialized TaskState so that it can be re-run.
- * This method should not be called on a task that is running.
- *
- * @throws {Error} if reset() is for a task that is currently running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.reset = goog.abstractMethod;
-
-
-/**
- * Attach a callback function to a task event.
+ * Executes an array of callback functions with the current task as the only
+ * paramater.
  *
  * @param {!tr.enums.Event} taskEvent
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * @private
  */
-tr.Task.prototype.on = goog.abstractMethod;
+tr.Base.prototype.executeCallbacks_ = function(taskEvent) {
+  var taskCallbacks = this.taskCallbackMap_[taskEvent];
+  if (taskCallbacks) {
+    for (var i in taskCallbacks) {
+      taskCallbacks[i].execute(this);
+    }
+  }
+};
+
+
+/** @override */
+tr.Base.prototype.run = function() {
+  if (this.state_ == tr.enums.State.RUNNING) {
+    throw 'Cannot run a running tr.';
+  }
+
+  if (this.state_ != tr.enums.State.COMPLETED) {
+    this.interruptingTask_ = null;
+    this.data_ = undefined;
+    this.errorMessage_ = undefined;
+    this.state_ = tr.enums.State.RUNNING;
+
+    this.executeCallbacks_(tr.enums.Event.STARTED);
+
+    this.runImpl();
+  }
+
+  return this;
+};
+
+
+/** @override */
+tr.Base.prototype.interrupt = function() {
+  if (this.state_ != tr.enums.State.RUNNING) {
+    throw 'Cannot interrupt a task that is not running.';
+  }
+
+  this.state_ = tr.enums.State.INTERRUPTED;
+
+  this.interruptImpl();
+
+  this.executeCallbacks_(tr.enums.Event.INTERRUPTED);
+
+  return this;
+};
+
+
+/** @override */
+tr.Base.prototype.interruptForTask = function(task) {
+  this.interruptingTask_ = task;
+
+  this.interrupt();
+
+  tr.completed(function(t) {
+    if (t == this.interruptingTask_) {
+      this.interruptingTask_ = null;
+
+      this.run();
+    }
+  }, this);
+  tr.errored(function(t) {
+    if (t == this.interruptingTask_) {
+      this.interruptingTask_ = null;
+
+      // TRICKY Tasks cannot error unless they're running
+      this.state_ = tr.enums.State.RUNNING;
+
+      this.errorInternal(t.getData(), t.getErrorMessage());
+    }
+  }, this);
+
+  return this;
+};
+
+
+/** @override */
+tr.Base.prototype.reset = function() {
+  if (this.state_ == tr.enums.State.RUNNING) {
+    throw 'Cannot reset a running tr.';
+  }
+
+  if (this.state_ != tr.enums.State.INITIALIZED) {
+    this.data_ = undefined;
+    this.errorMessage_ = undefined;
+    this.state_ = tr.enums.State.INITIALIZED;
+
+    this.resetImpl();
+  }
+
+  return this;
+};
+
+
+/** @override */
+tr.Base.prototype.on = function(
+    taskEvent, callback, opt_scope) {
+  this.taskCallbackMap_[taskEvent] = this.taskCallbackMap_[taskEvent] || [];
+
+  var taskCallbacks = this.taskCallbackMap_[taskEvent];
+  var index = -1;
+  for (var i in taskCallbacks) {
+    var taskCallback = taskCallbacks[i];
+    if (taskCallback.callback_ === callback &amp;
+        taskCallback.scope_ === opt_scope) {
+      index = i;
+      break;
+    }
+  }
+  if (index == -1) {
+    taskCallbacks.push(
+        new tr.Base.TaskCallback_(callback, opt_scope));
+  }
+  return this;
+};
+
+
+/** @override */
+tr.Base.prototype.off = function(
+    taskEvent, callback, opt_scope) {
+  var taskCallbacks = this.taskCallbackMap_[taskEvent];
+  var index = -1;
+  if (taskCallbacks) {
+    for (var i in taskCallbacks) {
+      var taskCallback = taskCallbacks[i];
+      if (taskCallback.callback_ === callback &amp;
+          taskCallback.scope_ === opt_scope) {
+        index = i;
+        break;
+      }
+    }
+  }
+  if (index != -1) {
+    taskCallbacks.splice(index, 1);
+  }
+  return this;
+};
+
+
+/** @override */
+tr.Base.prototype.started = function(callback, opt_scope) {
+  return this.on(tr.enums.Event.STARTED, callback, opt_scope);
+};
+
+
+/** @override */
+tr.Base.prototype.interrupted = function(callback, opt_scope) {
+  return this.on(tr.enums.Event.INTERRUPTED, callback, opt_scope);
+};
+
+
+/** @override */
+tr.Base.prototype.completed = function(callback, opt_scope) {
+  return this.on(tr.enums.Event.COMPLETED, callback, opt_scope);
+};
+
+
+/** @override */
+tr.Base.prototype.errored = function(callback, opt_scope) {
+  return this.on(tr.enums.Event.ERRORED, callback, opt_scope);
+};
+
+
+/** @override */
+tr.Base.prototype.final = function(callback, opt_scope) {
+  return this.on(tr.enums.Event.FINAL, callback, opt_scope);
+};
 
 
 /**
- * Dettach a callback function from a task event.
- *
- * @param {!tr.enums.Event} taskEvent
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * This method is called each time a task is run.
+ * Call completeInternal() or errorInternal() when the task is finished.
  */
-tr.Task.prototype.off = goog.abstractMethod;
+tr.Base.prototype.runImpl = goog.abstractMethod;
 
 
 /**
- * This callback will be invoked when a task is started.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * This method is called each time a task is interrupted.
  */
-tr.Task.prototype.started = goog.abstractMethod;
+tr.Base.prototype.interruptImpl = goog.nullFunction;
 
 
 /**
- * This callback will be invoked whenever this task is interrupted.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * This method is called each time a task is reset.
+ * Override it to perform custom cleanup between task-runs.
  */
-tr.Task.prototype.interrupted = goog.abstractMethod;
+tr.Base.prototype.resetImpl = goog.nullFunction;
 
 
 /**
- * This callback will be invoked only upon successful completion of the tr.
- * Callbacks may be called multiple times (if the task is run more than once).
- * Multiple callbacks may be registered with a task as well.
+ * Call this method to mark the task as complete.
  *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * @param {!Object=} data Task data.
+ * @throws {Error} if called while a task is not running.
+ * @protected
  */
-tr.Task.prototype.completed = goog.abstractMethod;
+tr.Base.prototype.completeInternal = function(data) {
+  if (this.state_ != tr.enums.State.RUNNING) {
+    throw 'Cannot complete an inactive tr.';
+  }
+
+  this.data_ = data;
+  this.state_ = tr.enums.State.COMPLETED;
+
+  this.executeCallbacks_(tr.enums.Event.COMPLETED);
+  this.executeCallbacks_(tr.enums.Event.FINAL);
+};
 
 
 /**
- * This callback will be invoked only upon a task error.
- * Callbacks may be called multiple times (if the task is run more than once).
- * Multiple callbacks may be registered with a task as well.
+ * Call this method to mark the task as errored.
  *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * @param {!Object=} data Task data.
+ * @param {string=} errorMessage Error message.
+ * @throws {Error} if called while a task is not running.
+ * @protected
  */
-tr.Task.prototype.errored = goog.abstractMethod;
+tr.Base.prototype.errorInternal = function(data, errorMessage) {
+  if (this.state_ != tr.enums.State.RUNNING) {
+    throw 'Cannot error an inactive tr.';
+  }
+
+  this.data_ = data;
+  this.errorMessage_ = errorMessage;
+  this.state_ = tr.enums.State.ERRORED;
+
+  this.executeCallbacks_(tr.enums.Event.ERRORED);
+  this.executeCallbacks_(tr.enums.Event.FINAL);
+};
 
 
 /**
- * This callback will be invoked after a task has completed or errorred.
+ * A TaskCallback contains a reference to a callback function and the scope it
+ * should be called with.
  *
  * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
+ * @constructor
+ * @struct
+ * @private
  */
-tr.Task.prototype.final = goog.abstractMethod;
+tr.Base.TaskCallback_ = function(callback, opt_scope) {
+  /** @private {function(!tr.Task)} */
+  this.callback_ = callback;
+
+  /** @private {?} */
+  this.scope_ = opt_scope;
+};
+
+
+/**
+ * Executes the callback function with the scope if it's available.
+ * @param {!tr.Task} task
+ */
+tr.Base.TaskCallback_.prototype.execute = function(task) {
+  if (this.scope_) {
+    this.callback_.call(this.scope_, task);
+  } else {
+    this.callback_(task);
+  }
+};
 </code></pre>
         </article>
     </section>
@@ -1287,7 +1453,7 @@ tr.Task.prototype.final = goog.abstractMethod;
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Sat Feb 07 2015 17:00:38 GMT-0800 (PST)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Sat Feb 07 2015 16:31:22 GMT-0800 (PST)
         </footer>
     </div>
 </div>

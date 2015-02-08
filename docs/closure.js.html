@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: task.js</title>
+    <title>Source: closure.js</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1049,232 +1049,108 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="task.js.html">Source: task.js</h1>
+        <h1 class="page-title" data-filename="closure.js.html">Source: closure.js</h1>
         
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source "><code>goog.provide('tr.Task');
+            <pre class="prettyprint source "><code>goog.provide('tr.Closure');
+
+goog.require('tr.Abstract');
 
 
 
 /**
- * Represents a unit of work.
+ * Invokes a callback function when run.
  * 
- * &lt;p>Tasks can be either synchronous or asynchronous.
- * They can be a single operation or a composite of other tasks.
- * This interface defines the minimum API that must be implemented by any job
- * within the Task Runner framework.
+ * &lt;p>This type of Task can be asynchronous or asynchronous.
+ * &lt;ul>
+ * &lt;li>Set &lt;code>opt_synchronous&lt;/code> to TRUE for synchronous tasks.
+ * This type of task will automatically complete itself after the callback function is called.
+ * If an error occurs in the callback function, this type of task will error.
+ * &lt;li>Set &lt;code>opt_synchronous&lt;/code> to FALSE for asynchronous tasks.
+ * In this case the task not complete until specifically instructed to do so.
+ * To complete the task, your callback should call either complete() or error().
+ * &lt;/ul>
  *
- * 
- * &lt;p>The lifecycle of a task is as follows:
- * &lt;ol>
- * &lt;li>First, to start a task the run() method is called.
- * &lt;li>Once a task is running 3 things can happen:
- * &lt;ol>
- * &lt;li>It can complete successfully
- * &lt;li>It can fail
- * &lt;li>It can be interrupted (or paused)
- * &lt;/ol>
- * &lt;/ol>
+ * @example
+ * // Executes the supplied closure and auto-completes after running it.
+ * var task = new tr.Closure(
+ *   function() {
+ *     // Do stuff
+ *   }, true);
+ * task.run();
  *
- * &lt;p>When a task fails or is explicitly interrupted, it goes into an idle state.
- * It can be resumed from this state by calling run() again.
- * Tasks that complete (successfully) may also be run again if desired.
+ * @example
+ * // Executes the supplied closure and waits to be completed.
+ * // You should probably use tr.Xhr instead of $.ajax ;)
+ * var task = new tr.Closure(
+ *   function() {
+*      $.ajax("demo/url", {
+*        success: function(data) {
+*          task.complete(data);
+*        },
+*        error: function() {
+*          task.error('An error occurred');
+*        }
+*      });
+ *   }, false);
+ * task.run();
  *
- * &lt;p>Tasks may also be reset explicitly (using the reset() method) in which case
- * they should discard any pending data and go back to their initialized state.
- *
- * &lt;p>It is important to design your task with the above concepts in mind.
- * Plan for the fact that your task may be executed more than once, or
- * interrupted before it is ever able to complete execution.
- *
- * @interface
+ * @param {function()} runImplFn The function to be executed when this Task is run.
+ * @param {boolean=} opt_synchronous This task should auto-complete when run.
+ * @param {string=} opt_taskName Optional task name.
+ * @extends {tr.Abstract}
+ * @constructor
+ * @struct
  */
-tr.Task = function() {};
+tr.Closure = function(runImplFn, opt_synchronous, opt_taskName) {
+  goog.base(this, opt_taskName);
+
+  /** @private {function()} */
+  this.runImplFn_ = runImplFn;
+
+  /** @private {boolean} */
+  this.autoCompleteUponRun_ = !!opt_synchronous;
+};
+goog.inherits(tr.Closure, tr.Abstract);
+
+
+/** @override */
+tr.Closure.prototype.runImpl = function() {
+  try {
+    this.runImplFn_();
+
+    if (this.autoCompleteUponRun_) {
+      this.completeInternal();
+    }
+  } catch (error) {
+    this.errorInternal(error, error.message);
+  }
+};
 
 
 /**
- * Optional data value passed to the Task complete/error/interruption method.
+ * Complete this task.
  *
- * @return {!Object|undefined}
+ * @param {!Object=} data Task data.
  */
-tr.Task.prototype.getData = goog.abstractMethod;
+tr.Closure.prototype.complete = function(data) {
+  this.completeInternal(data);
+};
 
 
 /**
- * Additional information about the cause of a task error.
+ * Error this task.
  *
- * @return {string|undefined}
+ * @param {!Object=} data Task data.
+ * @param {string=} errorMessage Error message.
  */
-tr.Task.prototype.getErrorMessage = goog.abstractMethod;
-
-
-/**
- * Number of internal operations conducted by this tr.
- *
- * @return {number}
- */
-tr.Task.prototype.getOperationsCount = goog.abstractMethod;
-
-
-/**
- * Number of internal operations that have completed.
- *
- * @return {number}
- */
-tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
-
-
-/**
- * Returns the state of the tr.
- *
- * @return {!tr.enums.State}
- */
-tr.Task.prototype.getState = goog.abstractMethod;
-
-
-/**
- * Optional human-readable name, typically useful for debug purposes.
- *
- * @return {string|undefined}
- */
-tr.Task.prototype.getTaskName = goog.abstractMethod;
-
-
-/**
- * Globally unique ID for the current Task-instance.
- *
- * Tasks should be assigned a unique ID when they are created.
- * IDs remain with their Tasks as long as the Tasks exist and are not reused.
- *
- * @return {number}
- */
-tr.Task.prototype.getUniqueID = goog.abstractMethod;
-
-
-/**
- * Starts a tr.
- * This method may also be used to re-run a task that has errorred or to resume
- * a task that has been interrupted.
- *
- * @throws {Error} if run() is called while a task is already running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.run = goog.abstractMethod;
-
-
-/**
- * Interrupts a running tr.
- * An interrupted task can be resumed by calling run().
- *
- * @throws {Error} if called while a task is not running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interrupt = goog.abstractMethod;
-
-
-/**
- * Interrupts a running task until another task has completed.
- * There can only be 1 active interrupting Task at a time.
- * Use a composite to interrupt for multiple tasks.
- *
- * This method will not start an interrupting tr.
- * It must be run by the caller.
- *
- * @param {!tr.Task} task to wait for
- * @throws {Error} if called while a task is not running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interruptForTask = goog.abstractMethod;
-
-
-/**
- * Resets the task to it's initialized TaskState so that it can be re-run.
- * This method should not be called on a task that is running.
- *
- * @throws {Error} if reset() is for a task that is currently running.
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.reset = goog.abstractMethod;
-
-
-/**
- * Attach a callback function to a task event.
- *
- * @param {!tr.enums.Event} taskEvent
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.on = goog.abstractMethod;
-
-
-/**
- * Dettach a callback function from a task event.
- *
- * @param {!tr.enums.Event} taskEvent
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.off = goog.abstractMethod;
-
-
-/**
- * This callback will be invoked when a task is started.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.started = goog.abstractMethod;
-
-
-/**
- * This callback will be invoked whenever this task is interrupted.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.interrupted = goog.abstractMethod;
-
-
-/**
- * This callback will be invoked only upon successful completion of the tr.
- * Callbacks may be called multiple times (if the task is run more than once).
- * Multiple callbacks may be registered with a task as well.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.completed = goog.abstractMethod;
-
-
-/**
- * This callback will be invoked only upon a task error.
- * Callbacks may be called multiple times (if the task is run more than once).
- * Multiple callbacks may be registered with a task as well.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.errored = goog.abstractMethod;
-
-
-/**
- * This callback will be invoked after a task has completed or errorred.
- *
- * @param {function(!tr.Task)} callback
- * @param {Object=} opt_scope
- * @return {!tr.Task} a reference to the current task
- */
-tr.Task.prototype.final = goog.abstractMethod;
+tr.Closure.prototype.error = function(data, errorMessage) {
+  this.errorInternal(data, errorMessage);
+};
 </code></pre>
         </article>
     </section>

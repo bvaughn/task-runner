@@ -1,4 +1,4 @@
-goog.provide('taskrunner.Task');
+goog.provide('tr.Task');
 
 
 
@@ -35,7 +35,7 @@ goog.provide('taskrunner.Task');
  *
  * @interface
  */
-taskrunner.Task = function() {};
+tr.Task = function() {};
 
 
 /**
@@ -43,7 +43,7 @@ taskrunner.Task = function() {};
  *
  * @return {!Object|undefined}
  */
-taskrunner.Task.prototype.getData = goog.abstractMethod;
+tr.Task.prototype.getData = goog.abstractMethod;
 
 
 /**
@@ -51,15 +51,15 @@ taskrunner.Task.prototype.getData = goog.abstractMethod;
  *
  * @return {string|undefined}
  */
-taskrunner.Task.prototype.getErrorMessage = goog.abstractMethod;
+tr.Task.prototype.getErrorMessage = goog.abstractMethod;
 
 
 /**
- * Number of internal operations conducted by this task.
+ * Number of internal operations conducted by this tr.
  *
  * @return {number}
  */
-taskrunner.Task.prototype.getOperationsCount = goog.abstractMethod;
+tr.Task.prototype.getOperationsCount = goog.abstractMethod;
 
 
 /**
@@ -67,15 +67,15 @@ taskrunner.Task.prototype.getOperationsCount = goog.abstractMethod;
  *
  * @return {number}
  */
-taskrunner.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
+tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
 
 
 /**
- * Returns the state of the task.
+ * Returns the state of the tr.
  *
- * @return {!taskrunner.TaskState}
+ * @return {!tr.enums.State}
  */
-taskrunner.Task.prototype.getState = goog.abstractMethod;
+tr.Task.prototype.getState = goog.abstractMethod;
 
 
 /**
@@ -83,7 +83,7 @@ taskrunner.Task.prototype.getState = goog.abstractMethod;
  *
  * @return {string|undefined}
  */
-taskrunner.Task.prototype.getTaskName = goog.abstractMethod;
+tr.Task.prototype.getTaskName = goog.abstractMethod;
 
 
 /**
@@ -94,28 +94,28 @@ taskrunner.Task.prototype.getTaskName = goog.abstractMethod;
  *
  * @return {number}
  */
-taskrunner.Task.prototype.getUniqueID = goog.abstractMethod;
+tr.Task.prototype.getUniqueID = goog.abstractMethod;
 
 
 /**
- * Starts a task.
+ * Starts a tr.
  * This method may also be used to re-run a task that has errorred or to resume
  * a task that has been interrupted.
  *
  * @throws {Error} if run() is called while a task is already running.
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.run = goog.abstractMethod;
+tr.Task.prototype.run = goog.abstractMethod;
 
 
 /**
- * Interrupts a running task.
+ * Interrupts a running tr.
  * An interrupted task can be resumed by calling run().
  *
  * @throws {Error} if called while a task is not running.
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.interrupt = goog.abstractMethod;
+tr.Task.prototype.interrupt = goog.abstractMethod;
 
 
 /**
@@ -123,14 +123,14 @@ taskrunner.Task.prototype.interrupt = goog.abstractMethod;
  * There can only be 1 active interrupting Task at a time.
  * Use a composite to interrupt for multiple tasks.
  *
- * This method will not start an interrupting task.
+ * This method will not start an interrupting tr.
  * It must be run by the caller.
  *
- * @param {!taskrunner.Task} task to wait for
+ * @param {!tr.Task} task to wait for
  * @throws {Error} if called while a task is not running.
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.interruptForTask = goog.abstractMethod;
+tr.Task.prototype.interruptForTask = goog.abstractMethod;
 
 
 /**
@@ -138,63 +138,63 @@ taskrunner.Task.prototype.interruptForTask = goog.abstractMethod;
  * This method should not be called on a task that is running.
  *
  * @throws {Error} if reset() is for a task that is currently running.
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.reset = goog.abstractMethod;
+tr.Task.prototype.reset = goog.abstractMethod;
 
 
 /**
  * Attach a callback function to a task event.
  *
- * @param {!taskrunner.TaskEvent} taskEvent
- * @param {function(!taskrunner.Task)} callback
+ * @param {!tr.enums.Event} taskEvent
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.on = goog.abstractMethod;
+tr.Task.prototype.on = goog.abstractMethod;
 
 
 /**
  * Dettach a callback function from a task event.
  *
- * @param {!taskrunner.TaskEvent} taskEvent
- * @param {function(!taskrunner.Task)} callback
+ * @param {!tr.enums.Event} taskEvent
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.off = goog.abstractMethod;
+tr.Task.prototype.off = goog.abstractMethod;
 
 
 /**
  * This callback will be invoked when a task is started.
  *
- * @param {function(!taskrunner.Task)} callback
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.started = goog.abstractMethod;
+tr.Task.prototype.started = goog.abstractMethod;
 
 
 /**
  * This callback will be invoked whenever this task is interrupted.
  *
- * @param {function(!taskrunner.Task)} callback
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.interrupted = goog.abstractMethod;
+tr.Task.prototype.interrupted = goog.abstractMethod;
 
 
 /**
- * This callback will be invoked only upon successful completion of the task.
+ * This callback will be invoked only upon successful completion of the tr.
  * Callbacks may be called multiple times (if the task is run more than once).
  * Multiple callbacks may be registered with a task as well.
  *
- * @param {function(!taskrunner.Task)} callback
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.completed = goog.abstractMethod;
+tr.Task.prototype.completed = goog.abstractMethod;
 
 
 /**
@@ -202,18 +202,18 @@ taskrunner.Task.prototype.completed = goog.abstractMethod;
  * Callbacks may be called multiple times (if the task is run more than once).
  * Multiple callbacks may be registered with a task as well.
  *
- * @param {function(!taskrunner.Task)} callback
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.errored = goog.abstractMethod;
+tr.Task.prototype.errored = goog.abstractMethod;
 
 
 /**
  * This callback will be invoked after a task has completed or errorred.
  *
- * @param {function(!taskrunner.Task)} callback
+ * @param {function(!tr.Task)} callback
  * @param {Object=} opt_scope
- * @return {!taskrunner.Task} a reference to the current task
+ * @return {!tr.Task} a reference to the current task
  */
-taskrunner.Task.prototype.final = goog.abstractMethod;
+tr.Task.prototype.final = goog.abstractMethod;

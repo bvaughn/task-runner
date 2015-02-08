@@ -1,20 +1,25 @@
-goog.provide('taskrunner');
+/**
+ * Entry point for Closure Compiler.
+ * Responsible for requiring all of the build dependencies.
+ */
 
-goog.require('taskrunner.AbstractTask');
-goog.require('taskrunner.ClosureTask');
-goog.require('taskrunner.CompositeTask');
-goog.require('taskrunner.DecoratorTask');
-goog.require('taskrunner.DeferredFactoryTask');
-goog.require('taskrunner.DependencyGraphTask');
-goog.require('taskrunner.EventListenerTask');
-goog.require('taskrunner.FailsafeTask');
-goog.require('taskrunner.NullTask');
-goog.require('taskrunner.ObserverTask');
-goog.require('taskrunner.RetryOnErrorTask');
-goog.require('taskrunner.TaskEvent');
-goog.require('taskrunner.TaskState');
-goog.require('taskrunner.Task');
-goog.require('taskrunner.TimeoutTask');
-goog.require('taskrunner.TweenTask');
-goog.require('taskrunner.WaitTask');
-goog.require('taskrunner.XHRTask');
+goog.provide('tr');
+
+goog.require('tr.Abstract');
+goog.require('tr.Closure');
+goog.require('tr.Composite');
+goog.require('tr.Decorator');
+goog.require('tr.Factory');
+goog.require('tr.Failsafe');
+goog.require('tr.Graph');
+goog.require('tr.Listener');
+goog.require('tr.Observer');
+goog.require('tr.Retry');
+goog.require('tr.Sleep');
+goog.require('tr.Stub');
+goog.require('tr.Task');
+goog.require('tr.Timeout');
+goog.require('tr.Tween');
+goog.require('tr.Xhr');
+goog.require('tr.enums.Event');
+goog.require('tr.enums.State');
