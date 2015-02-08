@@ -20,7 +20,7 @@ Get Task Runner in one of the following ways:
 1. clone & [build](README.md#Building) this repository
 1. [download the release](https://github.com/bvaughn/task-runner/tree/master/dist)
 1. via Bower: by running `bower install task-runner` from your console
-1. or via npm: by running `npm install task-runner` from your console
+1. or via npm: by running `npm install task-runner-js` from your console
 
 
 ## Building
