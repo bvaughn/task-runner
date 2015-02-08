@@ -35,5 +35,5 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router']).
       templateUrl: 'app/views/demos/demo-2.html'
     });
 
-    $urlRouterProvider.otherwise('/index');
+    $urlRouterProvider.otherwise('/');
   });
