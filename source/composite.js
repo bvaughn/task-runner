@@ -52,7 +52,7 @@ tr.Composite = function(parallel, opt_tasks, opt_taskName) {
   this.flushQueueInProgress_ = false;
 
   if (opt_tasks) {
-    this.addAllTasks(opt_tasks);
+    this.addAll(opt_tasks);
   }
 };
 goog.inherits(tr.Composite, tr.Abstract);
@@ -65,7 +65,7 @@ goog.inherits(tr.Composite, tr.Abstract);
  * @return {!tr.Composite} a reference to the current tr.
  * @throws {Error} if tasks have been added more than once
  */
-tr.Composite.prototype.addAllTasks = function(tasks) {
+tr.Composite.prototype.addAll = function(tasks) {
   for (var i = 0; i < tasks.length; i++) {
     this.add(tasks[i]);
   }

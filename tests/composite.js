@@ -596,9 +596,9 @@ describe('tr.Composite', function() {
     var compositeTask1 = new tr.Composite(true);
     var compositeTask2 = new tr.Composite(true);
 
-    compositeTask2.addAllTasks([nullTask2, nullTask3]);
+    compositeTask2.addAll([nullTask2, nullTask3]);
 
-    compositeTask1.addAllTasks([nullTask1, compositeTask2]);
+    compositeTask1.addAll([nullTask1, compositeTask2]);
     compositeTask1.run();
 
     expect(compositeTask1.getOperationsCount()).toBe(3);
@@ -731,7 +731,7 @@ describe('tr.Composite', function() {
     expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask3);
     expect(interruptedCallback).not.toHaveBeenCalledWith(nullTask4);
 
-    task.addAllTasks([nullTask3, nullTask4]);
+    task.addAll([nullTask3, nullTask4]);
 
     expect(startedCallback).toHaveBeenCalledWith(nullTask3);
     expect(startedCallback).not.toHaveBeenCalledWith(nullTask4);
