@@ -6649,7 +6649,7 @@ tr.Abstract.prototype.executeCallbacks_ = function(a) {
 };
 tr.Abstract.prototype.run = function() {
   if (this.state_ == tr.enums.State.RUNNING) {
-    throw "Cannot run a running tr.";
+    throw "Cannot run a running task.";
   }
   this.state_ != tr.enums.State.COMPLETED && (this.interruptingTask_ = null, this.errorMessage_ = this.data_ = void 0, this.state_ = tr.enums.State.RUNNING, this.executeCallbacks_(tr.enums.Event.STARTED), this.runImpl());
   return this;
@@ -6676,7 +6676,7 @@ tr.Abstract.prototype.interruptFor = function(a) {
 };
 tr.Abstract.prototype.reset = function() {
   if (this.state_ == tr.enums.State.RUNNING) {
-    throw "Cannot reset a running tr.";
+    throw "Cannot reset a running task.";
   }
   this.state_ != tr.enums.State.INITIALIZED && (this.errorMessage_ = this.data_ = void 0, this.state_ = tr.enums.State.INITIALIZED, this.resetImpl());
   return this;
@@ -6729,7 +6729,7 @@ tr.Abstract.prototype.interruptImpl = goog.nullFunction;
 tr.Abstract.prototype.resetImpl = goog.nullFunction;
 tr.Abstract.prototype.completeInternal = function(a) {
   if (this.state_ != tr.enums.State.RUNNING) {
-    throw "Cannot complete an inactive tr.";
+    throw "Cannot complete an inactive task.";
   }
   this.data_ = a;
   this.state_ = tr.enums.State.COMPLETED;
@@ -6738,7 +6738,7 @@ tr.Abstract.prototype.completeInternal = function(a) {
 };
 tr.Abstract.prototype.errorInternal = function(a, b) {
   if (this.state_ != tr.enums.State.RUNNING) {
-    throw "Cannot error an inactive tr.";
+    throw "Cannot error an inactive task.";
   }
   this.data_ = a;
   this.errorMessage_ = b;
@@ -6801,7 +6801,7 @@ tr.Composite.prototype.add = function(a) {
 tr.Composite.prototype.remove = function(a) {
   var b = this.taskQueue_.indexOf(a);
   if (0 > b) {
-    throw "Attempted to remove an invalid tr.";
+    throw "Attempted to remove an invalid task.";
   }
   this.removeCallbacks_(a);
   this.taskQueue_.splice(this.taskQueue_.indexOf(a), 1);

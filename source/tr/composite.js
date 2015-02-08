@@ -116,7 +116,7 @@ tr.Composite.prototype.remove = function(task) {
   var index = this.taskQueue_.indexOf(task);
 
   if (index < 0) {
-    throw 'Attempted to remove an invalid tr.';
+    throw 'Attempted to remove an invalid task.';
   }
 
   this.removeCallbacks_(task);
