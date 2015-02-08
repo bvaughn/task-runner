@@ -83,7 +83,7 @@ tr.Task.prototype.getState = goog.abstractMethod;
  *
  * @return {string|undefined}
  */
-tr.Task.prototype.getTaskName = goog.abstractMethod;
+tr.Task.prototype.getName = goog.abstractMethod;
 
 
 /**
@@ -130,7 +130,7 @@ tr.Task.prototype.interrupt = goog.abstractMethod;
  * @throws {Error} if called while a task is not running.
  * @return {!tr.Task} a reference to the current task
  */
-tr.Task.prototype.interruptForTask = goog.abstractMethod;
+tr.Task.prototype.interruptFor = goog.abstractMethod;
 
 
 /**

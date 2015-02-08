@@ -12,9 +12,9 @@ goog.require('tr.enums.State');
  * @example
  * // Creates a composite task that will execute child tasks A, B, and C in parallel
  * var task = new tr.Composite(true);
- * task.addTask(childTaskA);
- * task.addTask(childTaskB);
- * task.addTask(childTaskC);
+ * task.add(childTaskA);
+ * task.add(childTaskB);
+ * task.add(childTaskC);
  * task.run();
  *
  * @example
@@ -49,7 +49,7 @@ tr.Composite = function(parallel, opt_tasks, opt_taskName) {
   this.erroredTasks_ = [];
 
   /** @private {boolean} */
-  this.flushTaskQueueInProgress_ = false;
+  this.flushQueueInProgress_ = false;
 
   if (opt_tasks) {
     this.addAllTasks(opt_tasks);
@@ -67,7 +67,7 @@ goog.inherits(tr.Composite, tr.Abstract);
  */
 tr.Composite.prototype.addAllTasks = function(tasks) {
   for (var i = 0; i < tasks.length; i++) {
-    this.addTask(tasks[i]);
+    this.add(tasks[i]);
   }
 
   return this;
@@ -81,7 +81,7 @@ tr.Composite.prototype.addAllTasks = function(tasks) {
  * @return {!tr.Composite} a reference to the current tr.
  * @throws {Error} if task has been added more than once
  */
-tr.Composite.prototype.addTask = function(task) {
+tr.Composite.prototype.add = function(task) {
   var index = this.taskQueue_.indexOf(task);
 
   if (index >= 0) {
@@ -95,7 +95,7 @@ tr.Composite.prototype.addTask = function(task) {
 
     // TRICKY If the queue was just flushed, auto-run this tr.
     if (this.parallel_ || this.taskQueueIndex_ == index) {
-      this.addTaskCallbacks_(task);
+      this.addCallbacks_(task);
 
       task.run();
     }
@@ -112,14 +112,14 @@ tr.Composite.prototype.addTask = function(task) {
  * @return {!tr.Composite} a reference to the current tr.
  * @throws {Error} if the task provided is not a child of this composite.
  */
-tr.Composite.prototype.removeTask = function(task) {
+tr.Composite.prototype.remove = function(task) {
   var index = this.taskQueue_.indexOf(task);
 
   if (index < 0) {
     throw 'Attempted to remove an invalid tr.';
   }
 
-  this.removeTaskCallbacks_(task);
+  this.removeCallbacks_(task);
   this.taskQueue_.splice(this.taskQueue_.indexOf(task), 1);
 
   if (this.getState() == tr.enums.State.RUNNING) {
@@ -180,14 +180,14 @@ tr.Composite.prototype.runImpl = function() {
     if (this.parallel_) {
       this.eachTaskInQueue_(
         goog.bind(function(task) {
-          this.addTaskCallbacks_(task);
+          this.addCallbacks_(task);
 
           task.run();
         }, this));
     } else {
       var task = this.taskQueue_[this.taskQueueIndex_];
 
-      this.addTaskCallbacks_(task);
+      this.addCallbacks_(task);
 
       task.run();
     }
@@ -247,10 +247,10 @@ tr.Composite.prototype.resetImpl = function() {
  *     nor invoke any completion callbacks once the queue has been emptied.
  * @protected
  */
-tr.Composite.prototype.flushTaskQueue = function(doNotComplete) {
+tr.Composite.prototype.flushQueue = function(doNotComplete) {
   // Prevent completion callbacks from being invoked once the queue is empty.
   // See checkForTaskCompletion_() for more information.
-  this.flushTaskQueueInProgress_ = !!doNotComplete;
+  this.flushQueueInProgress_ = !!doNotComplete;
 
   // Manually interrupt any Task that are running.
   this.eachTaskInQueue_(
@@ -264,13 +264,13 @@ tr.Composite.prototype.flushTaskQueue = function(doNotComplete) {
   while (this.taskQueue_.length > 0) {
     var task = this.taskQueue_[this.taskQueue_.length - 1];
 
-    this.removeTask(task);
+    this.remove(task);
   }
 
   this.completedTasks_ = [];
   this.erroredTasks_ = [];
 
-  this.flushTaskQueueInProgress_ = false;
+  this.flushQueueInProgress_ = false;
 };
 
 
@@ -280,7 +280,7 @@ tr.Composite.prototype.flushTaskQueue = function(doNotComplete) {
  * @param {!tr.Task} task Child task
  * @private
  */
-tr.Composite.prototype.addTaskCallbacks_ = function(task) {
+tr.Composite.prototype.addCallbacks_ = function(task) {
   task.completed(this.childTaskCompleted_, this);
   task.errored(this.childTaskErrored_, this);
 };
@@ -292,7 +292,7 @@ tr.Composite.prototype.addTaskCallbacks_ = function(task) {
  * @param {!tr.Task} task Child task
  * @private
  */
-tr.Composite.prototype.removeTaskCallbacks_ = function(task) {
+tr.Composite.prototype.removeCallbacks_ = function(task) {
   task.off(tr.enums.Event.COMPLETED, this.childTaskCompleted_, this);
   task.off(tr.enums.Event.ERRORED, this.childTaskErrored_, this);
 };
@@ -323,9 +323,9 @@ tr.Composite.prototype.allTasksAreCompleted_ = function() {
  * @private
  */
 tr.Composite.prototype.checkForTaskCompletion_ = function() {
-  // This lock will only be set to true if the flushTaskQueue() is in-progress.
+  // This lock will only be set to true if the flushQueue() is in-progress.
   // In this case we should ignore child task callbacks.
-  if (this.flushTaskQueueInProgress_) {
+  if (this.flushQueueInProgress_) {
     return;
   }
 
@@ -367,7 +367,7 @@ tr.Composite.prototype.taskCompletedOrRemoved_ = function(task) {
 
     // TRICKY Handle edge-case where the task queue is being flushed.
     if (nextTask) {
-      this.addTaskCallbacks_(nextTask);
+      this.addCallbacks_(nextTask);
 
       nextTask.run();
     }

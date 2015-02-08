@@ -51,7 +51,7 @@ describe('tr.Graph', function() {
 
 
   /**
-   * Test task that tracks the number of times 'addTasksBeforeFirstRun' has been run.
+   * Test task that tracks the number of times 'addsBeforeFirstRun' has been run.
    * @extends {tr.Graph}
    * @constructor
    * @struct
@@ -59,13 +59,13 @@ describe('tr.Graph', function() {
   tr.TestGraph = function() {
     goog.base(this);
 
-    this.addTasksBeforeFirstRunCount_ = 0;
+    this.addsBeforeFirstRunCount_ = 0;
   };
   goog.inherits(tr.TestGraph, tr.Graph);
 
   /** @override */
-  tr.TestGraph.prototype.addTasksBeforeFirstRun = function() {
-    this.addTasksBeforeFirstRunCount_++;
+  tr.TestGraph.prototype.addsBeforeFirstRun = function() {
+    this.addsBeforeFirstRunCount_++;
   };
 
 
@@ -80,10 +80,10 @@ describe('tr.Graph', function() {
     var nullTask1 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
+    task.add(nullTask1);
 
     expect(function() {
-      task.addTask(nullTask1);
+      task.add(nullTask1);
     }).toThrow();
   });
 
@@ -92,10 +92,10 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
+    task.add(nullTask1);
 
     expect(function() {
-      task.removeTask(nullTask2);
+      task.remove(nullTask2);
     }).toThrow();
   });
 
@@ -105,9 +105,9 @@ describe('tr.Graph', function() {
     var nullTask3 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
-    task.addTask(nullTask3);
+    task.add(nullTask1);
+    task.add(nullTask2);
+    task.add(nullTask3);
 
     attachMockCallbacks(task);
 
@@ -150,9 +150,9 @@ describe('tr.Graph', function() {
     var nullTask3 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2, [nullTask1]);
-    task.addTaskToEnd(nullTask3);
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.addToEnd(nullTask3);
 
     attachMockCallbacks(task);
 
@@ -193,7 +193,7 @@ describe('tr.Graph', function() {
     var nullTask1 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
+    task.add(nullTask1);
 
     attachMockCallbacks(nullTask1);
     attachMockCallbacks(task);
@@ -233,8 +233,8 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
+    task.add(nullTask1);
+    task.add(nullTask2);
 
     attachMockCallbacks(task);
 
@@ -273,8 +273,8 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
+    task.add(nullTask1);
+    task.add(nullTask2);
     task.run();
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
@@ -312,8 +312,8 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
+    task.add(nullTask1);
+    task.add(nullTask2);
     task.run();
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
@@ -351,7 +351,7 @@ describe('tr.Graph', function() {
     var task = new tr.Graph();
 
     expect(function() {
-      task.addTask(nullTask1, [nullTask1]);
+      task.add(nullTask1, [nullTask1]);
     }).toThrow();
   });
 
@@ -362,7 +362,7 @@ describe('tr.Graph', function() {
     var task = new tr.Graph();
 
     expect(function() {
-      task.addTask(nullTask1, [nullTask2]);
+      task.add(nullTask1, [nullTask2]);
     }).toThrow();
   });
 
@@ -371,11 +371,11 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2, [nullTask1]);
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
 
     expect(function() {
-      task.removeTask(nullTask1);
+      task.remove(nullTask1);
     }).toThrow();
   });
 
@@ -384,14 +384,14 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
+    task.add(nullTask1);
 
     task.run();
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.addTask(nullTask2);
+    task.add(nullTask2);
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
@@ -415,14 +415,14 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
+    task.add(nullTask1);
 
     task.run();
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.addTask(nullTask2, [nullTask1]);
+    task.add(nullTask2, [nullTask1]);
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
@@ -447,7 +447,7 @@ describe('tr.Graph', function() {
     var nullTask3 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
+    task.add(nullTask1);
 
     task.run();
 
@@ -455,7 +455,7 @@ describe('tr.Graph', function() {
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
     expect(function() {
-      task.addTask(nullTask2, [nullTask3]);
+      task.add(nullTask2, [nullTask3]);
     }).toThrow();
   });
 
@@ -464,8 +464,8 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
+    task.add(nullTask1);
+    task.add(nullTask2);
 
     task.run();
 
@@ -473,7 +473,7 @@ describe('tr.Graph', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.removeTask(nullTask2);
+    task.remove(nullTask2);
 
     nullTask1.complete();
 
@@ -486,8 +486,8 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
+    task.add(nullTask1);
+    task.add(nullTask2);
 
     task.run();
 
@@ -501,7 +501,7 @@ describe('tr.Graph', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.removeTask(nullTask2);
+    task.remove(nullTask2);
 
     expect(task.getState()).toBe(tr.enums.State.COMPLETED);
   });
@@ -514,11 +514,11 @@ describe('tr.Graph', function() {
     var graphTask1 = new tr.Graph();
     var graphTask2 = new tr.Graph();
 
-    graphTask2.addTask(nullTask2);
-    graphTask2.addTask(nullTask3);
+    graphTask2.add(nullTask2);
+    graphTask2.add(nullTask3);
 
-    graphTask1.addTask(nullTask1);
-    graphTask1.addTask(graphTask2);
+    graphTask1.add(nullTask1);
+    graphTask1.add(graphTask2);
     graphTask1.run();
 
     expect(graphTask1.getOperationsCount()).toBe(3);
@@ -546,9 +546,9 @@ describe('tr.Graph', function() {
     var nullTask3 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2, [nullTask1]);
-    task.addTask(nullTask3);
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.add(nullTask3);
 
     task.run();
 
@@ -594,9 +594,9 @@ describe('tr.Graph', function() {
     var nullTask3 = new tr.Stub(true); // Succeeds immediately
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2, [nullTask1]);
-    task.addTask(nullTask3, [nullTask2]);
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.add(nullTask3, [nullTask2]);
     task.run();
 
     expect(nullTask1.getState()).toBe(tr.enums.State.COMPLETED);
@@ -610,8 +610,8 @@ describe('tr.Graph', function() {
     var nullTask2 = new tr.Stub();
 
     var task = new tr.Graph();
-    task.addTask(nullTask1);
-    task.addTask(nullTask2);
+    task.add(nullTask1);
+    task.add(nullTask2);
 
     task.run();
 
@@ -627,31 +627,31 @@ describe('tr.Graph', function() {
     expect(task.getState()).toBe(tr.enums.State.INITIALIZED);
   });
 
-  it('should invoke addTasksBeforeFirstRun before running', function() {
+  it('should invoke addsBeforeFirstRun before running', function() {
     var task = new tr.TestGraph();
-    task.addTask(new tr.Stub());
+    task.add(new tr.Stub());
     task.run();
 
-    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+    expect(task.addsBeforeFirstRunCount_).toBe(1);
   });
 
-  it('should only invoke addTasksBeforeFirstRun once', function() {
+  it('should only invoke addsBeforeFirstRun once', function() {
     var task = new tr.TestGraph();
-    task.addTask(new tr.Stub());
+    task.add(new tr.Stub());
     task.run();
 
-    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+    expect(task.addsBeforeFirstRunCount_).toBe(1);
 
     task.interrupt();
     task.run();
 
-    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+    expect(task.addsBeforeFirstRunCount_).toBe(1);
 
     task.interrupt();
     task.reset();
     task.run();
 
-    expect(task.addTasksBeforeFirstRunCount_).toBe(1);
+    expect(task.addsBeforeFirstRunCount_).toBe(1);
   });
 
   it('should interrupt any children running in parallel in the event of an error', function() {
@@ -660,9 +660,9 @@ describe('tr.Graph', function() {
     var nullTask3 = new tr.Stub();
 
     var graphTask = new tr.Graph();
-    graphTask.addTask(nullTask1);
-    graphTask.addTask(nullTask2);
-    graphTask.addTask(nullTask3);
+    graphTask.add(nullTask1);
+    graphTask.add(nullTask2);
+    graphTask.add(nullTask3);
     graphTask.run();
 
     expect(graphTask.getState()).toBe(tr.enums.State.RUNNING);

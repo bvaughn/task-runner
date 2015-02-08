@@ -12,8 +12,8 @@ describe('tr.Abstract', function() {
     var fooTask = new tr.Abstract('foo');
     var barTask = new tr.Abstract('bar');
 
-    expect(fooTask.getTaskName()).toBe('foo');
-    expect(barTask.getTaskName()).toBe('bar');
+    expect(fooTask.getName()).toBe('foo');
+    expect(barTask.getName()).toBe('bar');
   });
 
   it('should generate unique ids for each task', function() {
@@ -390,7 +390,7 @@ describe('tr.Abstract', function() {
 
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.interruptForTask(interruptingTask);
+    task.interruptFor(interruptingTask);
 
     expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(interruptingTask.getState()).toBe(tr.enums.State.RUNNING);
@@ -410,7 +410,7 @@ describe('tr.Abstract', function() {
 
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.interruptForTask(interruptingTask);
+    task.interruptFor(interruptingTask);
 
     expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(interruptingTask.getState()).toBe(tr.enums.State.RUNNING);
@@ -430,7 +430,7 @@ describe('tr.Abstract', function() {
 
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.interruptForTask(interruptingTask);
+    task.interruptFor(interruptingTask);
 
     expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
 
@@ -452,7 +452,7 @@ describe('tr.Abstract', function() {
 
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.interruptForTask(interruptingTask);
+    task.interruptFor(interruptingTask);
 
     expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(interruptingTask.getState()).toBe(tr.enums.State.INITIALIZED);

@@ -47,10 +47,10 @@ describe('tr.Composite', function() {
   goog.inherits(tr.TestComposite, tr.Composite);
 
   /**
-   * Exposes flushTaskQueue() method for testing.
+   * Exposes flushQueue() method for testing.
    */
   tr.TestComposite.prototype.flushForTest = function(doNotComplete) {
-    this.flushTaskQueue(doNotComplete);
+    this.flushQueue(doNotComplete);
   };
 
   it('should automatically complete when run with no children', function() {
@@ -66,7 +66,7 @@ describe('tr.Composite', function() {
     var task = new tr.Composite(false, [nullTask1]);
 
     expect(function() {
-      task.addTask(nullTask1);
+      task.add(nullTask1);
     }).toThrow();
   });
 
@@ -77,7 +77,7 @@ describe('tr.Composite', function() {
     var task = new tr.Composite(false, [nullTask1]);
 
     expect(function() {
-      task.removeTask(nullTask2);
+      task.remove(nullTask2);
     }).toThrow();
   });
 
@@ -417,7 +417,7 @@ describe('tr.Composite', function() {
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.addTask(nullTask2);
+    task.add(nullTask2);
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
@@ -443,7 +443,7 @@ describe('tr.Composite', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.addTask(nullTask2);
+    task.add(nullTask2);
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
@@ -470,9 +470,9 @@ describe('tr.Composite', function() {
     var nullTask5 = new tr.Stub();
 
     var task = new tr.Composite(true, [nullTask1, nullTask2, nullTask3, nullTask4, nullTask5]);
-    task.removeTask(nullTask1);
-    task.removeTask(nullTask3);
-    task.removeTask(nullTask5);
+    task.remove(nullTask1);
+    task.remove(nullTask3);
+    task.remove(nullTask5);
     task.run();
 
     expect(nullTask1.getState()).toBe(tr.enums.State.INITIALIZED);
@@ -492,9 +492,9 @@ describe('tr.Composite', function() {
 
     var task = new tr.Composite(true, [nullTask1, nullTask2, nullTask3, nullTask4, nullTask5]);
     task.run();
-    task.removeTask(nullTask1);
-    task.removeTask(nullTask3);
-    task.removeTask(nullTask5);
+    task.remove(nullTask1);
+    task.remove(nullTask3);
+    task.remove(nullTask5);
 
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask4.getState()).toBe(tr.enums.State.RUNNING);
@@ -519,7 +519,7 @@ describe('tr.Composite', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.removeTask(nullTask1);
+    task.remove(nullTask1);
 
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
@@ -539,7 +539,7 @@ describe('tr.Composite', function() {
     expect(nullTask3.getState()).toBe(tr.enums.State.INITIALIZED);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.removeTask(nullTask2);
+    task.remove(nullTask2);
 
     nullTask1.complete();
 
@@ -562,7 +562,7 @@ describe('tr.Composite', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
 
-    task.removeTask(nullTask2);
+    task.remove(nullTask2);
 
     expect(nullTask1.getState()).toBe(tr.enums.State.COMPLETED);
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);

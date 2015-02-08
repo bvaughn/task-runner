@@ -62,7 +62,7 @@ tr.Observer.prototype.getObservedTasks = function() {
  * Add an additional Task to observe.
  * @param {!tr.Task} task
  */
-tr.Observer.prototype.observeTask = function(task) {
+tr.Observer.prototype.observe = function(task) {
   if (this.observedTasks_.indexOf(task) == -1) {
     this.observedTasks_.push(task);
   }
@@ -77,7 +77,7 @@ tr.Observer.prototype.observeTask = function(task) {
  * Stops a Task from being observed.
  * @param {!tr.Task} task
  */
-tr.Observer.prototype.stopObservingTask = function(task) {
+tr.Observer.prototype.stopObserving = function(task) {
   var index = this.observedTasks_.indexOf(task);
   if (index == -1) {
     return;
@@ -125,7 +125,7 @@ tr.Observer.prototype.runImpl = function() {
   if (!this.tryToFinalize_()) {
     for (var i in this.observedTasks_) {
       var task = this.observedTasks_[i];
-      this.observeTask(task);
+      this.observe(task);
     }
   }
 };

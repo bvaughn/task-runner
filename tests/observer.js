@@ -88,7 +88,7 @@ describe('tr.Observer', function() {
     expect(task1.getState()).toBe(tr.enums.State.RUNNING);
     expect(task2.getState()).toBe(tr.enums.State.RUNNING);
 
-    observerTask.observeTask(task2);
+    observerTask.observe(task2);
 
     task1.complete();
     expect(observerTask.getState()).toBe(tr.enums.State.RUNNING);
@@ -114,7 +114,7 @@ describe('tr.Observer', function() {
     expect(task1.getState()).toBe(tr.enums.State.RUNNING);
     expect(task2.getState()).toBe(tr.enums.State.RUNNING);
 
-    observerTask.stopObservingTask(task2);
+    observerTask.stopObserving(task2);
 
     expect(observerTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(task1.getState()).toBe(tr.enums.State.RUNNING);
@@ -141,7 +141,7 @@ describe('tr.Observer', function() {
     expect(task1.getState()).toBe(tr.enums.State.COMPLETED);
     expect(task2.getState()).toBe(tr.enums.State.RUNNING);
 
-    observerTask.stopObservingTask(task2);
+    observerTask.stopObserving(task2);
 
     expect(observerTask.getState()).toBe(tr.enums.State.COMPLETED);
     expect(task1.getState()).toBe(tr.enums.State.COMPLETED);
@@ -155,9 +155,9 @@ describe('tr.Observer', function() {
 
     expect(observerTask.getObservedTasks().length).toBe(1);
 
-    observerTask.observeTask(task2);
-    observerTask.observeTask(task1);
-    observerTask.observeTask(task2);
+    observerTask.observe(task2);
+    observerTask.observe(task1);
+    observerTask.observe(task2);
 
     expect(observerTask.getObservedTasks().length).toBe(2);
   });
@@ -182,7 +182,7 @@ describe('tr.Observer', function() {
     var task5 = new tr.Composite(true, [task3, task4]);
     task5.run();
 
-    observerTask.observeTask(task5);
+    observerTask.observe(task5);
     expect(observerTask.getOperationsCount()).toBe(4);
     expect(observerTask.getCompletedOperationsCount()).toBe(1);
 

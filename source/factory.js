@@ -7,7 +7,7 @@ goog.require('tr.enums.State');
 
 
 /**
- * Decorates a Task returned by the specified factory method.
+ * Creates and decorates a task returned by the callback.
  *
  * <p>Use this type of task when an important decision needs to be deferred.
  * For example if you need a task to load some data, but the specifics aren't known when your application is initialized.

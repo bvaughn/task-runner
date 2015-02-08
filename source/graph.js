@@ -18,11 +18,11 @@ goog.require('tr.Abstract');
  * @example
  * // Creates a graph task that will execute tasks in the order required by their dependencies.
  * var task = new tr.Graph();
- * task.addTask(childTaskA);
- * task.addTask(childTaskB);
- * task.addTask(childTaskC, [childTaskA]);
- * task.addTask(childTaskD, [childTaskB]);
- * task.addTask(childTaskE, [childTaskC, childTaskD]);
+ * task.add(childTaskA);
+ * task.add(childTaskB);
+ * task.add(childTaskC, [childTaskA]);
+ * task.add(childTaskD, [childTaskB]);
+ * task.add(childTaskE, [childTaskC, childTaskD]);
  * task.run();
  *
  * @param {string=} opt_taskName Optional defaulttask name.
@@ -43,7 +43,7 @@ tr.Graph = function(opt_taskName) {
   this.erroredTasks_ = [];
 
   /** @private {boolean} */
-  this.addTasksBeforeFirstRunInvoked_ = false;
+  this.addsBeforeFirstRunInvoked_ = false;
 };
 goog.inherits(tr.Graph, tr.Abstract);
 
@@ -60,7 +60,7 @@ goog.inherits(tr.Graph, tr.Abstract);
  * @throws {Error} if task has been added more than once.
  * @throws {Error} if cyclic dependencies are detected.
  */
-tr.Graph.prototype.addTask = function(task, blockers) {
+tr.Graph.prototype.add = function(task, blockers) {
   var index = this.tasks_.indexOf(task);
 
   goog.asserts.assert(index < 0, 'Cannot add task more than once.');
@@ -87,8 +87,8 @@ tr.Graph.prototype.addTask = function(task, blockers) {
  * @throws {Error} if task has been added more than once.
  * @throws {Error} if cyclic dependencies are detected.
  */
-tr.Graph.prototype.addTaskToEnd = function(task) {
-  return this.addTask(task, this.tasks_.slice());
+tr.Graph.prototype.addToEnd = function(task) {
+  return this.add(task, this.tasks_.slice());
 };
 
 
@@ -101,7 +101,7 @@ tr.Graph.prototype.addTaskToEnd = function(task) {
  * @throws {Error} if the task provided is not within the depenency graph, or if
  *     removing the task invalidates any other, blocked tasks.
  */
-tr.Graph.prototype.removeTask = function(task) {
+tr.Graph.prototype.remove = function(task) {
   var index = this.tasks_.indexOf(task);
 
   goog.asserts.assert(index >= 0, 'Cannot find the specified task.');
@@ -160,9 +160,9 @@ tr.Graph.prototype.getCompletedOperationsCount =
 tr.Graph.prototype.runImpl = function() {
   this.erroredTasks_ = [];
 
-  if ( !this.addTasksBeforeFirstRunInvoked_ ) {
-    this.addTasksBeforeFirstRun();
-    this.addTasksBeforeFirstRunInvoked_ = true;
+  if ( !this.addsBeforeFirstRunInvoked_ ) {
+    this.addsBeforeFirstRun();
+    this.addsBeforeFirstRunInvoked_ = true;
   }
 
   this.completeOrRunNext_();
@@ -202,7 +202,7 @@ tr.Graph.prototype.resetImpl = function() {
 /**
  * Subclasses may override this method to just-in-time add child Tasks before the composite is run.
  */
-tr.Graph.prototype.addTasksBeforeFirstRun = goog.nullFunction;
+tr.Graph.prototype.addsBeforeFirstRun = goog.nullFunction;
 
 
 /**

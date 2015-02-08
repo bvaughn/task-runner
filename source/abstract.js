@@ -14,20 +14,20 @@ goog.require('tr.enums.State');
  * <p>Your Task should call completeInternal() or errorInternal() when it is done.
  *
  * @example
- * tr.CustomTask = function() {
+ * var CustomTask = function() {
  *   goog.base(this);
  * };
- * goog.inherits(tr.CustomTask, tr.Abstract);
+ * goog.inherits(CustomTask, tr.Abstract);
  * 
- * tr.CustomTask.prototype.resetImpl = function() {
+ * CustomTask.prototype.resetImpl = function() {
  *   // Reset state
  * };
  * 
- * tr.CustomTask.prototype.interruptImpl = function() {
+ * CustomTask.prototype.interruptImpl = function() {
  *   // Interrupt any moving parts
  * };
  * 
- * tr.CustomTask.prototype.runImpl = function() {
+ * CustomTask.prototype.runImpl = function() {
  *   // Start the task
  * };
  *
@@ -105,7 +105,7 @@ tr.Abstract.prototype.getState = function() {
 
 
 /** @override */
-tr.Abstract.prototype.getTaskName = function() {
+tr.Abstract.prototype.getName = function() {
   return this.taskName_;
 };
 
@@ -171,7 +171,7 @@ tr.Abstract.prototype.interrupt = function() {
 
 
 /** @override */
-tr.Abstract.prototype.interruptForTask = function(task) {
+tr.Abstract.prototype.interruptFor = function(task) {
   this.interruptingTask_ = task;
 
   this.interrupt();
