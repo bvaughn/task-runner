@@ -1,11 +1,11 @@
 function createFadeInTweenTask(element) {
-  return new taskrunner.TweenTask(function(value) {
+  return new tr.Tween(function(value) {
     element.style.opacity = value;  
   }, 1000);
 };
 
 function createFadeOutTweenTask(element) {
-  return new taskrunner.TweenTask(function(value) {
+  return new tr.Tween(function(value) {
     element.style.opacity = 1 - value;  
   }, 1000);
 };
@@ -13,7 +13,7 @@ function createFadeOutTweenTask(element) {
 function createShrinkTweenTask(element) {
   var boundingClientRect = element.getBoundingClientRect();
 
-  return new taskrunner.TweenTask(function(value) {
+  return new tr.Tween(function(value) {
     var multiplier = 1 - value;
 
     element.style.height = boundingClientRect.height * multiplier;
@@ -25,7 +25,7 @@ function creatDropTweenTask(element) {
   var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
   var boundingClientRect = element.getBoundingClientRect();
 
-  var task = new taskrunner.TweenTask(function(value) {
+  var task = new tr.Tween(function(value) {
     element.style.top = boundingClientRect.top + value * (viewportHeight - boundingClientRect.top);
   }, 1000);
   task.started(function() {
@@ -38,39 +38,39 @@ function creatDropTweenTask(element) {
 };
 
 function init() {
-  window.dependencyGraphTask = new taskrunner.DependencyGraphTask();
+  var graphTask = new tr.Graph();
 
   var waitForClickTask;
   var completedCount = 0;
 
   var button1 = document.getElementById('button1');
-  waitForClickTask = new taskrunner.EventListenerTask(button1, "click");
-  dependencyGraphTask.addTask(createFadeInTweenTask(button1));
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(createFadeOutTweenTask(button1), [waitForClickTask]);
+  waitForClickTask = new tr.Listener(button1, "click");
+  graphTask.add(createFadeInTweenTask(button1));
+  graphTask.add(waitForClickTask);
+  graphTask.add(createFadeOutTweenTask(button1), [waitForClickTask]);
 
   var button2 = document.getElementById('button2');
-  waitForClickTask = new taskrunner.EventListenerTask(button2, "click");
-  dependencyGraphTask.addTask(createFadeInTweenTask(button2));
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(createShrinkTweenTask(button2), [waitForClickTask]);
+  waitForClickTask = new tr.Listener(button2, "click");
+  graphTask.add(createFadeInTweenTask(button2));
+  graphTask.add(waitForClickTask);
+  graphTask.add(createShrinkTweenTask(button2), [waitForClickTask]);
 
   var button3 = document.getElementById('button3');
-  waitForClickTask = new taskrunner.EventListenerTask(button3, "click");
-  dependencyGraphTask.addTask(createFadeInTweenTask(button3));
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(creatDropTweenTask(button3), [waitForClickTask]);
+  waitForClickTask = new tr.Listener(button3, "click");
+  graphTask.add(createFadeInTweenTask(button3));
+  graphTask.add(waitForClickTask);
+  graphTask.add(creatDropTweenTask(button3), [waitForClickTask]);
 
   // Blocks on all of the above tasks
-  dependencyGraphTask.addTaskToEnd(
-    new taskrunner.ClosureTask(function() {
+  graphTask.addToEnd(
+    new tr.Closure(function() {
       var logger = document.getElementById('logger');
       logger.innerText = "Task completed " + ++completedCount + " times";
     }, true));
 
-  dependencyGraphTask.completed(function() {
-    dependencyGraphTask.reset();
-    dependencyGraphTask.run();
+  graphTask.completed(function() {
+    graphTask.reset();
+    graphTask.run();
   });
-  dependencyGraphTask.run();
+  graphTask.run();
 };

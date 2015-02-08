@@ -1,17 +1,17 @@
 function init() {
-  window.dependencyGraphTask = new taskrunner.DependencyGraphTask();
+  var graphTask = new tr.Graph();
 
-  taskrunner.XHRTask.setDefaultResponseType(taskrunner.XHRTask.ResponseType.JSON);
+  tr.Xhr.setDefaultResponseType(tr.Xhr.ResponseType.JSON);
 
   var waitForClickTask;
 
   // Sequence to load IP address JSON
-  var getIpTask = new taskrunner.XHRTask('http://httpbin.org/ip');
-  waitForClickTask = new taskrunner.EventListenerTask(document.getElementById('loadIpButton'), 'click');
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(getIpTask, [waitForClickTask]);
-  dependencyGraphTask.addTask(
-    new taskrunner.ClosureTask(
+  var getIpTask = new tr.Xhr('http://httpbin.org/ip');
+  waitForClickTask = new tr.Listener(document.getElementById('loadIpButton'), 'click');
+  graphTask.add(waitForClickTask);
+  graphTask.add(getIpTask, [waitForClickTask]);
+  graphTask.add(
+    new tr.Closure(
       function() {
         var data = getIpTask.getData();
 
@@ -20,12 +20,12 @@ function init() {
     [getIpTask]);
 
   // Sequence to load user agent JSON
-  var getUserAgentTask = new taskrunner.XHRTask('http://httpbin.org/user-agent');
-  waitForClickTask = new taskrunner.EventListenerTask(document.getElementById('loadUserAgentButton'), 'click');
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(getUserAgentTask, [waitForClickTask]);
-  dependencyGraphTask.addTask(
-    new taskrunner.ClosureTask(
+  var getUserAgentTask = new tr.Xhr('http://httpbin.org/user-agent');
+  waitForClickTask = new tr.Listener(document.getElementById('loadUserAgentButton'), 'click');
+  graphTask.add(waitForClickTask);
+  graphTask.add(getUserAgentTask, [waitForClickTask]);
+  graphTask.add(
+    new tr.Closure(
       function() {
         var data = getUserAgentTask.getData();
 
@@ -34,12 +34,12 @@ function init() {
     [getUserAgentTask]);
 
   // Sequence to load arbitrary text
-  var getTextTask = new taskrunner.XHRTask('http://httpbin.org/html', undefined, taskrunner.XHRTask.ResponseType.TEXT);
-  waitForClickTask = new taskrunner.EventListenerTask(document.getElementById('loadTextButton'), 'click');
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(getTextTask, [waitForClickTask]);
-  dependencyGraphTask.addTask(
-    new taskrunner.ClosureTask(
+  var getTextTask = new tr.Xhr('http://httpbin.org/html', undefined, tr.Xhr.ResponseType.TEXT);
+  waitForClickTask = new tr.Listener(document.getElementById('loadTextButton'), 'click');
+  graphTask.add(waitForClickTask);
+  graphTask.add(getTextTask, [waitForClickTask]);
+  graphTask.add(
+    new tr.Closure(
       function() {
         var data = getTextTask.getData();
 
@@ -48,12 +48,12 @@ function init() {
     [getTextTask]);
 
   // Sequence to load arbitrary XML
-  var getXmlTask = new taskrunner.XHRTask('http://httpbin.org/xml', undefined, taskrunner.XHRTask.ResponseType.XML);
-  waitForClickTask = new taskrunner.EventListenerTask(document.getElementById('loadXmlButton'), 'click');
-  dependencyGraphTask.addTask(waitForClickTask);
-  dependencyGraphTask.addTask(getXmlTask, [waitForClickTask]);
-  dependencyGraphTask.addTask(
-    new taskrunner.ClosureTask(
+  var getXmlTask = new tr.Xhr('http://httpbin.org/xml', undefined, tr.Xhr.ResponseType.XML);
+  waitForClickTask = new tr.Listener(document.getElementById('loadXmlButton'), 'click');
+  graphTask.add(waitForClickTask);
+  graphTask.add(getXmlTask, [waitForClickTask]);
+  graphTask.add(
+    new tr.Closure(
       function() {
         var data = getXmlTask.getData();
 
@@ -62,5 +62,5 @@ function init() {
     [getXmlTask]);
 
   // Run all of the above sequences in parallel.
-  dependencyGraphTask.run();
+  graphTask.run();
 };
