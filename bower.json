@@ -1,6 +1,10 @@
 {
   "name": "task-runner",
   "version": "1.0.0",
+  "description": "JavaScript Promises on steroids- and more!",
+  "author": "Brian Vaughn <briandavidvaughn@gmail.com>",
+  "license": "Apache 2.0",
+  "main": "source/base.js",
   "devDependencies": {
     "closure-compiler": "http://dl.google.com/closure-compiler/compiler-latest.zip",
     "closure-library": "git@github.com:google/closure-library.git"
