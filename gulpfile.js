@@ -30,7 +30,7 @@ gulp.task('build', function() {
         closure_entry_point: 'tr',
         language_in: 'ECMASCRIPT5',
         only_closure_dependencies: true,
-        //formatting: 'pretty_print'
+        formatting: 'pretty_print'
       }
     }))
     .pipe(gulp.dest('dist'));

@@ -684,4 +684,36 @@ describe('tr.Graph', function() {
     expect(nullTask2.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(nullTask3.getState()).toBe(tr.enums.State.ERRORED);
   });
+
+  it('should add a set of tasks to the end of the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+    var nullTask3 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.addAllToEnd([nullTask2, nullTask3]);
+
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
+    expect(nullTask3.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    nullTask1.complete();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask3.getState()).toBe(tr.enums.State.RUNNING);
+
+    nullTask2.complete();
+    nullTask3.complete();
+
+    expect(task.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(nullTask1.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(nullTask2.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(nullTask3.getState()).toBe(tr.enums.State.COMPLETED);
+  });
 });

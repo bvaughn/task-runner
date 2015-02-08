@@ -93,6 +93,25 @@ tr.Graph.prototype.addToEnd = function(task) {
 
 
 /**
+ * TODO
+ *
+ * @param {!tr.Task} task Child task to be run when this task is run.
+ * @return {!tr.Graph} a reference to the current task.
+ * @throws {Error} if task has been added more than once.
+ * @throws {Error} if cyclic dependencies are detected.
+ */
+tr.Graph.prototype.addAllToEnd = function(tasks) {
+  var blockers = this.tasks_.slice();
+
+  for (var i = 0, length = tasks.length; i < length; i++) {
+    this.add(tasks[i], blockers);
+  }
+
+  return this;
+};
+
+
+/**
  * Removes a child task from the dependency graph and ensures that the remaining
  * dependencies are still valid.
  *
