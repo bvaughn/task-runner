@@ -1,8 +1,7 @@
 /**
  * Entry point for Closure Compiler.
- * Responsible for requiring all of the build dependencies.
+ * Responsible for requiring all of the Task Runner tasks.
  */
-
 goog.provide('tr');
 
 goog.require('tr.Abstract');
