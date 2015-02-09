@@ -1,4 +1,9 @@
-jQuery(document).ready(function($) {
+$(document).ready(function($) {
+
+    /* ======= Mobile nav ======= */
+    $('.navbar-collapse li').click(function() {
+        $('.navbar-collapse').collapse('hide');
+    });
 
     /* ======= Scrollspy ======= */
     $('body').scrollspy({ target: '#header', offset: 400});
@@ -29,5 +34,4 @@ jQuery(document).ready(function($) {
 		}
 		
 	});
-
 });

@@ -97,6 +97,7 @@ pre code {
   color: #fff;
   position: fixed;
   width: 100%;
+  z-index: 10;
 }
 .header.navbar-fixed-top {
   background: #fff;
