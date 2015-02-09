@@ -1,6 +1,19 @@
 var gulp = require('gulp');
 var karma = require('gulp-karma');
- 
+
+var sources = [
+  'bower_components/closure-library/closure/goog/**/*.js',
+  'source/*.js',
+  'source/tr/*.js',
+  'source/tr/enums/*.js'
+];
+var sourcesWithApps = [
+  'bower_components/closure-library/closure/goog/**/*.js',
+  'source/*.js',
+  'source/tr/*.js',
+  'source/tr/app/*.js',
+  'source/tr/enums/*.js'
+];
 var testFiles = []; // Declared in the karma.conf.js
  
 gulp.task('test', function() {
@@ -15,40 +28,49 @@ gulp.task('test', function() {
       throw err;
     });
 });
- 
-gulp.task('build', function() {
+
+var buildHelper = function(sources, entryPoint, outputFile) {
   var closureCompiler = require('gulp-closure-compiler');
 
-  gulp.src([
-      'bower_components/closure-library/closure/goog/**/*.js',
-      'source/**/*.js'
-    ])
+  gulp.src(sources)
     .pipe(closureCompiler({
       compilerPath: 'bower_components/closure-compiler/compiler.jar',
-      fileName: 'task-runner.js',
+      fileName: outputFile,
       compilerFlags: {
-        closure_entry_point: 'tr',
+        closure_entry_point: entryPoint,
         language_in: 'ECMASCRIPT5',
         only_closure_dependencies: true,
         formatting: 'pretty_print'
       }
     }))
     .pipe(gulp.dest('dist'));
+};
+ 
+gulp.task('build', function() {
+  buildHelper(sources, 'tr', 'task-runner.js');
+});
+gulp.task('build:app', function() {
+  buildHelper(sourcesWithApps, 'tr.app', 'task-runner-with-app.js');
 });
 
-gulp.task('deps', function() {
+// TODO
+var depsHelper = function(sources, outputFile) {
   var closureDeps = require('gulp-closure-deps');
 
-  gulp.src([
-      'bower_components/closure-library/closure/goog/**/*.js',
-      'source/**/*.js'
-    ])
+  gulp.src(sources)
     .pipe(closureDeps({
-      fileName: 'task-runner-deps.js',
+      fileName: outputFile,
       prefix: '',
       baseDir: 'source/'
     }))
     .pipe(gulp.dest('dist'));
+};
+
+gulp.task('deps', function() {
+  depsHelper(sources, 'task-runner-deps.js');
+});
+gulp.task('deps:app', function() {
+  depsHelper(sourcesWithApps, 'task-runner-deps-with-app.js');
 });
 
 gulp.task('watch', function() {

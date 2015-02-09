@@ -40,8 +40,8 @@ goog.require('tr.Abstract');
 *      });
  *   }, false).run();
  *
- * @param {function(!tr.ClosureTask)} runImplFn The function to be executed when this Task is run.
- *                                              ClosureTask will pass a reference to itself to the function.
+ * @param {function(!tr.Closure)} runImplFn The function to be executed when this Task is run.
+ *                                          ClosureTask will pass a reference to itself to the function.
  * @param {boolean=} opt_synchronous This task should auto-complete when run.
  * @param {string=} opt_taskName Optional task name.
  * @extends {tr.Abstract}
