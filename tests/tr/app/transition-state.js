@@ -18,7 +18,7 @@ describe('tr.app.TransitionState', function() {
   var stateTransitioningTask;
   
   beforeEach(function() {
-    application = new tr.Application();
+    application = new tr.app.Application();
 
     stateTransitioningTask = new tr.app.TransitionState(application);
 

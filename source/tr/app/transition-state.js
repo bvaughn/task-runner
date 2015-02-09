@@ -54,7 +54,7 @@ tr.app.TransitionState.prototype.beforeFirstRun = function() {
   // Once all of the blocker-tasks have completed, choose the most appropriate state.
   this.addToEnd(
     new tr.Closure(
-      goog.bind(this.chooseState_, this)));
+      goog.bind(this.chooseState_, this), false, "Chooses state after blockers have completed"));
 };
 
 
@@ -100,27 +100,35 @@ tr.app.TransitionState.prototype.addTargetState = function(stateTask, blockingTa
  * @private
  */
 tr.app.TransitionState.prototype.chooseState_ = function() {
-  for (var i = 0; i < this.prioritizedStates_.length; i++) {
-    var stateTask = this.prioritizedStates_[i];
-    var blockingTasks = this.taskIdToBlockingTasksMap_[stateTask.getUniqueID()];
-    var blockingDependenciesMet = true;
-    
-    for (var x = 0; x < blockingTasks.length; x++) {
-      var blockingTask = blockingTasks[x];
+  try {
+    for (var i = 0; i < this.prioritizedStates_.length; i++) {
+      var stateTask = this.prioritizedStates_[i];
+      var blockingTasks = this.taskIdToBlockingTasksMap_[stateTask.getUniqueID()];
+      var blockingDependenciesMet = true;
+      
+      for (var x = 0; x < blockingTasks.length; x++) {
+        var blockingTask = blockingTasks[x];
 
-      if (blockingTask.getState() === tr.enums.State.ERRORED) {
-        blockingDependenciesMet = false;
+        if (blockingTask.getState() === tr.enums.State.ERRORED) {
+          blockingDependenciesMet = false;
 
-        break;
+          break;
+        }
+      }
+
+      if (blockingDependenciesMet) {
+        this.application_.enterState(stateTask);
+
+        return;
       }
     }
 
-    if (blockingDependenciesMet) {
-      this.application_.enterState(stateTask);
+    this.errorInternal('No valid application states found');
 
-      return;
+  // Handle any errors that occur in synchronous task we hand off to.
+  } catch (error) {
+    if (this.getState() === tr.enums.State.RUNNING) {
+      throw error;
     }
   }
-
-  this.errorInternal('No valid application states found');
 };

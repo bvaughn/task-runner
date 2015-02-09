@@ -12,7 +12,7 @@ describe('tr.app.State', function() {
   var nullTaskB;
   
   beforeEach(function() {
-    application = new tr.Application();
+    application = new tr.app.Application();
 
     nullTaskA = new tr.Stub();
     nullTaskB = new tr.Stub();

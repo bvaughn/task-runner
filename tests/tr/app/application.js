@@ -12,7 +12,7 @@ describe('tr.app.Application', function() {
   var stateTaskB;
   
   beforeEach(function() {
-    application = new tr.Application();
+    application = new tr.app.Application();
 
     stateTaskA = new tr.app.State(application);
     stateTaskA.add(new tr.Sleep());

@@ -7,7 +7,7 @@ goog.require('tr.enums.State');
 
 
 /**
- * A runtime state of an {@link tr.Application}s.
+ * A runtime state of an {@link tr.app.Application}s.
  * Extend this base class to implement custom application states.
  *
 
@@ -21,7 +21,7 @@ goog.require('tr.enums.State');
  * };
  * goog.inherits(tr.InitializationState, tr.app.State);
  *
- * @param {!tr.Application} application A reference to the {@link tr.Application} this state belongs to.
+ * @param {!tr.app.Application} application A reference to the {@link tr.app.Application} this state belongs to.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {tr.DepdencyGraph}
  * @constructor
@@ -30,7 +30,7 @@ goog.require('tr.enums.State');
 tr.app.State = function(application, opt_taskName) {
   goog.base(this, opt_taskName);
 
-  /** @private {!tr.Application} */
+  /** @private {!tr.app.Application} */
   this.application_ = application;
 };
 goog.inherits(tr.app.State, tr.Graph);

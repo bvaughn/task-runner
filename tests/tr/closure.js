@@ -31,6 +31,39 @@ describe('tr.Closure', function() {
     expect(task.getState()).toBe(tr.enums.State.COMPLETED);
   });
 
+  it('should not error when told to auto-complete if the callback completes the task', function() {
+    var method = function() {
+      task.complete()
+    };
+
+    var task = new tr.Closure(method, true);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.COMPLETED);
+  });
+
+  it('should not error when told to auto-complete if the callback errors the task', function() {
+    var method = function() {
+      task.error()
+    };
+
+    var task = new tr.Closure(method, true);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.ERRORED);
+  });
+
+  it('should not error when told to auto-complete if the callback interrupts the task', function() {
+    var method = function() {
+      task.interrupt()
+    };
+
+    var task = new tr.Closure(method, true);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
+  });
+
   it('should pass a reference to itself to runImpl', function() {
     var method = jasmine.createSpy();
 
@@ -53,6 +86,22 @@ describe('tr.Closure', function() {
     expect(task.getState()).toBe(tr.enums.State.ERRORED);
     expect(task.getData()).toBe(error);
     expect(task.getErrorMessage()).toBe('test');
+  });
+
+  // Weird edge-case that could be triggered if a Closure task invokes another Closure task that errors.
+  it('should not error if callback throws an error but interrupts the running task', function() {
+    var error = new Error('test');
+
+    var method = function() {
+      task.interrupt();
+
+      throw error;
+    };
+
+    var task = new tr.Closure(method, true);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
   });
 
   it('should rerun wrapped function if reset and rerun', function() {

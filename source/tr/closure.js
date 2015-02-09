@@ -65,11 +65,16 @@ tr.Closure.prototype.runImpl = function() {
   try {
     this.runImplFn_(this);
 
-    if (this.autoCompleteUponRun_) {
+    // Don't auto-complete if the callback has already interrupted or completed this task.
+    if (this.autoCompleteUponRun_ && this.getState() === tr.enums.State.RUNNING) {
       this.completeInternal();
     }
   } catch (error) {
-    this.errorInternal(error, error.message);
+
+    // Edge case that could be triggered if a Closure task invokes another synchronous task that errors.
+    if (this.getState() === tr.enums.State.RUNNING) {
+      this.errorInternal(error, error.message);
+    }
   }
 };
 

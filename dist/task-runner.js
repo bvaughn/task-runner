@@ -724,6 +724,8 @@ goog.disposeAll = function(a) {
     goog.isArrayLike(d) ? goog.disposeAll.apply(null, d) : goog.dispose(d);
   }
 };
+goog.dom = {};
+goog.dom.NodeType = {ELEMENT:1, ATTRIBUTE:2, TEXT:3, CDATA_SECTION:4, ENTITY_REFERENCE:5, ENTITY:6, PROCESSING_INSTRUCTION:7, COMMENT:8, DOCUMENT:9, DOCUMENT_TYPE:10, DOCUMENT_FRAGMENT:11, NOTATION:12};
 goog.events = {};
 goog.events.EventId = function(a) {
   this.id = a;
@@ -781,8 +783,6 @@ goog.events.Listener.prototype.markAsRemoved = function() {
   this.removed = !0;
   this.handler = this.src = this.proxy = this.listener = null;
 };
-goog.dom = {};
-goog.dom.NodeType = {ELEMENT:1, ATTRIBUTE:2, TEXT:3, CDATA_SECTION:4, ENTITY_REFERENCE:5, ENTITY:6, PROCESSING_INSTRUCTION:7, COMMENT:8, DOCUMENT:9, DOCUMENT_TYPE:10, DOCUMENT_FRAGMENT:11, NOTATION:12};
 goog.functions = {};
 goog.functions.constant = function(a) {
   return function() {
@@ -6761,9 +6761,9 @@ tr.Closure = function(a, b, c) {
 goog.inherits(tr.Closure, tr.Abstract);
 tr.Closure.prototype.runImpl = function() {
   try {
-    this.runImplFn_(this), this.autoCompleteUponRun_ && this.completeInternal();
+    this.runImplFn_(this), this.autoCompleteUponRun_ && this.getState() === tr.enums.State.RUNNING && this.completeInternal();
   } catch (a) {
-    this.errorInternal(a, a.message);
+    this.getState() === tr.enums.State.RUNNING && this.errorInternal(a, a.message);
   }
 };
 tr.Closure.prototype.complete = function(a) {

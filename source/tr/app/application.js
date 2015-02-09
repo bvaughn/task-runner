@@ -11,7 +11,7 @@ goog.require('tr.enums.State');
  * Use the enterState() method to start the application or to transition between states.
  *
  * @example
- * var application = new tr.Application();
+ * var application = new tr.app.Application();
  * application.enterState(initializationTask);
  *
  * @example
@@ -21,10 +21,10 @@ goog.require('tr.enums.State');
  * @constructor
  * @struct
  */
-tr.Application = function() {
+tr.app.Application = function() {
 
-  /** @private {!tr.ApplicationRouter} */
-  this.applicationRouter_ = new tr.ApplicationRouter(this);
+  /** @private {!tr.app.ApplicationRouter} */
+  this.applicationRouter_ = new tr.app.ApplicationRouter(this);
 
   /** @private {tr.Task|undefined} */
   this.stateTask_;
@@ -35,9 +35,10 @@ tr.Application = function() {
  * Interrupt the current application-state and enter a new one.
  * 
  * @param {!State} stateTask State task to enter.
- * @private
+ * @constructor
+ * @struct
  */
-tr.Application.prototype.enterState = function(stateTask) {
+tr.app.Application.prototype.enterState = function(stateTask) {
   if (this.stateTask_ === stateTask) {
     stateTask.interrupt();
     stateTask.reset();
@@ -58,9 +59,9 @@ tr.Application.prototype.enterState = function(stateTask) {
 
 
 /**
- * @return {@link tr.ApplicationRouter}
+ * @return {@link tr.app.ApplicationRouter}
  */
-tr.Application.prototype.getApplicationRouter = function() {
+tr.app.Application.prototype.getApplicationRouter = function() {
   return this.applicationRouter_;
 };
 
@@ -68,7 +69,7 @@ tr.Application.prototype.getApplicationRouter = function() {
 /**
  * @return Current application {@link tr.app.State}.
  */
-tr.Application.prototype.getState = function() {
+tr.app.Application.prototype.getState = function() {
   return this.stateTask_;
 };
 
@@ -77,18 +78,18 @@ tr.Application.prototype.getState = function() {
  * This method is called when a application has been started.
  * Override it to implement custom start behavior.
  */
-//tr.Application.prototype.applicationStarted = goog.nullFunction;
+//tr.app.Application.prototype.applicationStarted = goog.nullFunction;
 
 
 /**
  * This method is called when a application has been interrupted.
  * Override it to implement custom interrupt behavior.
  */
-//tr.Application.prototype.applicationInterrupted = goog.nullFunction;
+//tr.app.Application.prototype.applicationInterrupted = goog.nullFunction;
 
 
 /**
  * This method is called when a application has been reset.
  * Override it to implement custom reset behavior.
  */
-//tr.Application.prototype.applicationReset = goog.nullFunction;
+//tr.app.Application.prototype.applicationReset = goog.nullFunction;
