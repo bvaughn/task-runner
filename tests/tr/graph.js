@@ -51,7 +51,7 @@ describe('tr.Graph', function() {
 
 
   /**
-   * Test task that tracks the number of times 'addsBeforeFirstRun' has been run.
+   * Test task that tracks the number of times 'beforeFirstRun' has been run.
    * @extends {tr.Graph}
    * @constructor
    * @struct
@@ -59,13 +59,13 @@ describe('tr.Graph', function() {
   tr.TestGraph = function() {
     goog.base(this);
 
-    this.addsBeforeFirstRunCount_ = 0;
+    this.beforeFirstRunCount_ = 0;
   };
   goog.inherits(tr.TestGraph, tr.Graph);
 
   /** @override */
-  tr.TestGraph.prototype.addsBeforeFirstRun = function() {
-    this.addsBeforeFirstRunCount_++;
+  tr.TestGraph.prototype.beforeFirstRun = function() {
+    this.beforeFirstRunCount_++;
   };
 
 
@@ -627,31 +627,31 @@ describe('tr.Graph', function() {
     expect(task.getState()).toBe(tr.enums.State.INITIALIZED);
   });
 
-  it('should invoke addsBeforeFirstRun before running', function() {
+  it('should invoke beforeFirstRun before running', function() {
     var task = new tr.TestGraph();
     task.add(new tr.Stub());
     task.run();
 
-    expect(task.addsBeforeFirstRunCount_).toBe(1);
+    expect(task.beforeFirstRunCount_).toBe(1);
   });
 
-  it('should only invoke addsBeforeFirstRun once', function() {
+  it('should only invoke beforeFirstRun once', function() {
     var task = new tr.TestGraph();
     task.add(new tr.Stub());
     task.run();
 
-    expect(task.addsBeforeFirstRunCount_).toBe(1);
+    expect(task.beforeFirstRunCount_).toBe(1);
 
     task.interrupt();
     task.run();
 
-    expect(task.addsBeforeFirstRunCount_).toBe(1);
+    expect(task.beforeFirstRunCount_).toBe(1);
 
     task.interrupt();
     task.reset();
     task.run();
 
-    expect(task.addsBeforeFirstRunCount_).toBe(1);
+    expect(task.beforeFirstRunCount_).toBe(1);
   });
 
   it('should interrupt any children running in parallel in the event of an error', function() {

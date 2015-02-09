@@ -43,7 +43,7 @@ tr.Graph = function(opt_taskName) {
   this.erroredTasks_ = [];
 
   /** @private {boolean} */
-  this.addsBeforeFirstRunInvoked_ = false;
+  this.beforeFirstRunInvoked_ = false;
 };
 goog.inherits(tr.Graph, tr.Abstract);
 
@@ -193,9 +193,9 @@ tr.Graph.prototype.getCompletedOperationsCount =
 tr.Graph.prototype.runImpl = function() {
   this.erroredTasks_ = [];
 
-  if ( !this.addsBeforeFirstRunInvoked_ ) {
-    this.addsBeforeFirstRun();
-    this.addsBeforeFirstRunInvoked_ = true;
+  if ( !this.beforeFirstRunInvoked_ ) {
+    this.beforeFirstRun();
+    this.beforeFirstRunInvoked_ = true;
   }
 
   this.completeOrRunNext_();
@@ -235,7 +235,7 @@ tr.Graph.prototype.resetImpl = function() {
 /**
  * Subclasses may override this method to just-in-time add child Tasks before the composite is run.
  */
-tr.Graph.prototype.addsBeforeFirstRun = goog.nullFunction;
+tr.Graph.prototype.beforeFirstRun = goog.nullFunction;
 
 
 /**

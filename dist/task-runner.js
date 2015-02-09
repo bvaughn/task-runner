@@ -724,8 +724,6 @@ goog.disposeAll = function(a) {
     goog.isArrayLike(d) ? goog.disposeAll.apply(null, d) : goog.dispose(d);
   }
 };
-goog.dom = {};
-goog.dom.NodeType = {ELEMENT:1, ATTRIBUTE:2, TEXT:3, CDATA_SECTION:4, ENTITY_REFERENCE:5, ENTITY:6, PROCESSING_INSTRUCTION:7, COMMENT:8, DOCUMENT:9, DOCUMENT_TYPE:10, DOCUMENT_FRAGMENT:11, NOTATION:12};
 goog.events = {};
 goog.events.EventId = function(a) {
   this.id = a;
@@ -783,6 +781,8 @@ goog.events.Listener.prototype.markAsRemoved = function() {
   this.removed = !0;
   this.handler = this.src = this.proxy = this.listener = null;
 };
+goog.dom = {};
+goog.dom.NodeType = {ELEMENT:1, ATTRIBUTE:2, TEXT:3, CDATA_SECTION:4, ENTITY_REFERENCE:5, ENTITY:6, PROCESSING_INSTRUCTION:7, COMMENT:8, DOCUMENT:9, DOCUMENT_TYPE:10, DOCUMENT_FRAGMENT:11, NOTATION:12};
 goog.functions = {};
 goog.functions.constant = function(a) {
   return function() {
@@ -6977,7 +6977,7 @@ tr.Graph = function(a) {
   this.taskIdToDependenciesMap_ = {};
   this.tasks_ = [];
   this.erroredTasks_ = [];
-  this.addsBeforeFirstRunInvoked_ = !1;
+  this.beforeFirstRunInvoked_ = !1;
 };
 goog.inherits(tr.Graph, tr.Abstract);
 tr.Graph.prototype.add = function(a, b) {
@@ -7029,7 +7029,7 @@ tr.Graph.prototype.getCompletedOperationsCount = function() {
 };
 tr.Graph.prototype.runImpl = function() {
   this.erroredTasks_ = [];
-  this.addsBeforeFirstRunInvoked_ || (this.addsBeforeFirstRun(), this.addsBeforeFirstRunInvoked_ = !0);
+  this.beforeFirstRunInvoked_ || (this.beforeFirstRun(), this.beforeFirstRunInvoked_ = !0);
   this.completeOrRunNext_();
 };
 tr.Graph.prototype.interruptImpl = function() {
@@ -7044,7 +7044,7 @@ tr.Graph.prototype.resetImpl = function() {
     this.tasks_[a].reset();
   }
 };
-tr.Graph.prototype.addsBeforeFirstRun = goog.nullFunction;
+tr.Graph.prototype.beforeFirstRun = goog.nullFunction;
 tr.Graph.prototype.addCallbacksTo_ = function(a) {
   a.completed(this.childTaskCompleted_, this);
   a.errored(this.childTaskErrored_, this);

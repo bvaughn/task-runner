@@ -1116,6 +1116,27 @@ goog.json.Serializer.prototype.serializeObject_ = function(a, b) {
   }
   b.push("}");
 };
+goog.memoize = function(a, b) {
+  var c = b || goog.memoize.simpleSerializer;
+  return function() {
+    if (goog.memoize.ENABLE_MEMOIZE) {
+      var b = this || goog.global, b = b[goog.memoize.CACHE_PROPERTY_] || (b[goog.memoize.CACHE_PROPERTY_] = {}), e = c(goog.getUid(a), arguments);
+      return b.hasOwnProperty(e) ? b[e] : b[e] = a.apply(this, arguments);
+    }
+    return a.apply(this, arguments);
+  };
+};
+goog.memoize.ENABLE_MEMOIZE = !0;
+goog.memoize.clearCache = function(a) {
+  a[goog.memoize.CACHE_PROPERTY_] = {};
+};
+goog.memoize.CACHE_PROPERTY_ = "closure_memoize_cache_";
+goog.memoize.simpleSerializer = function(a, b) {
+  for (var c = [a], d = b.length - 1;0 <= d;--d) {
+    c.push(typeof b[d], b[d]);
+  }
+  return c.join("\x0B");
+};
 goog.math = {};
 goog.math.Size = function(a, b) {
   this.width = a;
@@ -1179,27 +1200,6 @@ goog.math.Size.prototype.scaleToCover = function(a) {
 goog.math.Size.prototype.scaleToFit = function(a) {
   a = this.aspectRatio() > a.aspectRatio() ? a.width / this.width : a.height / this.height;
   return this.scale(a);
-};
-goog.memoize = function(a, b) {
-  var c = b || goog.memoize.simpleSerializer;
-  return function() {
-    if (goog.memoize.ENABLE_MEMOIZE) {
-      var b = this || goog.global, b = b[goog.memoize.CACHE_PROPERTY_] || (b[goog.memoize.CACHE_PROPERTY_] = {}), e = c(goog.getUid(a), arguments);
-      return b.hasOwnProperty(e) ? b[e] : b[e] = a.apply(this, arguments);
-    }
-    return a.apply(this, arguments);
-  };
-};
-goog.memoize.ENABLE_MEMOIZE = !0;
-goog.memoize.clearCache = function(a) {
-  a[goog.memoize.CACHE_PROPERTY_] = {};
-};
-goog.memoize.CACHE_PROPERTY_ = "closure_memoize_cache_";
-goog.memoize.simpleSerializer = function(a, b) {
-  for (var c = [a], d = b.length - 1;0 <= d;--d) {
-    c.push(typeof b[d], b[d]);
-  }
-  return c.join("\x0B");
 };
 goog.object = {};
 goog.object.forEach = function(a, b, c) {
@@ -8256,7 +8256,7 @@ tr.Graph = function(a) {
   this.taskIdToDependenciesMap_ = {};
   this.tasks_ = [];
   this.erroredTasks_ = [];
-  this.addsBeforeFirstRunInvoked_ = !1;
+  this.beforeFirstRunInvoked_ = !1;
 };
 goog.inherits(tr.Graph, tr.Abstract);
 tr.Graph.prototype.add = function(a, b) {
@@ -8308,7 +8308,7 @@ tr.Graph.prototype.getCompletedOperationsCount = function() {
 };
 tr.Graph.prototype.runImpl = function() {
   this.erroredTasks_ = [];
-  this.addsBeforeFirstRunInvoked_ || (this.addsBeforeFirstRun(), this.addsBeforeFirstRunInvoked_ = !0);
+  this.beforeFirstRunInvoked_ || (this.beforeFirstRun(), this.beforeFirstRunInvoked_ = !0);
   this.completeOrRunNext_();
 };
 tr.Graph.prototype.interruptImpl = function() {
@@ -8323,7 +8323,7 @@ tr.Graph.prototype.resetImpl = function() {
     this.tasks_[a].reset();
   }
 };
-tr.Graph.prototype.addsBeforeFirstRun = goog.nullFunction;
+tr.Graph.prototype.beforeFirstRun = goog.nullFunction;
 tr.Graph.prototype.addCallbacksTo_ = function(a) {
   a.completed(this.childTaskCompleted_, this);
   a.errored(this.childTaskErrored_, this);
@@ -8764,7 +8764,7 @@ tr.app.TransitionState = function(a, b) {
   this.taskIdToBlockingTasksMap_ = {};
 };
 goog.inherits(tr.app.TransitionState, tr.app.State);
-tr.app.TransitionState.prototype.addsBeforeFirstRun = function() {
+tr.app.TransitionState.prototype.beforeFirstRun = function() {
   this.addToEnd(new tr.Closure(goog.bind(this.chooseState_, this)));
 };
 tr.app.TransitionState.prototype.addTargetState = function(a, b) {

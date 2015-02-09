@@ -50,7 +50,7 @@ goog.inherits(tr.app.TransitionState, tr.app.State);
  * @override
  * @inheritDoc
  */
-tr.app.TransitionState.prototype.addsBeforeFirstRun = function() {
+tr.app.TransitionState.prototype.beforeFirstRun = function() {
   // Once all of the blocker-tasks have completed, choose the most appropriate state.
   this.addToEnd(
     new tr.Closure(
