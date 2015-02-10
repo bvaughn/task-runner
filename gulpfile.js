@@ -42,6 +42,8 @@ var buildHelper = function(sources, entryPoint, directory, outputFile, debug) {
   if (debug) {
     compilerFlags.define = ["goog.DEBUG=true"];
     compilerFlags.formatting = 'pretty_print';
+  } else {
+    compilerFlags.define = ["goog.DEBUG=false"];
   }
 
   gulp.src(sources)
