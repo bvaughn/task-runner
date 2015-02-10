@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: factory.js</title>
+    <title>Source: app/transition-state.js</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1217,201 +1217,148 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="factory.js.html">Source: factory.js</h1>
+        <h1 class="page-title" data-filename="app_transition-state.js.html">Source: app/transition-state.js</h1>
         
 
 
     
     <section>
         <article>
-            <pre class="prettyprint source "><code>goog.provide('tr.Factory');
+            <pre class="prettyprint source "><code>goog.provide('tr.app.TransitionState');
 
-goog.require('tr.Abstract');
-goog.require('tr.enums.Event');
+goog.require('tr.Closure');
+goog.require('tr.Failsafe');
+goog.require('tr.app.State');
 goog.require('tr.enums.State');
 
 
 
 /**
- * Creates and decorates a task returned by the callback.
- *
- * &lt;p>Use this type of task when an important decision needs to be deferred.
- * For example if you need a task to load some data, but the specifics aren't known when your application is initialized.
- * This type of task allows for just-in-time evaluation of data resolved by previous Tasks.
+ * Special state used to resolve dependencies when transitioning from one {tr.app.State} to another.
  *
  * @example
- * // Creates and runs a new Xhr only when the outer deferred task is run.
- * // In this example, the variable `someUrl` is not yet set when the task is defined.
- * var task = new tr.Factory(
- *   function() {
- *     return new tr.Xhr(someUrl);
- *   });
- *
- * @param {function(*):tr.Task} taskFactoryFn The function to create an Task object.
- * @param {Object=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn with.
- * @param {!Array=} opt_argsArray Optional arguments array to invoke taskFactoryFn with.
- * @param {string=} opt_taskName Optional defaulttask name.
- * @extends {tr.Abstract}
- * @implements {tr.Decorator}
+ * var goToUserProfileTask = new tr.app.TransitionState(application);
+ * 
+ * // In this example, the highest-priority target state is one that displays a user-profile.
+ * goToUserProfileTask.addTargetState(userProfileState, [loadSessionTask, loadUserProfileTask]);
+ * 
+ * // If the user-profile could not be loaded, fall back to viewing the user's homepage.
+ * goToUserProfileTask.addTargetState(userHomePageState, [loadSessionTask]);
+ * 
+ * // If the neither could not be loaded, fall back to the login screen.
+ * goToUserProfileTask.addTargetState(loginState, []);
+ * 
+ * // Change application-state to initiate the transition.
+ * application.enterState(goToUserProfileTask);
+ * 
+ * @param {!tr.Task} application A reference to the Application this state belongs to.
+ * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @extends {tr.app.State}
  * @constructor
  * @struct
  */
-tr.Factory = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
-  goog.base(this, opt_taskName || "Factory");
+tr.app.TransitionState = function(application, opt_taskName) {
+  goog.base(this, application, opt_taskName || "TransitionState");
 
-  /** @private {function(*):tr.Task} */
-  this.taskFactoryFn_ = taskFactoryFn;
+  /** @private {Array.&lt;!tr.Task>=}  */
+  this.blockingTasks_ = [];
 
-  /** @private {?} */
-  this.thisArg_ = opt_thisArg;
+  /** @private {Array.&lt;!tr.Task>=} */
+  this.prioritizedStates_ = [];
 
-  /** @private {!Array|undefined} */
-  this.argsArray_ = opt_argsArray;
-
-  /** @private {tr.Task} */
-  this.deferredTask_ = null;
-
-  /**
-   * Whether to recreate the deferred task after an error occured.
-   * @private {boolean}
-   */
-  this.recreateDeferredTaskAfterError_ = false;
-
-  /**
-   * Whether the deferred task has errored.
-   * @private {boolean}
-   */
-  this.deferredTaskErrored_ = false;
+  /** @private {!Object} */
+  this.taskIdToBlockingTasksMap_ = {};
 };
-goog.inherits(tr.Factory, tr.Abstract);
+goog.inherits(tr.app.TransitionState, tr.app.State);
 
 
 /**
  * @override
  * @inheritDoc
  */
-tr.Factory.prototype.getDecoratedTask = function() {
-  return this.deferredTask_;
+tr.app.TransitionState.prototype.beforeFirstRun = function() {
+  // Once all of the blocker-tasks have completed, choose the most appropriate state.
+  this.addToEnd(
+    new tr.Closure(
+      goog.bind(this.chooseState_, this), false, "Closure - state-chooser"));
 };
 
 
+// TODO Always require exactly one target state that has no blocking tasks?
+// TODO Always require a default target state when started?
+
+
 /**
- * Set whether to recreate the deferred task after an error occured.
- * This property is sticky for all consecutive reruns until set again.
- * @param {boolean} recreateDeferredTaskAfterError
+ * Add a target tr.app.State and its prerequisite blocking {@link tr.Task}s.
+ * Multiple target states can be added; they should be added in the order of highest-to-lowest importance.
+ * 
+ * @param {!State} stateTask State task to be entered if all of the specified blockers succeed.
+ * @param {Array.&lt;!tr.Task>=} blockers Tasks that are pre-requisites to complete before the target state can be entered.
+ * @return {!tr.app.StateTransitionTask}
  */
-tr.Factory.prototype.recreateDeferredTaskAfterError =
-    function(recreateDeferredTaskAfterError) {
-  this.recreateDeferredTaskAfterError_ = recreateDeferredTaskAfterError;
+tr.app.TransitionState.prototype.addTargetState = function(stateTask, blockingTasks) {
+  blockingTasks = blockingTasks || [];
+
+  this.prioritizedStates_.push(stateTask);
+
+  this.taskIdToBlockingTasksMap_[stateTask.getUniqueID()] = blockingTasks;
+
+  for (var i = 0; i &lt; blockingTasks.length; i++) {
+    var task = blockingTasks[i];
+
+    if (this.blockingTasks_.indexOf(task) >= 0) {
+      continue;
+    }
+
+    this.blockingTasks_.push(task);
+
+    // Wrap it in a Failsafe task so that a blocking-task failure won't interrupt the other blocking tasks.
+    this.add(new tr.Failsafe(task));
+  }
+
+  return this;
 };
 
 
 /**
- * Removes the deferred task callbacks.
+ * Picks the highest priority State that meets all blocking dependencies.
+ * If no matching states can be found, this function will transition to an errored state.
+ *
  * @private
  */
-tr.Factory.prototype.removeCallbacks_ = function() {
-  if (!this.deferredTask_) {
-    return;
-  }
-  this.deferredTask_.off(
-      tr.enums.Event.COMPLETED, this.onDeferredTaskCompleted_, this);
-  this.deferredTask_.off(
-      tr.enums.Event.ERRORED, this.onDeferredTaskErrored_, this);
-  this.deferredTask_.off(
-      tr.enums.Event.INTERRUPTED, this.onDeferredTaskInterrupted_, this);
-};
+tr.app.TransitionState.prototype.chooseState_ = function() {
+  try {
+    for (var i = 0; i &lt; this.prioritizedStates_.length; i++) {
+      var stateTask = this.prioritizedStates_[i];
+      var blockingTasks = this.taskIdToBlockingTasksMap_[stateTask.getUniqueID()];
+      var blockingDependenciesMet = true;
+      
+      for (var x = 0; x &lt; blockingTasks.length; x++) {
+        var blockingTask = blockingTasks[x];
 
+        if (blockingTask.getState() === tr.enums.State.ERRORED) {
+          blockingDependenciesMet = false;
 
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.resetImpl = function() {
-  this.removeCallbacks_();
+          break;
+        }
+      }
 
-  if (this.deferredTask_) {
-    this.deferredTask_ = null;
-  }
-};
+      if (blockingDependenciesMet) {
+        this.application_.enterState(stateTask);
 
+        return;
+      }
+    }
 
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.interruptImpl = function() {
-  if (!this.deferredTask_) {
-    return;
-  }
-  this.removeCallbacks_();
-  this.deferredTask_.interrupt();
-};
+    this.errorInternal('No valid application states found');
 
-
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.runImpl = function() {
-  if (!this.deferredTask_ ||
-      this.recreateDeferredTaskAfterError_ &amp;&amp; this.deferredTaskErrored_) {
-    if (goog.isDef(this.thisArg_)) {
-      this.deferredTask_ = this.taskFactoryFn_.apply(
-          this.thisArg_, this.argsArray_ || []);
-    } else {
-      this.deferredTask_ = this.taskFactoryFn_.apply();
+  // Handle any errors that occur in synchronous task we hand off to.
+  } catch (error) {
+    if (this.getState() === tr.enums.State.RUNNING) {
+      throw error;
     }
   }
-
-  if (this.deferredTask_.getState() == tr.enums.State.COMPLETED) {
-    this.onDeferredTaskCompleted_(this.deferredTask_);
-  } else if (this.deferredTask_.getState() == tr.enums.State.ERRORED) {
-    this.onDeferredTaskErrored_(this.deferredTask_);
-  } else {
-    this.deferredTask_.completed(this.onDeferredTaskCompleted_, this);
-    this.deferredTask_.errored(this.onDeferredTaskErrored_, this);
-    this.deferredTask_.interrupted(this.onDeferredTaskInterrupted_, this);
-    this.deferredTask_.run();
-  }
-};
-
-
-/**
- * Event handler for when the deferred task is complete.
- * @param {!tr.Task} task
- * @private
- */
-tr.Factory.prototype.onDeferredTaskCompleted_ =
-    function(task) {
-  this.removeCallbacks_();
-  this.completeInternal(task.getData());
-};
-
-
-/**
- * Event handler for when the deferred task errored.
- * @param {!tr.Task} task
- * @private
- */
-tr.Factory.prototype.onDeferredTaskErrored_ =
-    function(task) {
-  this.removeCallbacks_();
-  this.deferredTaskErrored_ = true;
-  this.errorInternal(task.getData(), task.getErrorMessage());
-};
-
-
-/**
- * Event handler for when the deferred task is interrupted.
- * @param {!tr.Task} task
- * @private
- */
-tr.Factory.prototype.onDeferredTaskInterrupted_ =
-    function(task) {
-  this.interrupt();
-};
-</code></pre>
+};</code></pre>
         </article>
     </section>
 

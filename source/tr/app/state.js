@@ -37,7 +37,7 @@ goog.inherits(tr.app.State, tr.Graph);
 
 
 /**
- * TODO
+ * Returns a reference to the global application.
  */
 tr.app.State.prototype.getApplication = function() {
   return this.application_;

@@ -37,8 +37,6 @@ tr.app.Application = function() {
  * Interrupt the current application-state and enter a new one.
  * 
  * @param {!State} stateTask State task to enter.
- * @constructor
- * @struct
  */
 tr.app.Application.prototype.enterState = function(stateTask) {
   if (this.stateTask_ === stateTask) {

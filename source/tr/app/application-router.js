@@ -6,7 +6,7 @@ goog.require('goog.events.EventType');
 
 
 /**
- * TODO
+ * Tracks application routes and maps them to the appropriate application state.
  *
  * @param {!tr.app.Application} application Main application
  * @constructor
@@ -40,7 +40,8 @@ tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
 
 
 /**
- * TODO
+ * Factory function responsible for creating the default application state.
+ * This factory function is invoked any time the user visits a URL that can't be matched.
  *
  * @param {function(!tr.app.State)} factoryFunction Factory function responsible for creating an application state task
  * @return {!tr.app.ApplicationRouter}
@@ -109,10 +110,11 @@ tr.app.ApplicationRouter.prototype.goToDefaultState_ = function(application) {
 
 
 /**
- * TODO
+ * Private wrapper class used to associate a route definition and a factory function responsible for creating an application state.
  *
  * @param {string} path
  * @param {function(*):tr.app.State} factoryFunction
+ * @private
  * @constructor
  * @struct
  */
@@ -131,9 +133,9 @@ tr.app.ApplicationRouter.Path_.$urlMatcherFactory_ = null;
 
 
 /**
- * TODO
+ * Parse the specifiec URL and extract state information if relevant.
  *
- * @return {boolean}
+ * @return {boolean} The specified URL matches the decorated state.
  */
 tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
   var searchParams = goog.Uri.QueryData(window.location.search);
@@ -146,7 +148,7 @@ tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
 
 
 /**
- * TODO
+ * Create and enter the decorated application state.
  *
  * @return {!tr.app.State}
  */

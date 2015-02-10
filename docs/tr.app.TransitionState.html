@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Source: factory.js</title>
+    <title>Class: TransitionState</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -1217,204 +1217,525 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="factory.js.html">Source: factory.js</h1>
+        <h1 class="page-title" data-filename="tr.app.TransitionState.html">Class: TransitionState</h1>
         
 
 
+
+<section>
     
-    <section>
-        <article>
-            <pre class="prettyprint source "><code>goog.provide('tr.Factory');
+<header>
+    <h2>
+    TransitionState
+    </h2>
+    
+</header>  
 
-goog.require('tr.Abstract');
-goog.require('tr.enums.Event');
-goog.require('tr.enums.State');
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="TransitionState">
+            
+            new tr.app.TransitionState<span class="signature">(application, <span class="optional">opt_taskName</span>)</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="app_transition-state.js.html">app/transition-state.js</a>, <a href="app_transition-state.js.html#line34">line 34</a>
+        </div>
+        
+    </div>
 
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Special state used to resolve dependencies when transitioning from one {tr.app.State} to another.
+    </div>
+    
 
+    
+    
+    
+    
+    
+        
 
-/**
- * Creates and decorates a task returned by the callback.
- *
- * &lt;p>Use this type of task when an important decision needs to be deferred.
- * For example if you need a task to load some data, but the specifics aren't known when your application is initialized.
- * This type of task allows for just-in-time evaluation of data resolved by previous Tasks.
- *
- * @example
- * // Creates and runs a new Xhr only when the outer deferred task is run.
- * // In this example, the variable `someUrl` is not yet set when the task is defined.
- * var task = new tr.Factory(
- *   function() {
- *     return new tr.Xhr(someUrl);
- *   });
- *
- * @param {function(*):tr.Task} taskFactoryFn The function to create an Task object.
- * @param {Object=} opt_thisArg Optional 'this' argument to invoke taskFactoryFn with.
- * @param {!Array=} opt_argsArray Optional arguments array to invoke taskFactoryFn with.
- * @param {string=} opt_taskName Optional defaulttask name.
- * @extends {tr.Abstract}
- * @implements {tr.Decorator}
- * @constructor
- * @struct
- */
-tr.Factory = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
-  goog.base(this, opt_taskName || "Factory");
-
-  /** @private {function(*):tr.Task} */
-  this.taskFactoryFn_ = taskFactoryFn;
-
-  /** @private {?} */
-  this.thisArg_ = opt_thisArg;
-
-  /** @private {!Array|undefined} */
-  this.argsArray_ = opt_argsArray;
-
-  /** @private {tr.Task} */
-  this.deferredTask_ = null;
-
-  /**
-   * Whether to recreate the deferred task after an error occured.
-   * @private {boolean}
-   */
-  this.recreateDeferredTaskAfterError_ = false;
-
-  /**
-   * Whether the deferred task has errored.
-   * @private {boolean}
-   */
-  this.deferredTaskErrored_ = false;
-};
-goog.inherits(tr.Factory, tr.Abstract);
-
-
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.getDecoratedTask = function() {
-  return this.deferredTask_;
-};
-
-
-/**
- * Set whether to recreate the deferred task after an error occured.
- * This property is sticky for all consecutive reruns until set again.
- * @param {boolean} recreateDeferredTaskAfterError
- */
-tr.Factory.prototype.recreateDeferredTaskAfterError =
-    function(recreateDeferredTaskAfterError) {
-  this.recreateDeferredTaskAfterError_ = recreateDeferredTaskAfterError;
-};
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>application</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="tr.Task.html">tr.Task</a></span>
 
 
-/**
- * Removes the deferred task callbacks.
- * @private
- */
-tr.Factory.prototype.removeCallbacks_ = function() {
-  if (!this.deferredTask_) {
-    return;
-  }
-  this.deferredTask_.off(
-      tr.enums.Event.COMPLETED, this.onDeferredTaskCompleted_, this);
-  this.deferredTask_.off(
-      tr.enums.Event.ERRORED, this.onDeferredTaskErrored_, this);
-  this.deferredTask_.off(
-      tr.enums.Event.INTERRUPTED, this.onDeferredTaskInterrupted_, this);
-};
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                A reference to the Application this state belongs to.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>opt_taskName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.resetImpl = function() {
-  this.removeCallbacks_();
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Optional semantically meaningful task name.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-  if (this.deferredTask_) {
-    this.deferredTask_ = null;
-  }
-};
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>var goToUserProfileTask = new tr.app.TransitionState(application);
+
+// In this example, the highest-priority target state is one that displays a user-profile.
+goToUserProfileTask.addTargetState(userProfileState, [loadSessionTask, loadUserProfileTask]);
+
+// If the user-profile could not be loaded, fall back to viewing the user's homepage.
+goToUserProfileTask.addTargetState(userHomePageState, [loadSessionTask]);
+
+// If the neither could not be loaded, fall back to the login screen.
+goToUserProfileTask.addTargetState(loginState, []);
+
+// Change application-state to initiate the transition.
+application.enterState(goToUserProfileTask);</code></pre>
+    
+
+    
+</dd>
+
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="tr.app.State.html">tr.app.State</a></li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addTargetState">
+            
+            addTargetState<span class="signature">(stateTask, <span class="optional">blockers</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{tr.app.StateTransitionTask}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="app_transition-state.js.html">app/transition-state.js</a>, <a href="app_transition-state.js.html#line73">line 73</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add a target tr.app.State and its prerequisite blocking <a href="tr.Task.html">tr.Task</a>s.
+Multiple target states can be added; they should be added in the order of highest-to-lowest importance.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>stateTask</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">State</span>
 
 
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.interruptImpl = function() {
-  if (!this.deferredTask_) {
-    return;
-  }
-  this.removeCallbacks_();
-  this.deferredTask_.interrupt();
-};
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                State task to be entered if all of the specified blockers succeed.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>blockers</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;!<a href="tr.Task.html">tr.Task</a>></span>
 
 
-/**
- * @override
- * @inheritDoc
- */
-tr.Factory.prototype.runImpl = function() {
-  if (!this.deferredTask_ ||
-      this.recreateDeferredTaskAfterError_ &amp;&amp; this.deferredTaskErrored_) {
-    if (goog.isDef(this.thisArg_)) {
-      this.deferredTask_ = this.taskFactoryFn_.apply(
-          this.thisArg_, this.argsArray_ || []);
-    } else {
-      this.deferredTask_ = this.taskFactoryFn_.apply();
-    }
-  }
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                Tasks that are pre-requisites to complete before the target state can be entered.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-  if (this.deferredTask_.getState() == tr.enums.State.COMPLETED) {
-    this.onDeferredTaskCompleted_(this.deferredTask_);
-  } else if (this.deferredTask_.getState() == tr.enums.State.ERRORED) {
-    this.onDeferredTaskErrored_(this.deferredTask_);
-  } else {
-    this.deferredTask_.completed(this.onDeferredTaskCompleted_, this);
-    this.deferredTask_.errored(this.onDeferredTaskErrored_, this);
-    this.deferredTask_.interrupted(this.onDeferredTaskInterrupted_, this);
-    this.deferredTask_.run();
-  }
-};
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
 
 
-/**
- * Event handler for when the deferred task is complete.
- * @param {!tr.Task} task
- * @private
- */
-tr.Factory.prototype.onDeferredTaskCompleted_ =
-    function(task) {
-  this.removeCallbacks_();
-  this.completeInternal(task.getData());
-};
+    
+    
+    
+</dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="beforeFirstRun">
+            
+            beforeFirstRun<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="app_transition-state.js.html">app/transition-state.js</a>, <a href="app_transition-state.js.html#line53">line 53</a>
+        </div>
+        
+    </div>
 
-/**
- * Event handler for when the deferred task errored.
- * @param {!tr.Task} task
- * @private
- */
-tr.Factory.prototype.onDeferredTaskErrored_ =
-    function(task) {
-  this.removeCallbacks_();
-  this.deferredTaskErrored_ = true;
-  this.errorInternal(task.getData(), task.getErrorMessage());
-};
+    
+</dt>
+<dd>
+    
+    
 
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
 
-/**
- * Event handler for when the deferred task is interrupted.
- * @param {!tr.Task} task
- * @private
- */
-tr.Factory.prototype.onDeferredTaskInterrupted_ =
-    function(task) {
-  this.interrupt();
-};
-</code></pre>
-        </article>
-    </section>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
 
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer inherited">
+        <h4 class="name" id="getApplication">
+            
+                <span class="inherited"><a href="tr.app.State.html#getApplication">inherited</a></span>
+            
+            getApplication<span class="signature">()</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="app_state.js.html">app/state.js</a>, <a href="app_state.js.html#line42">line 42</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a reference to the global application.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
 
 
 

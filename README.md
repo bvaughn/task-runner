@@ -60,5 +60,6 @@ node_modules/.bin/jsdoc \
   -t node_modules/jaguarjs-jsdoc/ \
   -d docs/ \
   --readme source/README.md \
-  source/**/*.js
+  --recurse \
+  source/
 ```

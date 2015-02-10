@@ -59,6 +59,7 @@ tr.app.TransitionState.prototype.beforeFirstRun = function() {
 
 
 // TODO Always require exactly one target state that has no blocking tasks?
+// TODO Always require a default target state when started?
 
 
 /**
