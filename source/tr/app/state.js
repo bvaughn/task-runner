@@ -7,10 +7,11 @@ goog.require('tr.enums.State');
 
 
 /**
+ * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
+ *
  * A runtime state of an {@link tr.app.Application}s.
  * Extend this base class to implement custom application states.
  *
-
  * @example
  * tr.InitializationState = function(application) {
  *   goog.base(this, application, "Initialization state");

@@ -1,6 +1,7 @@
 /**
  * Entry point for Closure Compiler.
  * Responsible for requiring all of the Task Runner tasks.
+ * @ignore
  */
 goog.provide('tr');
 

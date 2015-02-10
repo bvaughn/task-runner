@@ -6,6 +6,8 @@ goog.require('goog.events.EventType');
 
 
 /**
+ * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
+ *
  * Tracks application routes and maps them to the appropriate application state.
  *
  * @param {!tr.app.Application} application Main application

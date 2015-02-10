@@ -71,125 +71,52 @@
       <div class="row">
         <div class="span3 bs-docs-sidebar">
           <ul class="nav nav-list bs-docs-sidenav affix-top">
-            <li><a href="index.html">Main</a></li>
-            <li><a href="abstract.js.html">abstract.js</a></li>
-            <li><a href="app/application-router.js.html">app/application-router.js</a></li>
-            <li><a href="app/application.js.html">app/application.js</a></li>
-            <li><a href="app/state.js.html">app/state.js</a></li>
-            <li><a href="app/transition-state.js.html">app/transition-state.js</a></li>
-            <li><a href="closure.js.html">closure.js</a></li>
-            <li><a href="composite.js.html">composite.js</a></li>
-            <li><a href="decorator.js.html">decorator.js</a></li>
-            <li><a href="enums/event.js.html">enums/event.js</a></li>
-            <li><a href="enums/state.js.html">enums/state.js</a></li>
-            <li><a href="factory.js.html">factory.js</a></li>
-            <li><a href="failsafe.js.html">failsafe.js</a></li>
-            <li><a href="graph.js.html">graph.js</a></li>
-            <li><a href="listener.js.html">listener.js</a></li>
-            <li><a href="observer.js.html">observer.js</a></li>
-            <li><a href="retry.js.html">retry.js</a></li>
-            <li><a href="sleep.js.html">sleep.js</a></li>
-            <li><a href="stub.js.html">stub.js</a></li>
-            <li><a href="task.js.html">task.js</a></li>
-            <li><a href="timeout.js.html">timeout.js</a></li>
-            <li class="active"><a href="tween.js.html">tween.js</a></li>
-            <li><a href="xhr.js.html">xhr.js</a></li>
+            <li><a href="../index.html">Main</a></li>
+            <li><a href="../abstract.js.html">abstract.js</a></li>
+            <li><a href="../app/application-router.js.html">app/application-router.js</a></li>
+            <li><a href="../app/application.js.html">app/application.js</a></li>
+            <li><a href="../app/state.js.html">app/state.js</a></li>
+            <li><a href="../app/transition-state.js.html">app/transition-state.js</a></li>
+            <li><a href="../closure.js.html">closure.js</a></li>
+            <li><a href="../composite.js.html">composite.js</a></li>
+            <li><a href="../decorator.js.html">decorator.js</a></li>
+            <li><a href="../enums/event.js.html">enums/event.js</a></li>
+            <li class="active"><a href="../enums/state.js.html">enums/state.js</a></li>
+            <li><a href="../factory.js.html">factory.js</a></li>
+            <li><a href="../failsafe.js.html">failsafe.js</a></li>
+            <li><a href="../graph.js.html">graph.js</a></li>
+            <li><a href="../listener.js.html">listener.js</a></li>
+            <li><a href="../observer.js.html">observer.js</a></li>
+            <li><a href="../retry.js.html">retry.js</a></li>
+            <li><a href="../sleep.js.html">sleep.js</a></li>
+            <li><a href="../stub.js.html">stub.js</a></li>
+            <li><a href="../task.js.html">task.js</a></li>
+            <li><a href="../timeout.js.html">timeout.js</a></li>
+            <li><a href="../tween.js.html">tween.js</a></li>
+            <li><a href="../xhr.js.html">xhr.js</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#Tween"><i class="alert alert-success"></i><span>Tween</span></a>
-              </li>
-              <li><a href="#interruptImpl"><i class="alert alert-info"></i><span>interruptImpl</span></a>
-              </li>
-              <li><a href="#resetImpl"><i class="alert alert-info"></i><span>resetImpl</span></a>
-              </li>
-              <li><a href="#runImpl"><i class="alert alert-info"></i><span>runImpl</span></a>
+              <li><a href="#State"><i class="alert alert-success"></i><span>State</span></a>
               </li>
             </ul>
           </div>
         </div>
         <div class="span9">
-          <section id="Tween">
-            <h1>Tween</h1>
+          <section id="State">
+            <h1>State</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-success radius ctx-type">constructor</div><span>tr.Tween()</span>
+              <div class="label label-success radius ctx-type">property</div><span>tr.enums.State</span>
             </p>
           </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>callback</td>
-                <td>function(!number)</td>
-                <td><p>Callback invoked on animation frame with a number (0..1) representing the position of the tween.</p></td>
-              </tr>
-              <tr>
-                <td>duration</td>
-                <td>number</td>
-                <td><p>Duration of tween in milliseconds.</p></td>
-              </tr>
-              <tr>
-                <td>opt_easingFunction</td>
-                <td>function(!number)</td>
-                <td><p>Optional easing function used to convert input time to an eased time.                                                If no function is specified, a linear ease (no ease) will be used.</p></td>
-              </tr>
-              <tr>
-                <td>opt_taskName</td>
-                <td>string</td>
-                <td><p>Optional defaulttask name.</p></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Animation-frame-based task for tweening properties.</p><p><p>This task invokes a callback on each animation frame and passes a 0..1 value representing the progress of the overall tween.</p> </div>
-          <pre><code class="language-javascript">tr.Tween = function(callback, duration, opt_easingFunction, opt_taskName) {
-  goog.base(this, opt_taskName || &quot;Tween&quot;);
-
-  goog.asserts.assert(duration &gt; 0, 'Invalid tween duration provided.');</code></pre>
-          <section id="interruptImpl">
-            <h1>interruptImpl</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Tween.prototype.interruptImpl()</span>
-            </p>
-          </section>
-          <div class="description"> </div>
-          <pre><code class="language-javascript">tr.Tween.prototype.interruptImpl = function() {
-  this.cancelCurrentAnimationFrame_();
-};</code></pre>
-          <section id="resetImpl">
-            <h1>resetImpl</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Tween.prototype.resetImpl()</span>
-            </p>
-          </section>
-          <div class="description"> </div>
-          <pre><code class="language-javascript">tr.Tween.prototype.resetImpl = function() {
-  this.elapsed_ = 0;
-  this.lastUpdateTimestamp_ = 0;
-
-  // One final animation frame to reset the progress value to 0.
-  this.queueAnimationFrame_(this.updateReset_);
-};</code></pre>
-          <section id="runImpl">
-            <h1>runImpl</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Tween.prototype.runImpl()</span>
-            </p>
-          </section>
-          <div class="description"> </div>
-          <pre><code class="language-javascript">tr.Tween.prototype.runImpl = function() {
-  this.lastUpdateTimestamp_ = goog.now();
-
-  this.queueAnimationFrame_(this.updateRunning_);
+          <div class="description"><p>Enumeration of Task states.</p> </div>
+          <pre><code class="language-javascript">tr.enums.State = {
+  INITIALIZED: 0,
+  RUNNING: 1,
+  INTERRUPTED: 2,
+  COMPLETED: 3,
+  ERRORED: 4
 };</code></pre>
         </div>
       </div>

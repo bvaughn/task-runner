@@ -51,12 +51,10 @@ gulp build
 
 ### Generating Documentation
 
-Begin by running `npm install` to install [Karma](https://karma-runner.github.io) and other dependencies.
+Begin by running `npm install -g doxx` to install [Doxx](http://fgribreau.github.io/doxx/docs/).
 
-Documentation is generated using with [JsDoc3](https://github.com/jsdoc3/jsdoc) special thanks to [jaguarjs-jsdoc templates](https://github.com/davidshimjs/jaguarjs-jsdoc).
-
-At the time of this writing, the Gulp Jsdoc plugin isn't working correctly so Task Runner uses Grunt:
+Then run the following command from the root of the Task Runner checkout:
 
 ```bash
-grunt docs
+node_modules/doxx/bin/doxx --source source/tr --target docs --title="Task Runner"
 ```

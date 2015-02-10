@@ -6,9 +6,9 @@ goog.require('tr.enums.State');
 
 
 
-/** @define {DEBUG = true;} */
-
 /**
+ * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
+ *
  * Basic Task for encapsulating an application comprised of {@link tr.app.State}s.
  * Use the enterState() method to start the application or to transition between states.
  *
@@ -59,7 +59,7 @@ tr.app.Application.prototype.enterState = function(stateTask) {
 
 
 /**
- * @return {@link tr.app.ApplicationRouter}
+ * @return {tr.app.ApplicationRouter}
  */
 tr.app.Application.prototype.getApplicationRouter = function() {
   return this.applicationRouter_;
