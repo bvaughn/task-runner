@@ -36,7 +36,7 @@ gulp test
 
 Or you can run tests each time a file in the `source` or `tests` directory changes using:
 ```bash
-gulp watch
+gulp test:watch
 ```
 
 ### Building Task Runner
