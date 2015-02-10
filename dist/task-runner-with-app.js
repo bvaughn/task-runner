@@ -6622,11 +6622,11 @@ tr.app.ApplicationRouter.prototype.setDefaultRoute = function(a) {
 };
 tr.app.ApplicationRouter.prototype.start = function() {
   goog.events.listen(window, goog.events.EventType.HASHCHANGE, goog.bind(this.ohHashChange_, this));
+  this.ohHashChange_();
   return this;
 };
-tr.app.ApplicationRouter.prototype.ohHashChange_ = function(a) {
-  a = window.location.hash.substring(1);
-  for (var b = 0, c = this.paths_.length;b < c;b++) {
+tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
+  for (var a = window.location.hash.substring(1), b = 0, c = this.paths_.length;b < c;b++) {
     var d = this.paths_[b];
     if (d.load(a)) {
       a = d.createState();

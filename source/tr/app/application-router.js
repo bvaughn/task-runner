@@ -63,12 +63,15 @@ tr.app.ApplicationRouter.prototype.start = function() {
     goog.events.EventType.HASHCHANGE,
     goog.bind(this.ohHashChange_, this));
 
+  // Process current URL
+  this.ohHashChange_();
+
   return this;
 };
 
 
 /** @private */
-tr.app.ApplicationRouter.prototype.ohHashChange_ = function(event) {
+tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
   // TODO Handle hash paths and full locations? How does UI Router do it?
   var url = window.location.hash.substring(1);
 
