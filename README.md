@@ -55,11 +55,8 @@ Begin by running `npm install` to install [Karma](https://karma-runner.github.io
 
 Documentation is generated using with [JsDoc3](https://github.com/jsdoc3/jsdoc) special thanks to [jaguarjs-jsdoc templates](https://github.com/davidshimjs/jaguarjs-jsdoc).
 
+At the time of this writing, the Gulp Jsdoc plugin isn't working correctly so Task Runner uses Grunt:
+
 ```bash
-node_modules/.bin/jsdoc \
-  -t node_modules/jaguarjs-jsdoc/ \
-  -d docs/ \
-  --readme source/README.md \
-  --recurse \
-  source/
+grunt docs
 ```

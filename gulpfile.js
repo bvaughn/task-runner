@@ -27,7 +27,7 @@ gulp.task('deps', function() {
   depsHelper(sources, 'dist/task-runner', 'deps.js');
   depsHelper(sourcesWithApps, 'dist/task-runner-engine', 'deps.js');
 });
- 
+
 gulp.task('test', function() {
   // Be sure to return the stream 
   return gulp.src(testFiles)
