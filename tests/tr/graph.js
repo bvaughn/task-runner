@@ -744,4 +744,29 @@ describe('tr.Graph', function() {
     expect(nullTask3.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask4.getState()).toBe(tr.enums.State.RUNNING);
   });
+
+  it('should gracefully handle itself if run when empty with a started-handler that interrupts it', function() {
+    var task = new tr.Graph();
+    task.started(function() {
+      task.interrupt();
+    });
+    task.run();
+  });
+
+  it('should not continue running tasks when one task interrupts', function() {
+    var nullTask1 = new tr.Stub();
+    nullTask1.started(function() {
+      task.interrupt();
+    });
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
+    expect(nullTask1.getState()).toBe(tr.enums.State.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
+  });
 });

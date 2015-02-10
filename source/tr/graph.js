@@ -31,7 +31,7 @@ goog.require('tr.Abstract');
  * @struct
  */
 tr.Graph = function(opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Graph");
 
   /** @private {!Object} */
   this.taskIdToDependenciesMap_ = {};
@@ -328,6 +328,12 @@ tr.Graph.prototype.validateDependencies_ = function(task) {
  * @private
  */
 tr.Graph.prototype.completeOrRunNext_ = function() {
+
+  // Handle edge-case where :started handler results in an interruption of this Graph
+  if (this.getState() !== tr.enums.State.RUNNING) {
+    return;
+  }
+
   if (this.areAllTasksCompleted_()) {
     this.completeInternal();
   } else if (this.erroredTasks_.length == 0) {
@@ -381,13 +387,18 @@ tr.Graph.prototype.runAllReadyTasks_ = function() {
   for (var i in this.tasks_) {
     var task = this.tasks_[i];
 
-    // TRICKY: If a task synchronously completes it will lead to another,
-    // simultaneous invocation of this method. If this 2nd invocation starts a
-    // task that synchronously errors, we run the risk of re-executing that
-    // failed Task when we return to this method. To avoid this, check to make
-    // sure that the Task we are examining has not already errored. Don't rely
-    // on task.getState() to check for an error, because it may have errored on
-    // a previous run in which case we should retry it now.
+    // TRICKY: Check to ensure we're still running.
+    // It's possible that a child task takes an action that interrupts the graph.
+    if (this.getState() !== tr.enums.State.RUNNING) {
+      return;
+    }
+
+    // TRICKY: If a task synchronously completes it will lead to another, simultaneous invocation of this method.
+    // If this 2nd invocation starts a task that synchronously errors,
+    // we run the risk of re-executing that failed Task when we return to this method.
+    // To avoid this, check to make sure that the Task we are examining has not already errored.
+    // Don't rely on task.getState() to check for an error,
+    // because it may have errored on a previous run in which case we should retry it now.
     if (this.erroredTasks_.indexOf(task) >= 0) {
       continue;
     }
@@ -397,7 +408,7 @@ tr.Graph.prototype.runAllReadyTasks_ = function() {
     }
 
     if (task.getState() != tr.enums.State.RUNNING &&
-       task.getState() != tr.enums.State.COMPLETED) {
+        task.getState() != tr.enums.State.COMPLETED) {
       this.addCallbacksTo_(task);
 
       task.run();

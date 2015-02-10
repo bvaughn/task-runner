@@ -6,6 +6,8 @@ goog.require('tr.enums.State');
 
 
 
+/** @define {DEBUG = true;} */
+
 /**
  * Basic Task for encapsulating an application comprised of {@link tr.app.State}s.
  * Use the enterState() method to start the application or to transition between states.

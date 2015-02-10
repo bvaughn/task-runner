@@ -37,6 +37,9 @@ var buildHelper = function(sources, entryPoint, outputFile) {
       compilerPath: 'bower_components/closure-compiler/compiler.jar',
       fileName: outputFile,
       compilerFlags: {
+        define: [
+          "goog.DEBUG=true"
+        ],
         closure_entry_point: entryPoint,
         language_in: 'ECMASCRIPT5',
         only_closure_dependencies: true,

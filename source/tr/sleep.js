@@ -23,7 +23,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Sleep = function(timeout, opt_resetTimerAfterInterruption, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Sleep");
 
   /** @private {boolean} */
   this.resetTimerAfterInterruption_ = !!opt_resetTimerAfterInterruption;

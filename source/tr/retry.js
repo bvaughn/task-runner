@@ -35,7 +35,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Retry = function(task, maxRetries, retryDelay, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Retry");
 
   /** @private {!tr.Task} */
   this.decoratedTask_ = task;

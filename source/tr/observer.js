@@ -30,7 +30,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Observer = function(opt_tasks, opt_failUponFirstError, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Observer");
 
   /** @private {boolean} */
   this.failUponFirstError_ = !!opt_failUponFirstError;

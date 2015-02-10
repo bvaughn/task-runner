@@ -841,4 +841,19 @@ describe('tr.Composite', function() {
     expect(completedCallback).toHaveBeenCalledWith(nullTask2);
     expect(completedCallback).toHaveBeenCalledWith(task);
   });
+
+  it('should not continue running tasks when one task interrupts', function() {
+    var nullTask1 = new tr.Stub();
+    nullTask1.started(function() {
+      task.interrupt();
+    });
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.TestComposite(true, [nullTask1, nullTask2]);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);
+    expect(nullTask1.getState()).toBe(tr.enums.State.INTERRUPTED);
+    expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
+  });
 });

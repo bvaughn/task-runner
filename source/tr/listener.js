@@ -21,7 +21,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Listener = function(eventTarget, eventType, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Listener");
 
   /** @private {Object} */
   this.eventTarget_ = eventTarget;

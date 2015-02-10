@@ -31,7 +31,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Composite = function(parallel, opt_tasks, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Composite");
 
   /** @private {boolean} */
   this.parallel_ = parallel;
@@ -180,6 +180,12 @@ tr.Composite.prototype.runImpl = function() {
     if (this.parallel_) {
       this.eachTaskInQueue_(
         goog.bind(function(task) {
+          // TRICKY: Check to ensure we're still running.
+          // It's possible that a child task takes an action that interrupts the graph.
+          if (this.getState() !== tr.enums.State.RUNNING) {
+            return;
+          }
+
           this.addCallbacks_(task);
 
           task.run();

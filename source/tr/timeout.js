@@ -26,7 +26,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Timeout = function(task, timeout, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Timeout");
 
   /** @private {!tr.Task} */
   this.decoratedTask_ = task;

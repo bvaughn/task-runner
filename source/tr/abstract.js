@@ -31,15 +31,15 @@ goog.require('tr.enums.State');
  *   // Start the task
  * };
  *
- * @param {string=} opt_taskName Optional defaulttask name,
- *     useful for automated testing or debugging.
+ * @param {string=} opt_taskName Optional defaulttask name, useful for automated testing or debugging.
+ *                               Sub-classes should specify a default equal to the name of the class.
  * @implements {tr.Task}
  * @constructor
  * @struct
  */
 tr.Abstract = function(opt_taskName) {
-  /** @private {string|undefined} */
-  this.taskName_ = opt_taskName;
+  /** @private {string} */
+  this.taskName_ = opt_taskName || "Task";
 
   /** @private {number} */
   this.uniqueID_ = tr.Abstract.ID_++;
@@ -63,6 +63,11 @@ tr.Abstract = function(opt_taskName) {
    *             !Array.<!tr.Abstract.TaskCallback_>>}
    */
   this.taskCallbackMap_ = {};
+
+  /** @private {goog.debug.Console} */
+  this.console_ = goog.DEBUG ? console : {
+    log: function(text) {}
+  };
 };
 
 
@@ -72,6 +77,27 @@ tr.Abstract = function(opt_taskName) {
  * @private
  */
 tr.Abstract.ID_ = 0;
+
+
+/**
+ * Debug logger for tasks.
+ * 
+ * <p>Messages are logged with task information (id and name) for debugging purposes.
+ * Tthese log messages are disabled in production builds.
+ *
+ * @param {!string} text Text to log.
+ */
+tr.Abstract.prototype.log = function(text) {
+  return this.console_.log(text + " :: " + this);
+};
+
+
+/**
+ * String representation of task (e.g. TaskName [id: 12]).
+ */
+tr.Abstract.prototype.toString = function() {
+  return this.taskName_ + ' [id: ' + this.uniqueID_ + ']';
+};
 
 
 /** @override */
@@ -139,6 +165,8 @@ tr.Abstract.prototype.run = function() {
     throw 'Cannot run a running task.';
   }
 
+  this.log('Running');
+
   if (this.state_ != tr.enums.State.COMPLETED) {
     this.interruptingTask_ = null;
     this.data_ = undefined;
@@ -160,6 +188,8 @@ tr.Abstract.prototype.interrupt = function() {
     throw 'Cannot interrupt a task that is not running.';
   }
 
+  this.log('Interrupting');
+
   this.state_ = tr.enums.State.INTERRUPTED;
 
   this.interruptImpl();
@@ -172,6 +202,8 @@ tr.Abstract.prototype.interrupt = function() {
 
 /** @override */
 tr.Abstract.prototype.interruptFor = function(task) {
+  this.log('Interrupting for ' + task);
+
   this.interruptingTask_ = task;
 
   this.interrupt();
@@ -203,6 +235,8 @@ tr.Abstract.prototype.reset = function() {
   if (this.state_ == tr.enums.State.RUNNING) {
     throw 'Cannot reset a running task.';
   }
+
+  this.log('Resetting');
 
   if (this.state_ != tr.enums.State.INITIALIZED) {
     this.data_ = undefined;
@@ -323,6 +357,8 @@ tr.Abstract.prototype.completeInternal = function(data) {
     throw 'Cannot complete an inactive task.';
   }
 
+  this.log('Internal complete');
+
   this.data_ = data;
   this.state_ = tr.enums.State.COMPLETED;
 
@@ -343,6 +379,8 @@ tr.Abstract.prototype.errorInternal = function(data, errorMessage) {
   if (this.state_ != tr.enums.State.RUNNING) {
     throw 'Cannot error an inactive task.';
   }
+
+  this.log('Internal error');
 
   this.data_ = data;
   this.errorMessage_ = errorMessage;

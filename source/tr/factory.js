@@ -31,7 +31,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Factory = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Factory");
 
   /** @private {function(*):tr.Task} */
   this.taskFactoryFn_ = taskFactoryFn;

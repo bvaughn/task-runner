@@ -6611,14 +6611,22 @@ tr.enums = {};
 tr.enums.Event = {STARTED:0, INTERRUPTED:1, COMPLETED:2, ERRORED:3, FINAL:4};
 tr.enums.State = {INITIALIZED:0, RUNNING:1, INTERRUPTED:2, COMPLETED:3, ERRORED:4};
 tr.Abstract = function(a) {
-  this.taskName_ = a;
+  this.taskName_ = a || "Task";
   this.uniqueID_ = tr.Abstract.ID_++;
   this.state_ = tr.enums.State.INITIALIZED;
   this.errorMessage_ = this.data_ = void 0;
   this.interruptingTask_ = null;
   this.taskCallbackMap_ = {};
+  this.console_ = goog.DEBUG ? console : {log:function(a) {
+  }};
 };
 tr.Abstract.ID_ = 0;
+tr.Abstract.prototype.log = function(a) {
+  return this.console_.log(a + " :: " + this);
+};
+tr.Abstract.prototype.toString = function() {
+  return this.taskName_ + " [id: " + this.uniqueID_ + "]";
+};
 tr.Abstract.prototype.getData = function() {
   return this.data_;
 };
@@ -6651,6 +6659,7 @@ tr.Abstract.prototype.run = function() {
   if (this.state_ == tr.enums.State.RUNNING) {
     throw "Cannot run a running task.";
   }
+  this.log("Running");
   this.state_ != tr.enums.State.COMPLETED && (this.interruptingTask_ = null, this.errorMessage_ = this.data_ = void 0, this.state_ = tr.enums.State.RUNNING, this.executeCallbacks_(tr.enums.Event.STARTED), this.runImpl());
   return this;
 };
@@ -6658,12 +6667,14 @@ tr.Abstract.prototype.interrupt = function() {
   if (this.state_ != tr.enums.State.RUNNING) {
     throw "Cannot interrupt a task that is not running.";
   }
+  this.log("Interrupting");
   this.state_ = tr.enums.State.INTERRUPTED;
   this.interruptImpl();
   this.executeCallbacks_(tr.enums.Event.INTERRUPTED);
   return this;
 };
 tr.Abstract.prototype.interruptFor = function(a) {
+  this.log("Interrupting for " + a);
   this.interruptingTask_ = a;
   this.interrupt();
   a.completed(function(a) {
@@ -6678,6 +6689,7 @@ tr.Abstract.prototype.reset = function() {
   if (this.state_ == tr.enums.State.RUNNING) {
     throw "Cannot reset a running task.";
   }
+  this.log("Resetting");
   this.state_ != tr.enums.State.INITIALIZED && (this.errorMessage_ = this.data_ = void 0, this.state_ = tr.enums.State.INITIALIZED, this.resetImpl());
   return this;
 };
@@ -6731,6 +6743,7 @@ tr.Abstract.prototype.completeInternal = function(a) {
   if (this.state_ != tr.enums.State.RUNNING) {
     throw "Cannot complete an inactive task.";
   }
+  this.log("Internal complete");
   this.data_ = a;
   this.state_ = tr.enums.State.COMPLETED;
   this.executeCallbacks_(tr.enums.Event.COMPLETED);
@@ -6740,6 +6753,7 @@ tr.Abstract.prototype.errorInternal = function(a, b) {
   if (this.state_ != tr.enums.State.RUNNING) {
     throw "Cannot error an inactive task.";
   }
+  this.log("Internal error");
   this.data_ = a;
   this.errorMessage_ = b;
   this.state_ = tr.enums.State.ERRORED;
@@ -6754,7 +6768,7 @@ tr.Abstract.TaskCallback_.prototype.execute = function(a) {
   this.scope_ ? this.callback_.call(this.scope_, a) : this.callback_(a);
 };
 tr.Closure = function(a, b, c) {
-  tr.Abstract.call(this, c);
+  tr.Abstract.call(this, c || "Closure");
   this.runImplFn_ = a;
   this.autoCompleteUponRun_ = !!b;
 };
@@ -6773,7 +6787,7 @@ tr.Closure.prototype.error = function(a, b) {
   this.errorInternal(a, b);
 };
 tr.Composite = function(a, b, c) {
-  tr.Abstract.call(this, c);
+  tr.Abstract.call(this, c || "Composite");
   this.parallel_ = a;
   this.taskQueue_ = [];
   this.taskQueueIndex_ = 0;
@@ -6828,8 +6842,7 @@ tr.Composite.prototype.runImpl = function() {
   } else {
     if (this.erroredTasks_ = [], this.parallel_) {
       this.eachTaskInQueue_(goog.bind(function(a) {
-        this.addCallbacks_(a);
-        a.run();
+        this.getState() === tr.enums.State.RUNNING && (this.addCallbacks_(a), a.run());
       }, this));
     } else {
       var a = this.taskQueue_[this.taskQueueIndex_];
@@ -6899,7 +6912,7 @@ tr.Composite.prototype.childTaskErrored_ = function(a) {
   this.parallel_ ? this.checkForTaskCompletion_() : this.errorInternal(a.getData(), a.getErrorMessage());
 };
 tr.Factory = function(a, b, c, d) {
-  tr.Abstract.call(this, d);
+  tr.Abstract.call(this, d || "Factory");
   this.taskFactoryFn_ = a;
   this.thisArg_ = b;
   this.argsArray_ = c;
@@ -6950,7 +6963,7 @@ tr.Factory.prototype.onDeferredTaskInterrupted_ = function(a) {
   this.interrupt();
 };
 tr.Failsafe = function(a, b) {
-  tr.Abstract.call(this, b);
+  tr.Abstract.call(this, b || "Failsafe for " + a.getName());
   this.decoratedTask_ = a;
 };
 goog.inherits(tr.Failsafe, tr.Abstract);
@@ -6973,7 +6986,7 @@ tr.Failsafe.prototype.runImpl = function() {
   this.decoratedTask_.run();
 };
 tr.Graph = function(a) {
-  tr.Abstract.call(this, a);
+  tr.Abstract.call(this, a || "Graph");
   this.taskIdToDependenciesMap_ = {};
   this.tasks_ = [];
   this.erroredTasks_ = [];
@@ -7079,17 +7092,19 @@ tr.Graph.prototype.validateDependencies_ = function(a) {
   }
 };
 tr.Graph.prototype.completeOrRunNext_ = function() {
-  if (this.areAllTasksCompleted_()) {
-    this.completeInternal();
-  } else {
-    if (0 == this.erroredTasks_.length) {
-      this.runAllReadyTasks_();
+  if (this.getState() === tr.enums.State.RUNNING) {
+    if (this.areAllTasksCompleted_()) {
+      this.completeInternal();
     } else {
-      for (var a in this.tasks_) {
-        var b = this.tasks_[a];
-        b.getState() === tr.enums.State.RUNNING && b.interrupt();
+      if (0 == this.erroredTasks_.length) {
+        this.runAllReadyTasks_();
+      } else {
+        for (var a in this.tasks_) {
+          var b = this.tasks_[a];
+          b.getState() === tr.enums.State.RUNNING && b.interrupt();
+        }
+        this.errorInternal();
       }
-      this.errorInternal();
     }
   }
 };
@@ -7106,6 +7121,9 @@ tr.Graph.prototype.hasIncompleteBlockers_ = function(a) {
 tr.Graph.prototype.runAllReadyTasks_ = function() {
   for (var a in this.tasks_) {
     var b = this.tasks_[a];
+    if (this.getState() !== tr.enums.State.RUNNING) {
+      break;
+    }
     0 <= this.erroredTasks_.indexOf(b) || this.hasIncompleteBlockers_(b) || b.getState() == tr.enums.State.RUNNING || b.getState() == tr.enums.State.COMPLETED || (this.addCallbacksTo_(b), b.run());
   }
 };
@@ -7119,7 +7137,7 @@ tr.Graph.prototype.childTaskErrored_ = function(a) {
   this.completeOrRunNext_();
 };
 tr.Listener = function(a, b, c) {
-  tr.Abstract.call(this, c);
+  tr.Abstract.call(this, c || "Listener");
   this.eventTarget_ = a;
   this.eventType_ = b;
   this.listener_ = void 0;
@@ -7139,7 +7157,7 @@ tr.Listener.prototype.runImpl = function() {
   goog.events.listen(this.eventTarget_, this.eventType_, this.listener_);
 };
 tr.Observer = function(a, b, c) {
-  tr.Abstract.call(this, c);
+  tr.Abstract.call(this, c || "Observer");
   this.failUponFirstError_ = !!b;
   this.observedTasks_ = [];
   if (a) {
@@ -7199,7 +7217,7 @@ tr.Observer.prototype.tryToFinalize_ = function() {
   return b && this.failUponFirstError_ ? (this.errorInternal(b.getData(), b.getErrorMessage()), !0) : b && a ? (this.errorInternal(), !0) : a ? (this.completeInternal(), !0) : !1;
 };
 tr.Retry = function(a, b, c, d) {
-  tr.Abstract.call(this, d);
+  tr.Abstract.call(this, d || "Retry");
   this.decoratedTask_ = a;
   this.maxRetries_ = goog.isDef(b) ? b : tr.Retry.MAX_RETRIES_;
   this.retryDelay_ = goog.isDef(c) ? c : tr.Retry.RETRY_DELAY_;
@@ -7252,7 +7270,7 @@ tr.Retry.prototype.onDecoratedTaskErrored_ = function(a) {
   this.retries_ >= this.maxRetries_ ? (this.stopTimer_(), this.removeCallbacks_(), this.errorInternal(a.getData(), a.getErrorMessage())) : (this.retries_++, 0 <= this.retryDelay_ ? this.timeoutId_ = goog.global.setTimeout(goog.bind(this.runImpl, this), this.retryDelay_) : this.runImpl());
 };
 tr.Sleep = function(a, b, c) {
-  tr.Abstract.call(this, c);
+  tr.Abstract.call(this, c || "Sleep");
   this.resetTimerAfterInterruption_ = !!b;
   this.timeout_ = a;
   this.timeoutPause_ = this.timeoutStart_ = -1;
@@ -7285,11 +7303,11 @@ tr.Sleep.prototype.onTimeout_ = function() {
   this.completeInternal();
 };
 tr.Stub = function(a, b) {
-  tr.Closure.call(this, goog.nullFunction, a, b);
+  tr.Closure.call(this, goog.nullFunction, a, b || "Stub");
 };
 goog.inherits(tr.Stub, tr.Closure);
 tr.Timeout = function(a, b, c) {
-  tr.Abstract.call(this, c);
+  tr.Abstract.call(this, c || "Timeout");
   this.decoratedTask_ = a;
   this.timeout_ = b;
   this.timeoutPause_ = this.timeoutStart_ = -1;
@@ -7354,7 +7372,7 @@ tr.Timeout.prototype.onDecoratedTaskErrored_ = function(a) {
   this.errorInternal(a.getData(), a.getErrorMessage());
 };
 tr.Tween = function(a, b, c, d) {
-  tr.Abstract.call(this, d);
+  tr.Abstract.call(this, d || "Tween");
   goog.asserts.assert(0 < b, "Invalid tween duration provided.");
   this.animationDelay_ = 0;
   this.callback_ = a;
@@ -7400,7 +7418,7 @@ tr.Tween.prototype.updateRunning_ = function(a) {
   this.elapsed_ >= this.duration_ ? this.completeInternal() : this.queueAnimationFrame_(this.updateRunning_);
 };
 tr.Xhr = function(a, b, c, d) {
-  tr.Abstract.call(this, d);
+  tr.Abstract.call(this, d || "Xhr");
   this.url_ = a;
   this.postData_ = b;
   this.ResponseType_ = c || tr.Xhr.DEFAULT_RESPONSE_TYPE_ || tr.Xhr.ResponseType.TEXT;

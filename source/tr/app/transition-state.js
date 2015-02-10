@@ -32,7 +32,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.app.TransitionState = function(application, opt_taskName) {
-  goog.base(this, application, opt_taskName);
+  goog.base(this, application, opt_taskName || "TransitionState");
 
   /** @private {Array.<!tr.Task>=}  */
   this.blockingTasks_ = [];
@@ -54,7 +54,7 @@ tr.app.TransitionState.prototype.beforeFirstRun = function() {
   // Once all of the blocker-tasks have completed, choose the most appropriate state.
   this.addToEnd(
     new tr.Closure(
-      goog.bind(this.chooseState_, this), false, "Chooses state after blockers have completed"));
+      goog.bind(this.chooseState_, this), false, "Closure - state-chooser"));
 };
 
 

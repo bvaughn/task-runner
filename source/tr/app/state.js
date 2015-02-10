@@ -28,7 +28,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.app.State = function(application, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "State");
 
   /** @private {!tr.app.Application} */
   this.application_ = application;

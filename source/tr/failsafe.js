@@ -22,7 +22,7 @@ goog.require('tr.Abstract');
  * @struct
  */
 tr.Failsafe = function(decoratedTask, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Failsafe for " + decoratedTask.getName());
 
   /** @private {!tr.Task} */
   this.decoratedTask_ = decoratedTask;

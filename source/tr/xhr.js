@@ -39,7 +39,7 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Xhr = function(url, opt_data, opt_responseType, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Xhr");
 
   /** @private {!string} */
   this.url_ = url;

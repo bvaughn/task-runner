@@ -25,6 +25,6 @@ goog.require('tr.Closure');
  * @struct
  */
 tr.Stub = function(opt_autoCompleteUponRun, opt_taskName) {
-  goog.base(this, goog.nullFunction, opt_autoCompleteUponRun, opt_taskName);
+  goog.base(this, goog.nullFunction, opt_autoCompleteUponRun, opt_taskName || "Stub");
 };
 goog.inherits(tr.Stub, tr.Closure);

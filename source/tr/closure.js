@@ -49,7 +49,7 @@ goog.require('tr.Abstract');
  * @struct
  */
 tr.Closure = function(runImplFn, opt_synchronous, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Closure");
 
   /** @private {function()} */
   this.runImplFn_ = runImplFn;

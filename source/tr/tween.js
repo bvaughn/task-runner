@@ -29,7 +29,7 @@ goog.require('tr.Abstract');
  * @struct
  */
 tr.Tween = function(callback, duration, opt_easingFunction, opt_taskName) {
-  goog.base(this, opt_taskName);
+  goog.base(this, opt_taskName || "Tween");
 
   goog.asserts.assert(duration > 0, 'Invalid tween duration provided.');
 
