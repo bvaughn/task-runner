@@ -1438,10 +1438,6 @@ goog.addDependency('../bower_components/closure-library/closure/goog/window/wind
 goog.addDependency('base-with-apps.js', ['tr.app'], ['tr', 'tr.app.Application', 'tr.app.ApplicationRouter', 'tr.app.State', 'tr.app.TransitionState'], false);
 goog.addDependency('base.js', ['tr'], ['tr.Abstract', 'tr.Closure', 'tr.Composite', 'tr.Decorator', 'tr.Factory', 'tr.Failsafe', 'tr.Graph', 'tr.Listener', 'tr.Observer', 'tr.Retry', 'tr.Sleep', 'tr.Stub', 'tr.Task', 'tr.Timeout', 'tr.Tween', 'tr.Xhr', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/abstract.js', ['tr.Abstract'], ['tr.Task', 'tr.enums.Event', 'tr.enums.State'], false);
-goog.addDependency('tr/app/application-router.js', ['tr.app.ApplicationRouter'], ['goog.array', 'goog.events.EventType'], false);
-goog.addDependency('tr/app/application.js', ['tr.app.Application'], ['tr.Composite', 'tr.app.ApplicationRouter', 'tr.enums.State'], false);
-goog.addDependency('tr/app/state.js', ['tr.app.State'], ['tr.Graph', 'tr.enums.State'], false);
-goog.addDependency('tr/app/transition-state.js', ['tr.app.TransitionState'], ['tr.Closure', 'tr.Failsafe', 'tr.app.State', 'tr.enums.State'], false);
 goog.addDependency('tr/closure.js', ['tr.Closure'], ['tr.Abstract'], false);
 goog.addDependency('tr/composite.js', ['tr.Composite'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/decorator.js', ['tr.Decorator'], [], false);

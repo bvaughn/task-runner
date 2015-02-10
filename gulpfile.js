@@ -56,10 +56,10 @@ var buildHelper = function(sources, entryPoint, directory, outputFile, debug) {
 };
  
 gulp.task('build', function() {
-  buildHelper(sources, 'tr', 'dist/task-runner-light', 'compressed.js', false);
-  buildHelper(sources, 'tr', 'dist/task-runner-light', 'debug.js', true);
-  buildHelper(sourcesWithApps, 'tr.app', 'dist/task-runner', 'compressed.js', false);
-  buildHelper(sourcesWithApps, 'tr.app', 'dist/task-runner', 'debug.js', true);
+  buildHelper(sources, 'tr', 'dist/task-runner', 'compressed.js', false);
+  buildHelper(sources, 'tr', 'dist/task-runner', 'debug.js', true);
+  buildHelper(sourcesWithApps, 'tr.app', 'dist/task-runner-engine', 'compressed.js', false);
+  buildHelper(sourcesWithApps, 'tr.app', 'dist/task-runner-engine', 'debug.js', true);
 });
 
 // TODO
@@ -76,8 +76,8 @@ var depsHelper = function(sources, directory, outputFile) {
 };
 
 gulp.task('deps', function() {
-  depsHelper(sources, 'dist/task-runner-light', 'deps.js');
-  depsHelper(sourcesWithApps, 'dist/task-runner', 'deps.js');
+  depsHelper(sources, 'dist/task-runner', 'deps.js');
+  depsHelper(sourcesWithApps, 'dist/task-runner-engine', 'deps.js');
 });
 
 gulp.task('watch', function() {
