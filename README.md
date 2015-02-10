@@ -17,7 +17,7 @@ Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) to le
 
 Get Task Runner in one of the following ways:
 
-* Clone & [build](README.md#Building) this repository.
+* Clone & [build](README.md#building-task-runner) this repository.
 * Download the [release](https://github.com/bvaughn/task-runner/tree/master/dist).
 * Bia Bower, by running `bower install task-runner`.
 * Via NPM, by running `npm install task-runner-js`.
