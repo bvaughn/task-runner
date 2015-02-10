@@ -71,60 +71,145 @@
       <div class="row">
         <div class="span3 bs-docs-sidebar">
           <ul class="nav nav-list bs-docs-sidenav affix-top">
-            <li><a href="../index.html">Main</a></li>
-            <li><a href="../abstract.js.html">abstract.js</a></li>
-            <li><a href="../app/application-router.js.html">app/application-router.js</a></li>
-            <li><a href="../app/application.js.html">app/application.js</a></li>
-            <li><a href="../app/state.js.html">app/state.js</a></li>
-            <li><a href="../app/transition-state.js.html">app/transition-state.js</a></li>
-            <li><a href="../closure.js.html">closure.js</a></li>
-            <li><a href="../composite.js.html">composite.js</a></li>
-            <li><a href="../decorator.js.html">decorator.js</a></li>
-            <li><a href="../enums/event.js.html">enums/event.js</a></li>
-            <li class="active"><a href="../enums/state.js.html">enums/state.js</a></li>
-            <li><a href="../factory.js.html">factory.js</a></li>
-            <li><a href="../failsafe.js.html">failsafe.js</a></li>
-            <li><a href="../graph.js.html">graph.js</a></li>
-            <li><a href="../listener.js.html">listener.js</a></li>
-            <li><a href="../observer.js.html">observer.js</a></li>
-            <li><a href="../retry.js.html">retry.js</a></li>
-            <li><a href="../sleep.js.html">sleep.js</a></li>
-            <li><a href="../stub.js.html">stub.js</a></li>
-            <li><a href="../task.js.html">task.js</a></li>
-            <li><a href="../timeout.js.html">timeout.js</a></li>
-            <li><a href="../tween.js.html">tween.js</a></li>
-            <li><a href="../xhr.js.html">xhr.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//index.html">Main</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/abstract.js.html">abstract.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/closure.js.html">closure.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/composite.js.html">composite.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/decorator.js.html">decorator.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/factory.js.html">factory.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/failsafe.js.html">failsafe.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/graph.js.html">graph.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/listener.js.html">listener.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stub.js.html">stub.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/task.js.html">task.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/tween.js.html">tween.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/xhr.js.html">xhr.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application-router.js.html">app/application-router.js</a></li>
+            <li class="active"><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#State"><i class="alert alert-success"></i><span>State</span></a>
+              <li><a href="#Application"><i class="alert alert-info"></i><span>Application</span></a>
+              </li>
+              <li><a href="#applicationRouter_"><i class="alert alert-success"></i><span>applicationRouter_</span></a>
+              </li>
+              <li><a href="#enterState"><i class="alert alert-info"></i><span>enterState</span></a>
+              </li>
+              <li><a href="#getApplicationRouter"><i class="alert alert-info"></i><span>getApplicationRouter</span></a>
+              </li>
+              <li><a href="#getState"><i class="alert alert-info"></i><span>getState</span></a>
               </li>
             </ul>
           </div>
         </div>
         <div class="span9">
-          <section id="State">
-            <h1>State</h1>
+          <section id="Application">
+            <h1>Application</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-success radius ctx-type">property</div><span>tr.enums.State</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.Application()</span>
             </p>
           </section>
-          <div class="description"><p>Enumeration of Task states.</p> </div>
-          <pre><code class="language-javascript">tr.enums.State = {
-  INITIALIZED: 0,
-  RUNNING: 1,
-  INTERRUPTED: 2,
-  COMPLETED: 3,
-  ERRORED: 4
+          <div class="description"><p><p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.</p><p>Basic Task for encapsulating an application comprised of {@link tr.app.State}s.<br />Use the enterState() method to start the application or to transition between states.</p> </div>
+          <pre><code class="language-javascript">tr.app.Application = function() {</code></pre>
+          <section id="applicationRouter_">
+            <h1>applicationRouter_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.applicationRouter_</span>
+            </p>
+          </section>
+          <div class="description"><p>@private {!tr.app.ApplicationRouter}</p> </div>
+          <pre><code class="language-javascript">this.applicationRouter_ = new tr.app.ApplicationRouter(this);</code></pre>
+          <div class="description"><p>@private {tr.Task|undefined}</p> </div>
+          <pre><code class="language-javascript">this.stateTask_;
 };</code></pre>
+          <section id="enterState">
+            <h1>enterState</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.Application.prototype.enterState()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>stateTask</td>
+                <td>!State</td>
+                <td>State task to enter.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Interrupt the current application-state and enter a new one.</p> </div>
+          <pre><code class="language-javascript">tr.app.Application.prototype.enterState = function(stateTask) {
+  if (this.stateTask_ === stateTask) {
+    stateTask.interrupt();
+    stateTask.reset();
+    stateTask.run();
+
+  } else {
+    if (this.stateTask_ &amp;&amp; this.stateTask_.getState() === tr.enums.State.RUNNING) {
+      this.stateTask_.interrupt();
+    }
+
+    this.stateTask_ = stateTask;
+
+    if (this.stateTask_.getState() !== tr.enums.State.RUNNING) {
+      this.stateTask_.run();
+    }
+  }
+};</code></pre>
+          <section id="getApplicationRouter">
+            <h1>getApplicationRouter</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.Application.prototype.getApplicationRouter()</span>
+            </p>
+          </section>
+          <div class="description"><p>@return {tr.app.ApplicationRouter}</p> </div>
+          <pre><code class="language-javascript">tr.app.Application.prototype.getApplicationRouter = function() {
+  return this.applicationRouter_;
+};</code></pre>
+          <section id="getState">
+            <h1>getState</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.Application.prototype.getState()</span>
+            </p>
+          </section>
+          <div class="description"><p>@return Current application {@link tr.app.State}.</p> </div>
+          <pre><code class="language-javascript">tr.app.Application.prototype.getState = function() {
+  return this.stateTask_;
+};</code></pre>
+          <div class="description"><p>This method is called when a application has been started.<br />Override it to implement custom start behavior.</p> </div>
+          <pre><code class="language-javascript">//tr.app.Application.prototype.applicationStarted = goog.nullFunction;</code></pre>
+          <div class="description"><p>This method is called when a application has been interrupted.<br />Override it to implement custom interrupt behavior.</p> </div>
+          <pre><code class="language-javascript">//tr.app.Application.prototype.applicationInterrupted = goog.nullFunction;</code></pre>
+          <div class="description"><p>This method is called when a application has been reset.<br />Override it to implement custom reset behavior.</p> </div>
+          <pre><code class="language-javascript">//tr.app.Application.prototype.applicationReset = goog.nullFunction;</code></pre>
         </div>
       </div>
     </div>
     <footer class="footer">
       <div class="container">
-        <p>Documentation generated with <a href="https://github.com/FGRibreau/doxx">Doxx </a> created by <a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau </a></p>
-        <p>Doxx is sponsored by <a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr </a> and <a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Documentation generated with<a href="https://github.com/FGRibreau/doxx">Doxx</a>created by<a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau</a></p>
+        <p>Doxx is sponsored by<a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr</a>and<a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
         <p>Theme borrowed from Twitter Bootstrap</p>
       </div>
     </footer>

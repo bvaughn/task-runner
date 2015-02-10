@@ -28,6 +28,20 @@ gulp.task('deps', function() {
   depsHelper(sourcesWithApps, 'dist/task-runner-engine', 'deps.js');
 });
 
+gulp.task('docs', function() {
+  var gulpDoxx = require('gulp-doxx');
+ 
+  gulp.src([
+      'source/tr/**/*.js',
+      'source/README.md'
+    ])
+    .pipe(gulpDoxx({
+      urlPrefix: 'http://rawgit.com/bvaughn/task-runner/master/docs/',
+      title: 'Task Runner'
+    }))
+    .pipe(gulp.dest('docs'));
+});
+
 gulp.task('test', function() {
   // Be sure to return the stream 
   return gulp.src(testFiles)

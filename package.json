@@ -19,6 +19,7 @@
     "jsdoc": "~3.3.0-beta1",
     "gulp-closure-deps": "~0.4.0",
     "gulp-jsdoc": "~0.1.4",
-    "doxx": "~1.2.5"
+    "doxx": "~1.2.5",
+    "gulp-doxx": "0.0.4"
   }
 }

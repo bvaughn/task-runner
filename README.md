@@ -51,10 +51,10 @@ gulp build
 
 ### Generating Documentation
 
-Begin by running `npm install -g doxx` to install [Doxx](http://fgribreau.github.io/doxx/docs/).
+Begin by running `npm install` to install [gulp-doxx](https://github.com/filipovskii/gulp-doxx/).
 
 Then run the following command from the root of the Task Runner checkout:
 
 ```bash
-node_modules/doxx/bin/doxx --source source/tr --target docs --title="Task Runner"
+gulp docs
 ```
