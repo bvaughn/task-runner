@@ -7527,7 +7527,7 @@ tr.app.Application = function() {
   this.applicationRouter_ = new tr.app.ApplicationRouter(this);
 };
 tr.app.Application.prototype.enterState = function(a) {
-  this.stateTask_ === a ? (a.interrupt(), a.reset(), a.run()) : (this.stateTask_ && this.stateTask_.getState() === tr.enums.State.RUNNING && this.stateTask_.interrupt(), this.stateTask_ = a, this.stateTask_.getState() !== tr.enums.State.RUNNING && this.stateTask_.run());
+  this.stateTask_ === a ? (a.interrupt(), a.reset(), a.run()) : (this.stateTask_ && this.stateTask_.getState() === tr.enums.State.RUNNING && this.stateTask_.interrupt(), this.stateTask_ = a, this.stateTask_.getState() !== tr.enums.State.RUNNING && (this.stateTask_.setApplication(this), this.stateTask_.run()));
 };
 tr.app.Application.prototype.getApplicationRouter = function() {
   return this.applicationRouter_;
@@ -7535,16 +7535,18 @@ tr.app.Application.prototype.getApplicationRouter = function() {
 tr.app.Application.prototype.getState = function() {
   return this.stateTask_;
 };
-tr.app.State = function(a, b) {
-  tr.Graph.call(this, b || "State");
-  this.application_ = a;
+tr.app.State = function(a) {
+  tr.Graph.call(this, a || "State");
 };
 goog.inherits(tr.app.State, tr.Graph);
 tr.app.State.prototype.getApplication = function() {
   return this.application_;
 };
-tr.app.TransitionState = function(a, b) {
-  tr.app.State.call(this, a, b || "TransitionState");
+tr.app.State.prototype.setApplication = function(a) {
+  return this.application_ = a;
+};
+tr.app.TransitionState = function(a) {
+  tr.app.State.call(this, a || "TransitionState");
   this.blockingTasks_ = [];
   this.prioritizedStates_ = [];
   this.taskIdToBlockingTasksMap_ = {};

@@ -11,7 +11,7 @@ goog.require('tr.enums.State');
  * Special state used to resolve dependencies when transitioning from one {tr.app.State} to another.
  *
  * @example
- * var goToUserProfileTask = new tr.app.TransitionState(application);
+ * var goToUserProfileTask = new tr.app.TransitionState();
  * 
  * // In this example, the highest-priority target state is one that displays a user-profile.
  * goToUserProfileTask.addTargetState(userProfileState, [loadSessionTask, loadUserProfileTask]);
@@ -25,14 +25,13 @@ goog.require('tr.enums.State');
  * // Change application-state to initiate the transition.
  * application.enterState(goToUserProfileTask);
  * 
- * @param {!tr.Task} application A reference to the Application this state belongs to.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {tr.app.State}
  * @constructor
  * @struct
  */
-tr.app.TransitionState = function(application, opt_taskName) {
-  goog.base(this, application, opt_taskName || "TransitionState");
+tr.app.TransitionState = function(opt_taskName) {
+  goog.base(this, opt_taskName || "TransitionState");
 
   /** @private {Array.<!tr.Task>=}  */
   this.blockingTasks_ = [];

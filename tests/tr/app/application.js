@@ -1,6 +1,7 @@
 goog.provide('tr.app.Application.test');
 goog.setTestOnly('tr.app.Application.test');
 
+goog.require('tr.Sleep');
 goog.require('tr.app.Application');
 goog.require('tr.app.State');
 goog.require('tr.enums.State');
@@ -14,11 +15,19 @@ describe('tr.app.Application', function() {
   beforeEach(function() {
     application = new tr.app.Application();
 
-    stateTaskA = new tr.app.State(application);
+    stateTaskA = new tr.app.State();
     stateTaskA.add(new tr.Sleep());
     
-    stateTaskB = new tr.app.State(application);
+    stateTaskB = new tr.app.State();
     stateTaskB.add(new tr.Sleep());
+  });
+
+  it('should pass a reference of itself to a state before running it', function() {
+    expect(stateTaskA.getApplication()).toBeFalsy();
+
+    application.enterState(stateTaskA);
+
+    expect(stateTaskA.getApplication()).toBe(application);
   });
 
   it('should automatically run when the first state is entered', function() {

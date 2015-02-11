@@ -26,9 +26,9 @@ goog.require('tr.enums.State');
  *   function(params) {
  *     var loadUuserInfo = new LoadUserInfo(params.userId);
  * 
- *     return new tr.app.TransitionState(application).
- *       addTargetState(new UserProfileState(application), [loadUuserInfo]).
- *       addTargetState(new SignInStateState(application))
+ *     return new tr.app.TransitionState().
+ *       addTargetState(new UserProfileState(), [loadUuserInfo]).
+ *       addTargetState(new SignInStateState())
  *   });
  * 
  * // The router must be configured with a default fall-back state.
@@ -36,7 +36,7 @@ goog.require('tr.enums.State');
  * // It's improtant for this state to have no dependencies.
  * application.getApplicationRouter().setDefaultRoute(
  *   function(params) {
- *     return new SignInStateTask(application);
+ *     return new SignInStateTask();
  *   });
  * 
  * // Once the router has been configured, start it to begin processing states.
@@ -75,6 +75,7 @@ tr.app.Application.prototype.enterState = function(stateTask) {
     this.stateTask_ = stateTask;
 
     if (this.stateTask_.getState() !== tr.enums.State.RUNNING) {
+      this.stateTask_.setApplication(this);
       this.stateTask_.run();
     }
   }

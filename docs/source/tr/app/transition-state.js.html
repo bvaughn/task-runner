@@ -131,11 +131,6 @@
             </thead>
             <tbody>
               <tr>
-                <td>application</td>
-                <td>!tr.Task</td>
-                <td>A reference to the Application this state belongs to.</td>
-              </tr>
-              <tr>
                 <td>opt_taskName</td>
                 <td>string=</td>
                 <td>Optional semantically meaningful task name.</td>
@@ -143,8 +138,8 @@
             </tbody>
           </table>
           <div class="description"><p><p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.</p><p>Special state used to resolve dependencies when transitioning from one {tr.app.State} to another.</p> </div>
-          <pre><code class="language-javascript">tr.app.TransitionState = function(application, opt_taskName) {
-  goog.base(this, application, opt_taskName || &quot;TransitionState&quot;);</code></pre>
+          <pre><code class="language-javascript">tr.app.TransitionState = function(opt_taskName) {
+  goog.base(this, opt_taskName || &quot;TransitionState&quot;);</code></pre>
           <section id="blockingTasks_">
             <h1>blockingTasks_</h1>
             <h5 class="subheader"></h5>

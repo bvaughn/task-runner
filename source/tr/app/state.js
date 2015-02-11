@@ -11,8 +11,8 @@ goog.require('tr.enums.State');
  * Extend this base class to implement custom application states.
  *
  * @example
- * tr.InitializationState = function(application) {
- *   goog.base(this, application, "Initialization state");
+ * tr.InitializationState = function() {
+ *   goog.base(this, "Initialization state");
  * 
  *   // Queue state sub-tasks; in this example these tasks run in parallel.
  *   this.add(new LoadSessionTask());
@@ -27,17 +27,16 @@ goog.require('tr.enums.State');
  * };
  * goog.inherits(tr.InitializationState, tr.app.State);
  *
- * @param {!tr.app.Application} application A reference to the {@link tr.app.Application} this state belongs to.
  * @param {string=} opt_taskName Optional semantically meaningful task name.
  * @extends {tr.DepdencyGraph}
  * @constructor
  * @struct
  */
-tr.app.State = function(application, opt_taskName) {
+tr.app.State = function(opt_taskName) {
   goog.base(this, opt_taskName || "State");
 
-  /** @private {!tr.app.Application} */
-  this.application_ = application;
+  /** @private {tr.app.Application|undefined} */
+  this.application_;
 };
 goog.inherits(tr.app.State, tr.Graph);
 
@@ -46,4 +45,13 @@ goog.inherits(tr.app.State, tr.Graph);
  */
 tr.app.State.prototype.getApplication = function() {
   return this.application_;
+};
+
+/**
+ * This method should be invoked by the {tr.app.Application} just prior to entering (running) this state.
+ *
+ * @param {!tr.app.Application} application A reference to the {@link tr.app.Application}.
+ */
+tr.app.State.prototype.setApplication = function(application) {
+  return this.application_ = application;
 };

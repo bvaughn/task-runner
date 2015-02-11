@@ -100,9 +100,9 @@
             <ul class="nav nav-list bs-docs-sidenav affix-top">
               <li><a href="#State"><i class="alert alert-info"></i><span>State</span></a>
               </li>
-              <li><a href="#application_"><i class="alert alert-success"></i><span>application_</span></a>
-              </li>
               <li><a href="#getApplication"><i class="alert alert-info"></i><span>getApplication</span></a>
+              </li>
+              <li><a href="#setApplication"><i class="alert alert-info"></i><span>setApplication</span></a>
               </li>
             </ul>
           </div>
@@ -125,11 +125,6 @@
             </thead>
             <tbody>
               <tr>
-                <td>application</td>
-                <td>!tr.app.Application</td>
-                <td>A reference to the {@link tr.app.Application} this state belongs to.</td>
-              </tr>
-              <tr>
                 <td>opt_taskName</td>
                 <td>string=</td>
                 <td>Optional semantically meaningful task name.</td>
@@ -137,17 +132,10 @@
             </tbody>
           </table>
           <div class="description"><p><p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.</p><p>A runtime state of an {@link tr.app.Application}s.<br />Extend this base class to implement custom application states.</p> </div>
-          <pre><code class="language-javascript">tr.app.State = function(application, opt_taskName) {
+          <pre><code class="language-javascript">tr.app.State = function(opt_taskName) {
   goog.base(this, opt_taskName || &quot;State&quot;);</code></pre>
-          <section id="application_">
-            <h1>application_</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-success radius ctx-type">property</div><span>this.application_</span>
-            </p>
-          </section>
-          <div class="description"><p>@private {!tr.app.Application}</p> </div>
-          <pre><code class="language-javascript">this.application_ = application;
+          <div class="description"><p>@private {tr.app.Application|undefined}</p> </div>
+          <pre><code class="language-javascript">this.application_;
 };
 goog.inherits(tr.app.State, tr.Graph);</code></pre>
           <section id="getApplication">
@@ -160,6 +148,33 @@ goog.inherits(tr.app.State, tr.Graph);</code></pre>
           <div class="description"><p>Returns a reference to the global application.</p> </div>
           <pre><code class="language-javascript">tr.app.State.prototype.getApplication = function() {
   return this.application_;
+};</code></pre>
+          <section id="setApplication">
+            <h1>setApplication</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.State.prototype.setApplication()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>application</td>
+                <td>!tr.app.Application</td>
+                <td>A reference to the {@link tr.app.Application}.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>This method should be invoked by the {tr.app.Application} just prior to entering (running) this state.</p> </div>
+          <pre><code class="language-javascript">tr.app.State.prototype.setApplication = function(application) {
+  return this.application_ = application;
 };</code></pre>
         </div>
       </div>

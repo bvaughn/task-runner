@@ -171,6 +171,7 @@
     this.stateTask_ = stateTask;
 
     if (this.stateTask_.getState() !== tr.enums.State.RUNNING) {
+      this.stateTask_.setApplication(this);
       this.stateTask_.run();
     }
   }

@@ -19,7 +19,8 @@ describe('tr.app.State', function() {
   });
 
   it('should expose the application', function() {
-    var stateTask = new tr.app.State(application);
+    var stateTask = new tr.app.State();
+    stateTask.setApplication(application);
 
     expect(stateTask.getApplication()).toBe(application);
   });
