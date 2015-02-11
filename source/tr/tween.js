@@ -3,8 +3,6 @@ goog.provide('tr.Tween');
 goog.require('goog.async.AnimationDelay');
 goog.require('tr.Abstract');
 
-
-
 /**
  * Animation-frame-based task for tweening properties.
  * 
@@ -53,7 +51,6 @@ tr.Tween = function(callback, duration, opt_easingFunction, opt_taskName) {
 };
 goog.inherits(tr.Tween, tr.Abstract);
 
-
 /**
  * @override
  * @inheritDoc
@@ -61,7 +58,6 @@ goog.inherits(tr.Tween, tr.Abstract);
 tr.Tween.prototype.interruptImpl = function() {
   this.cancelCurrentAnimationFrame_();
 };
-
 
 /**
  * @override
@@ -75,7 +71,6 @@ tr.Tween.prototype.resetImpl = function() {
   this.queueAnimationFrame_(this.updateReset_);
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -86,7 +81,6 @@ tr.Tween.prototype.runImpl = function() {
   this.queueAnimationFrame_(this.updateRunning_);
 };
 
-
 /**
  * @param {!number} value
  * @return {!number}
@@ -96,7 +90,6 @@ tr.Tween.prototype.linearEase_ = function(value) {
   return value;
 };
 
-
 /** @private */
 tr.Tween.prototype.cancelCurrentAnimationFrame_ = function() {
   if (this.animationDelay_) {
@@ -104,7 +97,6 @@ tr.Tween.prototype.cancelCurrentAnimationFrame_ = function() {
     this.animationDelay_.dispose();
   }
 };
-
 
 /**
  * @param {function(!number)} callback
@@ -117,7 +109,6 @@ tr.Tween.prototype.queueAnimationFrame_ = function(callback) {
   this.animationDelay_.start();
 };
 
-
 /**
  * @param {!number} timestamp
  * @private
@@ -127,7 +118,6 @@ tr.Tween.prototype.updateReset_ = function(timestamp) {
 
   this.callback_(this.easingFunction_(0));
 };
-
 
 /**
  * @param {!number} timestamp

@@ -4,8 +4,6 @@ goog.provide('tr.app.State');
 goog.require('tr.Graph');
 goog.require('tr.enums.State');
 
-
-
 /**
  * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
  *
@@ -42,7 +40,6 @@ tr.app.State = function(application, opt_taskName) {
   this.application_ = application;
 };
 goog.inherits(tr.app.State, tr.Graph);
-
 
 /**
  * Returns a reference to the global application.

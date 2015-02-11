@@ -4,8 +4,6 @@ goog.require('tr.app.ApplicationRouter');
 goog.require('tr.Composite');
 goog.require('tr.enums.State');
 
-
-
 /**
  * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
  *
@@ -58,7 +56,6 @@ tr.app.Application = function() {
   this.stateTask_;
 };
 
-
 /**
  * Interrupt the current application-state and enter a new one.
  * 
@@ -83,14 +80,12 @@ tr.app.Application.prototype.enterState = function(stateTask) {
   }
 };
 
-
 /**
  * @return {tr.app.ApplicationRouter}
  */
 tr.app.Application.prototype.getApplicationRouter = function() {
   return this.applicationRouter_;
 };
-
 
 /**
  * @return Current application {@link tr.app.State}.

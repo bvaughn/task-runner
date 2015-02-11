@@ -1,7 +1,5 @@
 goog.provide('tr.enums.Event');
 
-
-
 /**
  * Enumeration of Task events.
  * @enum {number}

@@ -4,8 +4,6 @@ goog.require('tr.Abstract');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Executes a set of Tasks either in parallel or one after another.
  *
@@ -57,7 +55,6 @@ tr.Composite = function(parallel, opt_tasks, opt_taskName) {
 };
 goog.inherits(tr.Composite, tr.Abstract);
 
-
 /**
  * Adds a set of tasks to the list of child tasks.
  *
@@ -72,7 +69,6 @@ tr.Composite.prototype.addAll = function(tasks) {
 
   return this;
 };
-
 
 /**
  * Adds a task to the list of child tasks.
@@ -103,7 +99,6 @@ tr.Composite.prototype.add = function(task) {
 
   return this;
 };
-
 
 /**
  * Removes a task from the list of child tasks.
@@ -136,7 +131,6 @@ tr.Composite.prototype.remove = function(task) {
   return this;
 };
 
-
 /**
  * @inheritDoc
  */
@@ -151,7 +145,6 @@ tr.Composite.prototype.getOperationsCount = function() {
   return operationsCount;
 };
 
-
 /**
  * @inheritDoc
  */
@@ -165,7 +158,6 @@ tr.Composite.prototype.getCompletedOperationsCount = function() {
 
   return completedOperationsCount;
 };
-
 
 /**
  * @override
@@ -200,7 +192,6 @@ tr.Composite.prototype.runImpl = function() {
   }
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -213,7 +204,6 @@ tr.Composite.prototype.interruptImpl = function() {
       }
     });
 };
-
 
 /**
  * @override
@@ -229,7 +219,6 @@ tr.Composite.prototype.resetImpl = function() {
       task.reset();
     });
 };
-
 
 /**
  * Warning: this method is intended for a specific use-case. Please read the
@@ -279,7 +268,6 @@ tr.Composite.prototype.flushQueue = function(doNotComplete) {
   this.flushQueueInProgress_ = false;
 };
 
-
 /**
  * Adds completed and errored callback handlers to child Task.
  *
@@ -291,7 +279,6 @@ tr.Composite.prototype.addCallbacks_ = function(task) {
   task.errored(this.childTaskErrored_, this);
 };
 
-
 /**
  * Removes completed and errored callback handlers from child Task.
  *
@@ -302,7 +289,6 @@ tr.Composite.prototype.removeCallbacks_ = function(task) {
   task.off(tr.enums.Event.COMPLETED, this.childTaskCompleted_, this);
   task.off(tr.enums.Event.ERRORED, this.childTaskErrored_, this);
 };
-
 
 /**
  * Are all child tasks completed?
@@ -321,7 +307,6 @@ tr.Composite.prototype.allTasksAreCompleted_ = function() {
 
   return true;
 };
-
 
 /**
  * Checks for completion (or failure) of child tasks and triggers callbacks.
@@ -348,7 +333,6 @@ tr.Composite.prototype.checkForTaskCompletion_ = function() {
     }
   }
 };
-
 
 /**
  * Convenience method for handling a completed Task and executing the next.
@@ -380,7 +364,6 @@ tr.Composite.prototype.taskCompletedOrRemoved_ = function(task) {
   }
 };
 
-
 /**
  * Invoke a callback once for each Task in the queue.
  *
@@ -395,7 +378,6 @@ tr.Composite.prototype.eachTaskInQueue_ = function(callback) {
   }
 };
 
-
 /**
  * Callback for child task completions.
  *
@@ -407,7 +389,6 @@ tr.Composite.prototype.childTaskCompleted_ = function(task) {
 
   this.taskCompletedOrRemoved_(task);
 };
-
 
 /**
  * Callback for child task errors.

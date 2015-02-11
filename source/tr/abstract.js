@@ -4,8 +4,6 @@ goog.require('tr.Task');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Abstract implementation of Task.
  *
@@ -70,14 +68,12 @@ tr.Abstract = function(opt_taskName) {
   };
 };
 
-
 /**
  * Auto-incremeted unique ID managed by AbstractTask.
  *
  * @private
  */
 tr.Abstract.ID_ = 0;
-
 
 /**
  * Debug logger for tasks.
@@ -91,7 +87,6 @@ tr.Abstract.prototype.log = function(text) {
   return this.console_.log(text + " :: " + this);
 };
 
-
 /**
  * String representation of task (e.g. TaskName [id: 12]).
  */
@@ -99,48 +94,40 @@ tr.Abstract.prototype.toString = function() {
   return this.taskName_ + ' [id: ' + this.uniqueID_ + ']';
 };
 
-
 /** @override */
 tr.Abstract.prototype.getData = function() {
   return this.data_;
 };
-
 
 /** @override */
 tr.Abstract.prototype.getErrorMessage = function() {
   return this.errorMessage_;
 };
 
-
 /** @override */
 tr.Abstract.prototype.getOperationsCount = function() {
   return 1;
 };
-
 
 /** @override */
 tr.Abstract.prototype.getCompletedOperationsCount = function() {
   return this.state_ == tr.enums.State.COMPLETED ? 1 : 0;
 };
 
-
 /** @override */
 tr.Abstract.prototype.getState = function() {
   return this.state_;
 };
-
 
 /** @override */
 tr.Abstract.prototype.getName = function() {
   return this.taskName_;
 };
 
-
 /** @override */
 tr.Abstract.prototype.getUniqueID = function() {
   return this.uniqueID_;
 };
-
 
 /**
  * Executes an array of callback functions with the current task as the only
@@ -157,7 +144,6 @@ tr.Abstract.prototype.executeCallbacks_ = function(taskEvent) {
     }
   }
 };
-
 
 /** @override */
 tr.Abstract.prototype.run = function() {
@@ -181,7 +167,6 @@ tr.Abstract.prototype.run = function() {
   return this;
 };
 
-
 /** @override */
 tr.Abstract.prototype.interrupt = function() {
   if (this.state_ != tr.enums.State.RUNNING) {
@@ -198,7 +183,6 @@ tr.Abstract.prototype.interrupt = function() {
 
   return this;
 };
-
 
 /** @override */
 tr.Abstract.prototype.interruptFor = function(task) {
@@ -229,7 +213,6 @@ tr.Abstract.prototype.interruptFor = function(task) {
   return this;
 };
 
-
 /** @override */
 tr.Abstract.prototype.reset = function() {
   if (this.state_ == tr.enums.State.RUNNING) {
@@ -248,7 +231,6 @@ tr.Abstract.prototype.reset = function() {
 
   return this;
 };
-
 
 /** @override */
 tr.Abstract.prototype.on = function(
@@ -272,7 +254,6 @@ tr.Abstract.prototype.on = function(
   return this;
 };
 
-
 /** @override */
 tr.Abstract.prototype.off = function(
     taskEvent, callback, opt_scope) {
@@ -294,36 +275,30 @@ tr.Abstract.prototype.off = function(
   return this;
 };
 
-
 /** @override */
 tr.Abstract.prototype.started = function(callback, opt_scope) {
   return this.on(tr.enums.Event.STARTED, callback, opt_scope);
 };
-
 
 /** @override */
 tr.Abstract.prototype.interrupted = function(callback, opt_scope) {
   return this.on(tr.enums.Event.INTERRUPTED, callback, opt_scope);
 };
 
-
 /** @override */
 tr.Abstract.prototype.completed = function(callback, opt_scope) {
   return this.on(tr.enums.Event.COMPLETED, callback, opt_scope);
 };
-
 
 /** @override */
 tr.Abstract.prototype.errored = function(callback, opt_scope) {
   return this.on(tr.enums.Event.ERRORED, callback, opt_scope);
 };
 
-
 /** @override */
 tr.Abstract.prototype.final = function(callback, opt_scope) {
   return this.on(tr.enums.Event.FINAL, callback, opt_scope);
 };
-
 
 /**
  * This method is called each time a task is run.
@@ -331,19 +306,16 @@ tr.Abstract.prototype.final = function(callback, opt_scope) {
  */
 tr.Abstract.prototype.runImpl = goog.abstractMethod;
 
-
 /**
  * This method is called each time a task is interrupted.
  */
 tr.Abstract.prototype.interruptImpl = goog.nullFunction;
-
 
 /**
  * This method is called each time a task is reset.
  * Override it to perform custom cleanup between task-runs.
  */
 tr.Abstract.prototype.resetImpl = goog.nullFunction;
-
 
 /**
  * Call this method to mark the task as complete.
@@ -365,7 +337,6 @@ tr.Abstract.prototype.completeInternal = function(data) {
   this.executeCallbacks_(tr.enums.Event.COMPLETED);
   this.executeCallbacks_(tr.enums.Event.FINAL);
 };
-
 
 /**
  * Call this method to mark the task as errored.
@@ -390,7 +361,6 @@ tr.Abstract.prototype.errorInternal = function(data, errorMessage) {
   this.executeCallbacks_(tr.enums.Event.FINAL);
 };
 
-
 /**
  * A TaskCallback contains a reference to a callback function and the scope it
  * should be called with.
@@ -408,7 +378,6 @@ tr.Abstract.TaskCallback_ = function(callback, opt_scope) {
   /** @private {?} */
   this.scope_ = opt_scope;
 };
-
 
 /**
  * Executes the callback function with the scope if it's available.

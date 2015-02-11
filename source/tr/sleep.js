@@ -3,8 +3,6 @@ goog.provide('tr.Sleep');
 goog.require('tr.Abstract');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Waits for an amount of time to pass before completing.
  *
@@ -42,7 +40,6 @@ tr.Sleep = function(timeout, opt_resetTimerAfterInterruption, opt_taskName) {
 };
 goog.inherits(tr.Sleep, tr.Abstract);
 
-
 /**
  * Stops the running timer.
  * @private
@@ -53,7 +50,6 @@ tr.Sleep.prototype.stopTimer_ = function() {
     this.timeoutId_ = null;
   }
 };
-
 
 /**
  * @override
@@ -66,7 +62,6 @@ tr.Sleep.prototype.resetImpl = function() {
   this.timeoutPause_ = -1;
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -76,7 +71,6 @@ tr.Sleep.prototype.interruptImpl = function() {
 
   this.timeoutPause_ = goog.now();
 };
-
 
 /**
  * @override
@@ -99,7 +93,6 @@ tr.Sleep.prototype.runImpl = function() {
       goog.bind(this.onTimeout_, this), timeout);
   this.timeoutStart_ = goog.now();
 };
-
 
 /**
  * Event handler for when the deferred task is complete.

@@ -2,8 +2,6 @@ goog.provide('tr.Stub');
 
 goog.require('tr.Closure');
 
-
-
 /**
  * No-op task primarily useful for unit testing.
  *

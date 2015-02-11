@@ -4,8 +4,6 @@ goog.require('tr.Abstract');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Decorator for tasks that should be retried on error.
  *
@@ -54,7 +52,6 @@ tr.Retry = function(task, maxRetries, retryDelay, opt_taskName) {
 };
 goog.inherits(tr.Retry, tr.Abstract);
 
-
 /**
  * The default max number of times to reset and re-run the decorated Task before
  * erroring the retry tr.
@@ -73,7 +70,6 @@ tr.Retry.MAX_RETRIES_ = 5;
  */
 tr.Retry.RETRY_DELAY_ = 5;
 
-
 /**
  * @override
  * @inheritDoc
@@ -81,7 +77,6 @@ tr.Retry.RETRY_DELAY_ = 5;
 tr.Retry.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;
 };
-
 
 /**
  * Returns the number of retries attempted.
@@ -91,7 +86,6 @@ tr.Retry.prototype.getRetries = function() {
   return this.retries_;
 };
 
-
 /**
  * Removes the decorated task callbacks.
  * @private
@@ -100,7 +94,6 @@ tr.Retry.prototype.removeCallbacks_ = function() {
   this.decoratedTask_.off(tr.enums.Event.COMPLETED, this.onDecoratedTaskCompleted_, this);
   this.decoratedTask_.off(tr.enums.Event.ERRORED, this.onDecoratedTaskErrored_, this);
 };
-
 
 /**
  * Stops the running timer.
@@ -113,7 +106,6 @@ tr.Retry.prototype.stopTimer_ = function() {
   }
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -125,7 +117,6 @@ tr.Retry.prototype.resetImpl = function() {
   this.removeCallbacks_();
   this.decoratedTask_.reset();
 };
-
 
 /**
  * @override
@@ -140,7 +131,6 @@ tr.Retry.prototype.interruptImpl = function() {
     this.decoratedTask_.interrupt();
   }
 };
-
 
 /**
  * @override
@@ -160,7 +150,6 @@ tr.Retry.prototype.runImpl = function() {
   this.decoratedTask_.run();
 };
 
-
 /**
  * Event handler for when the deferred task is complete.
  * @param {!tr.Task} task
@@ -172,7 +161,6 @@ tr.Retry.prototype.onDecoratedTaskCompleted_ = function(task) {
 
   this.completeInternal(task.getData());
 };
-
 
 /**
  * Event handler for when the deferred task errored.

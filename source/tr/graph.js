@@ -2,8 +2,6 @@ goog.provide('tr.Graph');
 
 goog.require('tr.Abstract');
 
-
-
 /**
  * Executes of a set of Tasks in a specific order.
  * 
@@ -47,7 +45,6 @@ tr.Graph = function(opt_taskName) {
 };
 goog.inherits(tr.Graph, tr.Abstract);
 
-
 /**
  * Adds a child task to the dependency graph and ensures that its blocking dependencies (if any) are valid.
  *
@@ -76,7 +73,6 @@ tr.Graph.prototype.add = function(task, blockers) {
   return this;
 };
 
-
 /**
  * Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.
  *
@@ -96,7 +92,6 @@ tr.Graph.prototype.addAll = function(tasks, blockers) {
   return this;
 };
 
-
 /**
  * Convenience method for adding a task to the "end" of the depepdency graph.
  * In othe words, this task will be blocked by all tasks already in the graph.
@@ -110,7 +105,6 @@ tr.Graph.prototype.addToEnd = function(task) {
   return this.add(task, this.tasks_.slice());
 };
 
-
 /**
  * Convenience method for adding multiple tasks to the "end" of the depepdency graph.
  * In othe words, these tasks will be blocked by all tasks already in the graph.
@@ -123,7 +117,6 @@ tr.Graph.prototype.addToEnd = function(task) {
 tr.Graph.prototype.addAllToEnd = function(tasks) {
   return this.addAll(tasks, this.tasks_.slice());
 };
-
 
 /**
  * Removes a child task from the dependency graph and ensures that the remaining
@@ -156,7 +149,6 @@ tr.Graph.prototype.remove = function(task) {
   return this;
 };
 
-
 /**
  * @inheritDoc
  */
@@ -169,7 +161,6 @@ tr.Graph.prototype.getOperationsCount = function() {
 
   return operationsCount;
 };
-
 
 /**
  * @inheritDoc
@@ -185,7 +176,6 @@ tr.Graph.prototype.getCompletedOperationsCount =
   return completedOperationsCount;
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -200,7 +190,6 @@ tr.Graph.prototype.runImpl = function() {
 
   this.completeOrRunNext_();
 };
-
 
 /**
  * @override
@@ -218,7 +207,6 @@ tr.Graph.prototype.interruptImpl = function() {
   }
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -231,12 +219,10 @@ tr.Graph.prototype.resetImpl = function() {
   }
 };
 
-
 /**
  * Subclasses may override this method to just-in-time add child Tasks before the composite is run.
  */
 tr.Graph.prototype.beforeFirstRun = goog.nullFunction;
-
 
 /**
  * Add callbacks to the specified task.
@@ -249,7 +235,6 @@ tr.Graph.prototype.addCallbacksTo_ = function(task) {
   task.errored(this.childTaskErrored_, this);
 };
 
-
 /**
  * Add callbacks from the specified task.
  *
@@ -260,7 +245,6 @@ tr.Graph.prototype.removeCallbacksFrom_ = function(task) {
   task.off(tr.enums.Event.COMPLETED, this.childTaskCompleted_, this);
   task.off(tr.enums.Event.ERRORED, this.childTaskErrored_, this);
 };
-
 
 /**
  * @return {boolean} All child tasks have completed.
@@ -276,7 +260,6 @@ tr.Graph.prototype.areAllTasksCompleted_ = function() {
   return true;
 };
 
-
 /**
  * @return {boolean} At least one child task is running.
  * @private
@@ -290,7 +273,6 @@ tr.Graph.prototype.isAnyTaskRunning_ = function() {
 
   return false;
 };
-
 
 /**
  * Checks the specified task to ensure that it does not have any cyclic
@@ -319,7 +301,6 @@ tr.Graph.prototype.validateDependencies_ = function(task) {
     }
   }
 };
-
 
 /**
  * Check child tasks to see if the graph has completed or errored.
@@ -351,7 +332,6 @@ tr.Graph.prototype.completeOrRunNext_ = function() {
   }
 };
 
-
 /**
  * Determines if a task is safe to run by analyzing its blocking dependencies.
  *
@@ -376,7 +356,6 @@ tr.Graph.prototype.hasIncompleteBlockers_ =
 
   return false;
 };
-
 
 /**
  * Run every non-running task that is not blocked by another incomplete tr.
@@ -416,7 +395,6 @@ tr.Graph.prototype.runAllReadyTasks_ = function() {
   }
 };
 
-
 /**
  * Callback for child task completions.
  *
@@ -428,7 +406,6 @@ tr.Graph.prototype.childTaskCompleted_ = function(task) {
 
   this.completeOrRunNext_();
 };
-
 
 /**
  * Callback for child task errors.

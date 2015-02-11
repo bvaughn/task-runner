@@ -4,8 +4,6 @@ goog.require('tr.Abstract');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Observes (but does not execute) a collection of Tasks.
  * 
@@ -48,7 +46,6 @@ tr.Observer = function(opt_tasks, opt_failUponFirstError, opt_taskName) {
 };
 goog.inherits(tr.Observer, tr.Abstract);
 
-
 /**
  * Returns a list of observed tasks.
  * @return {!Array.<!tr.Task>}
@@ -56,7 +53,6 @@ goog.inherits(tr.Observer, tr.Abstract);
 tr.Observer.prototype.getObservedTasks = function() {
   return this.observedTasks_;
 };
-
 
 /**
  * Add an additional Task to observe.
@@ -71,7 +67,6 @@ tr.Observer.prototype.observe = function(task) {
     task.errored(this.onObservedTaskErrored_, this);
   }
 };
-
 
 /**
  * Stops a Task from being observed.
@@ -88,7 +83,6 @@ tr.Observer.prototype.stopObserving = function(task) {
   this.tryToFinalize_();
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -101,7 +95,6 @@ tr.Observer.prototype.getOperationsCount = function() {
   }
   return count;
 };
-
 
 /**
  * @override
@@ -116,7 +109,6 @@ tr.Observer.prototype.getCompletedOperationsCount = function() {
   return count;
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -130,7 +122,6 @@ tr.Observer.prototype.runImpl = function() {
   }
 };
 
-
 /**
  * Event handler for when the observed task is complete.
  * @param {!tr.Task} task
@@ -140,7 +131,6 @@ tr.Observer.prototype.onObservedTaskCompleted_ = function(task) {
   this.tryToFinalize_();
 };
 
-
 /**
  * Event handler for when the observed task errored.
  * @param {!tr.Task} task
@@ -149,7 +139,6 @@ tr.Observer.prototype.onObservedTaskCompleted_ = function(task) {
 tr.Observer.prototype.onObservedTaskErrored_ = function(task) {
   this.tryToFinalize_();
 };
-
 
 /**
  * Try to complete or error the observer task based on the states of the

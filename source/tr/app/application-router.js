@@ -3,8 +3,6 @@ goog.provide('tr.app.ApplicationRouter');
 goog.require('goog.array');
 goog.require('goog.events.EventType');
 
-
-
 /**
  * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
  *
@@ -24,7 +22,6 @@ tr.app.ApplicationRouter = function(application) {
   this.defaultStateFactoryFunction_;
 };
 
-
 /**
  * Register an application route.
  * When this route is matched the provided factory function will be invoked to create an application state.
@@ -39,7 +36,6 @@ tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
 
   return this;
 };
-
 
 /**
  * Factory function responsible for creating the default application state.
@@ -57,7 +53,6 @@ tr.app.ApplicationRouter.prototype.setDefaultRoute = function(factoryFunction) {
 
   return this;
 };
-
 
 /**
  * Start the router.
@@ -77,7 +72,6 @@ tr.app.ApplicationRouter.prototype.start = function() {
 
   return this;
 };
-
 
 /** @private */
 tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
@@ -99,7 +93,6 @@ tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
 
   this.goToDefaultState_();
 };
-
 
 /** @private */
 tr.app.ApplicationRouter.prototype.goToDefaultState_ = function(application) {
@@ -139,7 +132,6 @@ tr.app.ApplicationRouter.Path_ = function(path, factoryFunction) {
 
 tr.app.ApplicationRouter.Path_.$urlMatcherFactory_ = null;
 
-
 /**
  * Parse the specifiec URL and extract state information if relevant.
  *
@@ -153,7 +145,6 @@ tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
 
   return !!this.factoryFunctionParams_;
 };
-
 
 /**
  * Create and enter the decorated application state.

@@ -5,8 +5,6 @@ goog.require('tr.Failsafe');
 goog.require('tr.app.State');
 goog.require('tr.enums.State');
 
-
-
 /**
  * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
  *
@@ -47,7 +45,6 @@ tr.app.TransitionState = function(application, opt_taskName) {
 };
 goog.inherits(tr.app.TransitionState, tr.app.State);
 
-
 /**
  * @override
  * @inheritDoc
@@ -58,7 +55,6 @@ tr.app.TransitionState.prototype.beforeFirstRun = function() {
     new tr.Closure(
       goog.bind(this.chooseState_, this), false, "Closure - state-chooser"));
 };
-
 
 /**
  * Add a target tr.app.State and its prerequisite blocking {@link tr.Task}s.
@@ -90,7 +86,6 @@ tr.app.TransitionState.prototype.addTargetState = function(stateTask, blockingTa
 
   return this;
 };
-
 
 /**
  * Picks the highest priority State that meets all blocking dependencies.

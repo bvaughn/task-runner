@@ -1,7 +1,5 @@
 goog.provide('tr.Task');
 
-
-
 /**
  * Represents a unit of work.
  * 
@@ -37,14 +35,12 @@ goog.provide('tr.Task');
  */
 tr.Task = function() {};
 
-
 /**
  * Optional data value passed to the Task complete/error/interruption method.
  *
  * @return {!Object|undefined}
  */
 tr.Task.prototype.getData = goog.abstractMethod;
-
 
 /**
  * Additional information about the cause of a task error.
@@ -53,14 +49,12 @@ tr.Task.prototype.getData = goog.abstractMethod;
  */
 tr.Task.prototype.getErrorMessage = goog.abstractMethod;
 
-
 /**
  * Number of internal operations conducted by this tr.
  *
  * @return {number}
  */
 tr.Task.prototype.getOperationsCount = goog.abstractMethod;
-
 
 /**
  * Number of internal operations that have completed.
@@ -69,7 +63,6 @@ tr.Task.prototype.getOperationsCount = goog.abstractMethod;
  */
 tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
 
-
 /**
  * Returns the state of the tr.
  *
@@ -77,14 +70,12 @@ tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
  */
 tr.Task.prototype.getState = goog.abstractMethod;
 
-
 /**
  * Optional human-readable name, typically useful for debug purposes.
  *
  * @return {string|undefined}
  */
 tr.Task.prototype.getName = goog.abstractMethod;
-
 
 /**
  * Globally unique ID for the current Task-instance.
@@ -96,7 +87,6 @@ tr.Task.prototype.getName = goog.abstractMethod;
  */
 tr.Task.prototype.getUniqueID = goog.abstractMethod;
 
-
 /**
  * Starts a tr.
  * This method may also be used to re-run a task that has errorred or to resume
@@ -107,7 +97,6 @@ tr.Task.prototype.getUniqueID = goog.abstractMethod;
  */
 tr.Task.prototype.run = goog.abstractMethod;
 
-
 /**
  * Interrupts a running tr.
  * An interrupted task can be resumed by calling run().
@@ -116,7 +105,6 @@ tr.Task.prototype.run = goog.abstractMethod;
  * @return {!tr.Task} a reference to the current task
  */
 tr.Task.prototype.interrupt = goog.abstractMethod;
-
 
 /**
  * Interrupts a running task until another task has completed.
@@ -132,7 +120,6 @@ tr.Task.prototype.interrupt = goog.abstractMethod;
  */
 tr.Task.prototype.interruptFor = goog.abstractMethod;
 
-
 /**
  * Resets the task to it's initialized TaskState so that it can be re-run.
  * This method should not be called on a task that is running.
@@ -141,7 +128,6 @@ tr.Task.prototype.interruptFor = goog.abstractMethod;
  * @return {!tr.Task} a reference to the current task
  */
 tr.Task.prototype.reset = goog.abstractMethod;
-
 
 /**
  * Attach a callback function to a task event.
@@ -153,7 +139,6 @@ tr.Task.prototype.reset = goog.abstractMethod;
  */
 tr.Task.prototype.on = goog.abstractMethod;
 
-
 /**
  * Dettach a callback function from a task event.
  *
@@ -164,7 +149,6 @@ tr.Task.prototype.on = goog.abstractMethod;
  */
 tr.Task.prototype.off = goog.abstractMethod;
 
-
 /**
  * This callback will be invoked when a task is started.
  *
@@ -174,7 +158,6 @@ tr.Task.prototype.off = goog.abstractMethod;
  */
 tr.Task.prototype.started = goog.abstractMethod;
 
-
 /**
  * This callback will be invoked whenever this task is interrupted.
  *
@@ -183,7 +166,6 @@ tr.Task.prototype.started = goog.abstractMethod;
  * @return {!tr.Task} a reference to the current task
  */
 tr.Task.prototype.interrupted = goog.abstractMethod;
-
 
 /**
  * This callback will be invoked only upon successful completion of the tr.
@@ -196,7 +178,6 @@ tr.Task.prototype.interrupted = goog.abstractMethod;
  */
 tr.Task.prototype.completed = goog.abstractMethod;
 
-
 /**
  * This callback will be invoked only upon a task error.
  * Callbacks may be called multiple times (if the task is run more than once).
@@ -207,7 +188,6 @@ tr.Task.prototype.completed = goog.abstractMethod;
  * @return {!tr.Task} a reference to the current task
  */
 tr.Task.prototype.errored = goog.abstractMethod;
-
 
 /**
  * This callback will be invoked after a task has completed or errorred.

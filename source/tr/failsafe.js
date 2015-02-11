@@ -2,8 +2,6 @@ goog.provide('tr.Failsafe');
 
 goog.require('tr.Abstract');
 
-
-
 /**
  * Decorates a task and re-dispatches errors as successful completions.
  *
@@ -29,7 +27,6 @@ tr.Failsafe = function(decoratedTask, opt_taskName) {
 };
 goog.inherits(tr.Failsafe, tr.Abstract);
 
-
 /**
  * @override
  * @inheritDoc
@@ -37,7 +34,6 @@ goog.inherits(tr.Failsafe, tr.Abstract);
 tr.Failsafe.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;
 };
-
 
 /**
  * @override
@@ -47,7 +43,6 @@ tr.Failsafe.prototype.interruptImpl = function() {
   this.decoratedTask_.interrupt();
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -55,7 +50,6 @@ tr.Failsafe.prototype.interruptImpl = function() {
 tr.Failsafe.prototype.resetImpl = function() {
   this.decoratedTask_.reset();
 };
-
 
 /**
  * @override

@@ -3,8 +3,6 @@ goog.provide('tr.Listener');
 goog.require('tr.Abstract');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Sleeps for an event-dispatching target to trigger a specific type of event.
  * 
@@ -35,7 +33,6 @@ tr.Listener = function(eventTarget, eventType, opt_taskName) {
 };
 goog.inherits(tr.Listener, tr.Abstract);
 
-
 /**
  * @override
  * @inheritDoc
@@ -44,7 +41,6 @@ tr.Listener.prototype.resetImpl = function() {
   // No-op
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -52,7 +48,6 @@ tr.Listener.prototype.resetImpl = function() {
 tr.Listener.prototype.interruptImpl = function() {
   goog.events.unlisten(this.eventTarget_, this.eventType_, this.listener_);
 };
-
 
 /**
  * @override

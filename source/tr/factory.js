@@ -4,8 +4,6 @@ goog.require('tr.Abstract');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Creates and decorates a task returned by the callback.
  *
@@ -59,7 +57,6 @@ tr.Factory = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
 };
 goog.inherits(tr.Factory, tr.Abstract);
 
-
 /**
  * @override
  * @inheritDoc
@@ -67,7 +64,6 @@ goog.inherits(tr.Factory, tr.Abstract);
 tr.Factory.prototype.getDecoratedTask = function() {
   return this.deferredTask_;
 };
-
 
 /**
  * Set whether to recreate the deferred task after an error occured.
@@ -78,7 +74,6 @@ tr.Factory.prototype.recreateDeferredTaskAfterError =
     function(recreateDeferredTaskAfterError) {
   this.recreateDeferredTaskAfterError_ = recreateDeferredTaskAfterError;
 };
-
 
 /**
  * Removes the deferred task callbacks.
@@ -96,7 +91,6 @@ tr.Factory.prototype.removeCallbacks_ = function() {
       tr.enums.Event.INTERRUPTED, this.onDeferredTaskInterrupted_, this);
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -109,7 +103,6 @@ tr.Factory.prototype.resetImpl = function() {
   }
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -121,7 +114,6 @@ tr.Factory.prototype.interruptImpl = function() {
   this.removeCallbacks_();
   this.deferredTask_.interrupt();
 };
-
 
 /**
  * @override
@@ -150,7 +142,6 @@ tr.Factory.prototype.runImpl = function() {
   }
 };
 
-
 /**
  * Event handler for when the deferred task is complete.
  * @param {!tr.Task} task
@@ -161,7 +152,6 @@ tr.Factory.prototype.onDeferredTaskCompleted_ =
   this.removeCallbacks_();
   this.completeInternal(task.getData());
 };
-
 
 /**
  * Event handler for when the deferred task errored.
@@ -174,7 +164,6 @@ tr.Factory.prototype.onDeferredTaskErrored_ =
   this.deferredTaskErrored_ = true;
   this.errorInternal(task.getData(), task.getErrorMessage());
 };
-
 
 /**
  * Event handler for when the deferred task is interrupted.

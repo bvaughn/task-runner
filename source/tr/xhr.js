@@ -7,8 +7,6 @@ goog.require('goog.structs.Map');
 goog.require('tr.Abstract');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Creates an XHR request and completes upon successful response from the server.
  *
@@ -55,7 +53,6 @@ tr.Xhr = function(url, opt_data, opt_responseType, opt_taskName) {
 };
 goog.inherits(tr.Xhr, tr.Abstract);
 
-
 /**
  * @override
  * @inheritDoc
@@ -63,7 +60,6 @@ goog.inherits(tr.Xhr, tr.Abstract);
 tr.Xhr.prototype.resetImpl = function() {
   this.xhrRequest_ = undefined;
 };
-
 
 /**
  * @override
@@ -75,7 +71,6 @@ tr.Xhr.prototype.interruptImpl = function() {
     this.xhrRequest_ = undefined;
   }
 };
-
 
 /**
  * @override
@@ -100,7 +95,6 @@ tr.Xhr.prototype.runImpl = function() {
     }
   }
 };
-
 
 /** @private */
 tr.Xhr.prototype.onXhrRequestSuccess = function() {
@@ -127,7 +121,6 @@ tr.Xhr.prototype.onXhrRequestSuccess = function() {
   }
 };
 
-
 /** @private */
 tr.Xhr.prototype.onXhrRequestErrorOrTimeout = function() {
   if (this.state_ === tr.enums.State.RUNNING) {
@@ -136,7 +129,6 @@ tr.Xhr.prototype.onXhrRequestErrorOrTimeout = function() {
       this.xhrRequest_.getLastError());
   }
 };
-
 
 /** @private */
 tr.Xhr.prototype.createPostDataString_ = function() {
@@ -148,14 +140,12 @@ tr.Xhr.prototype.createPostDataString_ = function() {
   return undefined;
 };
 
-
 /**
  * Set the default response-type for all XHR requests that do not otherwise specify a response-type.
  */
 tr.Xhr.setDefaultResponseType = function(responseType) {
   tr.Xhr.DEFAULT_RESPONSE_TYPE_ = responseType;
 };
-
 
 /**
  * Enumeration of XHR requestion response types.

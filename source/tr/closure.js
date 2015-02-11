@@ -2,8 +2,6 @@ goog.provide('tr.Closure');
 
 goog.require('tr.Abstract');
 
-
-
 /**
  * Invokes a callback function when run.
  * 
@@ -59,7 +57,6 @@ tr.Closure = function(runImplFn, opt_synchronous, opt_taskName) {
 };
 goog.inherits(tr.Closure, tr.Abstract);
 
-
 /** @override */
 tr.Closure.prototype.runImpl = function() {
   try {
@@ -78,7 +75,6 @@ tr.Closure.prototype.runImpl = function() {
   }
 };
 
-
 /**
  * Complete this task.
  *
@@ -87,7 +83,6 @@ tr.Closure.prototype.runImpl = function() {
 tr.Closure.prototype.complete = function(data) {
   this.completeInternal(data);
 };
-
 
 /**
  * Error this task.

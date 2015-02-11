@@ -4,8 +4,6 @@ goog.require('tr.Abstract');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
 
-
-
 /**
  * Decorates a Task and enforces a max-execution time limit.
  * 
@@ -45,7 +43,6 @@ tr.Timeout = function(task, timeout, opt_taskName) {
 };
 goog.inherits(tr.Timeout, tr.Abstract);
 
-
 /**
  * @override
  * @inheritDoc
@@ -53,7 +50,6 @@ goog.inherits(tr.Timeout, tr.Abstract);
 tr.Timeout.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;
 };
-
 
 /**
  * Removes the decorated task callbacks.
@@ -63,7 +59,6 @@ tr.Timeout.prototype.removeCallbacks_ = function() {
   this.decoratedTask_.off(tr.enums.Event.COMPLETED, this.onDecoratedTaskCompleted_, this);
   this.decoratedTask_.off(tr.enums.Event.ERRORED, this.onDecoratedTaskErrored_, this);
 };
-
 
 /**
  * Stops the running timer.
@@ -75,7 +70,6 @@ tr.Timeout.prototype.stopTimer_ = function() {
     this.timeoutId_ = null;
   }
 };
-
 
 /**
  * @override
@@ -90,7 +84,6 @@ tr.Timeout.prototype.resetImpl = function() {
   this.timeoutPause_ = -1;
 };
 
-
 /**
  * @override
  * @inheritDoc
@@ -102,7 +95,6 @@ tr.Timeout.prototype.interruptImpl = function() {
   this.decoratedTask_.interrupt();
   this.timeoutPause_ = goog.now();
 };
-
 
 /**
  * @override
@@ -134,7 +126,6 @@ tr.Timeout.prototype.runImpl = function() {
   }
 };
 
-
 /**
  * Event handler for when the deferred task is complete.
  * @private
@@ -147,7 +138,6 @@ tr.Timeout.prototype.onTimeout_ = function() {
   this.errorInternal(this.decoratedTask_.getData(), 'Task timed out after ' + this.timeout_ + 'ms');
 };
 
-
 /**
  * Event handler for when the deferred task is complete.
  * @param {!tr.Task} task
@@ -159,7 +149,6 @@ tr.Timeout.prototype.onDecoratedTaskCompleted_ = function(task) {
 
   this.completeInternal(task.getData());
 };
-
 
 /**
  * Event handler for when the deferred task errored.

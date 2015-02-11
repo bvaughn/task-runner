@@ -1,7 +1,5 @@
 goog.provide('tr.enums.State');
 
-
-
 /**
  * Enumeration of Task states.
  * @enum {number}

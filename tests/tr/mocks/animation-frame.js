@@ -2,8 +2,6 @@ goog.provide('tr.MockAnimationFrame');
 
 goog.require('goog.testing.PropertyReplacer');
 
-
-
 /**
  * Mocks window.requestAnimationFrame and window.cancelAnimationFrame functions
  * for testing purposes. This class is safe to use with goog.testing.MockClock,
@@ -21,7 +19,6 @@ tr.MockAnimationFrame = function() {
   this.animationIdtoCallbacksMap_ = {};
 };
 
-
 /**
  * Override cancelAnimationFrame, requestAnimationFrame, and goog.now
  * with mock functions.
@@ -34,14 +31,12 @@ tr.MockAnimationFrame.prototype.install = function() {
       goog.bind(this.request_, this));
 };
 
-
 /**
  * Revert overriden functions with defaults.
  */
 tr.MockAnimationFrame.prototype.uninstall = function() {
   this.replacer_.reset();
 };
-
 
 /**
  * @return {!number} Id of most recent requestAnimationFrame callback.
@@ -50,14 +45,12 @@ tr.MockAnimationFrame.prototype.getLastId = function() {
   return this.animationIds_[this.animationIds_.length - 1];
 };
 
-
 /**
  * @return {!number} Number of pending requestAnimationFrame callbacks.
  */
 tr.MockAnimationFrame.prototype.getAnimationFrameCount = function() {
   return this.animationIds_.length;
 };
-
 
 /**
  * Call a pending requestAnimationFrame callback with the current timestamp.
@@ -69,7 +62,6 @@ tr.MockAnimationFrame.prototype.call = function(id) {
   this.cancel_(id);
 };
 
-
 /**
  * Calls the most recent pending requestAnimationFrame callback with the
  * current timestamp.
@@ -77,7 +69,6 @@ tr.MockAnimationFrame.prototype.call = function(id) {
 tr.MockAnimationFrame.prototype.callMostRecent = function() {
   this.call(this.getLastId());
 };
-
 
 /**
  * @param {!number} id
@@ -88,7 +79,6 @@ tr.MockAnimationFrame.prototype.cancel_ = function(id) {
 
   delete this.animationIdtoCallbacksMap_[id];
 };
-
 
 /**
  * @param {function(!number)=} callback
