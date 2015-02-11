@@ -16,9 +16,16 @@ goog.require('tr.enums.State');
  * tr.InitializationState = function(application) {
  *   goog.base(this, application, "Initialization state");
  * 
- *   // Queue state sub-tasks
+ *   // Queue state sub-tasks; in this example these tasks run in parallel.
  *   this.add(new LoadSessionTask());
  *   this.add(new LoadContentJSONTask());
+ *
+ *   // Once session and content data have been loaded transition to a home-page state.
+ *   this.addToEnd(
+ *     new tr.Closure(
+ *       function() {
+ *         application.enterState(new HomePageState());
+ *       }));
  * };
  * goog.inherits(tr.InitializationState, tr.app.State);
  *
@@ -43,24 +50,3 @@ goog.inherits(tr.app.State, tr.Graph);
 tr.app.State.prototype.getApplication = function() {
   return this.application_;
 };
-
-
-/**
- * This method is called when a state has been started.
- * Override it to implement custom start behavior.
- */
-//tr.app.State.prototype.stateStarted = goog.nullFunction;
-
-
-/**
- * This method is called when a state has been interrupted.
- * Override it to implement custom interrupt behavior.
- */
-//tr.app.State.prototype.stateInterrupted = goog.nullFunction;
-
-
-/**
- * This method is called when a state has been reset.
- * Override it to implement custom reset behavior.
- */
-//tr.app.State.prototype.stateReset = goog.nullFunction;

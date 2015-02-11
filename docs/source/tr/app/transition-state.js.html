@@ -187,11 +187,7 @@ goog.inherits(tr.app.TransitionState, tr.app.State);</code></pre>
   this.addToEnd(
     new tr.Closure(
       goog.bind(this.chooseState_, this), false, &quot;Closure - state-chooser&quot;));
-};
-
-
-// TODO Always require exactly one target state that has no blocking tasks?
-// TODO Always require a default target state when started?</code></pre>
+};</code></pre>
           <section id="addTargetState">
             <h1>addTargetState</h1>
             <h5 class="subheader"></h5>

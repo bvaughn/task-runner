@@ -218,7 +218,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Factory function responsible for creating the default application state.<br />This factory function is invoked any time the user visits a URL that can&#39;t be matched.</p> </div>
+          <div class="description"><p>Factory function responsible for creating the default application state.<br />This factory function is invoked any time the user visits a URL that can&#39;t be matched.</p><p><p>The router must be configured with a default state before being run.<br />This state is entered if a URL cannot be matched with a route, or if a route fails to load a valid state.<br />It&#39;s improtant for this state to have no dependencies.</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.setDefaultRoute = function(factoryFunction) {
   this.defaultStateFactoryFunction_ = factoryFunction;
 
@@ -233,6 +233,8 @@
           </section>
           <div class="description"><p>Start the router.</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.start = function() {
+  // TODO Check to make sure a default route has been set
+
   goog.events.listen(
     window,
     goog.events.EventType.HASHCHANGE,
@@ -325,6 +327,9 @@
   goog.asserts.assert(this.factoryFunctionParams_, 'Invalid path');
 
   // TODO Handle RTEs in factory function
+  // If we're not entering a default state when an error occurs, enter the default state.
+  // If we're entering a default state then just let the error be thrown.
+  // Test this thoroughly!
   return this.factoryFunction_(this.factoryFunctionParams_);
 };</code></pre>
         </div>

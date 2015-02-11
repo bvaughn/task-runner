@@ -3,7 +3,6 @@ goog.provide('tr.Abstract');
 goog.require('tr.Task');
 goog.require('tr.enums.Event');
 goog.require('tr.enums.State');
-goog.require('goog.DEBUG');
 
 
 

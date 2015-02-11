@@ -7564,24 +7564,18 @@ tr.app.TransitionState.prototype.addTargetState = function(a, b) {
   return this;
 };
 tr.app.TransitionState.prototype.chooseState_ = function() {
-  try {
-    for (var a = 0;a < this.prioritizedStates_.length;a++) {
-      for (var b = this.prioritizedStates_[a], c = this.taskIdToBlockingTasksMap_[b.getUniqueID()], d = !0, e = 0;e < c.length;e++) {
-        if (c[e].getState() === tr.enums.State.ERRORED) {
-          d = !1;
-          break;
-        }
-      }
-      if (d) {
-        this.application_.enterState(b);
-        return;
+  for (var a = 0;a < this.prioritizedStates_.length;a++) {
+    for (var b = this.prioritizedStates_[a], c = this.taskIdToBlockingTasksMap_[b.getUniqueID()], d = !0, e = 0;e < c.length;e++) {
+      if (c[e].getState() === tr.enums.State.ERRORED) {
+        d = !1;
+        break;
       }
     }
-    this.errorInternal("No valid application states found");
-  } catch (f) {
-    if (this.getState() === tr.enums.State.RUNNING) {
-      throw f;
+    if (d) {
+      this.application_.enterState(b);
+      return;
     }
   }
+  this.errorInternal("No valid application states found");
 };
 

@@ -60,10 +60,6 @@ tr.app.TransitionState.prototype.beforeFirstRun = function() {
 };
 
 
-// TODO Always require exactly one target state that has no blocking tasks?
-// TODO Always require a default target state when started?
-
-
 /**
  * Add a target tr.app.State and its prerequisite blocking {@link tr.Task}s.
  * Multiple target states can be added; they should be added in the order of highest-to-lowest importance.
@@ -103,35 +99,27 @@ tr.app.TransitionState.prototype.addTargetState = function(stateTask, blockingTa
  * @private
  */
 tr.app.TransitionState.prototype.chooseState_ = function() {
-  try {
-    for (var i = 0; i < this.prioritizedStates_.length; i++) {
-      var stateTask = this.prioritizedStates_[i];
-      var blockingTasks = this.taskIdToBlockingTasksMap_[stateTask.getUniqueID()];
-      var blockingDependenciesMet = true;
-      
-      for (var x = 0; x < blockingTasks.length; x++) {
-        var blockingTask = blockingTasks[x];
+  for (var i = 0; i < this.prioritizedStates_.length; i++) {
+    var stateTask = this.prioritizedStates_[i];
+    var blockingTasks = this.taskIdToBlockingTasksMap_[stateTask.getUniqueID()];
+    var blockingDependenciesMet = true;
+    
+    for (var x = 0; x < blockingTasks.length; x++) {
+      var blockingTask = blockingTasks[x];
 
-        if (blockingTask.getState() === tr.enums.State.ERRORED) {
-          blockingDependenciesMet = false;
+      if (blockingTask.getState() === tr.enums.State.ERRORED) {
+        blockingDependenciesMet = false;
 
-          break;
-        }
-      }
-
-      if (blockingDependenciesMet) {
-        this.application_.enterState(stateTask);
-
-        return;
+        break;
       }
     }
 
-    this.errorInternal('No valid application states found');
+    if (blockingDependenciesMet) {
+      this.application_.enterState(stateTask);
 
-  // Handle any errors that occur in synchronous task we hand off to.
-  } catch (error) {
-    if (this.getState() === tr.enums.State.RUNNING) {
-      throw error;
+      return;
     }
   }
+
+  this.errorInternal('No valid application states found');
 };

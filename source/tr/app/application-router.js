@@ -45,6 +45,10 @@ tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
  * Factory function responsible for creating the default application state.
  * This factory function is invoked any time the user visits a URL that can't be matched.
  *
+ * <p>The router must be configured with a default state before being run.
+ * This state is entered if a URL cannot be matched with a route, or if a route fails to load a valid state.
+ * It's improtant for this state to have no dependencies.
+ *
  * @param {function(!tr.app.State)} factoryFunction Factory function responsible for creating an application state task
  * @return {!tr.app.ApplicationRouter}
  */
@@ -61,6 +65,8 @@ tr.app.ApplicationRouter.prototype.setDefaultRoute = function(factoryFunction) {
  * @return {!tr.app.ApplicationRouter}
  */
 tr.app.ApplicationRouter.prototype.start = function() {
+  // TODO Check to make sure a default route has been set
+
   goog.events.listen(
     window,
     goog.events.EventType.HASHCHANGE,
@@ -158,5 +164,8 @@ tr.app.ApplicationRouter.Path_.prototype.createState = function() {
   goog.asserts.assert(this.factoryFunctionParams_, 'Invalid path');
 
   // TODO Handle RTEs in factory function
+  // If we're not entering a default state when an error occurs, enter the default state.
+  // If we're entering a default state then just let the error be thrown.
+  // Test this thoroughly!
   return this.factoryFunction_(this.factoryFunctionParams_);
 };
