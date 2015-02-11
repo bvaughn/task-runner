@@ -15,6 +15,8 @@ var sourcesWithApps = [
   'source/tr/enums/*.js'
 ];
 var testFiles = []; // Declared in the karma.conf.js
+
+gulp.task('all', ['deps', 'docs', 'build']);
  
 gulp.task('build', function() {
   buildHelper(sources, 'tr', 'dist/task-runner', 'compressed.js', false);
