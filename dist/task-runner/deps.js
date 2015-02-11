@@ -1435,7 +1435,7 @@ goog.addDependency('../bower_components/closure-library/closure/goog/vec/vec4f.j
 goog.addDependency('../bower_components/closure-library/closure/goog/webgl/webgl.js', ['goog.webgl'], [], false);
 goog.addDependency('../bower_components/closure-library/closure/goog/window/window.js', ['goog.window'], ['goog.string', 'goog.userAgent'], false);
 goog.addDependency('../bower_components/closure-library/closure/goog/window/window_test.js', ['goog.windowTest'], ['goog.dom', 'goog.events', 'goog.string', 'goog.testing.AsyncTestCase', 'goog.testing.jsunit', 'goog.window'], false);
-goog.addDependency('base-with-apps.js', ['tr.app'], ['tr', 'tr.app.Application', 'tr.app.ApplicationRouter', 'tr.app.State', 'tr.app.TransitionState'], false);
+goog.addDependency('base-with-apps.js', ['tr.app'], ['tr', 'tr.app.Application', 'tr.app.ApplicationRouter', 'tr.app.State', 'tr.app.TransitionState', 'tr.app.UrlMatcher'], false);
 goog.addDependency('base.js', ['tr'], ['tr.Abstract', 'tr.Closure', 'tr.Composite', 'tr.Decorator', 'tr.Factory', 'tr.Failsafe', 'tr.Graph', 'tr.Listener', 'tr.Observer', 'tr.Retry', 'tr.Sleep', 'tr.Stub', 'tr.Task', 'tr.Timeout', 'tr.Tween', 'tr.Xhr', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/abstract.js', ['tr.Abstract'], ['tr.Task', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/closure.js', ['tr.Closure'], ['tr.Abstract'], false);

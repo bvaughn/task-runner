@@ -35,6 +35,7 @@ gulp.task('docs', function() {
  
   gulp.src([
       'source/tr/**/*.js',
+      '!source/tr/app/angular-mini.js',
       'source/README.md'
     ])
     .pipe(gulpDoxx({

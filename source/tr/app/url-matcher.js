@@ -1,6 +1,6 @@
 goog.provide('tr.app.UrlMatcher');
 
-goog.require('tr.app.AngularMini');
+goog.require('tr.app.AngularMini_');
 
 /**
  * Matches URLs against patterns and extracts named parameters from the path or the search
@@ -67,7 +67,7 @@ goog.require('tr.app.AngularMini');
  * @struct
  */
 tr.app.UrlMatcher = function(pattern, config, parentMatcher) {
-  config = tr.app.AngularMini.extend({ params: {} }, tr.app.AngularMini.isObject(config) ? config : {});
+  config = tr.app.AngularMini_.extend({ params: {} }, tr.app.AngularMini_.isObject(config) ? config : {});
 
   // Find all placeholders and create a compiled pattern, using either classic or curly syntax:
   //   '*' name
@@ -120,7 +120,7 @@ tr.app.UrlMatcher = function(pattern, config, parentMatcher) {
     cfg         = config.params[id];
     segment     = pattern.substring(last, m.index);
     regexp      = isSearch ? m[4] : m[4] || (m[1] == '*' ? '.*' : null);
-    type        = $$UMFP.type(regexp || "string") || tr.app.AngularMini.inherit($$UMFP.type("string"), { pattern: new RegExp(regexp) });
+    type        = $$UMFP.type(regexp || "string") || tr.app.AngularMini_.inherit($$UMFP.type("string"), { pattern: new RegExp(regexp) });
     return {
       id: id, regexp: regexp, segment: segment, type: type, cfg: cfg
     };
@@ -199,7 +199,7 @@ tr.app.UrlMatcher.prototype.concat = function (pattern, config) {
     strict: $$UMFP.strictMode(),
     squash: $$UMFP.defaultSquashPolicy()
   };
-  return new UrlMatcher(this.sourcePath + pattern + this.sourceSearch, tr.app.AngularMini.extend(defaultConfig, config), this);
+  return new UrlMatcher(this.sourcePath + pattern + this.sourceSearch, tr.app.AngularMini_.extend(defaultConfig, config), this);
 };
 
 tr.app.UrlMatcher.prototype.toString = function () {
@@ -246,8 +246,8 @@ tr.app.UrlMatcher.prototype.exec = function (path, searchParams) {
     function unquoteDashes(str) { return str.replace(/\\-/g, "-"); }
 
     var split = reverseString(string).split(/-(?!\\)/);
-    var allReversed = tr.app.AngularMini.map(split, reverseString);
-    return tr.app.AngularMini.map(allReversed, unquoteDashes).reverse();
+    var allReversed = tr.app.AngularMini_.map(split, reverseString);
+    return tr.app.AngularMini_.map(allReversed, unquoteDashes).reverse();
   }
 
   for (i = 0; i < nPath; i++) {
@@ -281,7 +281,7 @@ tr.app.UrlMatcher.prototype.exec = function (path, searchParams) {
  *    pattern has no parameters, an empty array is returned.
  */
 tr.app.UrlMatcher.prototype.parameters = function (param) {
-  if (!tr.app.AngularMini.isDefined(param)) return this.$$paramNames;
+  if (!tr.app.AngularMini_.isDefined(param)) return this.$$paramNames;
   return this.params[param] || null;
 };
 
@@ -342,8 +342,8 @@ tr.app.UrlMatcher.prototype.format = function (values) {
       var nextSegment = segments[i + 1];
       if (squash === false) {
         if (encoded != null) {
-          if (tr.app.AngularMini.isArray(encoded)) {
-            result += tr.app.AngularMini.map(encoded, encodeDashes).join("-");
+          if (tr.app.AngularMini_.isArray(encoded)) {
+            result += tr.app.AngularMini_.map(encoded, encodeDashes).join("-");
           } else {
             result += encodeURIComponent(encoded);
           }
@@ -352,13 +352,13 @@ tr.app.UrlMatcher.prototype.format = function (values) {
       } else if (squash === true) {
         var capture = result.match(/\/$/) ? /\/?(.*)/ : /(.*)/;
         result += nextSegment.match(capture)[1];
-      } else if (tr.app.AngularMini.isString(squash)) {
+      } else if (tr.app.AngularMini_.isString(squash)) {
         result += squash + nextSegment;
       }
     } else {
       if (encoded == null || (isDefaultValue && squash !== false)) continue;
-      if (!tr.app.AngularMini.isArray(encoded)) encoded = [ encoded ];
-      encoded = tr.app.AngularMini.map(encoded, encodeURIComponent).join('&' + name + '=');
+      if (!tr.app.AngularMini_.isArray(encoded)) encoded = [ encoded ];
+      encoded = tr.app.AngularMini_.map(encoded, encodeURIComponent).join('&' + name + '=');
       result += (search ? '&' : '?') + (name + '=' + encoded);
       search = true;
     }
@@ -396,7 +396,7 @@ tr.app.UrlMatcher.prototype.format = function (values) {
  * @struct
  */
 tr.app.UrlMatcher.Type_ = function(config) {
-  tr.app.AngularMini.extend(this, config);
+  tr.app.AngularMini_.extend(this, config);
 }
 
 /**
@@ -506,7 +506,7 @@ tr.app.UrlMatcher.Type_.prototype.$asArray = function(mode, isSearch) {
     }
 
     // Wrap non-array value as array
-    function arrayWrap(val) { return tr.app.AngularMini.isArray(val) ? val : (tr.app.AngularMini.isDefined(val) ? [ val ] : []); }
+    function arrayWrap(val) { return tr.app.AngularMini_.isArray(val) ? val : (tr.app.AngularMini_.isDefined(val) ? [ val ] : []); }
     // Unwrap array value for "auto" mode. Return undefined for empty array.
     function arrayUnwrap(val) {
       switch(val.length) {
@@ -521,9 +521,9 @@ tr.app.UrlMatcher.Type_.prototype.$asArray = function(mode, isSearch) {
     function arrayHandler(callback, allTruthyMode) {
       return function handleArray(val) {
         val = arrayWrap(val);
-        var result = tr.app.AngularMini.map(val, callback);
+        var result = tr.app.AngularMini_.map(val, callback);
         if (allTruthyMode === true)
-          return tr.app.AngularMini.filter(result, falsey).length === 0;
+          return tr.app.AngularMini_.filter(result, falsey).length === 0;
         return arrayUnwrap(result);
       };
     }
@@ -573,7 +573,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
   function valToString(val) { return val != null ? val.toString().replace(/\//g, "%2F") : val; }
   function valFromString(val) { return val != null ? val.toString().replace(/%2F/g, "/") : val; }
 //  TODO: in 1.0, make string .is() return false if value is undefined by default.
-//  function regexpMatches(val) { /*jshint validthis:true */ return tr.app.AngularMini.isDefined(val) && this.pattern.test(val); }
+//  function regexpMatches(val) { /*jshint validthis:true */ return tr.app.AngularMini_.isDefined(val) && this.pattern.test(val); }
   function regexpMatches(val) { /*jshint validthis:true */ return this.pattern.test(val); }
 
   var $types = {}, enqueue = true, typeQueue = [], injector, defaultTypes = {
@@ -586,7 +586,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     int: {
       encode: valToString,
       decode: function(val) { return parseInt(val, 10); },
-      is: function(val) { return tr.app.AngularMini.isDefined(val) && this.decode(val.toString()) === val; },
+      is: function(val) { return tr.app.AngularMini_.isDefined(val) && this.decode(val.toString()) === val; },
       pattern: /\d+/
     },
     bool: {
@@ -615,17 +615,17 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
       capture: /([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/
     },
     json: {
-      encode: tr.app.AngularMini.toJson,
-      decode: tr.app.AngularMini.fromJson,
-      is: tr.app.AngularMini.isObject,
-      equals: tr.app.AngularMini.equals,
+      encode: tr.app.AngularMini_.toJson,
+      decode: tr.app.AngularMini_.fromJson,
+      is: tr.app.AngularMini_.isObject,
+      equals: tr.app.AngularMini_.equals,
       pattern: /[^/]*/
     },
     any: { // does not encode/decode
-      encode: tr.app.AngularMini.identity,
-      decode: tr.app.AngularMini.identity,
-      is: tr.app.AngularMini.identity,
-      equals: tr.app.AngularMini.equals,
+      encode: tr.app.AngularMini_.identity,
+      decode: tr.app.AngularMini_.identity,
+      is: tr.app.AngularMini_.identity,
+      equals: tr.app.AngularMini_.equals,
       pattern: /.*/
     }
   };
@@ -638,7 +638,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
   }
 
   function isInjectable(value) {
-    return (tr.app.AngularMini.isFunction(value) || (tr.app.AngularMini.isArray(value) && tr.app.AngularMini.isFunction(value[value.length - 1])));
+    return (tr.app.AngularMini_.isFunction(value) || (tr.app.AngularMini_.isArray(value) && tr.app.AngularMini_.isFunction(value[value.length - 1])));
   }
 
   /**
@@ -662,7 +662,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
    * @returns {boolean} the current value of caseInsensitive
    */
   this.caseInsensitive = function(value) {
-    if (tr.app.AngularMini.isDefined(value))
+    if (tr.app.AngularMini_.isDefined(value))
       isCaseInsensitive = value;
     return isCaseInsensitive;
   };
@@ -679,7 +679,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
    * @returns {boolean} the current value of strictMode
    */
   this.strictMode = function(value) {
-    if (tr.app.AngularMini.isDefined(value))
+    if (tr.app.AngularMini_.isDefined(value))
       isStrictMode = value;
     return isStrictMode;
   };
@@ -700,8 +700,8 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
    *             the parameter value from the URL and replace it with this string.
    */
   this.defaultSquashPolicy = function(value) {
-    if (!tr.app.AngularMini.isDefined(value)) return defaultSquashPolicy;
-    if (value !== true && value !== false && !tr.app.AngularMini.isString(value))
+    if (!tr.app.AngularMini_.isDefined(value)) return defaultSquashPolicy;
+    if (value !== true && value !== false && !tr.app.AngularMini_.isString(value))
       throw new Error("Invalid squash policy: " + value + ". Valid policies: false, true, arbitrary-string");
     defaultSquashPolicy = value;
     return value;
@@ -720,7 +720,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
    * @returns {UrlMatcher}  The UrlMatcher.
    */
   this.compile = function (pattern, config) {
-    return new UrlMatcher(pattern, tr.app.AngularMini.extend(getDefaultConfig(), config));
+    return new UrlMatcher(pattern, tr.app.AngularMini_.extend(getDefaultConfig(), config));
   };
 
   /**
@@ -736,12 +736,12 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
    *          implementing all the same methods.
    */
   this.isMatcher = function (o) {
-    if (!tr.app.AngularMini.isObject(o)) return false;
+    if (!tr.app.AngularMini_.isObject(o)) return false;
     var result = true;
 
-    tr.app.AngularMini.forEach(tr.app.UrlMatcher.prototype, function(val, name) {
-      if (tr.app.AngularMini.isFunction(val)) {
-        result = result && (tr.app.AngularMini.isDefined(o[name]) && tr.app.AngularMini.isFunction(o[name]));
+    tr.app.AngularMini_.forEach(tr.app.UrlMatcher.prototype, function(val, name) {
+      if (tr.app.AngularMini_.isFunction(val)) {
+        result = result && (tr.app.AngularMini_.isDefined(o[name]) && tr.app.AngularMini_.isFunction(o[name]));
       }
     });
     return result;
@@ -855,10 +855,10 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
    * </pre>
    */
   this.type = function (name, definition, definitionFn) {
-    if (!tr.app.AngularMini.isDefined(definition)) return $types[name];
+    if (!tr.app.AngularMini_.isDefined(definition)) return $types[name];
     if ($types.hasOwnProperty(name)) throw new Error("A type named '" + name + "' has already been defined.");
 
-    $types[name] = new tr.app.UrlMatcher.Type_(tr.app.AngularMini.extend({ name: name }, definition));
+    $types[name] = new tr.app.UrlMatcher.Type_(tr.app.AngularMini_.extend({ name: name }, definition));
     if (definitionFn) {
       typeQueue.push({ name: name, def: definitionFn });
       if (!enqueue) flushTypeQueue();
@@ -871,13 +871,13 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     while(typeQueue.length) {
       var type = typeQueue.shift();
       if (type.pattern) throw new Error("You cannot override a type's .pattern at runtime.");
-      tr.app.AngularMini.extend($types[type.name], injector.invoke(type.def));
+      tr.app.AngularMini_.extend($types[type.name], injector.invoke(type.def));
     }
   }
 
   // Register default types. Store them in the prototype of $types.
-  tr.app.AngularMini.forEach(defaultTypes, function(type, name) { $types[name] = new tr.app.UrlMatcher.Type_(tr.app.AngularMini.extend({name: name}, type)); });
-  $types = tr.app.AngularMini.inherit($types, {});
+  tr.app.AngularMini_.forEach(defaultTypes, function(type, name) { $types[name] = new tr.app.UrlMatcher.Type_(tr.app.AngularMini_.extend({name: name}, type)); });
+  $types = tr.app.AngularMini_.inherit($types, {});
 
   /* No need to document $get, since it returns this */
   this.$get = ['$injector', function ($injector) {
@@ -885,7 +885,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     enqueue = false;
     flushTypeQueue();
 
-    tr.app.AngularMini.forEach(defaultTypes, function(type, name) {
+    tr.app.AngularMini_.forEach(defaultTypes, function(type, name) {
       if (!$types[name]) $types[name] = new tr.app.UrlMatcher.Type_(type);
     });
     return this;
@@ -904,9 +904,9 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     var replace = getReplace(config, arrayMode, isOptional, squash);
 
     function unwrapShorthand(config) {
-      var keys = tr.app.AngularMini.isObject(config) ? objectKeys(config) : [];
-      var isShorthand = tr.app.AngularMini.indexOf(keys, "value") === -1 && tr.app.AngularMini.indexOf(keys, "type") === -1 &&
-                        tr.app.AngularMini.indexOf(keys, "squash") === -1 && tr.app.AngularMini.indexOf(keys, "array") === -1;
+      var keys = tr.app.AngularMini_.isObject(config) ? objectKeys(config) : [];
+      var isShorthand = tr.app.AngularMini_.indexOf(keys, "value") === -1 && tr.app.AngularMini_.indexOf(keys, "type") === -1 &&
+                        tr.app.AngularMini_.indexOf(keys, "squash") === -1 && tr.app.AngularMini_.indexOf(keys, "array") === -1;
       if (isShorthand) config = { value: config };
       config.$$fn = isInjectable(config.value) ? config.value : function () { return config.value; };
       return config;
@@ -923,7 +923,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     function getArrayMode() {
       var arrayDefaults = { array: (location === "search" ? "auto" : false) };
       var arrayParamNomenclature = id.match(/\[\]$/) ? { array: true } : {};
-      return tr.app.AngularMini.extend(arrayDefaults, arrayParamNomenclature, config).array;
+      return tr.app.AngularMini_.extend(arrayDefaults, arrayParamNomenclature, config).array;
     }
 
     /**
@@ -932,8 +932,8 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     function getSquashPolicy(config, isOptional) {
       var squash = config.squash;
       if (!isOptional || squash === false) return false;
-      if (!tr.app.AngularMini.isDefined(squash) || squash == null) return defaultSquashPolicy;
-      if (squash === true || tr.app.AngularMini.isString(squash)) return squash;
+      if (!tr.app.AngularMini_.isDefined(squash) || squash == null) return defaultSquashPolicy;
+      if (squash === true || tr.app.AngularMini_.isString(squash)) return squash;
       throw new Error("Invalid squash policy: '" + squash + "'. Valid policies: false, true, or arbitrary string");
     }
 
@@ -942,11 +942,11 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
         { from: "",   to: (isOptional || arrayMode ? undefined : "") },
         { from: null, to: (isOptional || arrayMode ? undefined : "") }
       ];
-      replace = tr.app.AngularMini.isArray(config.replace) ? config.replace : [];
-      if (tr.app.AngularMini.isString(squash))
+      replace = tr.app.AngularMini_.isArray(config.replace) ? config.replace : [];
+      if (tr.app.AngularMini_.isString(squash))
         replace.push({ from: squash, to: undefined });
-      configuredKeys = tr.app.AngularMini.map(replace, function(item) { return item.from; } );
-      return tr.app.AngularMini.filter(defaultPolicy, function(item) { return tr.app.AngularMini.indexOf(configuredKeys, item.from) === -1; }).concat(replace);
+      configuredKeys = tr.app.AngularMini_.map(replace, function(item) { return item.from; } );
+      return tr.app.AngularMini_.filter(defaultPolicy, function(item) { return tr.app.AngularMini_.indexOf(configuredKeys, item.from) === -1; }).concat(replace);
     }
 
     /**
@@ -967,16 +967,16 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
     function $value(value) {
       function hasReplaceVal(val) { return function(obj) { return obj.from === val; }; }
       function $replace(value) {
-        var replacement = tr.app.AngularMini.map(tr.app.AngularMini.filter(self.replace, hasReplaceVal(value)), function(obj) { return obj.to; });
+        var replacement = tr.app.AngularMini_.map(tr.app.AngularMini_.filter(self.replace, hasReplaceVal(value)), function(obj) { return obj.to; });
         return replacement.length ? replacement[0] : value;
       }
       value = $replace(value);
-      return !tr.app.AngularMini.isDefined(value) ? $$getDefaultValue() : self.type.$normalize(value);
+      return !tr.app.AngularMini_.isDefined(value) ? $$getDefaultValue() : self.type.$normalize(value);
     }
 
     function toString() { return "{Param:" + id + " " + type + " squash: '" + squash + "' optional: " + isOptional + "}"; }
 
-    tr.app.AngularMini.extend(this, {
+    tr.app.AngularMini_.extend(this, {
       id: id,
       type: type,
       location: location,
@@ -992,35 +992,35 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
   };
 
   function ParamSet(params) {
-    tr.app.AngularMini.extend(this, params || {});
+    tr.app.AngularMini_.extend(this, params || {});
   }
 
   ParamSet.prototype = {
     $$new: function() {
-      return tr.app.AngularMini.inherit(this, tr.app.AngularMini.extend(new ParamSet(), { $$parent: this}));
+      return tr.app.AngularMini_.inherit(this, tr.app.AngularMini_.extend(new ParamSet(), { $$parent: this}));
     },
     $$keys: function () {
       var keys = [], chain = [], parent = this,
         ignore = objectKeys(ParamSet.prototype);
       while (parent) { chain.push(parent); parent = parent.$$parent; }
       chain.reverse();
-      tr.app.AngularMini.forEach(chain, function(paramset) {
-        tr.app.AngularMini.forEach(objectKeys(paramset), function(key) {
-            if (tr.app.AngularMini.indexOf(keys, key) === -1 && tr.app.AngularMini.indexOf(ignore, key) === -1) keys.push(key);
+      tr.app.AngularMini_.forEach(chain, function(paramset) {
+        tr.app.AngularMini_.forEach(objectKeys(paramset), function(key) {
+            if (tr.app.AngularMini_.indexOf(keys, key) === -1 && tr.app.AngularMini_.indexOf(ignore, key) === -1) keys.push(key);
         });
       });
       return keys;
     },
     $$values: function(paramValues) {
       var values = {}, self = this;
-      tr.app.AngularMini.forEach(self.$$keys(), function(key) {
+      tr.app.AngularMini_.forEach(self.$$keys(), function(key) {
         values[key] = self[key].value(paramValues && paramValues[key]);
       });
       return values;
     },
     $$equals: function(paramValues1, paramValues2) {
       var equal = true, self = this;
-      tr.app.AngularMini.forEach(self.$$keys(), function(key) {
+      tr.app.AngularMini_.forEach(self.$$keys(), function(key) {
         var left = paramValues1 && paramValues1[key], right = paramValues2 && paramValues2[key];
         if (!self[key].type.equals(left, right)) equal = false;
       });
@@ -1037,7 +1037,7 @@ tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
         if (!param.type.is(normalized))
           return false; // The value was not of the correct Type, and could not be decoded to the correct Type
         encoded = param.type.encode(normalized);
-        if (tr.app.AngularMini.isString(encoded) && !param.type.pattern.exec(encoded))
+        if (tr.app.AngularMini_.isString(encoded) && !param.type.pattern.exec(encoded))
           return false; // The value was of the correct type, but when encoded, did not match the Type's regexp
       }
       return true;

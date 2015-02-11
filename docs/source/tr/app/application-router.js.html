@@ -92,6 +92,7 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/url-matcher.js.html">app/url-matcher.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
@@ -218,7 +219,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Factory function responsible for creating the default application state.<br />This factory function is invoked any time the user visits a URL that can&#39;t be matched.</p><p><p>The router must be configured with a default state before being run.<br />This state is entered if a URL cannot be matched with a route, or if a route fails to load a valid state.<br />It&#39;s improtant for this state to have no dependencies.</p> </div>
+          <div class="description"><p>Factory function responsible for creating the default application state.<br />This factory function is invoked any time the user visits a URL that can&#39;t be matched.</p><p><p>The router must be configured with a default state before being run.<br />This state is entered if a URL cannot be matched with a route, or if a route fails to load a valid state.<br />It&#39;s improtant for this state to have no dependencies.</p><p><p>This router is based on UI Router (and shares much of its code under the hood).<br />This means that UI Router&#39;s parameter formatting is supported.<br />For more information see <a href="https://github.com/angular-ui/ui-router/wiki/URL-Routing">https://github.com/angular-ui/ui-router/wiki/URL-Routing</a></p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.setDefaultRoute = function(factoryFunction) {
   this.defaultStateFactoryFunction_ = factoryFunction;
 
@@ -233,7 +234,7 @@
           </section>
           <div class="description"><p>Start the router.</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.start = function() {
-  // TODO Check to make sure a default route has been set
+  goog.asserts.assert(!!this.defaultStateFactoryFunction_, 'Default route required.');
 
   goog.events.listen(
     window,
@@ -254,8 +255,8 @@
           </section>
           <div class="description"><p>@private</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
-  // TODO Handle hash paths and full locations? How does UI Router do it?
-  var url = window.location.hash.substring(1);
+  // TODO Handle both hash paths and full locations; support HTML5 mode like UI Router.
+  var url = goog.window.location.hash.substring(1);
 
   for (var i = 0, length = this.paths_.length; i &lt; length; i++) {
     var path = this.paths_[i];
@@ -302,7 +303,19 @@
           </section>
           <div class="description"><p>Parse the specifiec URL and extract state information if relevant.</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
-  var searchParams = goog.Uri.QueryData(window.location.search);</code></pre>
+  var search = goog.window.location.search;
+
+  if (search &amp;&amp; search.length &gt; 0) {
+    var queryData = new goog.Uri.QueryData(search.substring(1));
+    var keys = queryData.getKeys();
+    var searchParams = {};
+
+    for (var i = 0, length = keys.length; i &lt; length; i++) {
+      var key = keys[i];
+
+      searchParams[key] = queryData.get(key);
+    }
+}</code></pre>
           <section id="factoryFunctionParams_">
             <h1>factoryFunctionParams_</h1>
             <h5 class="subheader"></h5>

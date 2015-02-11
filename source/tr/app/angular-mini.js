@@ -1,51 +1,53 @@
-goog.provide('tr.app.AngularMini');
+goog.provide('tr.app.AngularMini_');
 
 /**
  * Partial port of Angular functionality used by UrlMatcher (ported from UI Router).
  * This set of functions is intended to be gradually replaced once UrlMatcher and ApplicationRouter are more fully-tested.
  * @see https://github.com/angular/angular.js/blob/master/src/Angular.js
+ * @private
  */
+ tr.app.AngularMini_ = {};
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.equals = function(o1, o2) {
+tr.app.AngularMini_.equals = function(o1, o2) {
   if (o1 === o2) return true;
   if (o1 === null || o2 === null) return false;
   if (o1 !== o1 && o2 !== o2) return true; // NaN === NaN
   var t1 = typeof o1, t2 = typeof o2, length, key, keySet;
   if (t1 == t2) {
     if (t1 == 'object') {
-      if (tr.app.AngularMini.isArray(o1)) {
-        if (!tr.app.AngularMini.isArray(o2)) return false;
+      if (tr.app.AngularMini_.isArray(o1)) {
+        if (!tr.app.AngularMini_.isArray(o2)) return false;
         if ((length = o1.length) == o2.length) {
           for (key = 0; key < length; key++) {
-            if (!tr.app.AngularMini.equals(o1[key], o2[key])) return false;
+            if (!tr.app.AngularMini_.equals(o1[key], o2[key])) return false;
           }
           return true;
         }
       } else if (isDate(o1)) {
         if (!isDate(o2)) return false;
-        return tr.app.AngularMini.equals(o1.getTime(), o2.getTime());
+        return tr.app.AngularMini_.equals(o1.getTime(), o2.getTime());
       } else if (isRegExp(o1) && isRegExp(o2)) {
         return o1.toString() == o2.toString();
       } else {
-        if (tr.app.AngularMini.isScope(o1) ||
-            tr.app.AngularMini.isScope(o2) ||
-            tr.app.AngularMini.isWindow(o1) ||
-            tr.app.AngularMini.isWindow(o2) ||
-            tr.app.AngularMini.isArray(o2)) return false;
+        if (tr.app.AngularMini_.isScope(o1) ||
+            tr.app.AngularMini_.isScope(o2) ||
+            tr.app.AngularMini_.isWindow(o1) ||
+            tr.app.AngularMini_.isWindow(o2) ||
+            tr.app.AngularMini_.isArray(o2)) return false;
         keySet = {};
         for (key in o1) {
-          if (key.charAt(0) === '$' || tr.app.AngularMini.isFunction(o1[key])) continue;
-          if (!tr.app.AngularMini.equals(o1[key], o2[key])) return false;
+          if (key.charAt(0) === '$' || tr.app.AngularMini_.isFunction(o1[key])) continue;
+          if (!tr.app.AngularMini_.equals(o1[key], o2[key])) return false;
           keySet[key] = true;
         }
         for (key in o2) {
           if (!keySet.hasOwnProperty(key) &&
               key.charAt(0) !== '$' &&
               o2[key] !== undefined &&
-              !tr.app.AngularMini.isFunction(o2[key])) return false;
+              !tr.app.AngularMini_.isFunction(o2[key])) return false;
         }
         return true;
       }
@@ -55,9 +57,9 @@ tr.app.AngularMini.equals = function(o1, o2) {
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.extend = function(dst) {
+tr.app.AngularMini_.extend = function(dst) {
   var h = dst.$$hashKey;
 
   for (var i = 1, ii = arguments.length; i < ii; i++) {
@@ -71,17 +73,17 @@ tr.app.AngularMini.extend = function(dst) {
     }
   }
 
-  tr.app.AngularMini.setHashKey(dst, h);
+  tr.app.AngularMini_.setHashKey(dst, h);
   return dst;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.filter = function(collection, callback) {
-  var array = tr.app.AngularMini.isArray(collection);
+tr.app.AngularMini_.filter = function(collection, callback) {
+  var array = tr.app.AngularMini_.isArray(collection);
   var result = array ? [] : {};
-  tr.app.AngularMini.forEach(collection, function(val, i) {
+  tr.app.AngularMini_.forEach(collection, function(val, i) {
     if (callback(val, i)) {
       result[array ? result.length : i] = val;
     }
@@ -90,12 +92,12 @@ tr.app.AngularMini.filter = function(collection, callback) {
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.forEach = function(obj, iterator, context) {
+tr.app.AngularMini_.forEach = function(obj, iterator, context) {
   var key, length;
   if (obj) {
-    if (tr.app.AngularMini.isFunction(obj)) {
+    if (tr.app.AngularMini_.isFunction(obj)) {
       for (key in obj) {
         // Need to check if hasOwnProperty exists,
         // as on IE8 the result of querySelectorAll is an object without a hasOwnProperty function
@@ -103,7 +105,7 @@ tr.app.AngularMini.forEach = function(obj, iterator, context) {
           iterator.call(context, obj[key], key, obj);
         }
       }
-    } else if (tr.app.AngularMini.isArray(obj) || tr.app.AngularMini.isArrayLike(obj)) {
+    } else if (tr.app.AngularMini_.isArray(obj) || tr.app.AngularMini_.isArrayLike(obj)) {
       var isPrimitive = typeof obj !== 'object';
       for (key = 0, length = obj.length; key < length; key++) {
         if (isPrimitive || key in obj) {
@@ -124,25 +126,25 @@ tr.app.AngularMini.forEach = function(obj, iterator, context) {
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.fromJson = function(json) {
-  return tr.app.AngularMini.isString(json)
+tr.app.AngularMini_.fromJson = function(json) {
+  return tr.app.AngularMini_.isString(json)
       ? JSON.parse(json)
       : json;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.identity = function($) {
+tr.app.AngularMini_.identity = function($) {
   return $;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.indexOf = function(array, value) {
+tr.app.AngularMini_.indexOf = function(array, value) {
   if (Array.prototype.indexOf) {
     return array.indexOf(value, Number(arguments[2]) || 0);
   }
@@ -158,106 +160,106 @@ tr.app.AngularMini.indexOf = function(array, value) {
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.inherit = function(parent, extra) {
-  return tr.app.AngularMini.extend(Object.create(parent), extra);
+tr.app.AngularMini_.inherit = function(parent, extra) {
+  return tr.app.AngularMini_.extend(Object.create(parent), extra);
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isArray = Array.isArray;
+tr.app.AngularMini_.isArray = Array.isArray;
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.NODE_TYPE_ELEMENT_ = 1;
+tr.app.AngularMini_.NODE_TYPE_ELEMENT_ = 1;
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isArrayLike = function(obj) {
-  if (obj == null || tr.app.AngularMini.isWindow(obj)) {
+tr.app.AngularMini_.isArrayLike = function(obj) {
+  if (obj == null || tr.app.AngularMini_.isWindow(obj)) {
     return false;
   }
 
   var length = obj.length;
 
-  if (obj.nodeType === tr.app.AngularMini.NODE_TYPE_ELEMENT_ && length) {
+  if (obj.nodeType === tr.app.AngularMini_.NODE_TYPE_ELEMENT_ && length) {
     return true;
   }
 
-  return tr.app.AngularMini.isString(obj) || tr.app.AngularMini.isArray(obj) || length === 0 ||
+  return tr.app.AngularMini_.isString(obj) || tr.app.AngularMini_.isArray(obj) || length === 0 ||
          typeof length === 'number' && length > 0 && (length - 1) in obj;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isDefined = function(value) {
+tr.app.AngularMini_.isDefined = function(value) {
   return typeof value !== 'undefined';
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isFunction = function(value) {
+tr.app.AngularMini_.isFunction = function(value) {
   return typeof value === 'function';
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isObject = function(value) {
+tr.app.AngularMini_.isObject = function(value) {
   // http://jsperf.com/isobject4
   return value !== null && typeof value === 'object';
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isRegExp = function(value) {
+tr.app.AngularMini_.isRegExp = function(value) {
   return toString.call(value) === '[object RegExp]';
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isScope = function(obj) {
+tr.app.AngularMini_.isScope = function(obj) {
   return obj && obj.$evalAsync && obj.$watch;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isString = function(value) {
+tr.app.AngularMini_.isString = function(value) {
   return typeof value === 'string';
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.isWindow = function(obj) {
+tr.app.AngularMini_.isWindow = function(obj) {
   return obj && obj.window === obj;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.map = function(collection, callback) {
-  var result = tr.app.AngularMini.isArray(collection) ? [] : {};
+tr.app.AngularMini_.map = function(collection, callback) {
+  var result = tr.app.AngularMini_.isArray(collection) ? [] : {};
 
-  tr.app.AngularMini.forEach(collection, function(val, i) {
+  tr.app.AngularMini_.forEach(collection, function(val, i) {
     result[i] = callback(val, i);
   });
   return result;
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.setHashKey = function(obj, h) {
+tr.app.AngularMini_.setHashKey = function(obj, h) {
   if (h) {
     obj.$$hashKey = h;
   } else {
@@ -266,9 +268,9 @@ tr.app.AngularMini.setHashKey = function(obj, h) {
 }
 
 /**
- * 
+ * @private
  */
-tr.app.AngularMini.toJson = function(obj, pretty) {
+tr.app.AngularMini_.toJson = function(obj, pretty) {
   if (typeof obj === 'undefined') return undefined;
   if (!isNumber(pretty)) {
     pretty = pretty ? 2 : null;

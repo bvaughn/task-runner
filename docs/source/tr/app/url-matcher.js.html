@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" charset="utf-8">
+    <title>Task Runner</title>
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/2.3.2/assets/css/docs.css">
+    <style>
+      body > .navbar .brand {
+        float:left;
+        text-shadow: rgba(255, 255, 255, 0.0980392) 0px 1px 0px, rgba(255, 255, 255, 0.4) 0px 0px 30px;
+        color: white;
+        margin-left:0px;
+        font-weight:normal;
+      }
+      
+      .bs-docs-sidenav.affix {
+        box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+      }
+      
+      .bs-docs-sidenav i{
+        width: 8px;
+        height: 8px;
+        padding: 0px;
+        margin: 0px;
+        display: inline-block;
+        margin-right:0.5em;
+      }
+      
+      .bs-docs-sidenav > li > a {
+          word-wrap: break-word;
+      }
+      
+      .bs-docs-sidenav > li:first-child > a {
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+      }
+      
+      code[class*="language-"],pre[class*="language-"]{color:black;text-shadow:0 1px white;font-family:Consolas,Monaco,'Andale Mono',monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*="language-"]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*="language-"],pre[class*="language-"]{background:#f5f2f0}:not(pre)>code[class*="language-"]{padding:.1em;border-radius:.3em}.token.comment,.token.prolog,.token.doctype,.token.cdata{color:slategray}.token.punctuation{color:#999}.namespace{opacity:.7}.token.property,.token.tag,.token.boolean,.token.number{color:#905}.token.selector,.token.attr-name,.token.string{color:#690}.token.operator,.token.entity,.token.url,.language-css .token.string,.style .token.string{color:#a67f59;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.regex,.token.important{color:#e90}.token.important{font-weight:bold}.token.entity{cursor:help}
+      div.description {margin: 14px 0; padding-top: 14px; border-bottom:1px solid #eee; }
+      .tags {}
+      .ctx-type {
+        display:inline-block;
+        margin-right:0.5em;
+        //- float:right; margin-top:8px
+      }
+      
+      footer iframe{vertical-align:middle;}
+      
+    </style>
+  </head>
+  <body data-spy="scroll" data-target=".scrollspy">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a class="brand">Doxx</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav pull-right sponsored"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header id="overview" class="jumbotron subhead">
+      <div class="container">
+        <h1>Task Runner</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix-top">
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//index.html">Main</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/abstract.js.html">abstract.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/closure.js.html">closure.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/composite.js.html">composite.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/decorator.js.html">decorator.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/factory.js.html">factory.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/failsafe.js.html">failsafe.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/graph.js.html">graph.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/listener.js.html">listener.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stub.js.html">stub.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/task.js.html">task.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/tween.js.html">tween.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/xhr.js.html">xhr.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application-router.js.html">app/application-router.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
+            <li class="active"><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/url-matcher.js.html">app/url-matcher.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
+          </ul>
+          <div class="scrollspy">
+            <ul class="nav nav-list bs-docs-sidenav affix-top">
+              <li><a href="#UrlMatcher"><i class="alert alert-info"></i><span>UrlMatcher</span></a>
+              </li>
+              <li><a href="#concat"><i class="alert alert-info"></i><span>concat</span></a>
+              </li>
+              <li><a href="#exec"><i class="alert alert-info"></i><span>exec</span></a>
+              </li>
+              <li><a href="#parameters"><i class="alert alert-info"></i><span>parameters</span></a>
+              </li>
+              <li><a href="#validates"><i class="alert alert-info"></i><span>validates</span></a>
+              </li>
+              <li><a href="#format"><i class="alert alert-info"></i><span>format</span></a>
+              </li>
+              <li><a href="#Type_"><i class="alert alert-info"></i><span>Type_</span></a>
+              </li>
+              <li><a href="#is"><i class="alert alert-info"></i><span>is</span></a>
+              </li>
+              <li><a href="#encode"><i class="alert alert-info"></i><span>encode</span></a>
+              </li>
+              <li><a href="#decode"><i class="alert alert-info"></i><span>decode</span></a>
+              </li>
+              <li><a href="#equals"><i class="alert alert-info"></i><span>equals</span></a>
+              </li>
+              <li><a href="#$normalize"><i class="alert alert-info"></i><span>$normalize</span></a>
+              </li>
+              <li><a href="#$asArray"><i class="alert alert-info"></i><span>$asArray</span></a>
+              </li>
+              <li><a href="#UrlMatcherFactory_"><i class="alert alert-info"></i><span>UrlMatcherFactory_</span></a>
+              </li>
+              <li><a href="#$$getDefaultValue"><i class="alert alert-info"></i><span>$$getDefaultValue</span></a>
+              </li>
+              <li><a href="#caseInsensitive"><i class="alert alert-info"></i><span>caseInsensitive</span></a>
+              </li>
+              <li><a href="#strictMode"><i class="alert alert-info"></i><span>strictMode</span></a>
+              </li>
+              <li><a href="#defaultSquashPolicy"><i class="alert alert-info"></i><span>defaultSquashPolicy</span></a>
+              </li>
+              <li><a href="#compile"><i class="alert alert-info"></i><span>compile</span></a>
+              </li>
+              <li><a href="#isMatcher"><i class="alert alert-info"></i><span>isMatcher</span></a>
+              </li>
+              <li><a href="#type"><i class="alert alert-info"></i><span>type</span></a>
+              </li>
+              <li><a href="#$get"><i class="alert alert-success"></i><span>$get</span></a>
+              </li>
+              <li><a href="#getSquashPolicy"><i class="alert alert-info"></i><span>getSquashPolicy</span></a>
+              </li>
+              <li><a href="#$$getDefaultValue"><i class="alert alert-info"></i><span>$$getDefaultValue</span></a>
+              </li>
+              <li><a href="#$value"><i class="alert alert-info"></i><span>$value</span></a>
+              </li>
+              <li><a href="#$$UMFP"><i class="alert alert-success"></i><span>$$UMFP</span></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="span9">
+          <section id="UrlMatcher">
+            <h1>UrlMatcher</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>pattern</td>
+                <td>string</td>
+                <td>The pattern to compile into a matcher.</td>
+              </tr>
+              <tr>
+                <td>config</td>
+                <td>Object</td>
+                <td>A configuration object hash:</td>
+              </tr>
+              <tr>
+                <td>parentMatcher</td>
+                <td>Object=</td>
+                <td>Used to concatenate the pattern/config onto   an existing UrlMatcher
+
+* `caseInsensitive` - `true` if URL matching should be case insensitive, otherwise `false`, the default value (for backward compatibility) is `false`.
+* `strict` - `false` if matching against a URL with a trailing slash should be treated as equivalent to a URL without a trailing slash, the default value is `true`.
+</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Matches URLs against patterns and extracts named parameters from the path or the search<br />part of the URL. A URL pattern consists of a path pattern, optionally followed by &#39;?&#39; and a list<br />of search parameters. Multiple search parameter names are separated by &#39;&amp;&#39;. Search parameters<br />do not influence whether or not a URL is matched, but their values are passed through into<br />the matched parameters returned by {@link ui.router.util.type:UrlMatcher#methods_exec exec}.</p><p>Path parameter placeholders can be specified using simple colon/catch-all syntax or curly brace<br />syntax, which optionally allows a regular expression for the parameter to be specified:</p><ul>
+<li><code>&#39;:&#39;</code> name - colon placeholder</li>
+<li><code>&#39;*&#39;</code> name - catch-all placeholder</li>
+<li><code>&#39;{&#39; name &#39;}&#39;</code> - curly placeholder</li>
+<li><code>&#39;{&#39; name &#39;:&#39; regexp|type &#39;}&#39;</code> - curly placeholder with regexp or type name. Should the<br />regexp itself contain curly braces, they must be in matched pairs or escaped with a backslash.</li>
+</ul>
+<p>Parameter names may contain only word characters (latin letters, digits, and underscore) and<br />must be unique within the pattern (across both path and search parameters). For colon<br />placeholders or curly placeholders without an explicit regexp, a path parameter matches any<br />number of characters other than &#39;/&#39;. For catch-all placeholders the path parameter matches<br />any number of characters.</p><p>Examples:</p><ul>
+<li><code>&#39;/hello/&#39;</code> - Matches only if the path is exactly &#39;/hello/&#39;. There is no special treatment for<br />trailing slashes, and patterns have to match the entire path, not just a prefix.</li>
+<li><code>&#39;/user/:id&#39;</code> - Matches &#39;/user/bob&#39; or &#39;/user/1234!!!&#39; or even &#39;/user/&#39; but not &#39;/user&#39; or<br />&#39;/user/bob/details&#39;. The second path segment will be captured as the parameter &#39;id&#39;.</li>
+<li><code>&#39;/user/{id}&#39;</code> - Same as the previous example, but using curly brace syntax.</li>
+<li><code>&#39;/user/{id:[^/]*}&#39;</code> - Same as the previous example.</li>
+<li><code>&#39;/user/{id:[0-9a-fA-F]{1,8}}&#39;</code> - Similar to the previous example, but only matches if the id<br />parameter consists of 1 to 8 hex digits.</li>
+<li><code>&#39;/files/{path:.*}&#39;</code> - Matches any URL starting with &#39;/files/&#39; and captures the rest of the<br />path into the parameter &#39;path&#39;.</li>
+<li><code>&#39;/files/*path&#39;</code> - ditto.</li>
+<li><code>&#39;/calendar/{start:date}&#39;</code> - Matches &quot;/calendar/2014-11-12&quot; (because the pattern defined<br />in the built-in  <code>date</code> Type matches <code>2014-11-12</code>) and provides a Date object in $stateParams.start</li>
+</ul>
+ </div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher = function(pattern, config, parentMatcher) {
+  config = tr.app.AngularMini_.extend({ params: {} }, tr.app.AngularMini_.isObject(config) ? config : {});
+
+  // Find all placeholders and create a compiled pattern, using either classic or curly syntax:
+  //   '*' name
+  //   ':' name
+  //   '{' name '}'
+  //   '{' name ':' regexp '}'
+  // The regular expression is somewhat complicated due to the need to allow curly braces
+  // inside the regular expression. The placeholder regexp breaks down as follows:
+  //    ([:*])([\w\[\]]+)              - classic placeholder ($1 / $2) (search version has - for snake-case)
+  //    \{([\w\[\]]+)(?:\:( ... ))?\}  - curly brace placeholder ($3) with optional regexp/type ... ($4) (search version has - for snake-case
+  //    (?: ... | ... | ... )+         - the regexp consists of any number of atoms, an atom being either
+  //    [^{}\\]+                       - anything other than curly braces or backslash
+  //    \\.                            - a backslash escape
+  //    \{(?:[^{}\\]+|\\.)*\}          - a matched set of curly braces containing other atoms
+  var placeholder       = /([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
+      searchPlaceholder = /([:]?)([\w\[\]-]+)|\{([\w\[\]-]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,
+      compiled = '^', last = 0, m,
+      segments = this.segments = [],
+      parentParams = parentMatcher ? parentMatcher.params : {},
+      params = this.params = parentMatcher ? parentMatcher.params.$$new() : new $$UMFP.ParamSet(),
+      paramNames = [];
+
+  function addParameter(id, type, config, location) {
+    paramNames.push(id);
+    if (parentParams[id]) return parentParams[id];
+    if (!/^\w+(-+\w+)*(?:\[\])?$/.test(id)) throw new Error(&quot;Invalid parameter name '&quot; + id + &quot;' in pattern '&quot; + pattern + &quot;'&quot;);
+    if (params[id]) throw new Error(&quot;Duplicate parameter name '&quot; + id + &quot;' in pattern '&quot; + pattern + &quot;'&quot;);
+    params[id] = new $$UMFP.Param(id, type, config, location);
+    return params[id];
+  }
+
+  function quoteRegExp(string, pattern, squash, optional) {
+    var surroundPattern = ['',''], result = string.replace(/[\\\[\]\^$*+?.()|{}]/g, &quot;\\$&amp;&quot;);
+    if (!pattern) return result;
+    switch(squash) {
+      case false: surroundPattern = ['(', ')' + (optional ? &quot;?&quot; : &quot;&quot;)]; break;
+      case true:  surroundPattern = ['?(', ')?']; break;
+      default:    surroundPattern = ['(' + squash + &quot;|&quot;, ')?']; break;
+    }
+    return result + surroundPattern[0] + pattern + surroundPattern[1];
+  }
+
+  this.source = pattern;
+
+  // Split into static segments separated by path parameter placeholders.
+  // The number of segments is always 1 more than the number of parameters.
+  function matchDetails(m, isSearch) {
+    var id, regexp, segment, type, cfg, arrayMode;
+    id          = m[2] || m[3]; // IE[78] returns '' for unmatched groups instead of null
+    cfg         = config.params[id];
+    segment     = pattern.substring(last, m.index);
+    regexp      = isSearch ? m[4] : m[4] || (m[1] == '*' ? '.*' : null);
+    type        = $$UMFP.type(regexp || &quot;string&quot;) || tr.app.AngularMini_.inherit($$UMFP.type(&quot;string&quot;), { pattern: new RegExp(regexp) });
+    return {
+      id: id, regexp: regexp, segment: segment, type: type, cfg: cfg
+    };
+  }
+
+  var p, param, segment;
+  while ((m = placeholder.exec(pattern))) {
+    p = matchDetails(m, false);
+    if (p.segment.indexOf('?') &gt;= 0) break; // we're into the search part
+
+    param = addParameter(p.id, p.type, p.cfg, &quot;path&quot;);
+    compiled += quoteRegExp(p.segment, param.type.pattern.source, param.squash, param.isOptional);
+    segments.push(p.segment);
+    last = placeholder.lastIndex;
+  }
+  segment = pattern.substring(last);
+
+  // Find any search parameter names and remove them from the last segment
+  var i = segment.indexOf('?');
+
+  if (i &gt;= 0) {
+    var search = this.sourceSearch = segment.substring(i);
+    segment = segment.substring(0, i);
+    this.sourcePath = pattern.substring(0, last + i);
+
+    if (search.length &gt; 0) {
+      last = 0;
+      while ((m = searchPlaceholder.exec(search))) {
+        p = matchDetails(m, true);
+        param = addParameter(p.id, p.type, p.cfg, &quot;search&quot;);
+        last = placeholder.lastIndex;
+        // check if ?&amp;
+      }
+    }
+  } else {
+    this.sourcePath = pattern;
+    this.sourceSearch = '';
+  }
+
+  compiled += quoteRegExp(segment) + (config.strict === false ? '\/?' : '') + '$';
+  segments.push(segment);
+
+  this.regexp = new RegExp(compiled, config.caseInsensitive ? 'i' : undefined);
+  this.prefix = segments[0];
+  this.$$paramNames = paramNames;
+};</code></pre>
+          <section id="concat">
+            <h1>concat</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.prototype.concat()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>pattern</td>
+                <td>string</td>
+                <td>The pattern to append.</td>
+              </tr>
+              <tr>
+                <td>config</td>
+                <td>Object</td>
+                <td>An object hash of the configuration for the matcher.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Returns a new matcher for a pattern constructed by appending the path part and adding the
+search parameters of the specified pattern to this pattern. The current pattern is not
+modified. This can be understood as creating a pattern for URLs that are relative to (or
+suffixes of) the current pattern.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.prototype.concat = function (pattern, config) {
+  // Because order of search parameters is irrelevant, we can add our own search
+  // parameters to the end of the new pattern. Parse the new pattern by itself
+  // and then join the bits together, but it's much easier to do this on a string level.
+  var defaultConfig = {
+    caseInsensitive: $$UMFP.caseInsensitive(),
+    strict: $$UMFP.strictMode(),
+    squash: $$UMFP.defaultSquashPolicy()
+  };
+  return new UrlMatcher(this.sourcePath + pattern + this.sourceSearch, tr.app.AngularMini_.extend(defaultConfig, config), this);
+};
+
+tr.app.UrlMatcher.prototype.toString = function () {
+  return this.source;
+};</code></pre>
+          <section id="exec">
+            <h1>exec</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.prototype.exec()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>path</td>
+                <td>string</td>
+                <td>The URL path to match, e.g. `$location.path()`.</td>
+              </tr>
+              <tr>
+                <td>searchParams</td>
+                <td>Object</td>
+                <td>URL search parameters, e.g. `$location.search()`.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Tests the specified path against this matcher, and returns an object containing the captured
+parameter values, or null if the path does not match. The returned object contains the values
+of any search parameters that are mentioned in the pattern, but their value may be null if
+they are not present in `searchParams`. This means that search parameters are always treated
+as optional.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.prototype.exec = function (path, searchParams) {
+  var m = this.regexp.exec(path);
+  if (!m) return null;
+  searchParams = searchParams || {};
+
+  var paramNames = this.parameters(), nTotal = paramNames.length,
+    nPath = this.segments.length - 1,
+    values = {}, i, j, cfg, paramName;
+
+  if (nPath !== m.length - 1) throw new Error(&quot;Unbalanced capture group in route '&quot; + this.source + &quot;'&quot;);
+
+  function decodePathArray(string) {
+    function reverseString(str) { return str.split(&quot;&quot;).reverse().join(&quot;&quot;); }
+    function unquoteDashes(str) { return str.replace(/\\-/g, &quot;-&quot;); }
+
+    var split = reverseString(string).split(/-(?!\\)/);
+    var allReversed = tr.app.AngularMini_.map(split, reverseString);
+    return tr.app.AngularMini_.map(allReversed, unquoteDashes).reverse();
+  }
+
+  for (i = 0; i &lt; nPath; i++) {
+    paramName = paramNames[i];
+    var param = this.params[paramName];
+    var paramVal = m[i+1];
+    // if the param value matches a pre-replace pair, replace the value before decoding.
+    for (j = 0; j &lt; param.replace; j++) {
+      if (param.replace[j].from === paramVal) paramVal = param.replace[j].to;
+    }
+    if (paramVal &amp;&amp; param.array === true) paramVal = decodePathArray(paramVal);
+    values[paramName] = param.value(paramVal);
+  }
+  for (</code></pre>
+          <section id="parameters">
+            <h1>parameters</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.prototype.parameters()</span>
+            </p>
+          </section>
+          <div class="description"><p>/; i &lt; nTotal; i++) {<br />    paramName = paramNames[i];<br />    values[paramName] = this.params[paramName].value(searchParams[paramName]);<br />  }</p><p>  return values;<br />};</p><p>/**</p> <p>Returns the names of all path and search parameters of this pattern in an unspecified order.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.prototype.parameters = function (param) {
+  if (!tr.app.AngularMini_.isDefined(param)) return this.$$paramNames;
+  return this.params[param] || null;
+};</code></pre>
+          <section id="validates">
+            <h1>validates</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.prototype.validates()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>params</td>
+                <td>Object</td>
+                <td>The object hash of parameters to validate.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Checks an object hash of parameters to validate their correctness according to the parameter
+types of this `UrlMatcher`.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.prototype.validates = function (params) {
+  return this.params.$$validates(params);
+};</code></pre>
+          <section id="format">
+            <h1>format</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.prototype.format()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>values</td>
+                <td>Object</td>
+                <td>the values to substitute for the parameters in this pattern.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Creates a URL that matches this pattern by substituting the specified values
+for the path and search parameters. Null values for path parameters are
+treated as empty strings.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.prototype.format = function (values) {
+  values = values || {};
+  var segments = this.segments, params = this.parameters(), paramset = this.params;
+  if (!this.validates(values)) return null;
+
+  var i, search = false, nPath = segments.length - 1, nTotal = params.length, result = segments[0];
+
+  function encodeDashes(str) { // Replace dashes with encoded &quot;\-&quot;
+    return encodeURIComponent(str).replace(/-/g, function(c) { return '%5C%' + c.charCodeAt(0).toString(16).toUpperCase(); });
+  }
+
+  for (i = 0; i &lt; nTotal; i++) {
+    var isPathParam = i &lt; nPath;
+    var name = params[i], param = paramset[name], value = param.value(values[name]);
+    var isDefaultValue = param.isOptional &amp;&amp; param.type.equals(param.value(), value);
+    var squash = isDefaultValue ? param.squash : false;
+    var encoded = param.type.encode(value);
+
+    if (isPathParam) {
+      var nextSegment = segments[i + 1];
+      if (squash === false) {
+        if (encoded != null) {
+          if (tr.app.AngularMini_.isArray(encoded)) {
+            result += tr.app.AngularMini_.map(encoded, encodeDashes).join(&quot;-&quot;);
+          } else {
+            result += encodeURIComponent(encoded);
+          }
+        }
+        result += nextSegment;
+      } else if (squash === true) {
+        var capture = result.match(/\/$/) ? /\/?(.*)/ : /(.*)/;
+        result += nextSegment.match(capture)[1];
+      } else if (tr.app.AngularMini_.isString(squash)) {
+        result += squash + nextSegment;
+      }
+    } else {
+      if (encoded == null || (isDefaultValue &amp;&amp; squash !== false)) continue;
+      if (!tr.app.AngularMini_.isArray(encoded)) encoded = [ encoded ];
+      encoded = tr.app.AngularMini_.map(encoded, encodeURIComponent).join('&amp;' + name + '=');
+      result += (search ? '&amp;' : '?') + (name + '=' + encoded);
+      search = true;
+    }
+  }
+
+  return result;
+};</code></pre>
+          <section id="Type_">
+            <h1>Type_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>config</td>
+                <td>Object</td>
+                <td>A configuration object which contains the custom type definition. The object's        properties will override the default methods and/or pattern in `Type`'s public interface.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Implements an interface to define custom parameter types that can be decoded from and encoded to<br />string parameters matched in a URL. Used by {@link ui.router.util.type:UrlMatcher <code>UrlMatcher</code>}<br />objects when matching or formatting URLs, or comparing or validating parameter values.</p><p>See {@link ui.router.util.$urlMatcherFactory#methods_type <code>$urlMatcherFactory#type()</code>} for more<br />information on registering custom types.</p> </div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_ = function(config) {
+  tr.app.AngularMini_.extend(this, config);
+}</code></pre>
+          <section id="is">
+            <h1>is</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_.prototype.is()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>val</td>
+                <td>*</td>
+                <td>The value to check.</td>
+              </tr>
+              <tr>
+                <td>key</td>
+                <td>string</td>
+                <td>Optional. If the type check is happening in the context of a specific        {@link ui.router.util.type:UrlMatcher `UrlMatcher`} object, this is the name of the
+       parameter in which `val` is stored. Can be used for meta-programming of `Type` objects.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Detects whether a value is of a particular type. Accepts a native (decoded) value
+and determines whether it matches the current `Type` object.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_.prototype.is = function(val, key) {
+  return true;
+};</code></pre>
+          <section id="encode">
+            <h1>encode</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_.prototype.encode()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>val</td>
+                <td>*</td>
+                <td>The value to encode.</td>
+              </tr>
+              <tr>
+                <td>key</td>
+                <td>string</td>
+                <td>The name of the parameter in which `val` is stored. Can be used for        meta-programming of `Type` objects.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Encodes a custom/native type value to a string that can be embedded in a URL. Note that the
+return value does *not* need to be URL-safe (i.e. passed through `encodeURIComponent()`), it
+only needs to be a representation of `val` that has been coerced to a string.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_.prototype.encode = function(val, key) {
+  return val;
+};</code></pre>
+          <section id="decode">
+            <h1>decode</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_.prototype.decode()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>val</td>
+                <td>string</td>
+                <td>The URL parameter value to decode.</td>
+              </tr>
+              <tr>
+                <td>key</td>
+                <td>string</td>
+                <td>The name of the parameter in which `val` is stored. Can be used for        meta-programming of `Type` objects.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Converts a parameter value (from URL string or transition param) to a custom/native value.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_.prototype.decode = function(val, key) {
+  return val;
+};</code></pre>
+          <section id="equals">
+            <h1>equals</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_.prototype.equals()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>a</td>
+                <td>*</td>
+                <td>A value to compare against.</td>
+              </tr>
+              <tr>
+                <td>b</td>
+                <td>*</td>
+                <td>A value to compare against.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Determines whether two decoded values are equivalent.
+</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_.prototype.equals = function(a, b) {
+  return a == b;
+};
+
+tr.app.UrlMatcher.Type_.prototype.$subPattern = function() {
+  var sub = this.pattern.toString();
+  return sub.substr(1, sub.length - 2);
+};
+
+tr.app.UrlMatcher.Type_.prototype.pattern = /.*/;
+
+tr.app.UrlMatcher.Type_.prototype.toString = function() { return &quot;{Type:&quot; + this.name + &quot;}&quot;; };</code></pre>
+          <section id="$normalize">
+            <h1>$normalize</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_.prototype.$normalize()</span>
+            </p>
+          </section>
+          <div class="description"><p>Given an encoded string, or a decoded object, returns a decoded object</p> </div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_.prototype.$normalize = function(val) {
+  return this.is(val) ? val : this.decode(val);
+};</code></pre>
+          <section id="$asArray">
+            <h1>$asArray</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.Type_.prototype.$asArray()</span>
+            </p>
+          </section>
+          <div class="description"><p>Wraps an existing custom Type as an array of Type, depending on &#39;mode&#39;.<br />e.g.:</p><ul>
+<li>urlmatcher pattern &quot;/path?{queryParam[]:int}&quot;</li>
+<li>url: &quot;/path?queryParam=1&amp;queryParam=2</li>
+<li>$stateParams.queryParam will be [1, 2]<br />if <code>mode</code> is &quot;auto&quot;, then</li>
+<li>url: &quot;/path?queryParam=1 will create $stateParams.queryParam: 1</li>
+<li>url: &quot;/path?queryParam=1&amp;queryParam=2 will create $stateParams.queryParam: [1, 2]</li>
+</ul>
+ </div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.Type_.prototype.$asArray = function(mode, isSearch) {
+  if (!mode) return this;
+  if (mode === &quot;auto&quot; &amp;&amp; !isSearch) throw new Error(&quot;'auto' array mode is for query parameters only&quot;);
+
+  function ArrayType(type, mode) {
+    function bindTo(type, callbackName) {
+      return function() {
+        return type[callbackName].apply(type, arguments);
+      };
+    }
+
+    // Wrap non-array value as array
+    function arrayWrap(val) { return tr.app.AngularMini_.isArray(val) ? val : (tr.app.AngularMini_.isDefined(val) ? [ val ] : []); }
+    // Unwrap array value for &quot;auto&quot; mode. Return undefined for empty array.
+    function arrayUnwrap(val) {
+      switch(val.length) {
+        case 0: return undefined;
+        case 1: return mode === &quot;auto&quot; ? val[0] : val;
+        default: return val;
+      }
+    }
+    function falsey(val) { return !val; }
+
+    // Wraps type (.is/.encode/.decode) functions to operate on each value of an array
+    function arrayHandler(callback, allTruthyMode) {
+      return function handleArray(val) {
+        val = arrayWrap(val);
+        var result = tr.app.AngularMini_.map(val, callback);
+        if (allTruthyMode === true)
+          return tr.app.AngularMini_.filter(result, falsey).length === 0;
+        return arrayUnwrap(result);
+      };
+    }
+
+    // Wraps type (.equals) functions to operate on each value of an array
+    function arrayEqualsHandler(callback) {
+      return function handleArray(val1, val2) {
+        var left = arrayWrap(val1), right = arrayWrap(val2);
+        if (left.length !== right.length) return false;
+        for (var i = 0; i &lt; left.length; i++) {
+          if (!callback(left[i], right[i])) return false;
+        }
+        return true;
+      };
+    }
+
+    this.encode = arrayHandler(bindTo(type, 'encode'));
+    this.decode = arrayHandler(bindTo(type, 'decode'));
+    this.is     = arrayHandler(bindTo(type, 'is'), true);
+    this.equals = arrayEqualsHandler(bindTo(type, 'equals'));
+    this.pattern = type.pattern;
+    this.$normalize = arrayHandler(bindTo(type, '$normalize'));
+    this.name = type.name;
+    this.$arrayMode = mode;
+  }
+
+  return new ArrayType(this, mode);
+};</code></pre>
+          <section id="UrlMatcherFactory_">
+            <h1>UrlMatcherFactory_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.app.UrlMatcher.UrlMatcherFactory_()</span>
+            </p>
+          </section>
+          <div class="description"><p>@ngdoc object</p> <p>Factory for {@link ui.router.util.type:UrlMatcher `UrlMatcher`} instances. The factory
+is also available to providers under the name `$urlMatcherFactoryProvider`.</p></div>
+          <pre><code class="language-javascript">tr.app.UrlMatcher.UrlMatcherFactory_ = function() {
+  $$UMFP = this;
+
+  var isCaseInsensitive = false, isStrictMode = true, defaultSquashPolicy = false;
+
+  function valToString(val) { return val != null ? val.toString().replace(/\//g, &quot;%2F&quot;) : val; }
+  function valFromString(val) { return val != null ? val.toString().replace(/%2F/g, &quot;/&quot;) : val; }
+//  TODO: in 1.0, make string .is() return false if value is undefined by default.
+//  function regexpMatches(val) { /*jshint validthis:true */ return tr.app.AngularMini_.isDefined(val) &amp;&amp; this.pattern.test(val); }
+  function regexpMatches(val) {</code></pre>
+          <div class="description"><p>shint validthis:true</p> </div>
+          <pre><code class="language-javascript">return this.pattern.test(val); }
+
+  var $types = {}, enqueue = true, typeQueue = [], injector, defaultTypes = {
+    string: {
+      encode: valToString,
+      decode: valFromString,
+      is: function(val) { return typeof val === &quot;string&quot;; },
+      pattern: /[^/]*/
+    },
+    int: {
+      encode: valToString,
+      decode: function(val) { return parseInt(val, 10); },
+      is: function(val) { return tr.app.AngularMini_.isDefined(val) &amp;&amp; this.decode(val.toString()) === val; },
+      pattern: /\d+/
+    },
+    bool: {
+      encode: function(val) { return val ? 1 : 0; },
+      decode: function(val) { return parseInt(val, 10) !== 0; },
+      is: function(val) { return val === true || val === false; },
+      pattern: /0|1/
+    },
+    date: {
+      encode: function (val) {
+        if (!this.is(val))
+          return undefined;
+        return [ val.getFullYear(),
+          ('0' + (val.getMonth() + 1)).slice(-2),
+          ('0' + val.getDate()).slice(-2)
+        ].join(&quot;-&quot;);
+      },
+      decode: function (val) {
+        if (this.is(val)) return val;
+        var match = this.capture.exec(val);
+        return match ? new Date(match[1], match[2] - 1, match[3]) : undefined;
+      },
+      is: function(val) { return val instanceof Date &amp;&amp; !isNaN(val.valueOf()); },
+      equals: function (a, b) { return this.is(a) &amp;&amp; this.is(b) &amp;&amp; a.toISOString() === b.toISOString(); },
+      pattern: /[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/,
+      capture: /([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/
+    },
+    json: {
+      encode: tr.app.AngularMini_.toJson,
+      decode: tr.app.AngularMini_.fromJson,
+      is: tr.app.AngularMini_.isObject,
+      equals: tr.app.AngularMini_.equals,
+      pattern: /[^/]*/
+    },
+    any: { // does not encode/decode
+      encode: tr.app.AngularMini_.identity,
+      decode: tr.app.AngularMini_.identity,
+      is: tr.app.AngularMini_.identity,
+      equals: tr.app.AngularMini_.equals,
+      pattern: /.*/
+    }
+  };
+
+  function getDefaultConfig() {
+    return {
+      strict: isStrictMode,
+      caseInsensitive: isCaseInsensitive
+    };
+  }
+
+  function isInjectable(value) {
+    return (tr.app.AngularMini_.isFunction(value) || (tr.app.AngularMini_.isArray(value) &amp;&amp; tr.app.AngularMini_.isFunction(value[value.length - 1])));
+  }</code></pre>
+          <section id="$$getDefaultValue">
+            <h1>$$getDefaultValue</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.$$getDefaultValue()</span>
+            </p>
+          </section>
+          <div class="description"><p>[Internal] Get the default value of a parameter, which may be an injectable function.</p> </div>
+          <pre><code class="language-javascript">this.$$getDefaultValue = function(config) {
+    if (!isInjectable(config.value)) return config.value;
+    if (!injector) return null; // throw new Error(&quot;Injectable functions cannot be called at configuration time&quot;);
+    return injector.invoke(config.value);
+  };</code></pre>
+          <section id="caseInsensitive">
+            <h1>caseInsensitive</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.caseInsensitive()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>value</td>
+                <td>boolean</td>
+                <td>`false` to match URL in a case sensitive manner; otherwise `true`;</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Defines whether URL matching should be case sensitive (the default behavior), or not.
+</p></div>
+          <pre><code class="language-javascript">this.caseInsensitive = function(value) {
+    if (tr.app.AngularMini_.isDefined(value))
+      isCaseInsensitive = value;
+    return isCaseInsensitive;
+  };</code></pre>
+          <section id="strictMode">
+            <h1>strictMode</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.strictMode()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>value</td>
+                <td>boolean=</td>
+                <td>`false` to match trailing slashes in URLs, otherwise `true`.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Defines whether URLs should match trailing slashes, or not (the default behavior).
+</p></div>
+          <pre><code class="language-javascript">this.strictMode = function(value) {
+    if (tr.app.AngularMini_.isDefined(value))
+      isStrictMode = value;
+    return isStrictMode;
+  };</code></pre>
+          <section id="defaultSquashPolicy">
+            <h1>defaultSquashPolicy</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.defaultSquashPolicy()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>value</td>
+                <td>string</td>
+                <td>A string that defines the default parameter URL squashing behavior.    `nosquash`: When generating an href with a default parameter value, do not squash the parameter value from the URL
+   `slash`: When generating an href with a default parameter value, squash (remove) the parameter value, and, if the
+            parameter is surrounded by slashes, squash (remove) one slash from the URL
+   any other string, e.g. &quot;~&quot;: When generating an href with a default parameter value, squash (remove)
+            the parameter value from the URL and replace it with this string.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Sets the default behavior when generating or matching URLs with default parameter values.
+</p></div>
+          <pre><code class="language-javascript">this.defaultSquashPolicy = function(value) {
+    if (!tr.app.AngularMini_.isDefined(value)) return defaultSquashPolicy;
+    if (value !== true &amp;&amp; value !== false &amp;&amp; !tr.app.AngularMini_.isString(value))
+      throw new Error(&quot;Invalid squash policy: &quot; + value + &quot;. Valid policies: false, true, arbitrary-string&quot;);
+    defaultSquashPolicy = value;
+    return value;
+  };</code></pre>
+          <section id="compile">
+            <h1>compile</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.compile()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>pattern</td>
+                <td>string</td>
+                <td>The URL pattern.</td>
+              </tr>
+              <tr>
+                <td>config</td>
+                <td>Object</td>
+                <td>The config object hash.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Creates a {@link ui.router.util.type:UrlMatcher `UrlMatcher`} for the specified pattern.
+</p></div>
+          <pre><code class="language-javascript">this.compile = function (pattern, config) {
+    return new UrlMatcher(pattern, tr.app.AngularMini_.extend(getDefaultConfig(), config));
+  };</code></pre>
+          <section id="isMatcher">
+            <h1>isMatcher</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.isMatcher()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>object</td>
+                <td>Object</td>
+                <td>The object to perform the type check against.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Returns true if the specified object is a `UrlMatcher`, or false otherwise.
+</p></div>
+          <pre><code class="language-javascript">this.isMatcher = function (o) {
+    if (!tr.app.AngularMini_.isObject(o)) return false;
+    var result = true;
+
+    tr.app.AngularMini_.forEach(tr.app.UrlMatcher.prototype, function(val, name) {
+      if (tr.app.AngularMini_.isFunction(val)) {
+        result = result &amp;&amp; (tr.app.AngularMini_.isDefined(o[name]) &amp;&amp; tr.app.AngularMini_.isFunction(o[name]));
+      }
+    });
+    return result;
+  };</code></pre>
+          <section id="type">
+            <h1>type</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>this.type()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>name</td>
+                <td>string</td>
+                <td>The type name.</td>
+              </tr>
+              <tr>
+                <td>definition</td>
+                <td>Object,Function</td>
+                <td>The type definition. See        {@link ui.router.util.type:Type `Type`} for information on the values accepted.</td>
+              </tr>
+              <tr>
+                <td>definitionFn</td>
+                <td>Object,Function</td>
+                <td>(optional) A function that is injected before the app        runtime starts.  The result of this function is merged into the existing `definition`.
+       See {@link ui.router.util.type:Type `Type`} for information on the values accepted.
+</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>@ngdoc function</p> <p>Registers a custom {@link ui.router.util.type:Type `Type`} object that can be used to
+generate URLs with typed parameters.
+</p></div>
+          <pre><code class="language-javascript">this.type = function (name, definition, definitionFn) {
+    if (!tr.app.AngularMini_.isDefined(definition)) return $types[name];
+    if ($types.hasOwnProperty(name)) throw new Error(&quot;A type named '&quot; + name + &quot;' has already been defined.&quot;);
+
+    $types[name] = new tr.app.UrlMatcher.Type_(tr.app.AngularMini_.extend({ name: name }, definition));
+    if (definitionFn) {
+      typeQueue.push({ name: name, def: definitionFn });
+      if (!enqueue) flushTypeQueue();
+    }
+    return this;
+  };
+
+  // `flushTypeQueue()` waits until `$urlMatcherFactory` is injected before invoking the queued `definitionFn`s
+  function flushTypeQueue() {
+    while(typeQueue.length) {
+      var type = typeQueue.shift();
+      if (type.pattern) throw new Error(&quot;You cannot override a type's .pattern at runtime.&quot;);
+      tr.app.AngularMini_.extend($types[type.name], injector.invoke(type.def));
+    }
+  }
+
+  // Register default types. Store them in the prototype of $types.
+  tr.app.AngularMini_.forEach(defaultTypes, function(type, name) { $types[name] = new tr.app.UrlMatcher.Type_(tr.app.AngularMini_.extend({name: name}, type)); });
+  $types = tr.app.AngularMini_.inherit($types, {});</code></pre>
+          <section id="$get">
+            <h1>$get</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.$get</span>
+            </p>
+          </section>
+          <div class="description"><p>No need to document $get, since it returns this</p> </div>
+          <pre><code class="language-javascript">this.$get = ['$injector', function ($injector) {
+    injector = $injector;
+    enqueue = false;
+    flushTypeQueue();
+
+    tr.app.AngularMini_.forEach(defaultTypes, function(type, name) {
+      if (!$types[name]) $types[name] = new tr.app.UrlMatcher.Type_(type);
+    });
+    return this;
+  }];
+
+  this.Param = function Param(id, type, config, location) {
+    var self = this;
+    config = unwrapShorthand(config);
+    type = getType(config, type, location);
+    var arrayMode = getArrayMode();
+    type = arrayMode ? type.$asArray(arrayMode, location === &quot;search&quot;) : type;
+    if (type.name === &quot;string&quot; &amp;&amp; !arrayMode &amp;&amp; location === &quot;path&quot; &amp;&amp; config.value === undefined)
+      config.value = &quot;&quot;; // for 0.2.x; in 0.3.0+ do not automatically default to &quot;&quot;
+    var isOptional = config.value !== undefined;
+    var squash = getSquashPolicy(config, isOptional);
+    var replace = getReplace(config, arrayMode, isOptional, squash);
+
+    function unwrapShorthand(config) {
+      var keys = tr.app.AngularMini_.isObject(config) ? objectKeys(config) : [];
+      var isShorthand = tr.app.AngularMini_.indexOf(keys, &quot;value&quot;) === -1 &amp;&amp; tr.app.AngularMini_.indexOf(keys, &quot;type&quot;) === -1 &amp;&amp;
+                        tr.app.AngularMini_.indexOf(keys, &quot;squash&quot;) === -1 &amp;&amp; tr.app.AngularMini_.indexOf(keys, &quot;array&quot;) === -1;
+      if (isShorthand) config = { value: config };
+      config.$$fn = isInjectable(config.value) ? config.value : function () { return config.value; };
+      return config;
+    }
+
+    function getType(config, urlType, location) {
+      if (config.type &amp;&amp; urlType) throw new Error(&quot;Param '&quot;+id+&quot;' has two type configurations.&quot;);
+      if (urlType) return urlType;
+      if (!config.type) return (location === &quot;config&quot; ? $types.any : $types.string);
+      return config.type instanceof Type ? config.type : new tr.app.UrlMatcher.Type_(config.type);
+    }
+
+    // array config: param name (param[]) overrides default settings.  explicit config overrides param name.
+    function getArrayMode() {
+      var arrayDefaults = { array: (location === &quot;search&quot; ? &quot;auto&quot; : false) };
+      var arrayParamNomenclature = id.match(/\[\]$/) ? { array: true } : {};
+      return tr.app.AngularMini_.extend(arrayDefaults, arrayParamNomenclature, config).array;
+    }</code></pre>
+          <section id="getSquashPolicy">
+            <h1>getSquashPolicy</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">function</div><span>getSquashPolicy()</span>
+            </p>
+          </section>
+          <div class="description"><p>returns false, true, or the squash value to indicate the &quot;default parameter url squash policy&quot;.</p> </div>
+          <pre><code class="language-javascript">function getSquashPolicy(config, isOptional) {
+      var squash = config.squash;
+      if (!isOptional || squash === false) return false;
+      if (!tr.app.AngularMini_.isDefined(squash) || squash == null) return defaultSquashPolicy;
+      if (squash === true || tr.app.AngularMini_.isString(squash)) return squash;
+      throw new Error(&quot;Invalid squash policy: '&quot; + squash + &quot;'. Valid policies: false, true, or arbitrary string&quot;);
+    }
+
+    function getReplace(config, arrayMode, isOptional, squash) {
+      var replace, configuredKeys, defaultPolicy = [
+        { from: &quot;&quot;,   to: (isOptional || arrayMode ? undefined : &quot;&quot;) },
+        { from: null, to: (isOptional || arrayMode ? undefined : &quot;&quot;) }
+      ];
+      replace = tr.app.AngularMini_.isArray(config.replace) ? config.replace : [];
+      if (tr.app.AngularMini_.isString(squash))
+        replace.push({ from: squash, to: undefined });
+      configuredKeys = tr.app.AngularMini_.map(replace, function(item) { return item.from; } );
+      return tr.app.AngularMini_.filter(defaultPolicy, function(item) { return tr.app.AngularMini_.indexOf(configuredKeys, item.from) === -1; }).concat(replace);
+    }</code></pre>
+          <section id="$$getDefaultValue">
+            <h1>$$getDefaultValue</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">function</div><span>$$getDefaultValue()</span>
+            </p>
+          </section>
+          <div class="description"><p>[Internal] Get the default value of a parameter, which may be an injectable function.</p> </div>
+          <pre><code class="language-javascript">function $$getDefaultValue() {
+      if (!injector) return null; // throw new Error(&quot;Injectable functions cannot be called at configuration time&quot;);
+      var defaultValue = injector.invoke(config.$$fn);
+      if (defaultValue !== null &amp;&amp; defaultValue !== undefined &amp;&amp; !self.type.is(defaultValue))
+        throw new Error(&quot;Default value (&quot; + defaultValue + &quot;) for parameter '&quot; + self.id + &quot;' is not an instance of Type (&quot; + self.type.name + &quot;)&quot;);
+      return defaultValue;
+    }</code></pre>
+          <section id="$value">
+            <h1>$value</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">function</div><span>$value()</span>
+            </p>
+          </section>
+          <div class="description"><p>[Internal] Gets the decoded representation of a value if the value is defined, otherwise, returns the<br />default value, which may be the result of an injectable function.</p> </div>
+          <pre><code class="language-javascript">function $value(value) {
+      function hasReplaceVal(val) { return function(obj) { return obj.from === val; }; }
+      function $replace(value) {
+        var replacement = tr.app.AngularMini_.map(tr.app.AngularMini_.filter(self.replace, hasReplaceVal(value)), function(obj) { return obj.to; });
+        return replacement.length ? replacement[0] : value;
+      }
+      value = $replace(value);
+      return !tr.app.AngularMini_.isDefined(value) ? $$getDefaultValue() : self.type.$normalize(value);
+    }
+
+    function toString() { return &quot;{Param:&quot; + id + &quot; &quot; + type + &quot; squash: '&quot; + squash + &quot;' optional: &quot; + isOptional + &quot;}&quot;; }
+
+    tr.app.AngularMini_.extend(this, {
+      id: id,
+      type: type,
+      location: location,
+      array: arrayMode,
+      squash: squash,
+      replace: replace,
+      isOptional: isOptional,
+      value: $value,
+      dynamic: undefined,
+      config: config,
+      toString: toString
+    });
+  };
+
+  function ParamSet(params) {
+    tr.app.AngularMini_.extend(this, params || {});
+  }
+
+  ParamSet.prototype = {
+    $$new: function() {
+      return tr.app.AngularMini_.inherit(this, tr.app.AngularMini_.extend(new ParamSet(), { $$parent: this}));
+    },
+    $$keys: function () {
+      var keys = [], chain = [], parent = this,
+        ignore = objectKeys(ParamSet.prototype);
+      while (parent) { chain.push(parent); parent = parent.$$parent; }
+      chain.reverse();
+      tr.app.AngularMini_.forEach(chain, function(paramset) {
+        tr.app.AngularMini_.forEach(objectKeys(paramset), function(key) {
+            if (tr.app.AngularMini_.indexOf(keys, key) === -1 &amp;&amp; tr.app.AngularMini_.indexOf(ignore, key) === -1) keys.push(key);
+        });
+      });
+      return keys;
+    },
+    $$values: function(paramValues) {
+      var values = {}, self = this;
+      tr.app.AngularMini_.forEach(self.$$keys(), function(key) {
+        values[key] = self[key].value(paramValues &amp;&amp; paramValues[key]);
+      });
+      return values;
+    },
+    $$equals: function(paramValues1, paramValues2) {
+      var equal = true, self = this;
+      tr.app.AngularMini_.forEach(self.$$keys(), function(key) {
+        var left = paramValues1 &amp;&amp; paramValues1[key], right = paramValues2 &amp;&amp; paramValues2[key];
+        if (!self[key].type.equals(left, right)) equal = false;
+      });
+      return equal;
+    },
+    $$validates: function $$validate(paramValues) {
+      var keys = this.$$keys(), i, param, rawVal, normalized, encoded;
+      for (i = 0; i &lt; keys.length; i++) {
+        param = this[keys[i]];
+        rawVal = paramValues[keys[i]];
+        if ((rawVal === undefined || rawVal === null) &amp;&amp; param.isOptional)
+          break; // There was no parameter value, but the param is optional
+        normalized = param.type.$normalize(rawVal);
+        if (!param.type.is(normalized))
+          return false; // The value was not of the correct Type, and could not be decoded to the correct Type
+        encoded = param.type.encode(normalized);
+        if (tr.app.AngularMini_.isString(encoded) &amp;&amp; !param.type.pattern.exec(encoded))
+          return false; // The value was of the correct type, but when encoded, did not match the Type's regexp
+      }
+      return true;
+    },
+    $$parent: undefined
+  };
+
+  this.ParamSet = ParamSet;
+};</code></pre>
+          <section id="$$UMFP">
+            <h1>$$UMFP</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">declaration</div><span>$$UMFP</span>
+            </p>
+          </section>
+          <div class="description"><p>Angular $UrlMatcherFactory written to be a singleton, given the way services are setup; this simulates that.</p> </div>
+          <pre><code class="language-javascript">var $$UMFP = new tr.app.UrlMatcher.UrlMatcherFactory_();</code></pre>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p>Documentation generated with<a href="https://github.com/FGRibreau/doxx">Doxx</a>created by<a href="https://twitter.com/FGRibreau" data-show-count="false" class="twitter-follow-button">Francois-Guillaume Ribreau</a></p>
+        <p>Doxx is sponsored by<a href="http://bringr.net/?btt" title="Outil d'analyse des réseaux sociaux" class="bringr">Bringr</a>and<a href="https://redsmin.com/?btt" title="Full Redis GUI" class="redsmin">Redsmin</a></p>
+        <p>Theme borrowed from Twitter Bootstrap</p>
+      </div>
+    </footer>
+    <script src="http://platform.twitter.com/widgets.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="http://leaverou.github.com/prefixfree/prefixfree.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-affix.js"></script>
+    <script>
+      /**
+       * Prism: Lightweight, robust, elegant syntax highlighting
+       * MIT license http://www.opensource.org/licenses/mit-license.php/
+       * @author Lea Verou http://lea.verou.me
+       */(function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var r={};for(var i in e)e.hasOwnProperty(i)&&(r[i]=t.util.clone(e[i]));return r;case"Array":return e.slice()}return e}},languages:{extend:function(e,n){var r=t.util.clone(t.languages[e]);for(var i in n)r[i]=n[i];return r},insertBefore:function(e,n,r,i){i=i||t.languages;var s=i[e],o={};for(var u in s)if(s.hasOwnProperty(u)){if(u==n)for(var a in r)r.hasOwnProperty(a)&&(o[a]=r[a]);o[u]=s[u]}return i[e]=o},DFS:function(e,n){for(var r in e){n.call(e,r,e[r]);t.util.type(e)==="Object"&&t.languages.DFS(e[r],n)}}},highlightAll:function(e,n){var r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');for(var i=0,s;s=r[i++];)t.highlightElement(s,e===!0,n)},highlightElement:function(r,i,s){var o,u,a=r;while(a&&!e.test(a.className))a=a.parentNode;if(a){o=(a.className.match(e)||[,""])[1];u=t.languages[o]}if(!u)return;r.className=r.className.replace(e,"").replace(/\s+/g," ")+" language-"+o;a=r.parentNode;/pre/i.test(a.nodeName)&&(a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+o);var f=r.textContent;if(!f)return;f=f.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\u00a0/g," ");var l={element:r,language:o,grammar:u,code:f};t.hooks.run("before-highlight",l);if(i&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){l.highlightedCode=n.stringify(JSON.parse(e.data));l.element.innerHTML=l.highlightedCode;s&&s.call(l.element);t.hooks.run("after-highlight",l)};c.postMessage(JSON.stringify({language:l.language,code:l.code}))}else{l.highlightedCode=t.highlight(l.code,l.grammar);l.element.innerHTML=l.highlightedCode;s&&s.call(r);t.hooks.run("after-highlight",l)}},highlight:function(e,r){return n.stringify(t.tokenize(e,r))},tokenize:function(e,n){var r=t.Token,i=[e],s=n.rest;if(s){for(var o in s)n[o]=s[o];delete n.rest}e:for(var o in n){if(!n.hasOwnProperty(o)||!n[o])continue;var u=n[o],a=u.inside,f=!!u.lookbehind||0;u=u.pattern||u;for(var l=0;l<i.length;l++){var c=i[l];if(i.length>e.length)break e;if(c instanceof r)continue;u.lastIndex=0;var h=u.exec(c);if(h){f&&(f=h[1].length);var p=h.index-1+f,h=h[0].slice(f),d=h.length,v=p+d,m=c.slice(0,p+1),g=c.slice(v+1),y=[l,1];m&&y.push(m);var b=new r(o,a?t.tokenize(h,a):h);y.push(b);g&&y.push(g);Array.prototype.splice.apply(i,y)}}}return i},hooks:{all:{},add:function(e,n){var r=t.hooks.all;r[e]=r[e]||[];r[e].push(n)},run:function(e,n){var r=t.hooks.all[e];if(!r||!r.length)return;for(var i=0,s;s=r[i++];)s(n)}}},n=t.Token=function(e,t){this.type=e;this.content=t};n.stringify=function(e){if(typeof e=="string")return e;if(Object.prototype.toString.call(e)=="[object Array]"){for(var r=0;r<e.length;r++)e[r]=n.stringify(e[r]);return e.join("")}var i={type:e.type,content:n.stringify(e.content),tag:"span",classes:["token",e.type],attributes:{}};i.type=="comment"&&(i.attributes.spellcheck="true");t.hooks.run("wrap",i);var s="";for(var o in i.attributes)s+=o+'="'+(i.attributes[o]||"")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'" '+s+">"+i.content+"</"+i.tag+">"};if(!self.document){self.addEventListener("message",function(e){var n=JSON.parse(e.data),r=n.language,i=n.code;self.postMessage(JSON.stringify(t.tokenize(i,t.languages[r])));self.close()},!1);return}var r=document.getElementsByTagName("script");r=r[r.length-1];if(r){t.filename=r.src;document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)}})();;
+      Prism.languages.markup={comment:/&lt;!--[\w\W]*?--(&gt;|&gt;)/g,prolog:/&lt;\?.+?\?&gt;/,doctype:/&lt;!DOCTYPE.+?&gt;/,cdata:/&lt;!\[CDATA\[[\w\W]+?]]&gt;/i,tag:{pattern:/&lt;\/?[\w:-]+\s*(?:\s+[\w:-]+(?:=(?:("|')(\\?[\w\W])*?\1|\w+))?\s*)*\/?&gt;/gi,inside:{tag:{pattern:/^&lt;\/?[\w:-]+/i,inside:{punctuation:/^&lt;\/?/,namespace:/^[\w-]+?:/}},"attr-value":{pattern:/=(?:('|")[\w\W]*?(\1)|[^\s>]+)/gi,inside:{punctuation:/=|&gt;|"/g}},punctuation:/\/?&gt;/g,"attr-name":{pattern:/[\w:-]+/g,inside:{namespace:/^[\w-]+?:/}}}},entity:/&amp;#?[\da-z]{1,8};/gi};Prism.hooks.add("wrap",function(e){e.type==="entity"&&(e.attributes.title=e.content.replace(/&amp;/,"&"))});;
+      Prism.languages.css={comment:/\/\*[\w\W]*?\*\//g,atrule:/@[\w-]+?(\s+[^;{]+)?(?=\s*{|\s*;)/gi,url:/url\((["']?).*?\1\)/gi,selector:/[^\{\}\s][^\{\}]*(?=\s*\{)/g,property:/(\b|\B)[a-z-]+(?=\s*:)/ig,string:/("|')(\\?.)*?\1/g,important:/\B!important\b/gi,ignore:/&(lt|gt|amp);/gi,punctuation:/[\{\};:]/g};Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{style:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/style(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)|(&lt;|<)\/style(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.css}}});;
+      Prism.languages.clike={comment:{pattern:/(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*?(\r?\n|$))/g,lookbehind:!0},string:/("|')(\\?.)*?\1/g,keyword:/\b(if|else|while|do|for|return|in|instanceof|function|new|try|catch|finally|null|break|continue)\b/g,"boolean":/\b(true|false)\b/g,number:/\b-?(0x)?\d*\.?[\da-f]+\b/g,operator:/[-+]{1,2}|!|=?&lt;|=?&gt;|={1,2}|(&amp;){1,2}|\|?\||\?|\*|\//g,ignore:/&(lt|gt|amp);/gi,punctuation:/[{}[\];(),.:]/g};;
+      Prism.languages.javascript=Prism.languages.extend("clike",{keyword:/\b(var|let|if|else|while|do|for|return|in|instanceof|function|new|with|typeof|try|catch|finally|null|break|continue)\b/g,number:/\b(-?(0x)?\d*\.?[\da-f]+|NaN|-?Infinity)\b/g});Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:/(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,lookbehind:!0}});Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{script:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/script(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)|(&lt;|<)\/script(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.javascript}}});;
+      
+    </script>
+    <!-- App js-->
+    <script>
+      $(function(){
+        var $window = $(window);
+        $('.scrollspy .nav').affix({
+          offset: {
+            top: function () { return $window.width() <= 980 ? 480 : 400 }
+          , bottom: 50
+          }
+        });
+      })
+    </script>
+  </body>
+</html>

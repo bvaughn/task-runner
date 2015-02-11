@@ -147,8 +147,7 @@ tr.Factory.prototype.runImpl = function() {
  * @param {!tr.Task} task
  * @private
  */
-tr.Factory.prototype.onDeferredTaskCompleted_ =
-    function(task) {
+tr.Factory.prototype.onDeferredTaskCompleted_ = function(task) {
   this.removeCallbacks_();
   this.completeInternal(task.getData());
 };
@@ -158,8 +157,7 @@ tr.Factory.prototype.onDeferredTaskCompleted_ =
  * @param {!tr.Task} task
  * @private
  */
-tr.Factory.prototype.onDeferredTaskErrored_ =
-    function(task) {
+tr.Factory.prototype.onDeferredTaskErrored_ = function(task) {
   this.removeCallbacks_();
   this.deferredTaskErrored_ = true;
   this.errorInternal(task.getData(), task.getErrorMessage());
@@ -170,7 +168,6 @@ tr.Factory.prototype.onDeferredTaskErrored_ =
  * @param {!tr.Task} task
  * @private
  */
-tr.Factory.prototype.onDeferredTaskInterrupted_ =
-    function(task) {
+tr.Factory.prototype.onDeferredTaskInterrupted_ = function(task) {
   this.interrupt();
 };
