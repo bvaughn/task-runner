@@ -1,4 +1,3 @@
-
 goog.provide('tr.app.State');
 
 goog.require('tr.Graph');

@@ -1104,6 +1104,89 @@ goog.json.Serializer.prototype.serializeObject_ = function(a, b) {
   }
   b.push("}");
 };
+goog.net = {};
+goog.net.ErrorCode = {NO_ERROR:0, ACCESS_DENIED:1, FILE_NOT_FOUND:2, FF_SILENT_ERROR:3, CUSTOM_ERROR:4, EXCEPTION:5, HTTP_ERROR:6, ABORT:7, TIMEOUT:8, OFFLINE:9};
+goog.net.ErrorCode.getDebugMessage = function(a) {
+  switch(a) {
+    case goog.net.ErrorCode.NO_ERROR:
+      return "No Error";
+    case goog.net.ErrorCode.ACCESS_DENIED:
+      return "Access denied to content document";
+    case goog.net.ErrorCode.FILE_NOT_FOUND:
+      return "File not found";
+    case goog.net.ErrorCode.FF_SILENT_ERROR:
+      return "Firefox silently errored";
+    case goog.net.ErrorCode.CUSTOM_ERROR:
+      return "Application custom error";
+    case goog.net.ErrorCode.EXCEPTION:
+      return "An exception occurred";
+    case goog.net.ErrorCode.HTTP_ERROR:
+      return "Http response at 400 or 500 level";
+    case goog.net.ErrorCode.ABORT:
+      return "Request was aborted";
+    case goog.net.ErrorCode.TIMEOUT:
+      return "Request timed out";
+    case goog.net.ErrorCode.OFFLINE:
+      return "The resource is not available offline";
+    default:
+      return "Unrecognized error code";
+  }
+};
+goog.net.EventType = {COMPLETE:"complete", SUCCESS:"success", ERROR:"error", ABORT:"abort", READY:"ready", READY_STATE_CHANGE:"readystatechange", TIMEOUT:"timeout", INCREMENTAL_DATA:"incrementaldata", PROGRESS:"progress"};
+goog.net.HttpStatus = {CONTINUE:100, SWITCHING_PROTOCOLS:101, OK:200, CREATED:201, ACCEPTED:202, NON_AUTHORITATIVE_INFORMATION:203, NO_CONTENT:204, RESET_CONTENT:205, PARTIAL_CONTENT:206, MULTIPLE_CHOICES:300, MOVED_PERMANENTLY:301, FOUND:302, SEE_OTHER:303, NOT_MODIFIED:304, USE_PROXY:305, TEMPORARY_REDIRECT:307, BAD_REQUEST:400, UNAUTHORIZED:401, PAYMENT_REQUIRED:402, FORBIDDEN:403, NOT_FOUND:404, METHOD_NOT_ALLOWED:405, NOT_ACCEPTABLE:406, PROXY_AUTHENTICATION_REQUIRED:407, REQUEST_TIMEOUT:408, 
+CONFLICT:409, GONE:410, LENGTH_REQUIRED:411, PRECONDITION_FAILED:412, REQUEST_ENTITY_TOO_LARGE:413, REQUEST_URI_TOO_LONG:414, UNSUPPORTED_MEDIA_TYPE:415, REQUEST_RANGE_NOT_SATISFIABLE:416, EXPECTATION_FAILED:417, PRECONDITION_REQUIRED:428, TOO_MANY_REQUESTS:429, REQUEST_HEADER_FIELDS_TOO_LARGE:431, INTERNAL_SERVER_ERROR:500, NOT_IMPLEMENTED:501, BAD_GATEWAY:502, SERVICE_UNAVAILABLE:503, GATEWAY_TIMEOUT:504, HTTP_VERSION_NOT_SUPPORTED:505, NETWORK_AUTHENTICATION_REQUIRED:511, QUIRK_IE_NO_CONTENT:1223};
+goog.net.HttpStatus.isSuccess = function(a) {
+  switch(a) {
+    case goog.net.HttpStatus.OK:
+    ;
+    case goog.net.HttpStatus.CREATED:
+    ;
+    case goog.net.HttpStatus.ACCEPTED:
+    ;
+    case goog.net.HttpStatus.NO_CONTENT:
+    ;
+    case goog.net.HttpStatus.PARTIAL_CONTENT:
+    ;
+    case goog.net.HttpStatus.NOT_MODIFIED:
+    ;
+    case goog.net.HttpStatus.QUIRK_IE_NO_CONTENT:
+      return!0;
+    default:
+      return!1;
+  }
+};
+goog.net.XhrLike = function() {
+};
+goog.net.XhrLike.prototype.open = function(a, b, c, d, e) {
+};
+goog.net.XhrLike.prototype.send = function(a) {
+};
+goog.net.XhrLike.prototype.abort = function() {
+};
+goog.net.XhrLike.prototype.setRequestHeader = function(a, b) {
+};
+goog.net.XhrLike.prototype.getResponseHeader = function(a) {
+};
+goog.net.XhrLike.prototype.getAllResponseHeaders = function() {
+};
+goog.net.XmlHttpFactory = function() {
+};
+goog.net.XmlHttpFactory.prototype.cachedOptions_ = null;
+goog.net.XmlHttpFactory.prototype.getOptions = function() {
+  return this.cachedOptions_ || (this.cachedOptions_ = this.internalGetOptions());
+};
+goog.net.WrapperXmlHttpFactory = function(a, b) {
+  goog.net.XmlHttpFactory.call(this);
+  this.xhrFactory_ = a;
+  this.optionsFactory_ = b;
+};
+goog.inherits(goog.net.WrapperXmlHttpFactory, goog.net.XmlHttpFactory);
+goog.net.WrapperXmlHttpFactory.prototype.createInstance = function() {
+  return this.xhrFactory_();
+};
+goog.net.WrapperXmlHttpFactory.prototype.getOptions = function() {
+  return this.optionsFactory_();
+};
 goog.object = {};
 goog.object.forEach = function(a, b, c) {
   for (var d in a) {
@@ -1326,89 +1409,6 @@ goog.dom.tags = {};
 goog.dom.tags.VOID_TAGS_ = goog.object.createSet("area base br col command embed hr img input keygen link meta param source track wbr".split(" "));
 goog.dom.tags.isVoidTag = function(a) {
   return!0 === goog.dom.tags.VOID_TAGS_[a];
-};
-goog.net = {};
-goog.net.ErrorCode = {NO_ERROR:0, ACCESS_DENIED:1, FILE_NOT_FOUND:2, FF_SILENT_ERROR:3, CUSTOM_ERROR:4, EXCEPTION:5, HTTP_ERROR:6, ABORT:7, TIMEOUT:8, OFFLINE:9};
-goog.net.ErrorCode.getDebugMessage = function(a) {
-  switch(a) {
-    case goog.net.ErrorCode.NO_ERROR:
-      return "No Error";
-    case goog.net.ErrorCode.ACCESS_DENIED:
-      return "Access denied to content document";
-    case goog.net.ErrorCode.FILE_NOT_FOUND:
-      return "File not found";
-    case goog.net.ErrorCode.FF_SILENT_ERROR:
-      return "Firefox silently errored";
-    case goog.net.ErrorCode.CUSTOM_ERROR:
-      return "Application custom error";
-    case goog.net.ErrorCode.EXCEPTION:
-      return "An exception occurred";
-    case goog.net.ErrorCode.HTTP_ERROR:
-      return "Http response at 400 or 500 level";
-    case goog.net.ErrorCode.ABORT:
-      return "Request was aborted";
-    case goog.net.ErrorCode.TIMEOUT:
-      return "Request timed out";
-    case goog.net.ErrorCode.OFFLINE:
-      return "The resource is not available offline";
-    default:
-      return "Unrecognized error code";
-  }
-};
-goog.net.EventType = {COMPLETE:"complete", SUCCESS:"success", ERROR:"error", ABORT:"abort", READY:"ready", READY_STATE_CHANGE:"readystatechange", TIMEOUT:"timeout", INCREMENTAL_DATA:"incrementaldata", PROGRESS:"progress"};
-goog.net.HttpStatus = {CONTINUE:100, SWITCHING_PROTOCOLS:101, OK:200, CREATED:201, ACCEPTED:202, NON_AUTHORITATIVE_INFORMATION:203, NO_CONTENT:204, RESET_CONTENT:205, PARTIAL_CONTENT:206, MULTIPLE_CHOICES:300, MOVED_PERMANENTLY:301, FOUND:302, SEE_OTHER:303, NOT_MODIFIED:304, USE_PROXY:305, TEMPORARY_REDIRECT:307, BAD_REQUEST:400, UNAUTHORIZED:401, PAYMENT_REQUIRED:402, FORBIDDEN:403, NOT_FOUND:404, METHOD_NOT_ALLOWED:405, NOT_ACCEPTABLE:406, PROXY_AUTHENTICATION_REQUIRED:407, REQUEST_TIMEOUT:408, 
-CONFLICT:409, GONE:410, LENGTH_REQUIRED:411, PRECONDITION_FAILED:412, REQUEST_ENTITY_TOO_LARGE:413, REQUEST_URI_TOO_LONG:414, UNSUPPORTED_MEDIA_TYPE:415, REQUEST_RANGE_NOT_SATISFIABLE:416, EXPECTATION_FAILED:417, PRECONDITION_REQUIRED:428, TOO_MANY_REQUESTS:429, REQUEST_HEADER_FIELDS_TOO_LARGE:431, INTERNAL_SERVER_ERROR:500, NOT_IMPLEMENTED:501, BAD_GATEWAY:502, SERVICE_UNAVAILABLE:503, GATEWAY_TIMEOUT:504, HTTP_VERSION_NOT_SUPPORTED:505, NETWORK_AUTHENTICATION_REQUIRED:511, QUIRK_IE_NO_CONTENT:1223};
-goog.net.HttpStatus.isSuccess = function(a) {
-  switch(a) {
-    case goog.net.HttpStatus.OK:
-    ;
-    case goog.net.HttpStatus.CREATED:
-    ;
-    case goog.net.HttpStatus.ACCEPTED:
-    ;
-    case goog.net.HttpStatus.NO_CONTENT:
-    ;
-    case goog.net.HttpStatus.PARTIAL_CONTENT:
-    ;
-    case goog.net.HttpStatus.NOT_MODIFIED:
-    ;
-    case goog.net.HttpStatus.QUIRK_IE_NO_CONTENT:
-      return!0;
-    default:
-      return!1;
-  }
-};
-goog.net.XhrLike = function() {
-};
-goog.net.XhrLike.prototype.open = function(a, b, c, d, e) {
-};
-goog.net.XhrLike.prototype.send = function(a) {
-};
-goog.net.XhrLike.prototype.abort = function() {
-};
-goog.net.XhrLike.prototype.setRequestHeader = function(a, b) {
-};
-goog.net.XhrLike.prototype.getResponseHeader = function(a) {
-};
-goog.net.XhrLike.prototype.getAllResponseHeaders = function() {
-};
-goog.net.XmlHttpFactory = function() {
-};
-goog.net.XmlHttpFactory.prototype.cachedOptions_ = null;
-goog.net.XmlHttpFactory.prototype.getOptions = function() {
-  return this.cachedOptions_ || (this.cachedOptions_ = this.internalGetOptions());
-};
-goog.net.WrapperXmlHttpFactory = function(a, b) {
-  goog.net.XmlHttpFactory.call(this);
-  this.xhrFactory_ = a;
-  this.optionsFactory_ = b;
-};
-goog.inherits(goog.net.WrapperXmlHttpFactory, goog.net.XmlHttpFactory);
-goog.net.WrapperXmlHttpFactory.prototype.createInstance = function() {
-  return this.xhrFactory_();
-};
-goog.net.WrapperXmlHttpFactory.prototype.getOptions = function() {
-  return this.optionsFactory_();
 };
 goog.promise = {};
 goog.promise.Resolver = function() {
@@ -1754,13 +1754,13 @@ goog.string.getRandomString = function() {
 };
 goog.string.compareVersions = function(a, b) {
   for (var c = 0, d = goog.string.trim(String(a)).split("."), e = goog.string.trim(String(b)).split("."), f = Math.max(d.length, e.length), g = 0;0 == c && g < f;g++) {
-    var h = d[g] || "", k = e[g] || "", l = /(\d*)(\D*)/g, p = /(\d*)(\D*)/g;
+    var h = d[g] || "", k = e[g] || "", l = /(\d*)(\D*)/g, m = /(\d*)(\D*)/g;
     do {
-      var m = l.exec(h) || ["", "", ""], n = p.exec(k) || ["", "", ""];
-      if (0 == m[0].length && 0 == n[0].length) {
+      var p = l.exec(h) || ["", "", ""], n = m.exec(k) || ["", "", ""];
+      if (0 == p[0].length && 0 == n[0].length) {
         break;
       }
-      var c = 0 == m[1].length ? 0 : parseInt(m[1], 10), q = 0 == n[1].length ? 0 : parseInt(n[1], 10), c = goog.string.compareElements_(c, q) || goog.string.compareElements_(0 == m[2].length, 0 == n[2].length) || goog.string.compareElements_(m[2], n[2]);
+      var c = 0 == p[1].length ? 0 : parseInt(p[1], 10), r = 0 == n[1].length ? 0 : parseInt(n[1], 10), c = goog.string.compareElements_(c, r) || goog.string.compareElements_(0 == p[2].length, 0 == n[2].length) || goog.string.compareElements_(p[2], n[2]);
     } while (0 == c);
   }
   return c;
@@ -6621,6 +6621,7 @@ tr.app.ApplicationRouter.prototype.setDefaultRoute = function(a) {
   return this;
 };
 tr.app.ApplicationRouter.prototype.start = function() {
+  goog.asserts.assert(!!this.defaultStateFactoryFunction_, "Default route required.");
   goog.events.listen(window, goog.events.EventType.HASHCHANGE, goog.bind(this.ohHashChange_, this));
   this.ohHashChange_();
   return this;
@@ -6655,7 +6656,459 @@ tr.app.ApplicationRouter.Path_.prototype.createState = function() {
   goog.asserts.assert(this.factoryFunctionParams_, "Invalid path");
   return this.factoryFunction_(this.factoryFunctionParams_);
 };
-tr.enums = {};
+var $$UMFP;
+tr.app.UrlMatcher = function(a, b, c) {
+  function d(b, c, d, e) {
+    t.push(b);
+    if (n[b]) {
+      return n[b];
+    }
+    if (!/^\w+(-+\w+)*(?:\[\])?$/.test(b)) {
+      throw Error("Invalid parameter name '" + b + "' in pattern '" + a + "'");
+    }
+    if (r[b]) {
+      throw Error("Duplicate parameter name '" + b + "' in pattern '" + a + "'");
+    }
+    r[b] = new $$UMFP.Param(b, c, d, e);
+    return r[b];
+  }
+  function e(a, b, c, d) {
+    var e = ["", ""];
+    a = a.replace(/[\\\[\]\^$*+?.()|{}]/g, "\\$&");
+    if (!b) {
+      return a;
+    }
+    switch(c) {
+      case !1:
+        e = ["(", ")" + (d ? "?" : "")];
+        break;
+      case !0:
+        e = ["?(", ")?"];
+        break;
+      default:
+        e = ["(" + c + "|", ")?"];
+    }
+    return a + e[0] + b + e[1];
+  }
+  function f(c, d) {
+    var e, f, g, h, n;
+    e = c[2] || c[3];
+    n = b.params[e];
+    g = a.substring(l, c.index);
+    f = d ? c[4] : c[4] || ("*" == c[1] ? ".*" : null);
+    h = $$UMFP.type(f || "string") || inherit($$UMFP.type("string"), {pattern:new RegExp(f)});
+    return{id:e, regexp:f, segment:g, type:h, cfg:n};
+  }
+  b = goog.object.extend({params:{}}, goog.isObject(b) ? b : {});
+  var g = /([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g, h = /([:]?)([\w\[\]-]+)|\{([\w\[\]-]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g, k = "^", l = 0, m, p = this.segments = [], n = c ? c.params : {}, r = this.params = c ? c.params.$$new() : new $$UMFP.ParamSet, t = [];
+  this.source = a;
+  for (var q;m = g.exec(a);) {
+    m = f(m, !1);
+    if (0 <= m.segment.indexOf("?")) {
+      break;
+    }
+    q = d(m.id, m.type, m.cfg, "path");
+    k += e(m.segment, q.type.pattern.source, q.squash, q.isOptional);
+    p.push(m.segment);
+    l = g.lastIndex;
+  }
+  c = a.substring(l);
+  m = c.indexOf("?");
+  if (0 <= m) {
+    var v = this.sourceSearch = c.substring(m);
+    c = c.substring(0, m);
+    this.sourcePath = a.substring(0, l + m);
+    if (0 < v.length) {
+      for (l = 0;m = h.exec(v);) {
+        m = f(m, !0), q = d(m.id, m.type, m.cfg, "search"), l = g.lastIndex;
+      }
+    }
+  } else {
+    this.sourcePath = a, this.sourceSearch = "";
+  }
+  k += e(c) + (!1 === b.strict ? "/?" : "") + "$";
+  p.push(c);
+  this.regexp = new RegExp(k, b.caseInsensitive ? "i" : void 0);
+  this.prefix = p[0];
+  this.$$paramNames = t;
+};
+UrlMatcher.prototype.concat = function(a, b) {
+  var c = {caseInsensitive:$$UMFP.caseInsensitive(), strict:$$UMFP.strictMode(), squash:$$UMFP.defaultSquashPolicy()};
+  return new UrlMatcher(this.sourcePath + a + this.sourceSearch, extend(c, b), this);
+};
+UrlMatcher.prototype.toString = function() {
+  return this.source;
+};
+UrlMatcher.prototype.exec = function(a, b) {
+  function c(a) {
+    function b(a) {
+      return a.split("").reverse().join("");
+    }
+    a = b(a).split(/-(?!\\)/);
+    a = map(a, b);
+    return map(a, function(a) {
+      return a.replace(/\\-/g, "-");
+    }).reverse();
+  }
+  var d = this.regexp.exec(a);
+  if (!d) {
+    return null;
+  }
+  b = b || {};
+  var e = this.parameters(), f = e.length, g = this.segments.length - 1, h = {}, k, l, m;
+  if (g !== d.length - 1) {
+    throw Error("Unbalanced capture group in route '" + this.source + "'");
+  }
+  for (k = 0;k < g;k++) {
+    m = e[k];
+    var p = this.params[m], n = d[k + 1];
+    for (l = 0;l < p.replace;l++) {
+      p.replace[l].from === n && (n = p.replace[l].to);
+    }
+    n && !0 === p.array && (n = c(n));
+    h[m] = p.value(n);
+  }
+  for (;k < f;k++) {
+    m = e[k], h[m] = this.params[m].value(b[m]);
+  }
+  return h;
+};
+UrlMatcher.prototype.parameters = function(a) {
+  return isDefined(a) ? this.params[a] || null : this.$$paramNames;
+};
+UrlMatcher.prototype.validates = function(a) {
+  return this.params.$$validates(a);
+};
+UrlMatcher.prototype.format = function(a) {
+  function b(a) {
+    return encodeURIComponent(a).replace(/-/g, function(a) {
+      return "%5C%" + a.charCodeAt(0).toString(16).toUpperCase();
+    });
+  }
+  a = a || {};
+  var c = this.segments, d = this.parameters(), e = this.params;
+  if (!this.validates(a)) {
+    return null;
+  }
+  var f, g = !1, h = c.length - 1, k = d.length, l = c[0];
+  for (f = 0;f < k;f++) {
+    var m = f < h, p = d[f], n = e[p], r = n.value(a[p]), t = n.isOptional && n.type.equals(n.value(), r), q = t ? n.squash : !1, n = n.type.encode(r);
+    m ? (m = c[f + 1], !1 === q ? (null != n && (l = isArray(n) ? l + map(n, b).join("-") : l + encodeURIComponent(n)), l += m) : !0 === q ? (q = l.match(/\/$/) ? /\/?(.*)/ : /(.*)/, l += m.match(q)[1]) : isString(q) && (l += q + m)) : null == n || t && !1 !== q || (isArray(n) || (n = [n]), n = map(n, encodeURIComponent).join("&" + p + "="), l += (g ? "&" : "?") + (p + "=" + n), g = !0);
+  }
+  return l;
+};
+function Type(a) {
+  extend(this, a);
+}
+Type.prototype.is = function(a, b) {
+  return!0;
+};
+Type.prototype.encode = function(a, b) {
+  return a;
+};
+Type.prototype.decode = function(a, b) {
+  return a;
+};
+Type.prototype.equals = function(a, b) {
+  return a == b;
+};
+Type.prototype.$subPattern = function() {
+  var a = this.pattern.toString();
+  return a.substr(1, a.length - 2);
+};
+Type.prototype.pattern = /.*/;
+Type.prototype.toString = function() {
+  return "{Type:" + this.name + "}";
+};
+Type.prototype.$normalize = function(a) {
+  return this.is(a) ? a : this.decode(a);
+};
+Type.prototype.$asArray = function(a, b) {
+  if (!a) {
+    return this;
+  }
+  if ("auto" === a && !b) {
+    throw Error("'auto' array mode is for query parameters only");
+  }
+  return new function(a, b) {
+    function e(a, b) {
+      return function() {
+        return a[b].apply(a, arguments);
+      };
+    }
+    function f(a) {
+      return isArray(a) ? a : isDefined(a) ? [a] : [];
+    }
+    function g(a) {
+      return!a;
+    }
+    function h(a, c) {
+      return function(e) {
+        e = f(e);
+        e = map(e, a);
+        if (!0 === c) {
+          return 0 === filter(e, g).length;
+        }
+        a: {
+          switch(e.length) {
+            case 0:
+              e = void 0;
+              break a;
+            case 1:
+              e = "auto" === b ? e[0] : e;
+              break a;
+          }
+        }
+        return e;
+      };
+    }
+    this.encode = h(e(a, "encode"));
+    this.decode = h(e(a, "decode"));
+    this.is = h(e(a, "is"), !0);
+    this.equals = function(a) {
+      return function(b, c) {
+        var d = f(b), e = f(c);
+        if (d.length !== e.length) {
+          return!1;
+        }
+        for (var g = 0;g < d.length;g++) {
+          if (!a(d[g], e[g])) {
+            return!1;
+          }
+        }
+        return!0;
+      };
+    }(e(a, "equals"));
+    this.pattern = a.pattern;
+    this.$normalize = h(e(a, "$normalize"));
+    this.name = a.name;
+    this.$arrayMode = b;
+  }(this, a);
+};
+function $UrlMatcherFactory() {
+  function a(a) {
+    return null != a ? a.toString().replace(/\//g, "%2F") : a;
+  }
+  function b(a) {
+    return isFunction(a) || isArray(a) && isFunction(a[a.length - 1]);
+  }
+  function c() {
+    for (;l.length;) {
+      var a = l.shift();
+      if (a.pattern) {
+        throw Error("You cannot override a type's .pattern at runtime.");
+      }
+      angular.extend(h[a.name], m.invoke(a.def));
+    }
+  }
+  function d(a) {
+    extend(this, a || {});
+  }
+  $$UMFP = this;
+  var e = !1, f = !0, g = !1, h = {}, k = !0, l = [], m, p = {string:{encode:a, decode:function(a) {
+    return null != a ? a.toString().replace(/%2F/g, "/") : a;
+  }, is:function(a) {
+    return "string" === typeof a;
+  }, pattern:/[^/]*/}, int:{encode:a, decode:function(a) {
+    return parseInt(a, 10);
+  }, is:function(a) {
+    return isDefined(a) && this.decode(a.toString()) === a;
+  }, pattern:/\d+/}, bool:{encode:function(a) {
+    return a ? 1 : 0;
+  }, decode:function(a) {
+    return 0 !== parseInt(a, 10);
+  }, is:function(a) {
+    return!0 === a || !1 === a;
+  }, pattern:/0|1/}, date:{encode:function(a) {
+    return this.is(a) ? [a.getFullYear(), ("0" + (a.getMonth() + 1)).slice(-2), ("0" + a.getDate()).slice(-2)].join("-") : void 0;
+  }, decode:function(a) {
+    return this.is(a) ? a : (a = this.capture.exec(a)) ? new Date(a[1], a[2] - 1, a[3]) : void 0;
+  }, is:function(a) {
+    return a instanceof Date && !isNaN(a.valueOf());
+  }, equals:function(a, b) {
+    return this.is(a) && this.is(b) && a.toISOString() === b.toISOString();
+  }, pattern:/[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/, capture:/([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/}, json:{encode:angular.toJson, decode:angular.fromJson, is:angular.isObject, equals:angular.equals, pattern:/[^/]*/}, any:{encode:angular.identity, decode:angular.identity, is:angular.identity, equals:angular.equals, pattern:/.*/}};
+  $UrlMatcherFactory.$$getDefaultValue = function(a) {
+    if (!b(a.value)) {
+      return a.value;
+    }
+    if (!m) {
+      throw Error("Injectable functions cannot be called at configuration time");
+    }
+    return m.invoke(a.value);
+  };
+  this.caseInsensitive = function(a) {
+    isDefined(a) && (e = a);
+    return e;
+  };
+  this.strictMode = function(a) {
+    isDefined(a) && (f = a);
+    return f;
+  };
+  this.defaultSquashPolicy = function(a) {
+    if (!isDefined(a)) {
+      return g;
+    }
+    if (!0 !== a && !1 !== a && !isString(a)) {
+      throw Error("Invalid squash policy: " + a + ". Valid policies: false, true, arbitrary-string");
+    }
+    return g = a;
+  };
+  this.compile = function(a, b) {
+    return new UrlMatcher(a, extend({strict:f, caseInsensitive:e}, b));
+  };
+  this.isMatcher = function(a) {
+    if (!isObject(a)) {
+      return!1;
+    }
+    var b = !0;
+    forEach(UrlMatcher.prototype, function(c, d) {
+      isFunction(c) && (b = b && isDefined(a[d]) && isFunction(a[d]));
+    });
+    return b;
+  };
+  this.type = function(a, b, d) {
+    if (!isDefined(b)) {
+      return h[a];
+    }
+    if (h.hasOwnProperty(a)) {
+      throw Error("A type named '" + a + "' has already been defined.");
+    }
+    h[a] = new Type(extend({name:a}, b));
+    d && (l.push({name:a, def:d}), k || c());
+    return this;
+  };
+  forEach(p, function(a, b) {
+    h[b] = new Type(extend({name:b}, a));
+  });
+  h = inherit(h, {});
+  this.$get = ["$injector", function(a) {
+    m = a;
+    k = !1;
+    c();
+    forEach(p, function(a, b) {
+      h[b] || (h[b] = new Type(a));
+    });
+    return this;
+  }];
+  this.Param = function(a, c, d, e) {
+    function f() {
+      if (!m) {
+        throw Error("Injectable functions cannot be called at configuration time");
+      }
+      var a = m.invoke(d.$$fn);
+      if (null !== a && void 0 !== a && !k.type.is(a)) {
+        throw Error("Default value (" + a + ") for parameter '" + k.id + "' is not an instance of Type (" + k.type.name + ")");
+      }
+      return a;
+    }
+    var k = this;
+    d = function(a) {
+      var c = isObject(a) ? objectKeys(a) : [];
+      -1 === indexOf(c, "value") && -1 === indexOf(c, "type") && -1 === indexOf(c, "squash") && -1 === indexOf(c, "array") && (a = {value:a});
+      a.$$fn = b(a.value) ? a.value : function() {
+        return a.value;
+      };
+      return a;
+    }(d);
+    if (d.type && c) {
+      throw Error("Param '" + a + "' has two type configurations.");
+    }
+    c || (c = d.type ? d.type instanceof Type ? d.type : new Type(d.type) : "config" === e ? h.any : h.string);
+    var l = function() {
+      var b = {array:"search" === e ? "auto" : !1}, c = a.match(/\[\]$/) ? {array:!0} : {};
+      return extend(b, c, d).array;
+    }();
+    c = l ? c.$asArray(l, "search" === e) : c;
+    "string" !== c.name || l || "path" !== e || void 0 !== d.value || (d.value = "");
+    var p = void 0 !== d.value, u = function(a, b) {
+      var c = a.squash;
+      if (!b || !1 === c) {
+        return!1;
+      }
+      if (!isDefined(c) || null == c) {
+        return g;
+      }
+      if (!0 === c || isString(c)) {
+        return c;
+      }
+      throw Error("Invalid squash policy: '" + c + "'. Valid policies: false, true, or arbitrary string");
+    }(d, p), w = function(a, b, c, d) {
+      var e;
+      b = [{from:"", to:c || b ? void 0 : ""}, {from:null, to:c || b ? void 0 : ""}];
+      a = isArray(a.replace) ? a.replace : [];
+      isString(d) && a.push({from:d, to:void 0});
+      e = map(a, function(a) {
+        return a.from;
+      });
+      return filter(b, function(a) {
+        return-1 === indexOf(e, a.from);
+      }).concat(a);
+    }(d, l, p, u);
+    extend(this, {id:a, type:c, location:e, array:l, squash:u, replace:w, isOptional:p, value:function(a) {
+      function b(a) {
+        return function(b) {
+          return b.from === a;
+        };
+      }
+      a = function(a) {
+        var c = map(filter(k.replace, b(a)), function(a) {
+          return a.to;
+        });
+        return c.length ? c[0] : a;
+      }(a);
+      return isDefined(a) ? k.type.$normalize(a) : f();
+    }, dynamic:void 0, config:d, toString:function() {
+      return "{Param:" + a + " " + c + " squash: '" + u + "' optional: " + p + "}";
+    }});
+  };
+  d.prototype = {$$new:function() {
+    return inherit(this, extend(new d, {$$parent:this}));
+  }, $$keys:function() {
+    for (var a = [], b = [], c = this, e = objectKeys(d.prototype);c;) {
+      b.push(c), c = c.$$parent;
+    }
+    b.reverse();
+    forEach(b, function(b) {
+      forEach(objectKeys(b), function(b) {
+        -1 === indexOf(a, b) && -1 === indexOf(e, b) && a.push(b);
+      });
+    });
+    return a;
+  }, $$values:function(a) {
+    var b = {}, c = this;
+    forEach(c.$$keys(), function(d) {
+      b[d] = c[d].value(a && a[d]);
+    });
+    return b;
+  }, $$equals:function(a, b) {
+    var c = !0, d = this;
+    forEach(d.$$keys(), function(e) {
+      d[e].type.equals(a && a[e], b && b[e]) || (c = !1);
+    });
+    return c;
+  }, $$validates:function(a) {
+    var b = this.$$keys(), c, d, e;
+    for (c = 0;c < b.length;c++) {
+      d = this[b[c]];
+      e = a[b[c]];
+      if ((void 0 === e || null === e) && d.isOptional) {
+        break;
+      }
+      e = d.type.$normalize(e);
+      if (!d.type.is(e)) {
+        return!1;
+      }
+      e = d.type.encode(e);
+      if (angular.isString(e) && !d.type.pattern.exec(e)) {
+        return!1;
+      }
+    }
+    return!0;
+  }, $$parent:void 0};
+  this.ParamSet = d;
+}
+;tr.enums = {};
 tr.enums.Event = {STARTED:0, INTERRUPTED:1, COMPLETED:2, ERRORED:3, FINAL:4};
 tr.enums.State = {INITIALIZED:0, RUNNING:1, INTERRUPTED:2, COMPLETED:3, ERRORED:4};
 tr.Abstract = function(a) {

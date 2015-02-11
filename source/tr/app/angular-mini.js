@@ -1,40 +1,51 @@
-// Lifted from https://github.com/angular/angular.js/blob/master/src/Angular.js
+goog.provide('tr.app.AngularMini');
 
-var NODE_TYPE_ELEMENT = 1;
+/**
+ * Partial port of Angular functionality used by UrlMatcher (ported from UI Router).
+ * This set of functions is intended to be gradually replaced once UrlMatcher and ApplicationRouter are more fully-tested.
+ * @see https://github.com/angular/angular.js/blob/master/src/Angular.js
+ */
 
-function equals(o1, o2) {
+/**
+ * 
+ */
+tr.app.AngularMini.equals = function(o1, o2) {
   if (o1 === o2) return true;
   if (o1 === null || o2 === null) return false;
   if (o1 !== o1 && o2 !== o2) return true; // NaN === NaN
   var t1 = typeof o1, t2 = typeof o2, length, key, keySet;
   if (t1 == t2) {
     if (t1 == 'object') {
-      if (isArray(o1)) {
-        if (!isArray(o2)) return false;
+      if (tr.app.AngularMini.isArray(o1)) {
+        if (!tr.app.AngularMini.isArray(o2)) return false;
         if ((length = o1.length) == o2.length) {
           for (key = 0; key < length; key++) {
-            if (!equals(o1[key], o2[key])) return false;
+            if (!tr.app.AngularMini.equals(o1[key], o2[key])) return false;
           }
           return true;
         }
       } else if (isDate(o1)) {
         if (!isDate(o2)) return false;
-        return equals(o1.getTime(), o2.getTime());
+        return tr.app.AngularMini.equals(o1.getTime(), o2.getTime());
       } else if (isRegExp(o1) && isRegExp(o2)) {
         return o1.toString() == o2.toString();
       } else {
-        if (isScope(o1) || isScope(o2) || isWindow(o1) || isWindow(o2) || isArray(o2)) return false;
+        if (tr.app.AngularMini.isScope(o1) ||
+            tr.app.AngularMini.isScope(o2) ||
+            tr.app.AngularMini.isWindow(o1) ||
+            tr.app.AngularMini.isWindow(o2) ||
+            tr.app.AngularMini.isArray(o2)) return false;
         keySet = {};
         for (key in o1) {
-          if (key.charAt(0) === '$' || isFunction(o1[key])) continue;
-          if (!equals(o1[key], o2[key])) return false;
+          if (key.charAt(0) === '$' || tr.app.AngularMini.isFunction(o1[key])) continue;
+          if (!tr.app.AngularMini.equals(o1[key], o2[key])) return false;
           keySet[key] = true;
         }
         for (key in o2) {
           if (!keySet.hasOwnProperty(key) &&
               key.charAt(0) !== '$' &&
               o2[key] !== undefined &&
-              !isFunction(o2[key])) return false;
+              !tr.app.AngularMini.isFunction(o2[key])) return false;
         }
         return true;
       }
@@ -43,7 +54,10 @@ function equals(o1, o2) {
   return false;
 }
 
-function extend(dst) {
+/**
+ * 
+ */
+tr.app.AngularMini.extend = function(dst) {
   var h = dst.$$hashKey;
 
   for (var i = 1, ii = arguments.length; i < ii; i++) {
@@ -57,14 +71,17 @@ function extend(dst) {
     }
   }
 
-  setHashKey(dst, h);
+  tr.app.AngularMini.setHashKey(dst, h);
   return dst;
 }
 
-function filter(collection, callback) {
-  var array = isArray(collection);
+/**
+ * 
+ */
+tr.app.AngularMini.filter = function(collection, callback) {
+  var array = tr.app.AngularMini.isArray(collection);
   var result = array ? [] : {};
-  forEach(collection, function(val, i) {
+  tr.app.AngularMini.forEach(collection, function(val, i) {
     if (callback(val, i)) {
       result[array ? result.length : i] = val;
     }
@@ -72,10 +89,13 @@ function filter(collection, callback) {
   return result;
 }
 
-function forEach(obj, iterator, context) {
+/**
+ * 
+ */
+tr.app.AngularMini.forEach = function(obj, iterator, context) {
   var key, length;
   if (obj) {
-    if (isFunction(obj)) {
+    if (tr.app.AngularMini.isFunction(obj)) {
       for (key in obj) {
         // Need to check if hasOwnProperty exists,
         // as on IE8 the result of querySelectorAll is an object without a hasOwnProperty function
@@ -83,7 +103,7 @@ function forEach(obj, iterator, context) {
           iterator.call(context, obj[key], key, obj);
         }
       }
-    } else if (isArray(obj) || isArrayLike(obj)) {
+    } else if (tr.app.AngularMini.isArray(obj) || tr.app.AngularMini.isArrayLike(obj)) {
       var isPrimitive = typeof obj !== 'object';
       for (key = 0, length = obj.length; key < length; key++) {
         if (isPrimitive || key in obj) {
@@ -103,17 +123,26 @@ function forEach(obj, iterator, context) {
   return obj;
 }
 
-function fromJson(json) {
-  return isString(json)
+/**
+ * 
+ */
+tr.app.AngularMini.fromJson = function(json) {
+  return tr.app.AngularMini.isString(json)
       ? JSON.parse(json)
       : json;
 }
 
-function identity($) {
+/**
+ * 
+ */
+tr.app.AngularMini.identity = function($) {
   return $;
 }
 
-function indexOf(array, value) {
+/**
+ * 
+ */
+tr.app.AngularMini.indexOf = function(array, value) {
   if (Array.prototype.indexOf) {
     return array.indexOf(value, Number(arguments[2]) || 0);
   }
@@ -128,66 +157,107 @@ function indexOf(array, value) {
   return -1;
 }
 
-function inherit(parent, extra) {
-  return extend(Object.create(parent), extra);
+/**
+ * 
+ */
+tr.app.AngularMini.inherit = function(parent, extra) {
+  return tr.app.AngularMini.extend(Object.create(parent), extra);
 }
 
-var isArray = Array.isArray;
+/**
+ * 
+ */
+tr.app.AngularMini.isArray = Array.isArray;
 
-function isArrayLike(obj) {
-  if (obj == null || isWindow(obj)) {
+/**
+ * 
+ */
+tr.app.AngularMini.NODE_TYPE_ELEMENT_ = 1;
+
+/**
+ * 
+ */
+tr.app.AngularMini.isArrayLike = function(obj) {
+  if (obj == null || tr.app.AngularMini.isWindow(obj)) {
     return false;
   }
 
   var length = obj.length;
 
-  if (obj.nodeType === NODE_TYPE_ELEMENT && length) {
+  if (obj.nodeType === tr.app.AngularMini.NODE_TYPE_ELEMENT_ && length) {
     return true;
   }
 
-  return isString(obj) || isArray(obj) || length === 0 ||
+  return tr.app.AngularMini.isString(obj) || tr.app.AngularMini.isArray(obj) || length === 0 ||
          typeof length === 'number' && length > 0 && (length - 1) in obj;
 }
 
-function isDefined(value) {
+/**
+ * 
+ */
+tr.app.AngularMini.isDefined = function(value) {
   return typeof value !== 'undefined';
 }
 
-function isFunction(value) {
+/**
+ * 
+ */
+tr.app.AngularMini.isFunction = function(value) {
   return typeof value === 'function';
 }
 
-function isObject(value) {
+/**
+ * 
+ */
+tr.app.AngularMini.isObject = function(value) {
   // http://jsperf.com/isobject4
   return value !== null && typeof value === 'object';
 }
 
-function isRegExp(value) {
+/**
+ * 
+ */
+tr.app.AngularMini.isRegExp = function(value) {
   return toString.call(value) === '[object RegExp]';
 }
 
-function isScope(obj) {
+/**
+ * 
+ */
+tr.app.AngularMini.isScope = function(obj) {
   return obj && obj.$evalAsync && obj.$watch;
 }
 
-function isString(value) {
+/**
+ * 
+ */
+tr.app.AngularMini.isString = function(value) {
   return typeof value === 'string';
 }
 
-function isWindow(obj) {
+/**
+ * 
+ */
+tr.app.AngularMini.isWindow = function(obj) {
   return obj && obj.window === obj;
 }
 
-function map(collection, callback) {
-  var result = isArray(collection) ? [] : {};
+/**
+ * 
+ */
+tr.app.AngularMini.map = function(collection, callback) {
+  var result = tr.app.AngularMini.isArray(collection) ? [] : {};
 
-  forEach(collection, function(val, i) {
+  tr.app.AngularMini.forEach(collection, function(val, i) {
     result[i] = callback(val, i);
   });
   return result;
 }
 
-function setHashKey(obj, h) {
+/**
+ * 
+ */
+tr.app.AngularMini.setHashKey = function(obj, h) {
   if (h) {
     obj.$$hashKey = h;
   } else {
@@ -195,20 +265,13 @@ function setHashKey(obj, h) {
   }
 }
 
-function toJson(obj, pretty) {
+/**
+ * 
+ */
+tr.app.AngularMini.toJson = function(obj, pretty) {
   if (typeof obj === 'undefined') return undefined;
   if (!isNumber(pretty)) {
     pretty = pretty ? 2 : null;
   }
   return JSON.stringify(obj, toJsonReplacer, pretty);
 }
-
-var angular = {
-  equals: equals,
-  extend: extend,
-  identity: identity,
-  isString: isString,
-  isObject: isObject,
-  fromJson: fromJson,
-  toJson: toJson
-};

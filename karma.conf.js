@@ -7,7 +7,7 @@ module.exports = function(config) {
       'bower_components/closure-library/closure/goog/base.js',
 
       // Tests.
-      'tests/**/*.js',
+      'tests/tr/app/application-router.js',
 
       // Source files are watched and served, but not parsed for tests.
       {pattern: 'source/**/*.js', included: false},
@@ -37,7 +37,7 @@ module.exports = function(config) {
 
     preprocessors: {
       // preprocessed for dependencies (closure) and for iits
-      'tests/**/*.js': [
+      'tests/tr/app/application-router.js': [
         'closure',
         'closure-iit'
       ],

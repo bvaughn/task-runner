@@ -1,7 +1,11 @@
 goog.provide('tr.app.ApplicationRouter');
 
+goog.require('tr.app.UrlMatcher');
 goog.require('goog.array');
+goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('goog.Uri');
+goog.require('goog.window');
 
 /**
  * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
@@ -45,6 +49,10 @@ tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
  * This state is entered if a URL cannot be matched with a route, or if a route fails to load a valid state.
  * It's improtant for this state to have no dependencies.
  *
+ * <p>This router is based on UI Router (and shares much of its code under the hood).
+ * This means that UI Router's parameter formatting is supported.
+ * For more information see https://github.com/angular-ui/ui-router/wiki/URL-Routing
+ *
  * @param {function(!tr.app.State)} factoryFunction Factory function responsible for creating an application state task
  * @return {!tr.app.ApplicationRouter}
  */
@@ -60,7 +68,7 @@ tr.app.ApplicationRouter.prototype.setDefaultRoute = function(factoryFunction) {
  * @return {!tr.app.ApplicationRouter}
  */
 tr.app.ApplicationRouter.prototype.start = function() {
-  // TODO Check to make sure a default route has been set
+  goog.asserts.assert(!!this.defaultStateFactoryFunction_, 'Default route required.');
 
   goog.events.listen(
     window,
@@ -75,8 +83,8 @@ tr.app.ApplicationRouter.prototype.start = function() {
 
 /** @private */
 tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
-  // TODO Handle hash paths and full locations? How does UI Router do it?
-  var url = window.location.hash.substring(1);
+  // TODO Handle both hash paths and full locations; support HTML5 mode like UI Router.
+  var url = goog.window.location.hash.substring(1);
 
   for (var i = 0, length = this.paths_.length; i < length; i++) {
     var path = this.paths_[i];
@@ -121,16 +129,8 @@ tr.app.ApplicationRouter.prototype.goToDefaultState_ = function(application) {
  */
 tr.app.ApplicationRouter.Path_ = function(path, factoryFunction) {
   this.factoryFunction_ = factoryFunction;
-
-  if (!tr.app.ApplicationRouter.Path_.$urlMatcherFactory_) {
-    tr.app.ApplicationRouter.Path_.$urlMatcherFactory_ = new $UrlMatcherFactory();
-  }
-
-  this.urlMatcher = tr.app.ApplicationRouter.Path_.$urlMatcherFactory_.compile(path);
+  this.urlMatcher = new tr.app.UrlMatcher(path, {});
 };
-
-
-tr.app.ApplicationRouter.Path_.$urlMatcherFactory_ = null;
 
 /**
  * Parse the specifiec URL and extract state information if relevant.
@@ -138,7 +138,19 @@ tr.app.ApplicationRouter.Path_.$urlMatcherFactory_ = null;
  * @return {boolean} The specified URL matches the decorated state.
  */
 tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
-  var searchParams = goog.Uri.QueryData(window.location.search);
+  var search = goog.window.location.search;
+
+  if (search && search.length > 0) {
+    var queryData = new goog.Uri.QueryData(search.substring(1));
+    var keys = queryData.getKeys();
+    var searchParams = {};
+
+    for (var i = 0, length = keys.length; i < length; i++) {
+      var key = keys[i];
+
+      searchParams[key] = queryData.get(key);
+    }
+}
   
   /** {Object|null} */
   this.factoryFunctionParams_ = this.urlMatcher.exec(url, searchParams);

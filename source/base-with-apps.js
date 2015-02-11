@@ -10,3 +10,4 @@ goog.require('tr.app.Application');
 goog.require('tr.app.ApplicationRouter');
 goog.require('tr.app.State');
 goog.require('tr.app.TransitionState');
+goog.require('tr.app.UrlMatcher');
