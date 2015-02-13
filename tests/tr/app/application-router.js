@@ -11,6 +11,7 @@ describe('tr.app.ApplicationRouter', function() {
   var application;
   var applicationRouter;
   var defaultState;
+  var mockEventDispatcher;
   var mockLocation;
   var factoryFunctionParams;
   var stateA;
@@ -47,8 +48,18 @@ describe('tr.app.ApplicationRouter', function() {
       search: ''
     };
 
+    mockEventDispatcher = {
+      attachEvent: function(event) {
+        // TODO
+      },
+      dispatchEvent: function(event) {
+        // TODO
+      }
+    };
+
     var propertyReplacer = new goog.testing.PropertyReplacer();
     propertyReplacer.set(goog.window, 'location', mockLocation);
+    propertyReplacer.set(goog.window, 'attachEvent', mockEventDispatcher.attachEvent);
   });
 
   function setUrl(url, search) {

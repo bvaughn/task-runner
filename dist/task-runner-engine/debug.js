@@ -7281,14 +7281,10 @@ var $$UMFP = new tr.app.UrlMatcher.UrlMatcherFactory_;
 tr.app.ApplicationRouter = function(a) {
   this.application_ = a;
   this.paths_ = [];
-  this.location_ = goog.window.location || window.location;
-  console.log("goog.window.location:");
-  console.log(goog.window.location);
-  console.log("window.location:");
-  console.log(window.location);
+  this.window_ = goog.window.location ? goog.window : window;
 };
 tr.app.ApplicationRouter.prototype.addPath = function(a, b) {
-  this.paths_.push(new tr.app.ApplicationRouter.Path_(a, b, this.location_));
+  this.paths_.push(new tr.app.ApplicationRouter.Path_(a, b, this.window_));
   return this;
 };
 tr.app.ApplicationRouter.prototype.setDefaultRoute = function(a) {
@@ -7297,14 +7293,12 @@ tr.app.ApplicationRouter.prototype.setDefaultRoute = function(a) {
 };
 tr.app.ApplicationRouter.prototype.start = function() {
   goog.asserts.assert(!!this.defaultStateFactoryFunction_, "Default route required.");
-  goog.events.listen(window, goog.events.EventType.HASHCHANGE, goog.bind(this.ohHashChange_, this));
+  goog.events.listen(this.window_, goog.events.EventType.HASHCHANGE, goog.bind(this.ohHashChange_, this));
   this.ohHashChange_();
   return this;
 };
 tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
-  var a = this.location_.hash.substring(1);
-  console.log('ohHashChange_(url:"' + a + '")');
-  for (var b = 0, c = this.paths_.length;b < c;b++) {
+  for (var a = this.window_.location.hash.substring(1), b = 0, c = this.paths_.length;b < c;b++) {
     var d = this.paths_[b];
     if (d.load(a)) {
       a = d.createState();
@@ -7321,10 +7315,10 @@ tr.app.ApplicationRouter.prototype.goToDefaultState_ = function(a) {
 tr.app.ApplicationRouter.Path_ = function(a, b, c) {
   this.factoryFunction_ = b;
   this.urlMatcher_ = new tr.app.UrlMatcher(a, {});
-  this.location_ = c;
+  this.window_ = c;
 };
 tr.app.ApplicationRouter.Path_.prototype.load = function(a) {
-  var b = this.location_.search;
+  var b = this.window_.location.search;
   if (b && 0 < b.length) {
     for (var b = new goog.Uri.QueryData(b.substring(1)), c = b.getKeys(), d = {}, e = 0, f = c.length;e < f;e++) {
       var g = c[e];

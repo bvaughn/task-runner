@@ -26,7 +26,7 @@ tr.app.ApplicationRouter = function(application) {
   this.defaultStateFactoryFunction_;
 
   /** {Object} */
-  this.location_ = goog.window.location || window.location;
+  this.window_ = goog.window.location ? goog.window : window;
 };
 
 /**
@@ -39,7 +39,7 @@ tr.app.ApplicationRouter = function(application) {
  */
 tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
   this.paths_.push(
-    new tr.app.ApplicationRouter.Path_(path, factoryFunction, this.location_));
+    new tr.app.ApplicationRouter.Path_(path, factoryFunction, this.window_));
 
   return this;
 };
@@ -74,7 +74,7 @@ tr.app.ApplicationRouter.prototype.start = function() {
   goog.asserts.assert(!!this.defaultStateFactoryFunction_, 'Default route required.');
 
   goog.events.listen(
-    window,
+    this.window_,
     goog.events.EventType.HASHCHANGE,
     goog.bind(this.ohHashChange_, this));
 
@@ -87,7 +87,7 @@ tr.app.ApplicationRouter.prototype.start = function() {
 /** @private */
 tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
   // TODO Handle both hash paths and full locations; support HTML5 mode like UI Router.
-  var url = this.location_.hash.substring(1);
+  var url = this.window_.location.hash.substring(1);
 
   for (var i = 0, length = this.paths_.length; i < length; i++) {
     var path = this.paths_[i];
@@ -130,10 +130,10 @@ tr.app.ApplicationRouter.prototype.goToDefaultState_ = function(application) {
  * @constructor
  * @struct
  */
-tr.app.ApplicationRouter.Path_ = function(path, factoryFunction, location) {
+tr.app.ApplicationRouter.Path_ = function(path, factoryFunction, window) {
   this.factoryFunction_ = factoryFunction;
   this.urlMatcher_ = new tr.app.UrlMatcher(path, {});
-  this.location_ = location;
+  this.window_ = window;
 };
 
 /**
@@ -142,7 +142,7 @@ tr.app.ApplicationRouter.Path_ = function(path, factoryFunction, location) {
  * @return {boolean} The specified URL matches the decorated state.
  */
 tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
-  var search = this.location_.search;
+  var search = this.window_.location.search;
 
   if (search && search.length > 0) {
     var queryData = new goog.Uri.QueryData(search.substring(1));

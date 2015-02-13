@@ -170,7 +170,7 @@
             </p>
           </section>
           <div class="description"><p>{Object}</p> </div>
-          <pre><code class="language-javascript">this.window_ = goog.window || window;
+          <pre><code class="language-javascript">this.window_ = goog.window.location ? goog.window : window;
 };</code></pre>
           <section id="addPath">
             <h1>addPath</h1>
@@ -248,7 +248,7 @@
   goog.asserts.assert(!!this.defaultStateFactoryFunction_, 'Default route required.');
 
   goog.events.listen(
-    window,
+    this.window_,
     goog.events.EventType.HASHCHANGE,
     goog.bind(this.ohHashChange_, this));
 
