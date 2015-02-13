@@ -11,8 +11,7 @@ describe('tr.app.ApplicationRouter', function() {
   var application;
   var applicationRouter;
   var defaultState;
-  var mockEventDispatcher;
-  var mockLocation;
+  var mockWindow;
   var factoryFunctionParams;
   var stateA;
   var stateAFactory;
@@ -43,30 +42,29 @@ describe('tr.app.ApplicationRouter', function() {
       return stateB;
     };
 
-    mockLocation = {
-      hash: '',
-      search: ''
-    };
-
-    mockEventDispatcher = {
+    mockWindow = {
       addEventListener: function(eventType, handler) {
-        mockEventDispatcher.handler_ = handler;
+        mockWindow.handler_ = handler;
       },
       dispatchEvent: function(event) {
-        mockEventDispatcher.handler_(event);
+        mockWindow.handler_(event);
+      },
+      location: {
+        hash: '',
+        search: ''
       }
     };
 
     var propertyReplacer = new goog.testing.PropertyReplacer();
-    propertyReplacer.set(goog.window, 'location', mockLocation);
-    propertyReplacer.set(goog.window, 'addEventListener', mockEventDispatcher.addEventListener);
+    propertyReplacer.set(goog.window, 'location', mockWindow.location);
+    propertyReplacer.set(goog.window, 'addEventListener', mockWindow.addEventListener);
   });
 
   function setUrl(url, search) {
-    mockLocation.hash = '#' + url; // TODO Update this once better URL support is implemented in ApplicationRouter
+    mockWindow.location.hash = '#' + url; // TODO Update this once better URL support is implemented in ApplicationRouter
     
     if (search) {
-      mockLocation.search = '?' + search;
+      mockWindow.location.search = '?' + search;
     }
   }
 
@@ -148,7 +146,7 @@ describe('tr.app.ApplicationRouter', function() {
 
     setUrl('/some/state');
 
-    mockEventDispatcher.dispatchEvent({type: 'HASHCHANGE'});
+    mockWindow.dispatchEvent({type: 'HASHCHANGE'});
 
     expect(stateA).toBeTruthy();
     expect(application.getState()).toBe(stateA);
