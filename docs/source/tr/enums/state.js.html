@@ -73,6 +73,7 @@
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//index.html">Main</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/abstract.js.html">abstract.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/chain.js.html">chain.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/closure.js.html">closure.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/composite.js.html">composite.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/decorator.js.html">decorator.js</a></li>
@@ -83,6 +84,7 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stop-on-success.js.html">stop-on-success.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stub.js.html">stub.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/task.js.html">task.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
@@ -105,11 +107,11 @@
         <div class="span9">
           <div class="description"><p>Enumeration of Task states.</p> </div>
           <pre><code class="language-javascript">tr.enums.State = {
-  INITIALIZED: 0,
-  RUNNING: 1,
-  INTERRUPTED: 2,
-  COMPLETED: 3,
-  ERRORED: 4
+  INITIALIZED: 'INITIALIZED',
+  RUNNING: 'RUNNING',
+  INTERRUPTED: 'INTERRUPTED',
+  COMPLETED: 'COMPLETED',
+  ERRORED: 'ERRORED'
 };</code></pre>
         </div>
       </div>

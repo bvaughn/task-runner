@@ -1436,7 +1436,7 @@ goog.addDependency('../bower_components/closure-library/closure/goog/webgl/webgl
 goog.addDependency('../bower_components/closure-library/closure/goog/window/window.js', ['goog.window'], ['goog.string', 'goog.userAgent'], false);
 goog.addDependency('../bower_components/closure-library/closure/goog/window/window_test.js', ['goog.windowTest'], ['goog.dom', 'goog.events', 'goog.string', 'goog.testing.AsyncTestCase', 'goog.testing.jsunit', 'goog.window'], false);
 goog.addDependency('base-with-apps.js', ['tr.app'], ['tr', 'tr.app.Application', 'tr.app.ApplicationRouter', 'tr.app.State', 'tr.app.TransitionState', 'tr.app.UrlMatcher'], false);
-goog.addDependency('base.js', ['tr'], ['tr.Abstract', 'tr.Closure', 'tr.Composite', 'tr.Decorator', 'tr.Factory', 'tr.Failsafe', 'tr.Graph', 'tr.Listener', 'tr.Observer', 'tr.Retry', 'tr.Sleep', 'tr.Stub', 'tr.Task', 'tr.Timeout', 'tr.Tween', 'tr.Xhr', 'tr.enums.Event', 'tr.enums.State'], false);
+goog.addDependency('base.js', ['tr'], ['tr.Abstract', 'tr.Chain', 'tr.Closure', 'tr.Composite', 'tr.Decorator', 'tr.Factory', 'tr.Failsafe', 'tr.Graph', 'tr.Listener', 'tr.Observer', 'tr.Retry', 'tr.Sleep', 'tr.StopOnSuccess', 'tr.Stub', 'tr.Task', 'tr.Timeout', 'tr.Tween', 'tr.Xhr', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/abstract.js', ['tr.Abstract'], ['tr.Task', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/app/angular-mini.js', ['tr.app.AngularMini_'], [], false);
 goog.addDependency('tr/app/application-router.js', ['tr.app.ApplicationRouter'], ['goog.Uri', 'goog.array', 'goog.events', 'goog.events.EventType', 'goog.window', 'tr.app.UrlMatcher'], false);
@@ -1444,6 +1444,7 @@ goog.addDependency('tr/app/application.js', ['tr.app.Application'], ['tr.Composi
 goog.addDependency('tr/app/state.js', ['tr.app.State'], ['tr.Graph', 'tr.enums.State'], false);
 goog.addDependency('tr/app/transition-state.js', ['tr.app.TransitionState'], ['tr.Closure', 'tr.Failsafe', 'tr.app.State', 'tr.enums.State'], false);
 goog.addDependency('tr/app/url-matcher.js', ['tr.app.UrlMatcher'], ['tr.app.AngularMini_'], false);
+goog.addDependency('tr/chain.js', ['tr.Chain'], ['goog.asserts', 'tr.Abstract', 'tr.Composite', 'tr.Graph', 'tr.StopOnSuccess'], false);
 goog.addDependency('tr/closure.js', ['tr.Closure'], ['tr.Abstract'], false);
 goog.addDependency('tr/composite.js', ['tr.Composite'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/decorator.js', ['tr.Decorator'], [], false);
@@ -1456,6 +1457,7 @@ goog.addDependency('tr/listener.js', ['tr.Listener'], ['tr.Abstract', 'tr.enums.
 goog.addDependency('tr/observer.js', ['tr.Observer'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/retry.js', ['tr.Retry'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/sleep.js', ['tr.Sleep'], ['tr.Abstract', 'tr.enums.State'], false);
+goog.addDependency('tr/stop-on-success.js', ['tr.StopOnSuccess'], ['tr.Composite', 'tr.enums.State'], false);
 goog.addDependency('tr/stub.js', ['tr.Stub'], ['tr.Closure'], false);
 goog.addDependency('tr/task.js', ['tr.Task'], [], false);
 goog.addDependency('tr/timeout.js', ['tr.Timeout'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);

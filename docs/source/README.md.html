@@ -73,6 +73,7 @@
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//index.html">Main</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/abstract.js.html">abstract.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/chain.js.html">chain.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/closure.js.html">closure.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/composite.js.html">composite.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/decorator.js.html">decorator.js</a></li>
@@ -83,6 +84,7 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stop-on-success.js.html">stop-on-success.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stub.js.html">stub.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/task.js.html">task.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
@@ -124,6 +126,7 @@ These are a few built-in tasks for doing things that are common in web applicati
 
 This type of task lets you treat a collection of tasks as a single tr.
 
+* `tr.Chain`: Lightweight interface to create a dependency graph task.
 * `tr.Composite`: Executes a set of Tasks either in parallel or one after another.
 * `tr.Graph`: Executes of a set of Tasks with dependencies on each other in the correct order.
 * `tr.Observer`: Observes (but does not execute) a collection of Tasks. These tasks do not have to be related in any way.
@@ -134,6 +137,7 @@ This type of task lets you treat a collection of tasks as a single tr.
 * `tr.Failsafe`: Decorates a task and re-dispatches errors as successful completions.
 * `tr.Stub`: No-op task primarily useful for unit testing of default, op-op values (that can be replaced with meaningful tasks to customize behavior).
 * `tr.Retry`: Decorator for tasks that should be retried on error. This can be useful for tasks that might fail intermittently due to things like a temporary loss of Internet connectivity.
+* `tr.StopOnSuccess`: Runs a series of tasks until one of them successfully completes.
 * `tr.Timeout`: Decorates a Task and enforces a timeout. If the decorated task has not completed within the specified time limits, the decorator errors.
 * `tr.Sleep`: Sleeps for an amount of time to pass before completing.
 

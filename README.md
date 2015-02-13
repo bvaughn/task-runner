@@ -33,6 +33,46 @@ Task Runner includes several [reusable tasks](http://rawgit.com/bvaughn/task-run
 
 Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for examples and additional documentation!
 
+## Chaining Tasks
+
+Task Runner provides several ways to group tasks but the simplest way is to use `tr.Chain`. Here's an example of how it works
+
+```js
+new Chain().first(taskA, taskB)
+           .then(taskC)
+           .then(taskE, taskD)
+           .or(taskF)
+           .then(taskG)
+           .run();
+```
+
+The above code creates a graph of composite of tasks that will run in the following order:
+
+1. First Task A and B will be run (in parallel).
+1. If they succeed Task C will be run next.
+1. If Task C succeeds, Task D and E will be run next (in parallel).
+1. If either Task D or E fails, Task F will be run. Otherwise it will be skipped.
+1. Lastly Task G will be run.
+
+If any of the above tasks fail (with the exception of Tasks D or E) the chain of execution will stop. Otherwise it will run until the last task (Task G) completes.
+
+Chain tasks, like all tasks, provide error handling. To be notified of a failed chain, just attach an error handler as shown below:
+
+```js
+new Chain(errorHandler)
+    // Add other tasks here
+    .run();
+```
+
+Alternately you can use the standard task synaxt for declarining the error handler:
+
+```js
+var chain = new Chain();
+chain.errored(errorHandler);
+// Add child tasks here
+chain.run();
+```
+
 ## Get Started
 
 Get Task Runner can be installed in any of the following ways:

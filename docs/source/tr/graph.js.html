@@ -73,6 +73,7 @@
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//index.html">Main</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/abstract.js.html">abstract.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/chain.js.html">chain.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/closure.js.html">closure.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/composite.js.html">composite.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/decorator.js.html">decorator.js</a></li>
@@ -83,6 +84,7 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stop-on-success.js.html">stop-on-success.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stub.js.html">stub.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/task.js.html">task.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
@@ -118,6 +120,8 @@
               <li><a href="#addAllToEnd"><i class="alert alert-info"></i><span>addAllToEnd</span></a>
               </li>
               <li><a href="#remove"><i class="alert alert-info"></i><span>remove</span></a>
+              </li>
+              <li><a href="#removeAll"><i class="alert alert-info"></i><span>removeAll</span></a>
               </li>
               <li><a href="#getOperationsCount"><i class="alert alert-info"></i><span>getOperationsCount</span></a>
               </li>
@@ -355,7 +359,7 @@ goog.inherits(tr.Graph, tr.Abstract);</code></pre>
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Removes a child task from the dependency graph and ensures that the remaining<br />dependencies are still valid.</p> </div>
+          <div class="description"><p>Removes a child task from the dependency graph and ensures that the remaining dependencies are still valid.</p> </div>
           <pre><code class="language-javascript">tr.Graph.prototype.remove = function(task) {
   var index = this.tasks_.indexOf(task);
 
@@ -373,6 +377,37 @@ goog.inherits(tr.Graph, tr.Abstract);</code></pre>
 
   if (this.getState() == tr.enums.State.RUNNING) {
     this.completeOrRunNext_();
+  }
+
+  return this;
+};</code></pre>
+          <section id="removeAll">
+            <h1>removeAll</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.Graph.prototype.removeAll()</span> -><span>!tr.Graph</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>tasks</td>
+                <td>!Array.&lt;!tr.Task&gt;</td>
+                <td>Child tasks to be removed.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Removes child tasks from the dependency graph and ensures that the remaining dependencies are still valid.</p> </div>
+          <pre><code class="language-javascript">tr.Graph.prototype.removeAll = function(tasks) {
+  for (var i = 0, length = tasks.length; i &lt; length; i++) {
+    this.remove(tasks[i]);
   }
 
   return this;

@@ -18,6 +18,7 @@ These are a few built-in tasks for doing things that are common in web applicati
 
 This type of task lets you treat a collection of tasks as a single tr.
 
+* `tr.Chain`: Lightweight interface to create a dependency graph task.
 * `tr.Composite`: Executes a set of Tasks either in parallel or one after another.
 * `tr.Graph`: Executes of a set of Tasks with dependencies on each other in the correct order.
 * `tr.Observer`: Observes (but does not execute) a collection of Tasks. These tasks do not have to be related in any way.
@@ -28,6 +29,7 @@ This type of task lets you treat a collection of tasks as a single tr.
 * `tr.Failsafe`: Decorates a task and re-dispatches errors as successful completions.
 * `tr.Stub`: No-op task primarily useful for unit testing of default, op-op values (that can be replaced with meaningful tasks to customize behavior).
 * `tr.Retry`: Decorator for tasks that should be retried on error. This can be useful for tasks that might fail intermittently due to things like a temporary loss of Internet connectivity.
+* `tr.StopOnSuccess`: Runs a series of tasks until one of them successfully completes.
 * `tr.Timeout`: Decorates a Task and enforces a timeout. If the decorated task has not completed within the specified time limits, the decorator errors.
 * `tr.Sleep`: Sleeps for an amount of time to pass before completing.
 

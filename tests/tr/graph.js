@@ -769,4 +769,23 @@ describe('tr.Graph', function() {
     expect(nullTask1.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
   });
+
+  it('should allow tasks to be removed in batches', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2);
+
+    task.run();
+
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+
+    task.removeAll([nullTask1, nullTask2]);
+
+    expect(task.getState()).toBe(tr.enums.State.COMPLETED);
+  });
 });

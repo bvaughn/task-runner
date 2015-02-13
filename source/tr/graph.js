@@ -119,13 +119,11 @@ tr.Graph.prototype.addAllToEnd = function(tasks) {
 };
 
 /**
- * Removes a child task from the dependency graph and ensures that the remaining
- * dependencies are still valid.
+ * Removes a child task from the dependency graph and ensures that the remaining dependencies are still valid.
  *
  * @param {!tr.Task} task Child task to be removed from the graph.
  * @return {!tr.Graph} a reference to the current task.
- * @throws {Error} if the task provided is not within the depenency graph, or if
- *     removing the task invalidates any other, blocked tasks.
+ * @throws {Error} if the task provided is not within the depenency graph, or if removing the task invalidates any other, blocked tasks.
  */
 tr.Graph.prototype.remove = function(task) {
   var index = this.tasks_.indexOf(task);
@@ -144,6 +142,21 @@ tr.Graph.prototype.remove = function(task) {
 
   if (this.getState() == tr.enums.State.RUNNING) {
     this.completeOrRunNext_();
+  }
+
+  return this;
+};
+
+/**
+ * Removes child tasks from the dependency graph and ensures that the remaining dependencies are still valid.
+ *
+ * @param {!Array.<!tr.Task>} tasks Child tasks to be removed.
+ * @return {!tr.Graph} a reference to the current task.
+ * @throws {Error} if the task provided is not within the depenency graph, or if removing the task invalidates any other, blocked tasks.
+ */
+tr.Graph.prototype.removeAll = function(tasks) {
+  for (var i = 0, length = tasks.length; i < length; i++) {
+    this.remove(tasks[i]);
   }
 
   return this;
