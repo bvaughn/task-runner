@@ -64,11 +64,14 @@ tr.Task.prototype.getOperationsCount = goog.abstractMethod;
 tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;
 
 /**
- * Returns the state of the tr.
+ * Context information about where this task was created.
+ * This information can help locate and debug errored tasks.
  *
- * @return {!tr.enums.State}
+ * <p>This property is only available in the debug build of Task Runner.
+ *
+ * @return {!string}
  */
-tr.Task.prototype.getState = goog.abstractMethod;
+tr.Task.prototype.getCreationContext = goog.abstractMethod;
 
 /**
  * Optional human-readable name, typically useful for debug purposes.
@@ -76,6 +79,13 @@ tr.Task.prototype.getState = goog.abstractMethod;
  * @return {string|undefined}
  */
 tr.Task.prototype.getName = goog.abstractMethod;
+
+/**
+ * Returns the state of the tr.
+ *
+ * @return {!tr.enums.State}
+ */
+tr.Task.prototype.getState = goog.abstractMethod;
 
 /**
  * Globally unique ID for the current Task-instance.

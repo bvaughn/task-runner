@@ -127,9 +127,11 @@
               </li>
               <li><a href="#getCompletedOperationsCount"><i class="alert alert-info"></i><span>getCompletedOperationsCount</span></a>
               </li>
-              <li><a href="#getState"><i class="alert alert-info"></i><span>getState</span></a>
+              <li><a href="#getCreationContext"><i class="alert alert-info"></i><span>getCreationContext</span></a>
               </li>
               <li><a href="#getName"><i class="alert alert-info"></i><span>getName</span></a>
+              </li>
+              <li><a href="#getState"><i class="alert alert-info"></i><span>getState</span></a>
               </li>
               <li><a href="#getUniqueID"><i class="alert alert-info"></i><span>getUniqueID</span></a>
               </li>
@@ -248,6 +250,19 @@
           </section>
           <div class="description"><p>@private {tr.Task}</p> </div>
           <pre><code class="language-javascript">this.interruptingTask_ = null;</code></pre>
+          <div class="description"><p>@private {Array.&lt;!string&gt;|undefined}</p> </div>
+          <pre><code class="language-javascript">this.creationContext_;
+
+  if (goog.DEBUG) {
+    var stack = new Error(&quot;Constructor&quot;).stack;
+
+    if (stack) {
+      this.creationContext_ = stack.replace(/^\s+at\s+/gm, '')
+                                   .replace(/\s$/gm, '')
+                                   .split(&quot;\n&quot;)
+                                   .slice(2);
+    }
+  }</code></pre>
           <section id="console_">
             <h1>console_</h1>
             <h5 class="subheader"></h5>
@@ -342,16 +357,16 @@
           <pre><code class="language-javascript">tr.Abstract.prototype.getCompletedOperationsCount = function() {
   return this.state_ == tr.enums.State.COMPLETED ? 1 : 0;
 };</code></pre>
-          <section id="getState">
-            <h1>getState</h1>
+          <section id="getCreationContext">
+            <h1>getCreationContext</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Abstract.prototype.getState()</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.Abstract.prototype.getCreationContext()</span>
             </p>
           </section>
           <div class="description"><p>@override</p> </div>
-          <pre><code class="language-javascript">tr.Abstract.prototype.getState = function() {
-  return this.state_;
+          <pre><code class="language-javascript">tr.Abstract.prototype.getCreationContext = function() {
+  return this.creationContext_;
 };</code></pre>
           <section id="getName">
             <h1>getName</h1>
@@ -363,6 +378,17 @@
           <div class="description"><p>@override</p> </div>
           <pre><code class="language-javascript">tr.Abstract.prototype.getName = function() {
   return this.taskName_;
+};</code></pre>
+          <section id="getState">
+            <h1>getState</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.Abstract.prototype.getState()</span>
+            </p>
+          </section>
+          <div class="description"><p>@override</p> </div>
+          <pre><code class="language-javascript">tr.Abstract.prototype.getState = function() {
+  return this.state_;
 };</code></pre>
           <section id="getUniqueID">
             <h1>getUniqueID</h1>

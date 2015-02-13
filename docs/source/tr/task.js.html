@@ -124,10 +124,12 @@
           <pre><code class="language-javascript">tr.Task.prototype.getOperationsCount = goog.abstractMethod;</code></pre>
           <div class="description"><p>Number of internal operations that have completed.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;</code></pre>
-          <div class="description"><p>Returns the state of the tr.</p> </div>
-          <pre><code class="language-javascript">tr.Task.prototype.getState = goog.abstractMethod;</code></pre>
+          <div class="description"><p>Context information about where this task was created.<br />This information can help locate and debug errored tasks.</p><p><p>This property is only available in the debug build of Task Runner.</p> </div>
+          <pre><code class="language-javascript">tr.Task.prototype.getCreationContext = goog.abstractMethod;</code></pre>
           <div class="description"><p>Optional human-readable name, typically useful for debug purposes.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getName = goog.abstractMethod;</code></pre>
+          <div class="description"><p>Returns the state of the tr.</p> </div>
+          <pre><code class="language-javascript">tr.Task.prototype.getState = goog.abstractMethod;</code></pre>
           <div class="description"><p>Globally unique ID for the current Task-instance.</p><p>Tasks should be assigned a unique ID when they are created.<br />IDs remain with their Tasks as long as the Tasks exist and are not reused.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getUniqueID = goog.abstractMethod;</code></pre>
           <div class="description"><p>Starts a tr.<br />This method may also be used to re-run a task that has errorred or to resume<br />a task that has been interrupted.</p> </div>

@@ -24,6 +24,9 @@ tr.app.ApplicationRouter = function(application) {
 
   /** {function(!tr.app.State)|undefined} */
   this.defaultStateFactoryFunction_;
+
+  /** {Object} */
+  this.location_ = goog.window.location || window.location;
 };
 
 /**
@@ -36,7 +39,7 @@ tr.app.ApplicationRouter = function(application) {
  */
 tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
   this.paths_.push(
-    new tr.app.ApplicationRouter.Path_(path, factoryFunction));
+    new tr.app.ApplicationRouter.Path_(path, factoryFunction, this.location_));
 
   return this;
 };
@@ -84,7 +87,7 @@ tr.app.ApplicationRouter.prototype.start = function() {
 /** @private */
 tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
   // TODO Handle both hash paths and full locations; support HTML5 mode like UI Router.
-  var url = goog.window.location.hash.substring(1);
+  var url = this.location_.hash.substring(1);
 
   for (var i = 0, length = this.paths_.length; i < length; i++) {
     var path = this.paths_[i];
@@ -127,9 +130,10 @@ tr.app.ApplicationRouter.prototype.goToDefaultState_ = function(application) {
  * @constructor
  * @struct
  */
-tr.app.ApplicationRouter.Path_ = function(path, factoryFunction) {
+tr.app.ApplicationRouter.Path_ = function(path, factoryFunction, location) {
   this.factoryFunction_ = factoryFunction;
-  this.urlMatcher = new tr.app.UrlMatcher(path, {});
+  this.urlMatcher_ = new tr.app.UrlMatcher(path, {});
+  this.location_ = location;
 };
 
 /**
@@ -138,7 +142,7 @@ tr.app.ApplicationRouter.Path_ = function(path, factoryFunction) {
  * @return {boolean} The specified URL matches the decorated state.
  */
 tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
-  var search = goog.window.location.search;
+  var search = this.location_.search;
 
   if (search && search.length > 0) {
     var queryData = new goog.Uri.QueryData(search.substring(1));
@@ -153,7 +157,7 @@ tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
 }
   
   /** {Object|null} */
-  this.factoryFunctionParams_ = this.urlMatcher.exec(url, searchParams);
+  this.factoryFunctionParams_ = this.urlMatcher_.exec(url, searchParams);
 
   return !!this.factoryFunctionParams_;
 };

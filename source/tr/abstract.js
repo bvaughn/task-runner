@@ -54,11 +54,23 @@ tr.Abstract = function(opt_taskName) {
   /** @private {tr.Task} */
   this.interruptingTask_ = null;
 
+  /** @private {Array.<!string>|undefined} */
+  this.creationContext_;
+
+  if (goog.DEBUG) {
+    var stack = new Error("Constructor").stack;
+
+    if (stack) {
+      this.creationContext_ = stack.replace(/^\s+at\s+/gm, '')
+                                   .replace(/\s$/gm, '')
+                                   .split("\n")
+                                   .slice(2);
+    }
+  }
+
   /**
    * A map from task events to its corresponding callbacks.
-   * @private {!Object.<
-   *             !tr.enums.Event,
-   *             !Array.<!tr.Abstract.TaskCallback_>>}
+   * @private {!Object.<!tr.enums.Event, !Array.<!tr.Abstract.TaskCallback_>>}
    */
   this.taskCallbackMap_ = {};
 
@@ -115,13 +127,18 @@ tr.Abstract.prototype.getCompletedOperationsCount = function() {
 };
 
 /** @override */
-tr.Abstract.prototype.getState = function() {
-  return this.state_;
+tr.Abstract.prototype.getCreationContext = function() {
+  return this.creationContext_;
 };
 
 /** @override */
 tr.Abstract.prototype.getName = function() {
   return this.taskName_;
+};
+
+/** @override */
+tr.Abstract.prototype.getState = function() {
+  return this.state_;
 };
 
 /** @override */

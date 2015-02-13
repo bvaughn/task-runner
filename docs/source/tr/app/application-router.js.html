@@ -103,6 +103,8 @@
               </li>
               <li><a href="#paths_"><i class="alert alert-success"></i><span>paths_</span></a>
               </li>
+              <li><a href="#window_"><i class="alert alert-success"></i><span>window_</span></a>
+              </li>
               <li><a href="#addPath"><i class="alert alert-info"></i><span>addPath</span></a>
               </li>
               <li><a href="#setDefaultRoute"><i class="alert alert-info"></i><span>setDefaultRoute</span></a>
@@ -159,7 +161,16 @@
           <div class="description"><p>@private {!Array.&lt;!tr.app.ApplicationRouter.Path_&gt;}</p> </div>
           <pre><code class="language-javascript">this.paths_ = [];</code></pre>
           <div class="description"><p>{function(!tr.app.State)|undefined}</p> </div>
-          <pre><code class="language-javascript">this.defaultStateFactoryFunction_;
+          <pre><code class="language-javascript">this.defaultStateFactoryFunction_;</code></pre>
+          <section id="window_">
+            <h1>window_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.window_</span>
+            </p>
+          </section>
+          <div class="description"><p>{Object}</p> </div>
+          <pre><code class="language-javascript">this.window_ = goog.window || window;
 };</code></pre>
           <section id="addPath">
             <h1>addPath</h1>
@@ -192,7 +203,7 @@
           <div class="description"><p>Register an application route.<br />When this route is matched the provided factory function will be invoked to create an application state.</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.addPath = function(path, factoryFunction) {
   this.paths_.push(
-    new tr.app.ApplicationRouter.Path_(path, factoryFunction));
+    new tr.app.ApplicationRouter.Path_(path, factoryFunction, this.window_));
 
   return this;
 };</code></pre>
@@ -256,7 +267,7 @@
           <div class="description"><p>@private</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.prototype.ohHashChange_ = function() {
   // TODO Handle both hash paths and full locations; support HTML5 mode like UI Router.
-  var url = goog.window.location.hash.substring(1);
+  var url = this.window_.location.hash.substring(1);
 
   for (var i = 0, length = this.paths_.length; i &lt; length; i++) {
     var path = this.paths_[i];
@@ -303,7 +314,7 @@
           </section>
           <div class="description"><p>Parse the specifiec URL and extract state information if relevant.</p> </div>
           <pre><code class="language-javascript">tr.app.ApplicationRouter.Path_.prototype.load = function(url) {
-  var search = goog.window.location.search;
+  var search = this.window_.location.search;
 
   if (search &amp;&amp; search.length &gt; 0) {
     var queryData = new goog.Uri.QueryData(search.substring(1));
@@ -324,7 +335,7 @@
             </p>
           </section>
           <div class="description"><p>{Object|null}</p> </div>
-          <pre><code class="language-javascript">this.factoryFunctionParams_ = this.urlMatcher.exec(url, searchParams);
+          <pre><code class="language-javascript">this.factoryFunctionParams_ = this.urlMatcher_.exec(url, searchParams);
 
   return !!this.factoryFunctionParams_;
 };</code></pre>
