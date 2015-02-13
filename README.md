@@ -5,13 +5,33 @@
 **[API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)** |
 **[Report an issue](https://github.com/bvaughn/task-runner/issues/new)**
 
----
+Task Runner is a collection of low-level libraries designed to make JavaScript application development easier. It does not require any third party libraries or frameworks.
 
-A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual task.
+Task Runner includes:
 
-Tasks help break complex problems down into smaller, simpler problems.
+* *Tasks*, which make organization of complex asynchronous code more manageable. A task is kind of like a [JavaScript Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more powerful.
+* A optional, barebones application framework and router (based on [UI Router](https://github.com/angular-ui/ui-router/)) to aid in the creation of task-based applications. (This code is bundled separately, as an add-on.)
 
-Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) to learn more!
+For more information, see the [Task Runner API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
+
+## Tasks
+
+A *task* encapsulates a unit of work. Tasks can be as small as a console log message or as big as an entire application. They can be synchronous or asynchronous.
+
+Tasks have many advantages over other methods of asynchronous programming, such as callbacks:
+
+* Performing several tasks in a row will not create nested "pyramid" code as you would get when using only callbacks.
+* Tasks are fully composable, allowing you to perform branching, parallelism, and complex error handling, without the spaghetti code of having many named callbacks.
+* You can arrange task-based code in the order that it executes, rather than having to split your logic across scattered callback functions.
+
+## Creating Tasks
+
+Task Runner includes several [reusable tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) but you can also create your own. There are 2 basic approaches:
+
+* **Inheritance**: Extend `tr.Abstract` task and override the run, interrupt, and reset methods.
+* **Composition**: Use the built in `tr.Closure` task to decorate functions and automatically turn them *into* tasks.
+
+Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for examples and additional documentation!
 
 ## Get Started
 
@@ -23,8 +43,9 @@ Get Task Runner can be installed in any of the following ways:
 * Via NPM, by running `npm install task-runner-js`.
 
 Task Runner is available in two flavors:
-* `dist/task-runner`: Includes base task library. Compatible with all browsers as well as Node JS. Can be used with any JavaScript frameworks (Angular, React, Ember, etc.).
-* `dist/task-runner-enginer`: Includes all of the above *in addition to* an application engine that can be used to create single-page-apps. Tasks that are only available in this package are explicitly marked in [the documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
+
+* `dist/task-runner`: This is the base, task library. It's compatible with all browsers (as well as Node JS) and can be used with any JavaScript frameworks (Angular, React, Ember, etc.).
+* `dist/task-runner-enginer`: This includes all of the above features *in addition to* an application engine that can be used to create single-page-apps. Tasks that are only in this package are explicitly marked in [the documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
 
 Each of the above bundles includes both a `debug.js` and a `compressed.js`. The debug build is pretty-printed for easier debugging and also logs task state-change events to the console. The compressed version is minified and does not include logging.
 
