@@ -116,7 +116,7 @@
 <li><code>tr.Graph</code>: Executes of a set of Tasks with dependencies on each other in the correct order.</li>
 <li><code>tr.Observer</code>: Observes (but does not execute) a collection of Tasks. These tasks do not have to be related in any way.</li>
 </ul>
-<h2>Tasks to help with controlling the flow of an application</h2>
+<h2>Tasks to help with controlling the flow of a program</h2>
 <ul>
 <li><code>tr.Factory</code>: Use this type of task when an important decision needs to be deferred.</li>
 <li><code>tr.Failsafe</code>: Decorates a task and re-dispatches errors as successful completions.</li>
@@ -129,6 +129,13 @@
 <ul>
 <li><code>tr.Abstract</code>: Abstract implementation of Task. Extend this task to create your own task with only a few lines of code.</li>
 <li><code>tr.Closure</code>: Invokes a callback function when run. Use this task when you want to do something custom but you don&#39;t want to implement a whole new type of tr.</li>
+</ul>
+<h2>Application framework tasks</h2>
+<p>These tasks are only available in the <code>dist/task-runner-enginer</code> version of Task Runner.</p><ul>
+<li><code>tr.app.Application</code>: Abstract application task. Use the enterState() method to start the application or to transition between states.</li>
+<li><code>tr.app.State</code>: Abstract application state. Extend this base class to implement your own application states.</li>
+<li><code>tr.app.TransitionState</code>: Special state used to resolve asynchronous dependencies when transitioning between other states.</li>
+<li><code>tr.app.ApplicationRouter</code>: Watches for changes in the current URL and maps them to the appropriate application state. </li>
 </ul>
 </section>
         </div>

@@ -128,7 +128,7 @@ This type of task lets you treat a collection of tasks as a single tr.
 * `tr.Graph`: Executes of a set of Tasks with dependencies on each other in the correct order.
 * `tr.Observer`: Observes (but does not execute) a collection of Tasks. These tasks do not have to be related in any way.
 
-## Tasks to help with controlling the flow of an application
+## Tasks to help with controlling the flow of a program
 
 * `tr.Factory`: Use this type of task when an important decision needs to be deferred.
 * `tr.Failsafe`: Decorates a task and re-dispatches errors as successful completions.
@@ -140,7 +140,16 @@ This type of task lets you treat a collection of tasks as a single tr.
 ## Tasks that can be used to create new custom tasks
 
 * `tr.Abstract`: Abstract implementation of Task. Extend this task to create your own task with only a few lines of code.
-* `tr.Closure`: Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of tr.</code></pre>
+* `tr.Closure`: Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of tr.
+
+## Application framework tasks
+
+These tasks are only available in the `dist/task-runner-enginer` version of Task Runner.
+
+* `tr.app.Application`: Abstract application task. Use the enterState() method to start the application or to transition between states.
+* `tr.app.State`: Abstract application state. Extend this base class to implement your own application states.
+* `tr.app.TransitionState`: Special state used to resolve asynchronous dependencies when transitioning between other states.
+* `tr.app.ApplicationRouter`: Watches for changes in the current URL and maps them to the appropriate application state.</code></pre>
         </div>
       </div>
     </div>
