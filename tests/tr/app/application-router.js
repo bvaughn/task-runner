@@ -49,17 +49,17 @@ describe('tr.app.ApplicationRouter', function() {
     };
 
     mockEventDispatcher = {
-      attachEvent: function(event) {
-        // TODO
+      addEventListener: function(eventType, handler) {
+        mockEventDispatcher.handler_ = handler;
       },
       dispatchEvent: function(event) {
-        // TODO
+        mockEventDispatcher.handler_(event);
       }
     };
 
     var propertyReplacer = new goog.testing.PropertyReplacer();
     propertyReplacer.set(goog.window, 'location', mockLocation);
-    propertyReplacer.set(goog.window, 'attachEvent', mockEventDispatcher.attachEvent);
+    propertyReplacer.set(goog.window, 'addEventListener', mockEventDispatcher.addEventListener);
   });
 
   function setUrl(url, search) {
@@ -135,5 +135,22 @@ describe('tr.app.ApplicationRouter', function() {
     expect(factoryFunctionParams).toBeTruthy();
     expect(factoryFunctionParams.myParam1).toBe('value1');
     expect(factoryFunctionParams.myParam2).toBe('wowcool');
+  });
+
+  it('should change states when a HASHCHANGE event is fired', function() {
+    setUrl('/something/else');
+
+    applicationRouter.addPath('/some/state', stateAFactory);
+    applicationRouter.start();
+
+    expect(defaultState).toBeTruthy();
+    expect(application.getState()).toBe(defaultState);
+
+    setUrl('/some/state');
+
+    mockEventDispatcher.dispatchEvent({type: 'HASHCHANGE'});
+
+    expect(stateA).toBeTruthy();
+    expect(application.getState()).toBe(stateA);
   });
 });
