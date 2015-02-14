@@ -42,12 +42,12 @@ Once you've created some tasks what do you do with them? By itself, a task is on
 Task Runner provides several ways to group and organize tasks. The simplest way is to use `tr.Chain`. Here's an example of how it works
 
 ```js
-new Chain().first(taskA, taskB)
-           .then(taskC)
-           .then(taskE, taskD)
-           .or(taskF)
-           .then(taskG)
-           .run();
+new tr.Chain().first(taskA, taskB)
+              .then(taskC)
+              .then(taskE, taskD)
+              .or(taskF)
+              .then(taskG)
+              .run();
 ```
 
 The above code creates a graph of composite of tasks that will run in the following order:
@@ -63,15 +63,15 @@ If any of the above tasks fail (with the exception of Tasks D or E) the chain of
 Chain tasks, like all tasks, provide error handling. To be notified of a failed chain, just attach an error handler as shown below:
 
 ```js
-new Chain(errorHandler)
-    // Add other tasks here
-    .run();
+new tr.Chain(errorHandler)
+      // Add other tasks here
+      .run();
 ```
 
 Alternately you can use the standard task synaxt for declarining the error handler:
 
 ```js
-var chain = new Chain();
+var chain = new tr.Chain();
 chain.errored(errorHandler);
 // Add child tasks here
 chain.run();
