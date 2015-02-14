@@ -28,7 +28,7 @@ For more information on the above benefits, see the [chaining tasks](https://git
 
 ## Creating Tasks
 
-Task Runner includes several [reusable tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) but you can also create your own. There are 2 basic approaches:
+Task Runner provides several [built-in tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) for common operations like animations and XML HTTP requests but you can also create your own. There are 2 basic approaches:
 
 * **Inheritance**: Extend `tr.Abstract` task and override the runImpl, interruptImpl, and resetImpl methods.
 * **Composition**: Use the built in `tr.Closure` task to decorate functions and automatically turn them *into* tasks.
