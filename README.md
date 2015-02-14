@@ -24,18 +24,22 @@ Tasks have many advantages over other methods of asynchronous programming, such 
 * Tasks are fully composable, allowing you to perform branching, parallelism, and complex error handling, without the spaghetti code of having many named callbacks.
 * You can arrange task-based code in the order that it executes, rather than having to split your logic across scattered callback functions.
 
+For more information on the above benefits, see the [chaining tasks](https://github.com/bvaughn/task-runner#chaining-tasks) section below.
+
 ## Creating Tasks
 
 Task Runner includes several [reusable tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) but you can also create your own. There are 2 basic approaches:
 
-* **Inheritance**: Extend `tr.Abstract` task and override the run, interrupt, and reset methods.
+* **Inheritance**: Extend `tr.Abstract` task and override the runImpl, interruptImpl, and resetImpl methods.
 * **Composition**: Use the built in `tr.Closure` task to decorate functions and automatically turn them *into* tasks.
 
 Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for examples and additional documentation!
 
 ## Chaining Tasks
 
-Task Runner provides several ways to group tasks but the simplest way is to use `tr.Chain`. Here's an example of how it works
+Once you've created some tasks what do you do with them? By itself, a task is only a little better than a Promise (it can paused and resumed) but what about the benefits of composition and code organization that were mentioned above?
+
+Task Runner provides several ways to group and organize tasks. The simplest way is to use `tr.Chain`. Here's an example of how it works
 
 ```js
 new Chain().first(taskA, taskB)
@@ -72,6 +76,8 @@ chain.errored(errorHandler);
 // Add child tasks here
 chain.run();
 ```
+
+If you need even more find-grained control over the order of your tasks, check out `tr.Graph` in the [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
 
 ## Get Started
 
