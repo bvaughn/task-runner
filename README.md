@@ -28,12 +28,46 @@ For more information on the above benefits, see the [chaining tasks](https://git
 
 ## Creating Tasks
 
-Task Runner provides several [built-in tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) for common operations like animations and XML HTTP requests but you can also create your own. There are 2 basic approaches:
+Task Runner includes several [reusable tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) but you can also create your own. There are 2 basic approaches:
 
-* **Inheritance**: Extend `tr.Abstract` task and override the runImpl, interruptImpl, and resetImpl methods.
-* **Composition**: Use the built in `tr.Closure` task to decorate functions and automatically turn them *into* tasks.
+### Inheritance
 
-Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for examples and additional documentation!
+Extend `tr.Abstract` task and override the runImpl, interruptImpl, and resetImpl methods.
+
+```js
+var CustomTask = function() {
+  tr.Abstract.call(this); // call super constructor.
+};
+
+CustomTask.prototype = Object.create(tr.Abstract.prototype);
+
+CustomTask.prototype.runImpl = function() {
+  // Start the work.
+};
+
+CustomTask.prototype.interruptImpl = function() {
+  // Pause anything that was started.
+};
+
+CustomTask.prototype.resetImpl = function() {
+  // Restore the task to its initial state so that it can be rerun.
+};
+
+```
+
+### Composition
+
+Use the built in `tr.Closure` task to decorate functions and automatically turn them *into* tasks.
+
+```js
+new Closure(
+  function(thisTask) {
+    // Do some work and when you're finished call...
+    thisTask.complete();
+  });
+```
+
+Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for more examples and documentation!
 
 ## Chaining Tasks
 
@@ -64,8 +98,8 @@ Chain tasks, like all tasks, provide error handling. To be notified of a failed 
 
 ```js
 new tr.Chain(errorHandler)
-      // Add other tasks here
-      .run();
+  // Add other tasks here
+  .run();
 ```
 
 Alternately you can use the standard task synaxt for declarining the error handler:
