@@ -1,4 +1,6 @@
-var CustomTask = function() {};
+var CustomTask = function() {
+  tr.Abstract.call(this); // call super constructor.
+};
 
 CustomTask.prototype = Object.create(tr.Abstract.prototype);
 
