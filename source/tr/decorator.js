@@ -1,7 +1,7 @@
 goog.provide('tr.Decorator');
 
 /**
- * This type of task decorates another tr.
+ * This type of task decorates another task.
  * Exposing the decorated task via the interface allows for useful debugging and reporting of error conditions.
  *
  * @extends {tr.Task}

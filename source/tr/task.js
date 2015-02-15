@@ -50,7 +50,7 @@ tr.Task.prototype.getData = goog.abstractMethod;
 tr.Task.prototype.getErrorMessage = goog.abstractMethod;
 
 /**
- * Number of internal operations conducted by this tr.
+ * Number of internal operations conducted by this task.
  *
  * @return {number}
  */
@@ -81,7 +81,7 @@ tr.Task.prototype.getCreationContext = goog.abstractMethod;
 tr.Task.prototype.getName = goog.abstractMethod;
 
 /**
- * Returns the state of the tr.
+ * Returns the state of the task.
  *
  * @return {!tr.enums.State}
  */
@@ -98,7 +98,7 @@ tr.Task.prototype.getState = goog.abstractMethod;
 tr.Task.prototype.getUniqueID = goog.abstractMethod;
 
 /**
- * Starts a tr.
+ * Starts a task.
  * This method may also be used to re-run a task that has errorred or to resume
  * a task that has been interrupted.
  *
@@ -108,7 +108,7 @@ tr.Task.prototype.getUniqueID = goog.abstractMethod;
 tr.Task.prototype.run = goog.abstractMethod;
 
 /**
- * Interrupts a running tr.
+ * Interrupts a running task.
  * An interrupted task can be resumed by calling run().
  *
  * @throws {Error} if called while a task is not running.
@@ -121,7 +121,7 @@ tr.Task.prototype.interrupt = goog.abstractMethod;
  * There can only be 1 active interrupting Task at a time.
  * Use a composite to interrupt for multiple tasks.
  *
- * This method will not start an interrupting tr.
+ * This method will not start an interrupting task.
  * It must be run by the caller.
  *
  * @param {!tr.Task} task to wait for
@@ -178,7 +178,7 @@ tr.Task.prototype.started = goog.abstractMethod;
 tr.Task.prototype.interrupted = goog.abstractMethod;
 
 /**
- * This callback will be invoked only upon successful completion of the tr.
+ * This callback will be invoked only upon successful completion of the task.
  * Callbacks may be called multiple times (if the task is run more than once).
  * Multiple callbacks may be registered with a task as well.
  *

@@ -1,10 +1,10 @@
 goog.provide('tr.Chain');
 
+goog.require('goog.asserts');
 goog.require('tr.Abstract');
 goog.require('tr.Composite');
 goog.require('tr.Graph');
 goog.require('tr.StopOnSuccess');
-goog.require('goog.asserts');
 
 /**
  * Lightweight interface to create a dependency graph task.

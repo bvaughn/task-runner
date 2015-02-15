@@ -90,13 +90,13 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/tween.js.html">tween.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/xhr.js.html">xhr.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application-router.js.html">app/application-router.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/url-matcher.js.html">app/url-matcher.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
           </ul>
           <div class="scrollspy">
@@ -106,14 +106,14 @@
         </div>
         <div class="span9">
           <section id="Main"><h1>Task Runner</h1>
-<p>A Task is a unit of work, similar to a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual tr.</p><p>Tasks help break complex problems down into smaller, simpler problems.</p><p>This library provides several building-block tasks to get you started:</p><h2>Tasks used to perform common operations</h2>
+<p>A Task is a unit of work, similar to a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual task.</p><p>Tasks help break complex problems down into smaller, simpler problems.</p><p>This library provides several building-block tasks to get you started:</p><h2>Tasks used to perform common operations</h2>
 <p>These are a few built-in tasks for doing things that are common in web applications.</p><ul>
 <li><code>tr.Xhr</code>: Creates an XHR request and completes upon successful response from the server.</li>
 <li><code>tr.Tween</code>: Animation-frame-based task for tweening properties.</li>
 <li><code>tr.Listener</code>: Waits for an event-dispatching target to trigger a specific type of event.</li>
 </ul>
 <h2>Tasks used to group other tasks</h2>
-<p>This type of task lets you treat a collection of tasks as a single tr.</p><ul>
+<p>This type of task lets you treat a collection of tasks as a single task.</p><ul>
 <li><code>tr.Chain</code>: Lightweight interface to create a dependency graph task.</li>
 <li><code>tr.Composite</code>: Executes a set of Tasks either in parallel or one after another.</li>
 <li><code>tr.Graph</code>: Executes of a set of Tasks with dependencies on each other in the correct order.</li>
@@ -132,7 +132,7 @@
 <h2>Tasks that can be used to create new custom tasks</h2>
 <ul>
 <li><code>tr.Abstract</code>: Abstract implementation of Task. Extend this task to create your own task with only a few lines of code.</li>
-<li><code>tr.Closure</code>: Invokes a callback function when run. Use this task when you want to do something custom but you don&#39;t want to implement a whole new type of tr.</li>
+<li><code>tr.Closure</code>: Invokes a callback function when run. Use this task when you want to do something custom but you don&#39;t want to implement a whole new type of task.</li>
 </ul>
 <h2>Application framework tasks</h2>
 <p>These tasks are only available in the <code>dist/task-runner-enginer</code> version of Task Runner.</p><ul>

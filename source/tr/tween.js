@@ -1,5 +1,6 @@
 goog.provide('tr.Tween');
 
+goog.require('goog.asserts');
 goog.require('goog.async.AnimationDelay');
 goog.require('tr.Abstract');
 

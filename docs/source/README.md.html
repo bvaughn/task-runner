@@ -90,13 +90,13 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/tween.js.html">tween.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/xhr.js.html">xhr.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application-router.js.html">app/application-router.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/url-matcher.js.html">app/url-matcher.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li class="active"><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
           </ul>
           <div class="scrollspy">
@@ -108,7 +108,7 @@
           <div class="description"> </div>
           <pre><code class="language-javascript"># Task Runner
 
-A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual tr.
+A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual task.
 
 Tasks help break complex problems down into smaller, simpler problems.
 
@@ -124,7 +124,7 @@ These are a few built-in tasks for doing things that are common in web applicati
 
 ## Tasks used to group other tasks
 
-This type of task lets you treat a collection of tasks as a single tr.
+This type of task lets you treat a collection of tasks as a single task.
 
 * `tr.Chain`: Lightweight interface to create a dependency graph task.
 * `tr.Composite`: Executes a set of Tasks either in parallel or one after another.
@@ -144,7 +144,7 @@ This type of task lets you treat a collection of tasks as a single tr.
 ## Tasks that can be used to create new custom tasks
 
 * `tr.Abstract`: Abstract implementation of Task. Extend this task to create your own task with only a few lines of code.
-* `tr.Closure`: Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of tr.
+* `tr.Closure`: Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of task.
 
 ## Application framework tasks
 

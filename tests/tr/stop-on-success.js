@@ -18,6 +18,22 @@ describe('tr.StopOnSuccess', function() {
     stopOnSuccess = new tr.StopOnSuccess([stubTaskA, stubTaskB]);
   });
 
+  it('should not allow tasks to be added while running', function() {
+    stopOnSuccess.run();
+
+    expect(function() {
+      stopOnSuccess.add(new tr.Stub(false, "StubB"));
+    }).toThrow();
+  });
+
+  it('should now allow tasks to be removed while running', function() {
+    stopOnSuccess.run();
+
+    expect(function() {
+      stopOnSuccess.remove(stubTaskA);
+    }).toThrow();
+  });
+
   it('should not execute any subsequent children once one completes', function() {
     stopOnSuccess.run();
 

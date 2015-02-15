@@ -1,6 +1,6 @@
 # Task Runner
 
-A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual tr.
+A Task is a unit of work, similar to a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual task.
 
 Tasks help break complex problems down into smaller, simpler problems.
 
@@ -16,7 +16,7 @@ These are a few built-in tasks for doing things that are common in web applicati
 
 ## Tasks used to group other tasks
 
-This type of task lets you treat a collection of tasks as a single tr.
+This type of task lets you treat a collection of tasks as a single task.
 
 * `tr.Chain`: Lightweight interface to create a dependency graph task.
 * `tr.Composite`: Executes a set of Tasks either in parallel or one after another.
@@ -36,7 +36,7 @@ This type of task lets you treat a collection of tasks as a single tr.
 ## Tasks that can be used to create new custom tasks
 
 * `tr.Abstract`: Abstract implementation of Task. Extend this task to create your own task with only a few lines of code.
-* `tr.Closure`: Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of tr.
+* `tr.Closure`: Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of task.
 
 ## Application framework tasks
 

@@ -90,24 +90,42 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/tween.js.html">tween.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/xhr.js.html">xhr.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application-router.js.html">app/application-router.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/url-matcher.js.html">app/url-matcher.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
               <li><a href="#StopOnSuccess"><i class="alert alert-info"></i><span>StopOnSuccess</span></a>
               </li>
+              <li><a href="#taskQueue_"><i class="alert alert-success"></i><span>taskQueue_</span></a>
+              </li>
+              <li><a href="#taskQueueIndex_"><i class="alert alert-success"></i><span>taskQueueIndex_</span></a>
+              </li>
+              <li><a href="#completedTasks_"><i class="alert alert-success"></i><span>completedTasks_</span></a>
+              </li>
+              <li><a href="#erroredTasks_"><i class="alert alert-success"></i><span>erroredTasks_</span></a>
+              </li>
+              <li><a href="#addAll"><i class="alert alert-info"></i><span>addAll</span></a>
+              </li>
+              <li><a href="#add"><i class="alert alert-info"></i><span>add</span></a>
+              </li>
+              <li><a href="#remove"><i class="alert alert-info"></i><span>remove</span></a>
+              </li>
+              <li><a href="#getOperationsCount"><i class="alert alert-info"></i><span>getOperationsCount</span></a>
+              </li>
               <li><a href="#getCompletedOperationsCount"><i class="alert alert-info"></i><span>getCompletedOperationsCount</span></a>
               </li>
-              <li><a href="#checkForTaskCompletion_"><i class="alert alert-info"></i><span>checkForTaskCompletion_</span></a>
+              <li><a href="#runImpl"><i class="alert alert-info"></i><span>runImpl</span></a>
               </li>
-              <li><a href="#childTaskErrored_"><i class="alert alert-info"></i><span>childTaskErrored_</span></a>
+              <li><a href="#interruptImpl"><i class="alert alert-info"></i><span>interruptImpl</span></a>
+              </li>
+              <li><a href="#resetImpl"><i class="alert alert-info"></i><span>resetImpl</span></a>
               </li>
             </ul>
           </div>
@@ -130,11 +148,6 @@
             </thead>
             <tbody>
               <tr>
-                <td>parallel</td>
-                <td>boolean</td>
-                <td>If TRUE, child tasks are run simultaneously;                           otherwise they are run serially, in the order they were added.</td>
-              </tr>
-              <tr>
                 <td>opt_tasks</td>
                 <td>!Array.&lt;!tr.Task&gt;=</td>
                 <td>Initial set of child tasks.</td>
@@ -148,9 +161,173 @@
           </table>
           <div class="description"><p>Runs a series of tasks until one of them successfully completes.</p><p><p>This type of task completes successfully if at least one of its children complete.<br />If all of its children error, this task will also error.</p> </div>
           <pre><code class="language-javascript">tr.StopOnSuccess = function(opt_tasks, opt_taskName) {
-  goog.base(this, false, opt_tasks, opt_taskName || &quot;StopOnSuccess&quot;);
+  goog.base(this, opt_taskName || &quot;StopOnSuccess&quot;);</code></pre>
+          <section id="taskQueue_">
+            <h1>taskQueue_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.taskQueue_</span>
+            </p>
+          </section>
+          <div class="description"><p>@private {!Array.&lt;!tr.Task&gt;}</p> </div>
+          <pre><code class="language-javascript">this.taskQueue_ = [];</code></pre>
+          <section id="taskQueueIndex_">
+            <h1>taskQueueIndex_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.taskQueueIndex_</span>
+            </p>
+          </section>
+          <div class="description"><p>@private {number}</p> </div>
+          <pre><code class="language-javascript">this.taskQueueIndex_ = 0;</code></pre>
+          <section id="completedTasks_">
+            <h1>completedTasks_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.completedTasks_</span>
+            </p>
+          </section>
+          <div class="description"><p>@private {!Array.&lt;!tr.Task&gt;}</p> </div>
+          <pre><code class="language-javascript">this.completedTasks_ = [];</code></pre>
+          <section id="erroredTasks_">
+            <h1>erroredTasks_</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">property</div><span>this.erroredTasks_</span>
+            </p>
+          </section>
+          <div class="description"><p>@private {!Array.&lt;!tr.Task&gt;}</p> </div>
+          <pre><code class="language-javascript">this.erroredTasks_ = [];
+
+  if (opt_tasks) {
+    this.addAll(opt_tasks);
+  }
 };
-goog.inherits(tr.StopOnSuccess, tr.Composite);</code></pre>
+goog.inherits(tr.StopOnSuccess, tr.Abstract);</code></pre>
+          <section id="addAll">
+            <h1>addAll</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.addAll()</span> -><span>!tr.StopOnSuccess</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>tasks</td>
+                <td>!Array.&lt;!tr.Task&gt;</td>
+                <td>Child tasks to be added</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Adds a set of tasks to the list of child tasks.</p><p><p>This method should only be called before the task is run.<br />Adding child tasks while running is not a supported operation.</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.addAll = function(tasks) {
+  for (var i = 0; i &lt; tasks.length; i++) {
+    this.add(tasks[i]);
+  }
+
+  return this;
+};</code></pre>
+          <section id="add">
+            <h1>add</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.add()</span> -><span>!tr.StopOnSuccess</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>task</td>
+                <td>!tr.Task</td>
+                <td>Child task to be run when this task is run.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Adds a task to the list of child tasks.</p><p><p>This method should only be called before the task is run.<br />Adding child tasks while running is not a supported operation.</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.add = function(task) {
+  goog.asserts.assert(this.getState() !== tr.enums.State.RUNNING, 'Cannot add task while running.');
+
+  var index = this.taskQueue_.indexOf(task);
+
+  if (index &gt;= 0) {
+    throw 'Cannot add task more than once.';
+  }
+
+  this.taskQueue_.push(task);
+
+  return this;
+};</code></pre>
+          <section id="remove">
+            <h1>remove</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.remove()</span> -><span>!tr.StopOnSuccess</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>task</td>
+                <td>!tr.Task</td>
+                <td>Child task to be removed from the graph.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Removes a task from the list of child tasks.</p><p><p>This method should only be called before the task is run.<br />Removing child tasks while running is not a supported operation.</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.remove = function(task) {
+  goog.asserts.assert(this.getState() !== tr.enums.State.RUNNING, 'Cannot remove task while running.');
+
+  var index = this.taskQueue_.indexOf(task);
+
+  if (index &lt; 0) {
+    throw 'Attempted to remove an invalid task.';
+  }
+
+  this.removeCallbacks_(task);
+  this.taskQueue_.splice(this.taskQueue_.indexOf(task), 1);
+
+  return this;
+};</code></pre>
+          <section id="getOperationsCount">
+            <h1>getOperationsCount</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.getOperationsCount()</span>
+            </p>
+          </section>
+          <div class="description"><p>@inheritDoc</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.getOperationsCount = function() {
+  var operationsCount = 0;
+
+  this.eachTaskInQueue_(
+    function(task) {
+      operationsCount += task.getOperationsCount();
+    });
+
+  return operationsCount;
+};</code></pre>
           <section id="getCompletedOperationsCount">
             <h1>getCompletedOperationsCount</h1>
             <h5 class="subheader"></h5>
@@ -173,33 +350,60 @@ goog.inherits(tr.StopOnSuccess, tr.Composite);</code></pre>
     return completedOperationsCount;
   }
 };</code></pre>
-          <section id="checkForTaskCompletion_">
-            <h1>checkForTaskCompletion_</h1>
+          <section id="runImpl">
+            <h1>runImpl</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.checkForTaskCompletion_()</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.runImpl()</span>
             </p>
           </section>
-          <div class="description"><p>@private</p> </div>
-          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.checkForTaskCompletion_ = function() {
-  if (this.completedTasks_.length &gt; 0) {
+          <div class="description"><p>@override</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.runImpl = function() {
+  if (this.allTasksAreCompleted_()) {
     this.completeInternal();
   } else {
-    goog.base(this, 'checkForTaskCompletion_');
+    this.erroredTasks_ = [];
+
+    var task = this.taskQueue_[this.taskQueueIndex_];
+
+    this.addCallbacks_(task);
+
+    task.run();
   }
 };</code></pre>
-          <section id="childTaskErrored_">
-            <h1>childTaskErrored_</h1>
+          <section id="interruptImpl">
+            <h1>interruptImpl</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.childTaskErrored_()</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.interruptImpl()</span>
             </p>
           </section>
-          <div class="description"><p>@private</p> </div>
-          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.childTaskErrored_ = function(task) {
-  this.erroredTasks_.push(task);
+          <div class="description"><p>@override</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.interruptImpl = function() {
+  this.eachTaskInQueue_(
+    function(task) {
+      if (task.getState() == tr.enums.State.RUNNING) {
+        task.interrupt();
+      }
+    });
+};</code></pre>
+          <section id="resetImpl">
+            <h1>resetImpl</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>tr.StopOnSuccess.prototype.resetImpl()</span>
+            </p>
+          </section>
+          <div class="description"><p>@override</p> </div>
+          <pre><code class="language-javascript">tr.StopOnSuccess.prototype.resetImpl = function() {
+  this.taskQueueIndex_ = 0;
+  this.completedTasks_ = [];
+  this.erroredTasks_ = [];
 
-  this.taskCompletedOrRemoved_(task);
+  this.eachTaskInQueue_(
+    function(task) {
+      task.reset();
+    });
 };</code></pre>
         </div>
       </div>

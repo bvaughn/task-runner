@@ -59,7 +59,7 @@ goog.inherits(tr.Composite, tr.Abstract);
  * Adds a set of tasks to the list of child tasks.
  *
  * @param {!Array.<!tr.Task>} tasks Child tasks to be added
- * @return {!tr.Composite} a reference to the current tr.
+ * @return {!tr.Composite} a reference to the current task.
  * @throws {Error} if tasks have been added more than once
  */
 tr.Composite.prototype.addAll = function(tasks) {
@@ -74,7 +74,7 @@ tr.Composite.prototype.addAll = function(tasks) {
  * Adds a task to the list of child tasks.
  *
  * @param {!tr.Task} task Child task to be run when this task is run.
- * @return {!tr.Composite} a reference to the current tr.
+ * @return {!tr.Composite} a reference to the current task.
  * @throws {Error} if task has been added more than once
  */
 tr.Composite.prototype.add = function(task) {
@@ -89,7 +89,7 @@ tr.Composite.prototype.add = function(task) {
   if (this.getState() == tr.enums.State.RUNNING) {
     index = this.taskQueue_.indexOf(task);
 
-    // TRICKY If the queue was just flushed, auto-run this tr.
+    // TRICKY If the queue was just flushed, auto-run this task.
     if (this.parallel_ || this.taskQueueIndex_ == index) {
       this.addCallbacks_(task);
 
@@ -104,7 +104,7 @@ tr.Composite.prototype.add = function(task) {
  * Removes a task from the list of child tasks.
  *
  * @param {!tr.Task} task Child task to be removed from the graph.
- * @return {!tr.Composite} a reference to the current tr.
+ * @return {!tr.Composite} a reference to the current task.
  * @throws {Error} if the task provided is not a child of this composite.
  */
 tr.Composite.prototype.remove = function(task) {

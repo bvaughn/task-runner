@@ -1,5 +1,6 @@
 goog.provide('tr.Graph');
 
+goog.require('goog.asserts');
 goog.require('tr.Abstract');
 
 /**
@@ -371,7 +372,7 @@ tr.Graph.prototype.hasIncompleteBlockers_ =
 };
 
 /**
- * Run every non-running task that is not blocked by another incomplete tr.
+ * Run every non-running task that is not blocked by another incomplete task.
  *
  * @private
  */

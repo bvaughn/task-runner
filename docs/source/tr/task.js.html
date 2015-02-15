@@ -90,13 +90,13 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/timeout.js.html">timeout.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/tween.js.html">tween.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/xhr.js.html">xhr.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application-router.js.html">app/application-router.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/application.js.html">app/application.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/state.js.html">app/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/transition-state.js.html">app/transition-state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/app/url-matcher.js.html">app/url-matcher.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/event.js.html">enums/event.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/enums/state.js.html">enums/state.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/README.md.html">README.md</a></li>
           </ul>
           <div class="scrollspy">
@@ -122,7 +122,7 @@
           <pre><code class="language-javascript">tr.Task.prototype.getData = goog.abstractMethod;</code></pre>
           <div class="description"><p>Additional information about the cause of a task error.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getErrorMessage = goog.abstractMethod;</code></pre>
-          <div class="description"><p>Number of internal operations conducted by this tr.</p> </div>
+          <div class="description"><p>Number of internal operations conducted by this task.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getOperationsCount = goog.abstractMethod;</code></pre>
           <div class="description"><p>Number of internal operations that have completed.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getCompletedOperationsCount = goog.abstractMethod;</code></pre>
@@ -130,13 +130,13 @@
           <pre><code class="language-javascript">tr.Task.prototype.getCreationContext = goog.abstractMethod;</code></pre>
           <div class="description"><p>Optional human-readable name, typically useful for debug purposes.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getName = goog.abstractMethod;</code></pre>
-          <div class="description"><p>Returns the state of the tr.</p> </div>
+          <div class="description"><p>Returns the state of the task.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getState = goog.abstractMethod;</code></pre>
           <div class="description"><p>Globally unique ID for the current Task-instance.</p><p>Tasks should be assigned a unique ID when they are created.<br />IDs remain with their Tasks as long as the Tasks exist and are not reused.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.getUniqueID = goog.abstractMethod;</code></pre>
-          <div class="description"><p>Starts a tr.<br />This method may also be used to re-run a task that has errorred or to resume<br />a task that has been interrupted.</p> </div>
+          <div class="description"><p>Starts a task.<br />This method may also be used to re-run a task that has errorred or to resume<br />a task that has been interrupted.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.run = goog.abstractMethod;</code></pre>
-          <div class="description"><p>Interrupts a running tr.<br />An interrupted task can be resumed by calling run().</p> </div>
+          <div class="description"><p>Interrupts a running task.<br />An interrupted task can be resumed by calling run().</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.interrupt = goog.abstractMethod;</code></pre>
           <table class="table table-bordered table-striped">
             <thead>
@@ -154,7 +154,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Interrupts a running task until another task has completed.<br />There can only be 1 active interrupting Task at a time.<br />Use a composite to interrupt for multiple tasks.</p><p>This method will not start an interrupting tr.<br />It must be run by the caller.</p> </div>
+          <div class="description"><p>Interrupts a running task until another task has completed.<br />There can only be 1 active interrupting Task at a time.<br />Use a composite to interrupt for multiple tasks.</p><p>This method will not start an interrupting task.<br />It must be run by the caller.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.interruptFor = goog.abstractMethod;</code></pre>
           <div class="description"><p>Resets the task to it&#39;s initialized TaskState so that it can be re-run.<br />This method should not be called on a task that is running.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.reset = goog.abstractMethod;</code></pre>
@@ -281,7 +281,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>This callback will be invoked only upon successful completion of the tr.<br />Callbacks may be called multiple times (if the task is run more than once).<br />Multiple callbacks may be registered with a task as well.</p> </div>
+          <div class="description"><p>This callback will be invoked only upon successful completion of the task.<br />Callbacks may be called multiple times (if the task is run more than once).<br />Multiple callbacks may be registered with a task as well.</p> </div>
           <pre><code class="language-javascript">tr.Task.prototype.completed = goog.abstractMethod;</code></pre>
           <table class="table table-bordered table-striped">
             <thead>

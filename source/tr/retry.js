@@ -21,7 +21,7 @@ goog.require('tr.enums.State');
  * task.run();
  *
  * @param {!tr.Task} task The task to decorate.
- * @param {number=} maxRetries Number of times to reset and re-run the decorated Task before erroring the retry tr.
+ * @param {number=} maxRetries Number of times to reset and re-run the decorated Task before erroring the retry task.
  *                             If not specified this defaults to 5.
  * @param {number=} retryDelay The amount of time to delay before resetting and re-running the decorated Task.
  *                             A value < 0 seconds will result in a synchronous retry.
@@ -53,8 +53,7 @@ tr.Retry = function(task, maxRetries, retryDelay, opt_taskName) {
 goog.inherits(tr.Retry, tr.Abstract);
 
 /**
- * The default max number of times to reset and re-run the decorated Task before
- * erroring the retry tr.
+ * The default max number of times to reset and re-run the decorated Task before erroring the retry task.
  *
  * @private {number}
  * @const

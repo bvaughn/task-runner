@@ -16,7 +16,7 @@ goog.require('tr.enums.State');
  * task.run();
  *
  * @param {!tr.Task} task The task to decorate.
- * @param {number} timeout Time in milliseconds to wait before timing out the decorated tr.
+ * @param {number} timeout Time in milliseconds to wait before timing out the decorated task.
  * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {tr.Abstract}
  * @implements {tr.Decorator}

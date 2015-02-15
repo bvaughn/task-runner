@@ -1,11 +1,12 @@
 goog.provide('tr.app.ApplicationRouter');
 
-goog.require('tr.app.UrlMatcher');
 goog.require('goog.array');
+goog.require('goog.asserts');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.Uri');
 goog.require('goog.window');
+goog.require('tr.app.UrlMatcher');
 
 /**
  * <p class="alert alert-info">This class is only available in the <em>task-runner-engine</em> target.
