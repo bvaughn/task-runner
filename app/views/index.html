@@ -57,7 +57,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"><
       <li>
         Next it provides several building block tasks that your application can use.
         (We'll learn more about these in a bit.)
-        It also it provives an abstract implementation of <em>Task</em> that you can extend to create your own custom tasks.
+        It provives an abstract implementation of <em>Task</em> that you can extend to create your own custom tasks as well.
       </li>
       <li>
         It also provides ways to compose and organize tasks.
@@ -78,15 +78,15 @@ allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"><
         <ul class="feature-list list-unstyled">
             <li>
               <i class="fa fa-check-circle"></i>
-              Built with <a href="https://github.com/google/closure-compiler">Google's Closure Compiler</a>
+              Has no external dependencies on any other JavaScript libraries.
             </li>
             <li>
               <i class="fa fa-check-circle"></i>
-              Compatible with jQuery, Angular, React, Ember, and more
+              Compatible with jQuery, Angular, React, Ember, and more.
             </li>
             <li>
               <i class="fa fa-check-circle"></i>
-              Compatible with all modern browsers
+              Compatible with all modern browsers.
             </li>
             <li>
               <i class="fa fa-check-circle"></i>
@@ -115,17 +115,13 @@ allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"><
             To implement your own Task all you need to do is extend <code>tr.Abstract</code> and override the following methods:
           </p>
 
-          <ul class="list">
-            <li>
-              <strong>runImpl</strong>: Called when a task is run.
-            </li>
-            <li>
-              <strong>interruptImpl</strong>: Called when a task is interrupted. This method should pause anything that was started when it ran.
-            </li>
-            <li>
-              <strong>resetImpl</strong>: Called when a task is reset. This method should restore the task to its initial state so that it can be rerun.
-            </li>
-          </ul>
+          <prism parser="javascript" source="app/snippets/abstract.js"></prism>
+
+          <p>
+            For an even lighter-weight approach, use <code>tr.Closure</code> task to wrap a function and <em>turn it into</em> a Task:
+          </p>
+
+          <prism parser="javascript" source="app/snippets/closure.js"></prism>
         </div><!--//block-->
       </div><!--//docs-inner-->         
   </div><!--//container-->
