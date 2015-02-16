@@ -145,7 +145,7 @@ tr.Promise.prototype.errorIfRunning_ = function(data, errorMessage) {
  * @private
  */
 tr.Promise.isAngularDetected_ = function() {
-  return goog.isDef(angular);
+  return goog.isDef(window.angular);
 };
 
 /**
@@ -153,7 +153,7 @@ tr.Promise.isAngularDetected_ = function() {
  * @private
  */
 tr.Promise.isES6Detected_ = function() {
-  return goog.isDef(Promise);
+  return goog.isDef(window.Promise);
 };
 
 /**
@@ -161,7 +161,7 @@ tr.Promise.isES6Detected_ = function() {
  * @private
  */
 tr.Promise.isJQueryDetected_ = function() {
-  return goog.isDef(jQuery) && goog.isDef(jQuery.Deferred);
+  return goog.isDef(window.jQuery) && goog.isDef(window.jQuery.Deferred);
 };
 
 /**
@@ -169,7 +169,7 @@ tr.Promise.isJQueryDetected_ = function() {
  * @private
  */
 tr.Promise.isQDetected_ = function() {
-  return goog.isDef(Q) && goog.isDef(Q.defer);
+  return goog.isDef(window.Q) && goog.isDef(window.Q.defer);
 };
 
 /**
