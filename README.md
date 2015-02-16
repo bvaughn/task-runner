@@ -103,10 +103,10 @@ If you need even more find-grained control over the order of your tasks, check o
 
 Tasks may be more useful than Promises, but they're not as popular. That's okay! Task Runner provides built-in methods for working with Promises. The following types of Promises are supported:
 
-* **ES6 (Promise.prototype)**: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-* **Q**: https://github.com/kriskowal/q
-* **Angular $q**: https://docs.angularjs.org/api/ng/service/$q
-* **jQuery**: http://api.jquery.com/promise/
+* [ES6 (Promise.prototype)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* [Q](https://github.com/kriskowal/q)
+* [Angular $q](https://docs.angularjs.org/api/ng/service/$q)
+* [jQuery](http://api.jquery.com/promise/)
 
 If you're working with a library that returns Promises (e.g. jQuery), you can convert them to tasks automatically like so:
 
