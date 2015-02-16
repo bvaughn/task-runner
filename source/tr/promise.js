@@ -75,7 +75,9 @@ tr.Promise.promiseToTask = function(promise, opt_taskName) {
  * <p>If you're working with a library that expects Promises (e.g. Angular's UI Router), you can convert any Task to a Promise using this method.
  *
  * @param {!Object} promise A Promise object
- * @param {Object=} opt_$q Angular $q service. This is required because there is no global $injector.
+ * @param {Object=} opt_$q Angular $q service.
+ *                         This parameter is only required if Angular Promises are being used.
+ *                         It is necessary because there is no global $injector from which to get $q.
  * @throws {Erorr} if invalid Task object provided.
  * @throws {Erorr} if no supported Promise libraries are detected.
  * @throws {Erorr} if Angular is detected but no $q implementation is provided
