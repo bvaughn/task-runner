@@ -78,11 +78,11 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/composite.js.html">composite.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/decorator.js.html">decorator.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/factory.js.html">factory.js</a></li>
-            <li class="active"><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/failsafe.js.html">failsafe.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/failsafe.js.html">failsafe.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/graph.js.html">graph.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/listener.js.html">listener.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/promise.js.html">promise.js</a></li>
+            <li class="active"><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/promise.js.html">promise.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stop-on-success.js.html">stop-on-success.js</a></li>
@@ -102,27 +102,21 @@
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#Failsafe"><i class="alert alert-info"></i><span>Failsafe</span></a>
+              <li><a href="#Promise"><i class="alert alert-info"></i><span>Promise</span></a>
               </li>
-              <li><a href="#decoratedTask_"><i class="alert alert-success"></i><span>decoratedTask_</span></a>
+              <li><a href="#promiseToTask"><i class="alert alert-info"></i><span>promiseToTask</span></a>
               </li>
-              <li><a href="#getDecoratedTask"><i class="alert alert-info"></i><span>getDecoratedTask</span></a>
-              </li>
-              <li><a href="#interruptImpl"><i class="alert alert-info"></i><span>interruptImpl</span></a>
-              </li>
-              <li><a href="#resetImpl"><i class="alert alert-info"></i><span>resetImpl</span></a>
-              </li>
-              <li><a href="#runImpl"><i class="alert alert-info"></i><span>runImpl</span></a>
+              <li><a href="#taskToPromise"><i class="alert alert-info"></i><span>taskToPromise</span></a>
               </li>
             </ul>
           </div>
         </div>
         <div class="span9">
-          <section id="Failsafe">
-            <h1>Failsafe</h1>
+          <section id="Promise">
+            <h1>Promise</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Failsafe()</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.Promise()</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -135,82 +129,118 @@
             </thead>
             <tbody>
               <tr>
-                <td>decoratedTask</td>
-                <td>!tr.Task</td>
-                <td>Decorated task to be run when this task is run.</td>
+                <td>promise</td>
+                <td>!Object</td>
+                <td>A Promise object</td>
+              </tr>
+              <tr>
+                <td>opt_taskName</td>
+                <td>string=</td>
+                <td>Optional task name.</td>
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Decorates a task and re-dispatches errors as successful completions.</p><p><p>This can be used to decorate tasks that are not essential.</p> </div>
-          <pre><code class="language-javascript">tr.Failsafe = function(decoratedTask, opt_taskName) {
-  goog.base(this, opt_taskName || &quot;Failsafe for &quot; + decoratedTask.getName());</code></pre>
-          <section id="decoratedTask_">
-            <h1>decoratedTask_</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-success radius ctx-type">property</div><span>this.decoratedTask_</span>
-            </p>
-          </section>
-          <div class="description"><p>@private {!tr.Task}</p> </div>
-          <pre><code class="language-javascript">this.decoratedTask_ = decoratedTask;
+          <div class="description"><p>Acts as an adapter between Task Runner and several popular Promise libraries.</p><p><p>The following promise libraries are supported:</p><ul><br /><li><strong>ES6 (Promise.prototype)</strong>: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise</a><br /><li><strong>Angular $q</strong>: <a href="https://docs.angularjs.org/api/ng/service/$q">https://docs.angularjs.org/api/ng/service/$q</a><br /><li><strong>Q</strong>: <a href="https://github.com/kriskowal/q">https://github.com/kriskowal/q</a><br /><li><strong>jQuery</strong>: <a href="http://api.jquery.com/deferred.promise/">http://api.jquery.com/deferred.promise/</a><br /></ul>
+
+<p><p>Note that depending on specific promises, reset/rerun behavior may not function as desired.</p> </div>
+          <pre><code class="language-javascript">tr.Promise = function(promise, opt_taskName) {
+  goog.asserts.assert(goog.isDef(promise), &quot;Invalid promise provided&quot;);
+
+  tr.Abstract.call(this, opt_taskName || &quot;Promise&quot;);
+
+  this.promise_ = promise;
+
+  if (tr.Promise.isAngularDetected_()) {
+    this.observeForAngular_(promise);
+  } else if (tr.Promise.isES6Detected_()) {
+    this.observeForES6_(promise);
+  } else if (tr.Promise.isJQueryDetected_()) {
+    this.observeForJQuery_(promise);
+  } else if (tr.Promise.isQDetected_()) {
+    this.observeForQ_(promise);
+  } else {
+    throw 'No supported Promise libraries detected.'
+  }
 };
-goog.inherits(tr.Failsafe, tr.Abstract);</code></pre>
-          <section id="getDecoratedTask">
-            <h1>getDecoratedTask</h1>
+goog.inherits(tr.Promise, tr.Abstract);</code></pre>
+          <section id="promiseToTask">
+            <h1>promiseToTask</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Failsafe.prototype.getDecoratedTask()</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.Promise.promiseToTask()</span>
             </p>
           </section>
-          <div class="description"><p>@override</p> </div>
-          <pre><code class="language-javascript">tr.Failsafe.prototype.getDecoratedTask = function() {
-  return this.decoratedTask_;
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>promise</td>
+                <td>!Object</td>
+                <td>A Promise object</td>
+              </tr>
+              <tr>
+                <td>opt_taskName</td>
+                <td>string=</td>
+                <td>Optional task name.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wraps a Promise and returns a Task that will complete/error when the promise is resolved/rejected.</p><p><p>If you&#39;re working with a library that returns Promises, you can convert any Promise to a Task using this method.</p> </div>
+          <pre><code class="language-javascript">tr.Promise.promiseToTask = function(promise, opt_taskName) {
+  return new tr.Promise(promise, opt_taskName);
 };</code></pre>
-          <section id="interruptImpl">
-            <h1>interruptImpl</h1>
+          <section id="taskToPromise">
+            <h1>taskToPromise</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Failsafe.prototype.interruptImpl()</span>
+              <div class="label label-info radius ctx-type">method</div><span>tr.Promise.taskToPromise()</span>
             </p>
           </section>
-          <div class="description"><p>@override</p> </div>
-          <pre><code class="language-javascript">tr.Failsafe.prototype.interruptImpl = function() {
-  this.decoratedTask_.interrupt();
-};</code></pre>
-          <section id="resetImpl">
-            <h1>resetImpl</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Failsafe.prototype.resetImpl()</span>
-            </p>
-          </section>
-          <div class="description"><p>@override</p> </div>
-          <pre><code class="language-javascript">tr.Failsafe.prototype.resetImpl = function() {
-  this.decoratedTask_.reset();
-};</code></pre>
-          <section id="runImpl">
-            <h1>runImpl</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>tr.Failsafe.prototype.runImpl()</span>
-            </p>
-          </section>
-          <div class="description"><p>@override</p> </div>
-          <pre><code class="language-javascript">tr.Failsafe.prototype.runImpl = function() {
-  this.decoratedTask_.completed(
-    goog.bind(
-      function(task) {
-        this.completeInternal();
-      }, this));
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>promise</td>
+                <td>!Object</td>
+                <td>A Promise object</td>
+              </tr>
+              <tr>
+                <td>opt_$q</td>
+                <td>string=</td>
+                <td>Angular $q service. This is required because there is no global $injector.</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wraps a Task and returns a Promise that will resolve/reject when the task is completed/errored.</p><p><p>If you&#39;re working with a library that expects Promises (e.g. Angular&#39;s UI Router), you can convert any Task to a Promise using this method.</p> </div>
+          <pre><code class="language-javascript">tr.Promise.taskToPromise = function(task, opt_$q) {
+  goog.asserts.assert(goog.isDef(task), &quot;Invalid task provided&quot;);
 
-  this.decoratedTask_.errored(
-    goog.bind(
-      function(task) {
-        this.completeInternal();
-      }, this));
-
-  this.decoratedTask_.run();
+  if (tr.Promise.isAngularDetected_()) {
+    return this.createAngularPromise_(task, opt_$q);
+  } else if (tr.Promise.isES6Detected_()) {
+    return this.createES6PromisePromise_(task);
+  } else if (tr.Promise.isJQueryDetected_()) {
+    return this.createJQueryPromise_(task);
+  } else if (tr.Promise.isQDetected_()) {
+    return this.createQPromise_(task);
+  } else {
+    throw 'No supported Promise libraries detected.'
+  }
 };</code></pre>
+          <div class="description"><p>@override</p> </div>
+          <pre><code class="language-javascript">tr.Promise.prototype.runImpl = goog.nullFunction;</code></pre>
         </div>
       </div>
     </div>

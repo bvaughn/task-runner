@@ -1436,7 +1436,7 @@ goog.addDependency('../bower_components/closure-library/closure/goog/webgl/webgl
 goog.addDependency('../bower_components/closure-library/closure/goog/window/window.js', ['goog.window'], ['goog.string', 'goog.userAgent'], false);
 goog.addDependency('../bower_components/closure-library/closure/goog/window/window_test.js', ['goog.windowTest'], ['goog.dom', 'goog.events', 'goog.string', 'goog.testing.AsyncTestCase', 'goog.testing.jsunit', 'goog.window'], false);
 goog.addDependency('base-with-apps.js', ['tr.app'], ['tr', 'tr.app.Application', 'tr.app.ApplicationRouter', 'tr.app.State', 'tr.app.TransitionState', 'tr.app.UrlMatcher'], false);
-goog.addDependency('base.js', ['tr'], ['tr.Abstract', 'tr.Chain', 'tr.Closure', 'tr.Composite', 'tr.Decorator', 'tr.Factory', 'tr.Failsafe', 'tr.Graph', 'tr.Listener', 'tr.Observer', 'tr.Retry', 'tr.Sleep', 'tr.StopOnSuccess', 'tr.Stub', 'tr.Task', 'tr.Timeout', 'tr.Tween', 'tr.Xhr', 'tr.enums.Event', 'tr.enums.State'], false);
+goog.addDependency('base.js', ['tr'], ['tr.Abstract', 'tr.Chain', 'tr.Closure', 'tr.Composite', 'tr.Decorator', 'tr.Factory', 'tr.Failsafe', 'tr.Graph', 'tr.Listener', 'tr.Observer', 'tr.Promise', 'tr.Retry', 'tr.Sleep', 'tr.StopOnSuccess', 'tr.Stub', 'tr.Task', 'tr.Timeout', 'tr.Tween', 'tr.Xhr', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/abstract.js', ['tr.Abstract'], ['tr.Task', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/app/angular-mini.js', ['tr.app.AngularMini_'], [], false);
 goog.addDependency('tr/app/application-router.js', ['tr.app.ApplicationRouter'], ['goog.Uri', 'goog.array', 'goog.asserts', 'goog.events', 'goog.events.EventType', 'goog.window', 'tr.app.UrlMatcher'], false);
@@ -1455,6 +1455,7 @@ goog.addDependency('tr/failsafe.js', ['tr.Failsafe'], ['tr.Abstract'], false);
 goog.addDependency('tr/graph.js', ['tr.Graph'], ['goog.asserts', 'tr.Abstract'], false);
 goog.addDependency('tr/listener.js', ['tr.Listener'], ['tr.Abstract', 'tr.enums.State'], false);
 goog.addDependency('tr/observer.js', ['tr.Observer'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
+goog.addDependency('tr/promise.js', ['tr.Promise'], ['goog.asserts', 'tr.Abstract', 'tr.enums.State'], false);
 goog.addDependency('tr/retry.js', ['tr.Retry'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
 goog.addDependency('tr/sleep.js', ['tr.Sleep'], ['tr.Abstract', 'tr.enums.State'], false);
 goog.addDependency('tr/stop-on-success.js', ['tr.StopOnSuccess'], ['goog.asserts', 'tr.Abstract', 'tr.enums.State'], false);

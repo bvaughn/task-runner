@@ -5,18 +5,13 @@
 **[API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)** |
 **[Report an issue](https://github.com/bvaughn/task-runner/issues/new)**
 
-Task Runner is a collection of low-level libraries designed to make JavaScript application development easier. It does not require any third party libraries or frameworks.
+Task Runner is a collection of low-level libraries designed to make JavaScript application development easier.
 
-Task Runner includes:
+## What is a Task?
 
-* *Tasks*, which make organization of complex asynchronous code more manageable. A task is kind of like a [JavaScript Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) but more powerful.
-* A optional, barebones application framework and router (based on [UI Router](https://github.com/angular-ui/ui-router/)) to aid in the creation of task-based applications. (This code is bundled separately, as an add-on.)
+A task encapsulates a unit of work. Like a [JavaScript Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise), once a task is run it will eventually *complete* or *error* to indicate the outcome. Unlike a Promise, tasks can also be *interrupted and resumed*, making them ideal for things like animations, sounds, etc.
 
-For more information, see the [Task Runner API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
-
-## Tasks
-
-A *task* encapsulates a unit of work. Tasks can be as small as a console log message or as big as an entire application. They can be synchronous or asynchronous.
+Tasks can be as small as a console log message or as big as an entire application. They can be synchronous or asynchronous.
 
 Tasks have many advantages over other methods of asynchronous programming, such as callbacks:
 
@@ -30,7 +25,7 @@ For more information on the above benefits, see the [chaining tasks](https://git
 
 Task Runner includes several [reusable tasks](http://rawgit.com/bvaughn/task-runner/master/docs/index.html) but you can also create your own. There are 2 basic approaches:
 
-### Inheritance
+### Creating Tasks via Inheritance
 
 Extend `tr.Abstract` task and override the runImpl, interruptImpl, and resetImpl methods.
 
@@ -55,7 +50,7 @@ CustomTask.prototype.resetImpl = function() {
 
 ```
 
-### Composition
+### Creating Tasks via Composition
 
 Use the built in `tr.Closure` task to decorate functions and automatically turn them *into* tasks.
 
@@ -71,9 +66,9 @@ Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for m
 
 ## Chaining Tasks
 
-Once you've created some tasks what do you do with them? By itself, a task is only a little better than a Promise (it can paused and resumed) but what about the benefits of composition and code organization that were mentioned above?
+Once you've created some tasks, what do you do with them? By itself a task is only a little better than a Promise- (it can paused and resumed)- but what about the other benefits that were mentioned above?
 
-Task Runner provides several ways to group and organize tasks. The simplest way is to use `tr.Chain`. Here's an example of how it works
+The beauty of Task Runner is shown in the way tasks can be connected to each other. Task Runner provides several such ways to group and organize tasks, the simplest of which is `tr.Chain`. Here's an example of how it works
 
 ```js
 new tr.Chain().first(taskA, taskB)
@@ -94,24 +89,40 @@ The above code creates a graph of composite of tasks that will run in the follow
 
 If any of the above tasks fail (with the exception of Tasks D or E) the chain of execution will stop. Otherwise it will run until the last task (Task G) completes.
 
-Chain tasks, like all tasks, provide error handling. To be notified of a failed chain, just attach an error handler as shown below:
+Chain tasks, like all tasks, support callbacks. To be notified of a failed chain, just attach an error handler as shown below:
 
 ```js
-new tr.Chain(errorHandler)
+new tr.Chain(completedCallback, errorCallback)
   // Add other tasks here
   .run();
 ```
 
-Alternately you can use the standard task synaxt for declarining the error handler:
+If you need even more find-grained control over the order of your tasks, check out `tr.Graph` in the [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
+
+## Working with Promises
+
+Tasks may be more useful than Promises, but they're not as popular. That's okay! Task Runner provides built-in methods for working with Promises. The following types of Promises are supported:
+
+* **ES6 (Promise.prototype)**: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+* **Q**: https://github.com/kriskowal/q
+* **Angular \$q**: https://docs.angularjs.org/api/ng/service/$q
+* **jQuery**: http://api.jquery.com/promise/
+
+If you're working with a library that returns Promises (e.g. jQuery), you can convert them to tasks automatically like so:
 
 ```js
-var chain = new tr.Chain();
-chain.errored(errorHandler);
-// Add child tasks here
-chain.run();
+var aNewTask = tr.Promise.promiseToTask(yourPromise);
+// You can treat this task like any other Task.
 ```
 
-If you need even more find-grained control over the order of your tasks, check out `tr.Graph` in the [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
+You may be working with a library that *expects* Promises (e.g. Angular's UI Router). In this case you can convert any Task *to* a Promise like so:
+
+```js
+var aNewPromise = tr.Promise.taskToPromise(yourTask);
+// This promise can be treated like any other Promise.
+```
+
+For more information, refer to the `tr.Promise` task in the [API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
 
 ## Get Started
 

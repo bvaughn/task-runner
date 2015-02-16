@@ -15,6 +15,7 @@ goog.require('tr.Failsafe');
 goog.require('tr.Graph');
 goog.require('tr.Listener');
 goog.require('tr.Observer');
+goog.require('tr.Promise');
 goog.require('tr.Retry');
 goog.require('tr.Sleep');
 goog.require('tr.StopOnSuccess');

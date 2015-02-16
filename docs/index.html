@@ -82,6 +82,7 @@
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/graph.js.html">graph.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/listener.js.html">listener.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/observer.js.html">observer.js</a></li>
+            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/promise.js.html">promise.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/retry.js.html">retry.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/sleep.js.html">sleep.js</a></li>
             <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs//source/tr/stop-on-success.js.html">stop-on-success.js</a></li>
@@ -108,9 +109,10 @@
           <section id="Main"><h1>Task Runner</h1>
 <p>A Task is a unit of work, similar to a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> but more flexible. Tasks can be as small as a console log message or as big as an entire application. They can be bundled into collections and then treated the same as an individual task.</p><p>Tasks help break complex problems down into smaller, simpler problems.</p><p>This library provides several building-block tasks to get you started:</p><h2>Tasks used to perform common operations</h2>
 <p>These are a few built-in tasks for doing things that are common in web applications.</p><ul>
-<li><code>tr.Xhr</code>: Creates an XHR request and completes upon successful response from the server.</li>
-<li><code>tr.Tween</code>: Animation-frame-based task for tweening properties.</li>
 <li><code>tr.Listener</code>: Waits for an event-dispatching target to trigger a specific type of event.</li>
+<li><code>tr.Promise</code>: Creates Tasks from Promises and Promises from Tasks.</li>
+<li><code>tr.Tween</code>: Animation-frame-based task for tweening properties.</li>
+<li><code>tr.Xhr</code>: Creates an XHR request and completes upon successful response from the server.</li>
 </ul>
 <h2>Tasks used to group other tasks</h2>
 <p>This type of task lets you treat a collection of tasks as a single task.</p><ul>

@@ -10,9 +10,10 @@ This library provides several building-block tasks to get you started:
 
 These are a few built-in tasks for doing things that are common in web applications.
 
-* `tr.Xhr`: Creates an XHR request and completes upon successful response from the server.
-* `tr.Tween`: Animation-frame-based task for tweening properties.
 * `tr.Listener`: Waits for an event-dispatching target to trigger a specific type of event.
+* `tr.Promise`: Creates Tasks from Promises and Promises from Tasks.
+* `tr.Tween`: Animation-frame-based task for tweening properties.
+* `tr.Xhr`: Creates an XHR request and completes upon successful response from the server.
 
 ## Tasks used to group other tasks
 

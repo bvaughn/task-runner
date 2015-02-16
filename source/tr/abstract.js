@@ -250,8 +250,7 @@ tr.Abstract.prototype.reset = function() {
 };
 
 /** @override */
-tr.Abstract.prototype.on = function(
-    taskEvent, callback, opt_scope) {
+tr.Abstract.prototype.on = function(taskEvent, callback, opt_scope) {
   this.taskCallbackMap_[taskEvent] = this.taskCallbackMap_[taskEvent] || [];
 
   var taskCallbacks = this.taskCallbackMap_[taskEvent];
@@ -266,14 +265,13 @@ tr.Abstract.prototype.on = function(
   }
   if (index == -1) {
     taskCallbacks.push(
-        new tr.Abstract.TaskCallback_(callback, opt_scope));
+      new tr.Abstract.TaskCallback_(callback, opt_scope));
   }
   return this;
 };
 
 /** @override */
-tr.Abstract.prototype.off = function(
-    taskEvent, callback, opt_scope) {
+tr.Abstract.prototype.off = function(taskEvent, callback, opt_scope) {
   var taskCallbacks = this.taskCallbackMap_[taskEvent];
   var index = -1;
   if (taskCallbacks) {
