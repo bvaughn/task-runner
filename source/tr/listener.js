@@ -4,7 +4,7 @@ goog.require('tr.Abstract');
 goog.require('tr.enums.State');
 
 /**
- * Sleeps for an event-dispatching target to trigger a specific type of event.
+ * Waits for an event-dispatching target to trigger a specific type of event.
  * 
  * @example
  * // Watches a DOM element until a "click" event is dispatched.
@@ -21,13 +21,22 @@ goog.require('tr.enums.State');
 tr.Listener = function(eventTarget, eventType, opt_taskName) {
   goog.base(this, opt_taskName || "Listener");
 
-  /** @private {Object} */
+  /**
+   * @type {Object}
+   * @private
+   */
   this.eventTarget_ = eventTarget;
 
-  /** @private {string} */
+  /**
+   * @type {string}
+   * @private
+   */
   this.eventType_ = eventType;
 
-  /** @private {function(!Object)|undefined} */
+  /**
+   * @type {function(!Object)|undefined}
+   * @private
+   */
   this.listener_ = undefined;
 
 };

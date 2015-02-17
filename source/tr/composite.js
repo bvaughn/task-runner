@@ -31,22 +31,40 @@ goog.require('tr.enums.State');
 tr.Composite = function(parallel, opt_tasks, opt_taskName) {
   goog.base(this, opt_taskName || "Composite");
 
-  /** @private {boolean} */
+  /**
+   * @type {boolean}
+   * @private
+   */
   this.parallel_ = parallel;
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.taskQueue_ = [];
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.taskQueueIndex_ = 0;
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.completedTasks_ = [];
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.erroredTasks_ = [];
 
-  /** @private {boolean} */
+  /**
+   * @type {boolean}
+   * @private
+   */
   this.flushQueueInProgress_ = false;
 
   if (opt_tasks) {

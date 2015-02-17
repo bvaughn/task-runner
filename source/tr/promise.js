@@ -10,10 +10,10 @@ goog.require('tr.enums.State');
  * <p>The following promise libraries are supported:
  *
  * <ul>
- * <li><strong>ES6 (Promise.prototype)</strong>: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
- * <li><strong>Angular $q</strong>: https://docs.angularjs.org/api/ng/service/$q
- * <li><strong>Q</strong>: https://github.com/kriskowal/q
- * <li><strong>jQuery</strong>: http://api.jquery.com/deferred.promise/
+ * <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">ES6 (Promise.prototype)</a>
+ * <li><a href="https://docs.angularjs.org/api/ng/service/$q">Angular $q</a>
+ * <li><a href="https://github.com/kriskowal/q">Q</a>
+ * <li><a href="http://api.jquery.com/deferred.promise/">jQuery</a>
  * </ul>
  *
  * <p>Note that depending on specific promises, reset/rerun behavior may not function as desired.
@@ -74,7 +74,7 @@ tr.Promise.promiseToTask = function(promise, opt_taskName) {
  *
  * <p>If you're working with a library that expects Promises (e.g. Angular's UI Router), you can convert any Task to a Promise using this method.
  *
- * @param {!Object} promise A Promise object
+ * @param {!tr.Task} task Task to wrap
  * @param {Object=} opt_$q Angular $q service.
  *                         This parameter is only required if Angular Promises are being used.
  *                         It is necessary because there is no global $injector from which to get $q.
@@ -98,7 +98,10 @@ tr.Promise.taskToPromise = function(task, opt_$q) {
   }
 };
 
-/** @override */
+/**
+ * @override
+ * @private
+ */
 tr.Promise.prototype.runImpl = goog.nullFunction;
 
 /**

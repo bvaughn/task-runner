@@ -23,19 +23,34 @@ goog.require('tr.enums.State');
 tr.Sleep = function(timeout, opt_resetTimerAfterInterruption, opt_taskName) {
   goog.base(this, opt_taskName || "Sleep");
 
-  /** @private {boolean} */
+  /**
+   * @type {boolean}
+   * @private
+   */
   this.resetTimerAfterInterruption_ = !!opt_resetTimerAfterInterruption;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.timeout_ = timeout;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.timeoutStart_ = -1;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.timeoutPause_ = -1;
 
-  /** @private {?number} */
+  /**
+   * @type {?number}
+   * @private
+   */
   this.timeoutId_ = null;
 };
 goog.inherits(tr.Sleep, tr.Abstract);

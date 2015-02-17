@@ -49,10 +49,16 @@ goog.require('tr.enums.State');
  */
 tr.app.Application = function() {
 
-  /** @private {!tr.app.ApplicationRouter} */
+  /**
+   * @type {!tr.app.ApplicationRouter}
+   * @private
+   */
   this.applicationRouter_ = new tr.app.ApplicationRouter(this);
 
-  /** @private {tr.Task|undefined} */
+  /**
+   * @type {tr.Task|undefined}
+   * @private
+   */
   this.stateTask_;
 };
 

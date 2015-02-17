@@ -31,16 +31,28 @@ goog.require('tr.enums.State');
 tr.Factory = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
   goog.base(this, opt_taskName || "Factory");
 
-  /** @private {function(*):tr.Task} */
+  /**
+   * @type {function(*):tr.Task}
+   * @private
+   */
   this.taskFactoryFn_ = taskFactoryFn;
 
-  /** @private {?} */
+  /**
+   * @type {?}
+   * @private
+   */
   this.thisArg_ = opt_thisArg;
 
-  /** @private {!Array|undefined} */
+  /**
+   * @type {!Array|undefined}
+   * @private
+   */
   this.argsArray_ = opt_argsArray;
 
-  /** @private {tr.Task} */
+  /**
+   * @type {tr.Task}
+   * @private
+   */
   this.deferredTask_ = null;
 
   /**
@@ -68,11 +80,10 @@ tr.Factory.prototype.getDecoratedTask = function() {
 /**
  * Set whether to recreate the deferred task after an error occured.
  * This property is sticky for all consecutive reruns until set again.
- * @param {boolean} recreateDeferredTaskAfterError
+ * @param {boolean} value
  */
-tr.Factory.prototype.recreateDeferredTaskAfterError =
-    function(recreateDeferredTaskAfterError) {
-  this.recreateDeferredTaskAfterError_ = recreateDeferredTaskAfterError;
+tr.Factory.prototype.recreateDeferredTaskAfterError = function(value) {
+  this.recreateDeferredTaskAfterError_ = value;
 };
 
 /**

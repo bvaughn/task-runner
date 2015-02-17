@@ -27,12 +27,18 @@ goog.require('tr.StopOnSuccess');
 tr.Chain = function(opt_completedCallback, opt_erroredCallback, opt_taskName) {
   goog.base(this, opt_taskName || "Chain");
 
-  /** @private {!tr.Graph} */
+  /**
+   * @type {!tr.Graph}
+   * @private
+   */
   this.graph_ = new tr.Graph();
   this.graph_.completed(goog.bind(this.completeInternal, this));
   this.graph_.errored(goog.bind(this.errorInternal, this));
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.mostRecentTaskArgs_ = [];
 
   if (opt_completedCallback !== undefined) {

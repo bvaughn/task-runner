@@ -26,19 +26,34 @@ goog.require('tr.enums.State');
 tr.Timeout = function(task, timeout, opt_taskName) {
   goog.base(this, opt_taskName || "Timeout");
 
-  /** @private {!tr.Task} */
+  /**
+   * @type {!tr.Task}
+   * @private
+   */
   this.decoratedTask_ = task;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.timeout_ = timeout;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.timeoutStart_ = -1;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.timeoutPause_ = -1;
 
-  /** @private {?number} */
+  /**
+   * @type {?number}
+   * @private
+   */
   this.timeoutId_ = null;
 };
 goog.inherits(tr.Timeout, tr.Abstract);

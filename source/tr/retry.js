@@ -35,19 +35,34 @@ goog.require('tr.enums.State');
 tr.Retry = function(task, maxRetries, retryDelay, opt_taskName) {
   goog.base(this, opt_taskName || "Retry");
 
-  /** @private {!tr.Task} */
+  /**
+   * @type {!tr.Task}
+   * @private
+   */
   this.decoratedTask_ = task;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.maxRetries_ = goog.isDef(maxRetries) ? maxRetries : tr.Retry.MAX_RETRIES_;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.retryDelay_ = goog.isDef(retryDelay) ? retryDelay : tr.Retry.RETRY_DELAY_;
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.retries_ = 0;
 
-  /** @private {?number} */
+  /**
+   * @type {?number}
+   * @private
+   */
   this.timeoutId_ = null;
 };
 goog.inherits(tr.Retry, tr.Abstract);

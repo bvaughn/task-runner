@@ -392,6 +392,7 @@ tr.app.UrlMatcher.prototype.format = function (values) {
  *           coming from a substring of a URL.
  *
  * @returns {Object}  Returns a new `Type` object.
+ * @private
  * @constructor
  * @struct
  */

@@ -39,16 +39,28 @@ goog.require('tr.enums.State');
 tr.Xhr = function(url, opt_data, opt_responseType, opt_taskName) {
   goog.base(this, opt_taskName || "Xhr");
 
-  /** @private {!string} */
+  /**
+   * @type {!string}
+   * @private
+   */
   this.url_ = url;
 
-  /** @private {Object|undefined} */
+  /**
+   * @type {Object|undefined}
+   * @private
+   */
   this.postData_ = opt_data;
 
-  /** @private {!tr.Xhr.ResponseType} */
+  /**
+   * @type {!tr.Xhr.ResponseType}
+   * @private
+   */
   this.ResponseType_ = opt_responseType || tr.Xhr.DEFAULT_RESPONSE_TYPE_ || tr.Xhr.ResponseType.TEXT;
 
-  /** @private {goog.net.XhrIo|undefined} */
+  /**
+   * @type {goog.net.XhrIo|undefined}
+   * @private
+   */
   this.xhrRequest_ = undefined;
 };
 goog.inherits(tr.Xhr, tr.Abstract);
@@ -83,9 +95,9 @@ tr.Xhr.prototype.runImpl = function() {
 
     this.xhrRequest_ = new goog.net.XhrIo();
 
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, goog.bind(this.onXhrRequestErrorOrTimeout, this));
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, goog.bind(this.onXhrRequestSuccess, this));
-    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, goog.bind(this.onXhrRequestErrorOrTimeout, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.ERROR, goog.bind(this.onXhrRequestErrorOrTimeout_, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.SUCCESS, goog.bind(this.onXhrRequestSuccess_, this));
+    goog.events.listen(this.xhrRequest_, goog.net.EventType.TIMEOUT, goog.bind(this.onXhrRequestErrorOrTimeout_, this));
 
     this.xhrRequest_.send(this.url_, method, postDataString);
 
@@ -97,7 +109,7 @@ tr.Xhr.prototype.runImpl = function() {
 };
 
 /** @private */
-tr.Xhr.prototype.onXhrRequestSuccess = function() {
+tr.Xhr.prototype.onXhrRequestSuccess_ = function() {
   if (this.state_ === tr.enums.State.RUNNING) {
     try {
       var data;
@@ -122,7 +134,7 @@ tr.Xhr.prototype.onXhrRequestSuccess = function() {
 };
 
 /** @private */
-tr.Xhr.prototype.onXhrRequestErrorOrTimeout = function() {
+tr.Xhr.prototype.onXhrRequestErrorOrTimeout_ = function() {
   if (this.state_ === tr.enums.State.RUNNING) {
     this.errorInternal(
       this.xhrRequest_.getLastErrorCode(),
@@ -142,6 +154,7 @@ tr.Xhr.prototype.createPostDataString_ = function() {
 
 /**
  * Set the default response-type for all XHR requests that do not otherwise specify a response-type.
+ * @param {tr.Xhr.ResponseType} responseType
  */
 tr.Xhr.setDefaultResponseType = function(responseType) {
   tr.Xhr.DEFAULT_RESPONSE_TYPE_ = responseType;

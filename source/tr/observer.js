@@ -30,10 +30,16 @@ goog.require('tr.enums.State');
 tr.Observer = function(opt_tasks, opt_failUponFirstError, opt_taskName) {
   goog.base(this, opt_taskName || "Observer");
 
-  /** @private {boolean} */
+  /**
+   * @type {boolean}
+   * @private
+   */
   this.failUponFirstError_ = !!opt_failUponFirstError;
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.observedTasks_ = [];
   if (opt_tasks) {
     for (var i in opt_tasks) {
@@ -57,20 +63,25 @@ tr.Observer.prototype.getObservedTasks = function() {
 /**
  * Add an additional Task to observe.
  * @param {!tr.Task} task
+ * @return {!tr.Observer} a reference to the current task.
  */
 tr.Observer.prototype.observe = function(task) {
   if (this.observedTasks_.indexOf(task) == -1) {
     this.observedTasks_.push(task);
   }
+
   if (this.getState() == tr.enums.State.RUNNING) {
     task.completed(this.onObservedTaskCompleted_, this);
     task.errored(this.onObservedTaskErrored_, this);
   }
+  
+  return this;
 };
 
 /**
  * Stops a Task from being observed.
  * @param {!tr.Task} task
+ * @return {!tr.Observer} a reference to the current task.
  */
 tr.Observer.prototype.stopObserving = function(task) {
   var index = this.observedTasks_.indexOf(task);
@@ -81,11 +92,13 @@ tr.Observer.prototype.stopObserving = function(task) {
   task.off(tr.enums.Event.ERRORED, this.onObservedTaskErrored_, this);
   this.observedTasks_.splice(index, 1);
   this.tryToFinalize_();
+
+  return this;
 };
 
 /**
  * @override
- * @inheritDoc
+ * @private
  */
 tr.Observer.prototype.getOperationsCount = function() {
   var count = 0;
@@ -98,7 +111,7 @@ tr.Observer.prototype.getOperationsCount = function() {
 
 /**
  * @override
- * @inheritDoc
+ * @private
  */
 tr.Observer.prototype.getCompletedOperationsCount = function() {
   var count = 0;
@@ -111,7 +124,7 @@ tr.Observer.prototype.getCompletedOperationsCount = function() {
 
 /**
  * @override
- * @inheritDoc
+ * @private
  */
 tr.Observer.prototype.runImpl = function() {
   if (!this.tryToFinalize_()) {

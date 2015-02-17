@@ -36,25 +36,47 @@ goog.require('tr.enums.State');
  * @struct
  */
 tr.Abstract = function(opt_taskName) {
-  /** @private {string} */
+
+  /**
+   * @type {string}
+   * @private
+   */
   this.taskName_ = opt_taskName || "Task";
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.uniqueID_ = tr.Abstract.ID_++;
 
-  /** @private {!tr.enums.State} */
+  /**
+   * @type {!tr.enums.State}
+   * @private
+   */
   this.state_ = tr.enums.State.INITIALIZED;
 
-  /** @private {!Object|undefined} */
+  /**
+   * @type {!Object|undefined}
+   * @private
+   */
   this.data_ = undefined;
 
-  /** @private {string|undefined} */
+  /**
+   * @type {string|undefined}
+   * @private
+   */
   this.errorMessage_ = undefined;
 
-  /** @private {tr.Task} */
+  /**
+   * @type {tr.Task}
+   * @private
+   */
   this.interruptingTask_ = null;
 
-  /** @private {Array.<!string>|undefined} */
+  /**
+   * @type {Array.<!string>|undefined}
+   * @private
+   */
   this.creationContext_;
 
   if (goog.DEBUG) {
@@ -74,7 +96,10 @@ tr.Abstract = function(opt_taskName) {
    */
   this.taskCallbackMap_ = {};
 
-  /** @private {goog.debug.Console} */
+  /**
+   * @type {goog.debug.Console}
+   * @private
+   */
   this.console_ = goog.DEBUG ? console : {
     log: function(text) {}
   };
@@ -82,7 +107,6 @@ tr.Abstract = function(opt_taskName) {
 
 /**
  * Auto-incremeted unique ID managed by AbstractTask.
- *
  * @private
  */
 tr.Abstract.ID_ = 0;
@@ -99,9 +123,7 @@ tr.Abstract.prototype.log = function(text) {
   return this.console_.log(text + " :: " + this);
 };
 
-/**
- * String representation of task (e.g. TaskName [id: 12]).
- */
+/** @private */
 tr.Abstract.prototype.toString = function() {
   return this.taskName_ + ' [id: ' + this.uniqueID_ + ']';
 };
@@ -147,9 +169,7 @@ tr.Abstract.prototype.getUniqueID = function() {
 };
 
 /**
- * Executes an array of callback functions with the current task as the only
- * paramater.
- *
+ * Executes an array of callback functions with the current task as the only paramater.
  * @param {!tr.enums.Event} taskEvent
  * @private
  */
@@ -353,7 +373,7 @@ tr.Abstract.prototype.completeInternal = function(data) {
   this.executeCallbacks_(tr.enums.Event.FINAL);
 };
 
-/**
+ /**
  * Call this method to mark the task as errored.
  *
  * @param {!Object=} data Task data.
@@ -387,10 +407,16 @@ tr.Abstract.prototype.errorInternal = function(data, errorMessage) {
  * @private
  */
 tr.Abstract.TaskCallback_ = function(callback, opt_scope) {
-  /** @private {function(!tr.Task)} */
+  /**
+   * @type {function(!tr.Task)}
+   * @private
+   */
   this.callback_ = callback;
 
-  /** @private {?} */
+  /**
+   * @type {?}
+   * @private
+   */
   this.scope_ = opt_scope;
 };
 

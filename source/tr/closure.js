@@ -28,14 +28,14 @@ goog.require('tr.Abstract');
  * // You should probably use tr.Xhr instead of $.ajax ;)
  * new tr.Closure(
  *   function(task) {
-*      $.ajax("demo/url", {
-*        success: function(data) {
-*          task.complete(data);
-*        },
-*        error: function() {
-*          task.error('An error occurred');
-*        }
-*      });
+ *      $.ajax("demo/url", {
+ *        success: function(data) {
+ *          task.complete(data);
+ *        },
+ *        error: function() {
+ *          task.error('An error occurred');
+ *        }
+ *      });
  *   }, false).run();
  *
  * @param {function(!tr.Closure)} runImplFn The function to be executed when this Task is run.
@@ -49,10 +49,16 @@ goog.require('tr.Abstract');
 tr.Closure = function(runImplFn, opt_synchronous, opt_taskName) {
   goog.base(this, opt_taskName || "Closure");
 
-  /** @private {function()} */
+  /**
+   * @type {function()}
+   * @private
+   */
   this.runImplFn_ = runImplFn;
 
-  /** @private {boolean} */
+  /**
+   * @type {boolean}
+   * @private
+   */
   this.autoCompleteUponRun_ = !!opt_synchronous;
 };
 goog.inherits(tr.Closure, tr.Abstract);

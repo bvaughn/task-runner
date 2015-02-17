@@ -33,13 +33,22 @@ goog.require('tr.enums.State');
 tr.app.TransitionState = function(opt_taskName) {
   goog.base(this, opt_taskName || "TransitionState");
 
-  /** @private {Array.<!tr.Task>=}  */
+  /**
+   * @type {Array.<!tr.Task>=} 
+   * @private
+   */
   this.blockingTasks_ = [];
 
-  /** @private {Array.<!tr.Task>=} */
+  /**
+   * @type {Array.<!tr.Task>=}
+   * @private
+   */
   this.prioritizedStates_ = [];
 
-  /** @private {!Object} */
+  /**
+   * @type {!Object}
+   * @private
+   */
   this.taskIdToBlockingTasksMap_ = {};
 };
 goog.inherits(tr.app.TransitionState, tr.app.State);

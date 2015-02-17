@@ -34,7 +34,10 @@ goog.require('tr.enums.State');
 tr.app.State = function(opt_taskName) {
   goog.base(this, opt_taskName || "State");
 
-  /** @private {tr.app.Application|undefined} */
+  /**
+   * @type {tr.app.Application|undefined}
+   * @private
+   */
   this.application_;
 };
 goog.inherits(tr.app.State, tr.Graph);

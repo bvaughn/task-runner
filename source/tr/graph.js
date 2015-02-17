@@ -32,16 +32,28 @@ goog.require('tr.Abstract');
 tr.Graph = function(opt_taskName) {
   goog.base(this, opt_taskName || "Graph");
 
-  /** @private {!Object} */
+  /**
+   * @type {!Object}
+   * @private
+   */
   this.taskIdToDependenciesMap_ = {};
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.tasks_ = [];
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.erroredTasks_ = [];
 
-  /** @private {boolean} */
+  /**
+   * @type {boolean}
+   * @private
+   */
   this.beforeFirstRunInvoked_ = false;
 };
 goog.inherits(tr.Graph, tr.Abstract);
@@ -113,7 +125,6 @@ tr.Graph.prototype.addToEnd = function(task) {
  * @param {!Array.<!tr.Task>} tasks Child tasks to be run when this task is run.
  * @return {!tr.Graph} a reference to the current task.
  * @throws {Error} if task has been added more than once.
- * @throws {Error} if cyclic dependencies are detected.
  */
 tr.Graph.prototype.addAllToEnd = function(tasks) {
   return this.addAll(tasks, this.tasks_.slice());

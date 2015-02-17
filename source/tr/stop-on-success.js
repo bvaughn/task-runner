@@ -27,16 +27,28 @@ goog.require('tr.enums.State');
 tr.StopOnSuccess = function(opt_tasks, opt_taskName) {
   goog.base(this, opt_taskName || "StopOnSuccess");
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.taskQueue_ = [];
 
-  /** @private {number} */
+  /**
+   * @type {number}
+   * @private
+   */
   this.taskQueueIndex_ = 0;
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.completedTasks_ = [];
 
-  /** @private {!Array.<!tr.Task>} */
+  /**
+   * @type {!Array.<!tr.Task>}
+   * @private
+   */
   this.erroredTasks_ = [];
 
   if (opt_tasks) {

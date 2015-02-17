@@ -32,22 +32,40 @@ tr.Tween = function(callback, duration, opt_easingFunction, opt_taskName) {
 
   goog.asserts.assert(duration > 0, 'Invalid tween duration provided.');
 
-  /** @private {goog.async.AnimationDelay|undefined} */
+  /**
+   * @type {goog.async.AnimationDelay|undefined}
+   * @private
+   */
   this.animationDelay_ = 0;
 
-  /** @private {function(!number)} */
+  /**
+   * @type {function(!number)}
+   * @private
+   */
   this.callback_ = callback;
 
-  /** @private {!number} */
+  /**
+   * @type {!number}
+   * @private
+   */
   this.duration_ = duration;
 
-  /** @private {!number} */
+  /**
+   * @type {!number}
+   * @private
+   */
   this.elapsed_ = 0;
 
-  /** @private {?function(!number):!number} */
+  /**
+   * @type {?function(!number):!number}
+   * @private
+   */
   this.easingFunction_ = opt_easingFunction || this.linearEase_;
 
-  /** @private {!number} */
+  /**
+   * @type {!number}
+   * @private
+   */
   this.lastUpdateTimestamp_ = 0;
 };
 goog.inherits(tr.Tween, tr.Abstract);

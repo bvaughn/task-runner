@@ -20,7 +20,10 @@ goog.require('tr.app.UrlMatcher');
 tr.app.ApplicationRouter = function(application) {
   this.application_ = application;
 
-  /** @private {!Array.<!tr.app.ApplicationRouter.Path_>} */
+  /**
+   * @type {!Array.<!tr.app.ApplicationRouter.Path_>}
+   * @private
+   */
   this.paths_ = [];
 
   /** {function(!tr.app.State)|undefined} */
