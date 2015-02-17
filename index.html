@@ -44,81 +44,98 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.css">
-    <link rel="stylesheet" href="assets/plugins/prism/prism.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/prism.css">
+    <link rel="stylesheet" href="//getbootstrap.com/assets/css/docs.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/prism.css">
+    <link rel="stylesheet" href="styles/main.css">
 
     <script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-route.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="//rawgit.com/bvaughn/task-runner/master/dist/task-runner-engine/compressed.js"></script>
+
+    <!-- Used for Animation demo -->
     <script type="text/javascript" src="//snapsvg.io/assets/js/snap.svg.js"></script>
     <script type="text/javascript" src="//rawgit.com/danro/easing-js/master/easing.js"></script>
 
-    <script type="text/javascript" src="app/scripts/prism.js"></script>
+    <script type="text/javascript" src="libs/showdown.js"></script>
+    <script type="text/javascript" src="libs/ng-showdown.js"></script>
+    <script type="text/javascript" src="libs/angular-markdown-directive.js"></script>
+
     <script type="text/javascript" src="app/scripts/app.js"></script>
     <script type="text/javascript" src="app/scripts/services.js"></script>
     <script type="text/javascript" src="app/scripts/controllers.js"></script>
     <script type="text/javascript" src="app/scripts/directives.js"></script>
   </head>
-  <body data-spy="scroll">
-
-    <header id="header" class="header">  
-        <div class="container">            
-            <h1 class="logo pull-left">
-                <a class="scrollto" href="#promo">
-                    <span class="logo-title">Task Runner</span>
-                </a>
-            </h1><!--//logo-->              
-            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
-                <div class="navbar-header">
-                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button><!--//nav-toggle-->
-                </div><!--//navbar-header-->            
-                <div class="navbar-collapse collapse" id="navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item">
-                            <a ui-sref="index" ui-sref-active="active">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a ui-sref="samples" ui-sref-active="active">Samples</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="http://rawgit.com/bvaughn/task-runner/master/docs/index.html" target="_blank">API Documentation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a ui-sref="license" ui-sref-active="active">License</a>
-                        </li>
-                        <li class="nav-item last">
-                            <a ui-sref="contact" ui-sref-active="active">Contact</a>
-                        </li>
-                    </ul><!--//nav-->
-                </div><!--//navabr-collapse-->
-            </nav><!--//main-nav-->
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
+    <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a ui-sref="index" class="navbar-brand">Task Runner</a>
         </div>
-    </header><!--//header-->
-    
+        <nav class="collapse navbar-collapse bs-navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Getting Started <i class="fa fa-caret-down"></i>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ui-sref="getting-started-what-is-a-task">What is a Task?</a></li>
+                <li><a ui-sref="getting-started-creating-tasks">Creating Tasks</a></li>
+                <li><a ui-sref="getting-started-chaining-tasks">Chaining Tasks</a></li>
+                <li><a ui-sref="getting-started-working-with-promises">Working with Promises</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Samples &amp; Demos <i class="fa fa-caret-down"></i>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ui-sref="sample-application-1">Sample Application 1</a></li>
+                <li><a ui-sref="sample-application-2">Sample Application 2</a></li>
+                <li><a ui-sref="sample-animation">Sample Animation</a></li>
+              </ul>
+            </li>
+            <li ui-sref="documentation.index" ui-sref-active="active">
+              <a ui-sref="documentation.index">API Documentation</a>
+            </li>
+          </ul>
+          <!--<ul class="nav navbar-nav navbar-right"></ul>-->
+        </nav>
+      </div>
+    </header>
+
     <div ui-view></div>
 
-    <footer class="footer">
-        <div class="container text-center">
-            <small class="copyright">
-                Created by <a href="http://www.briandavidvaughn.com" target="_blank">Brian Vaughn</a>.
-                Check out my <a href="github.com/bvaughn/" target="_blank">other projects</a>.
-            </small>
-        </div><!--//container-->
-    </footer>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap.min.js"></script>
+    <script type="text/javascript" src="app/scripts/prism.js"></script>
 
-    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.js"></script>
-    <script type="text/javascript" src="assets/plugins/prism/prism.js"></script>
-    <script type="text/javascript" src="assets/js/main.js"></script>
+    <footer class="bs-docs-footer" role="contentinfo">
+      <div class="container">
+        <div class="bs-docs-social">
+          <ul class="bs-docs-social-buttons">
+            <li>
+              <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=bvaughn&amp;repo=task-runner&amp;type=watch&amp;count=true" width="80" height="20" title="Star on GitHub"></iframe>
+            </li>
+            <li>
+              <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=bvaughn&amp;repo=task-runner&amp;type=fork&amp;count=true" width="82" height="20" title="Fork on GitHub"></iframe>
+            </li>
+          </ul>
+        </div>
+
+        <div class="container text-center">
+          Created by <a href="http://www.briandavidvaughn.com">Brian Vaughn</a>.
+          Check out my <a href="http://github.com/bvaughn/">other projects</a>.
+        </div><!--//container-->
+      </div>
+    </footer>
   </body>
 </html>

@@ -1,0 +1,65 @@
+<div class="bs-docs-header">
+  <div class="container">
+    <h1>Chaining Tasks</h1>
+  </div>
+</div>
+
+<div class="container bs-docs-container">
+  <p>
+    Once you've created some tasks, what do you do with them?
+    By itself a task is only a little better than a Promise- (it can paused and resumed)- but what about the other benefits that were mentioned above?
+  </p>
+
+  <p>
+    The beauty of Task Runner is shown in the way tasks can be connected to each other.
+    Task Runner provides several such ways to group and organize tasks, the simplest of which is <code>tr.Chain</code>.
+    Here's an example of how it works:
+  <p>
+
+  <prism parser="javascript" source="app/snippets/chaining-task-example-1.js"></prism>
+
+  <p>
+    The above code creates a graph of composite of tasks that will run in the following order:
+  </p>
+
+  <ol>
+    <li>
+      First Task A and B will be run (in parallel).
+    </li>
+    <li>
+      If they succeed Task C will be run next.
+    </li>
+    <li>
+      If Task C succeeds, Task D and E will be run next (in parallel).
+    </li>
+    <li>
+      If either Task D or E fails, Task F will be run. Otherwise it will be skipped.
+    </li>
+    <li>
+      Lastly Task G will be run.
+    </li>
+    <li>
+      If any of the above tasks fail (with the exception of Tasks D or E) the chain of execution will stop.
+      Otherwise it will run until the last task (Task G) completes.
+    </li>
+  </ol>
+
+  <p>
+    Chain tasks, like all tasks, support callbacks. To be notified of a failed chain, just attach an error handler as shown below:
+  </p>
+
+  <prism parser="javascript" source="app/snippets/chaining-task-example-2.js"></prism>
+
+  <p>
+    If you need even more find-grained control over the order of your tasks,
+    check out <code>tr.Graph</code> in the <a ui-sref="documentation.index">API documentation</a>.
+  </p>
+
+  <p>
+    <strong>Next</strong>:
+    <a ui-sref="getting-started-working-with-promises" class="btn btn-outline btn-lg">
+      Working with Promises
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </p>
+</div>

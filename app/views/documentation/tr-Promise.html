@@ -1,0 +1,81 @@
+<h3>
+  tr.Promise
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/promise.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">ExecutesActs as an adapter between Task Runner and several popular Promise libraries.</p>
+
+<p>The following promise libraries are supported:</p>
+
+<ul>
+  <li>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">ES6 (Promise.prototype)</a>
+  </li>
+  <li>
+    <a href="https://docs.angularjs.org/api/ng/service/$q">Angular $q</a>
+  </li>
+  <li>
+    <a href="https://github.com/kriskowal/q">Q</a>
+  </li>
+  <li>
+    <a href="http://api.jquery.com/deferred.promise/">jQuery</a>
+  </li>
+</ul>
+
+<p class="alert alert-danger">
+  Note that depending on specific promises, reset/rerun behavior may not function as desired.
+</p>
+
+<usage source="app/snippets/documentation/promise.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (promise, taskName)
+</h4>
+
+<signature params="[
+  {name: 'promise', type: 'Promise', description: 'A Promise object'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if invalid Promise object provided.'},
+  {type: 'Error', description: 'if no supported Promise libraries are detected.'}
+]"></throws>
+
+<h3>Static Methods</h3>
+
+<!-- promiseToTask() -->
+<h4 class="page-header">
+  tr.Promise.promiseToTask(promise, taskName)
+</h4>
+<p>Wraps a Promise and returns a Task that will complete/error when the promise is resolved/rejected.</p>
+<p>If you're working with a library that returns Promises, you can convert any Promise to a Task using this method.</p>
+<signature params="[
+  {name: 'promise', type: 'Promise', description: 'A Promise object'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if invalid Promise object provided.'},
+  {type: 'Error', description: 'if no supported Promise libraries are detected.'}
+]"></throws>
+
+<!-- taskToPromise() -->
+<h4 class="page-header">
+  tr.Promise.taskToPromise(task, $q)
+</h4>
+<p>Wraps a Task and returns a Promise that will resolve/reject when the task is completed/errored.</p>
+<p>If you're working with a library that expects Promises (e.g. Angular's UI Router), you can convert any Task to a Promise using this method.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'A Task to wrap.'},
+  {name: '$q', type: 'Object', description: 'Angular $q service. This parameter is only required if Angular Promises are being used. It is necessary because there is no global $injector from which to get $q.'}
+]"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if invalid Task object provided.'},
+  {type: 'Error', description: 'if no supported Promise libraries are detected.'},
+  {type: 'Error', description: 'if Angular is detected but no $q implementation is provided'}
+]"></throws>

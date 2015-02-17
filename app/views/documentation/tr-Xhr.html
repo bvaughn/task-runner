@@ -1,0 +1,45 @@
+<h3>
+  tr.Xhr
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/xhr.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Creates an XHR request and completes upon successful response from the server.</p>
+
+<p>
+  The type of request created depends on whether a data object is provided:
+</p>
+
+<ul>
+  <li>If a data object is provided it will be converted to a URL-args string and a POST request will be created.
+  <li>If a data object is provided a GET request will be created.
+</ul>
+
+<usage source="app/snippets/documentation/xhr.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (task, timeout, taskName)
+</h4>
+
+<signature params="[
+  {name: 'url', type: 'String', description: 'URL to load.'},
+  {name: 'data', type: 'Object', description: 'Object containing POST data; if undefined a GET request will be used.'},
+  {name: 'responseType', type: 'tr.Xhr.ResponseType', description: 'Expected reponse type. If undefined the static value set with tr.Xhr.setDefaultResponseType will be used. If no default response-type is set this value defaults to tr.Xhr.ResponseType.TEXT.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Static Methods</h3>
+
+<!-- promiseToTask() -->
+<h4 class="page-header">
+  tr.Xhr.setDefaultResponseType(responseType)
+</h4>
+<p>Set the default response-type for all XHR requests that do not otherwise specify a response-type.</p>
+<signature params="[
+  {name: 'responseType', type: 'tr.Xhr.ResponseType', description: 'Response type to use.'}
+]"></signature>

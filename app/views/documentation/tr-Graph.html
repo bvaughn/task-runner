@@ -1,0 +1,107 @@
+<h3>
+  tr.Graph
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/graph.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Executes a set of Tasks either in parallel or one after another.</p>
+
+<p>
+  This type of task allows a dependency graph (of child tasks) to be created.
+  It then executes all of its children in the order needed to satisfy dependencies, and completes (or fails) once the child tasks have completed (or failed).
+</p>
+
+<p>
+  In the event of an error, the graph will stop and error.
+  All tasks that are running will be interrupted.
+  If the graph is re-run, any incomplete child tasks will be resumed.
+</p>
+
+<usage source="app/snippets/documentation/graph.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (taskName)
+</h4>
+
+<signature params="[{name: 'taskName', type: 'String', description: 'Optional task name.'}]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- add() -->
+<h4 class="page-header">
+  add(task, blockers)
+</h4>
+<p>Adds a child task to the dependency graph and ensures that its blocking dependencies (if any) are valid.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Child task to be run when this task is run.'},
+  {name: 'blockers', type: 'Array<tr.Task>', description: 'Blocking tasks that must complete successfully before this task can be run. This parameter can be ommitted for tasks that do not have blocking dependencies.'}
+]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if task has been added more than once.'},
+  {type: 'Error', description: 'if cyclic dependencies are detected.'}
+]"></throws>
+
+<!-- addAll() -->
+<h4 class="page-header">
+  addAll(tasks, blockers)
+</h4>
+<p>Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.</p>
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Child tasks to be run when this task is run.'},
+  {name: 'blockers', type: 'Array<tr.Task>', description: 'Blocking tasks that must complete successfully before this task can be run. This parameter can be ommitted for tasks that do not have blocking dependencies.'}
+]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if task has been added more than once.'},
+  {type: 'Error', description: 'if cyclic dependencies are detected.'}
+]"></throws>
+
+<!-- addToEnd() -->
+<h4 class="page-header">
+  addToEnd(task)
+</h4>
+<p>
+  Convenience method for adding a task to the "end" of the depepdency graph.
+  In othe words, this task will be blocked by all tasks already in the graph.
+</p>
+<signature params="[{name: 'task', type: 'tr.Task', description: 'Child task to be run when this task is run.'}]"
+           return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if task has been added more than once.'}]"></throws>
+
+<!-- remove() -->
+<h4 class="page-header">
+  remove(task)
+</h4>
+<p>Removes a child task from the dependency graph and ensures that the remaining dependencies are still valid.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Child task to be removed from the graph.'}
+]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if the task provided is not within the depenency graph.'},
+  {type: 'Error', description: 'if removing the task invalidates any other, blocked tasks.'}
+]"></throws>
+
+<!-- removeAll() -->
+<h4 class="page-header">
+  removeAll(tasks)
+</h4>
+<p>Removes child tasks from the dependency graph and ensures that the remaining dependencies are still valid.</p>
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Child tasks to be removed.'}
+]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if the task provided is not within the depenency graph.'},
+  {type: 'Error', description: 'if removing the task invalidates any other, blocked tasks.'}
+]"></throws>
+
+<h3>Protected methods</h3>
+
+<!-- beforeFirstRun() -->
+<h4 class="page-header">
+  beforeFirstRun()
+</h4>
+<p>Subclasses may override this method to just-in-time add child Tasks before the composite is run.</p>

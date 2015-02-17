@@ -1,0 +1,33 @@
+<h3>
+  tr.Stub
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/stub.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">No-op task primarily useful for unit testing.</p>
+
+<p>
+  This type of task can also be useful in a composite when a default, no-op behavior is desired.
+  Simply replace the placeholder null task with one that does actual work.
+</p>
+
+<p>
+  This task can be configured to auto-complete when it is executed.
+  Otherwise it will not complete or error until specifically told to do so.
+</p>
+
+<usage source="app/snippets/documentation/stub.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (autoCompleteUponRun, taskName)
+</h4>
+
+<signature params="[
+  {name: 'autoCompleteUponRun', type: 'Boolean', description: 'Task should auto-complete when run.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>

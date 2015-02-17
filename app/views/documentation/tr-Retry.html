@@ -1,0 +1,51 @@
+<h3>
+  tr.Retry
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/retry.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Decorator for tasks that should be retried on error.</p>
+
+<p>
+  For example, you may wish to decorator a Task that relies on Internet connectivity in order to complete.
+  The decorated Task is allowed to fail a specified number of times before the error condition is reported externally.
+</p>
+
+<p>
+  This decorator can also be configured to delay for a set amount of time before re-running its internal tasks.
+  This delay may allow certain types of external error conditions (e.g. temporary loss of Internet connectivity) to resolve before the operation is attempted again.
+</p>
+
+<usage source="app/snippets/documentation/retry.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (task, maxRetries, retryDelay, taskName)
+</h4>
+
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'The task to decorate.'},
+  {name: 'maxRetries', type: 'Number', description: 'Number of times to reset and re-run the decorated Task before erroring the retry task. If not specified this defaults to 5.'},
+  {name: 'retryDelay', type: 'Number', description: 'The amount of time to delay before resetting and re-running the decorated Task. A value < 0 seconds will result in a synchronous retry. If not specified this defaults to 1000 ms.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- getDecoratedTask() -->
+<h4 class="page-header">
+  getDecoratedTask()
+</h4>
+<p>Returns the decorated Task.</p>
+<signature return="tr.Task"></signature>
+
+<!-- getRetries() -->
+<h4 class="page-header">
+  getRetries()
+</h4>
+<p>Returns the number of retries attempted.</p>
+<signature return="Number"></signature>

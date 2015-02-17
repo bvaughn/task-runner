@@ -1,0 +1,81 @@
+<h4>Tasks used to perform common operations</h4>
+
+<p>These are a few built-in tasks for doing things that are common in web applications.</p>
+
+<dl>
+  <dt><a ui-sref="documentation.tr-Listener">tr.Listener</a></dt>
+  <dd>Waits for an event-dispatching target to trigger a specific type of event.</dd>
+  <dt><a ui-sref="documentation.tr-Promise">tr.Promise</a></dt>
+  <dd>Creates Tasks from Promises and Promises from Tasks.</dd>
+  <dt><a ui-sref="documentation.tr-Tween">tr.Tween</a></dt>
+  <dd>Animation-frame-based task for tweening properties.</dd>
+  <dt><a ui-sref="documentation.tr-Xhr">tr.Xhr</a></dt>
+  <dd>Creates an XHR request and completes upon successful response from the server.</dd>
+</dl>
+
+<hr/>
+
+<h4>Tasks used to group other tasks</h4>
+
+<p>This type of task lets you treat a collection of tasks as a single task.</p>
+
+<dl>
+  <dt><a ui-sref="documentation.tr-Chain">tr.Chain</a></dt>
+  <dd>Lightweight interface to create a dependency graph task.</dd>
+  <dt><a ui-sref="documentation.tr-Composite">tr.Composite</a></dt>
+  <dd>Executes a set of Tasks either in parallel or one after another.</dd>
+  <dt><a ui-sref="documentation.tr-Graph">tr.Graph</a></dt>
+  <dd>Executes of a set of Tasks with dependencies on each other in the correct order.</dd>
+  <dt><a ui-sref="documentation.tr-Observer">tr.Observer</a></dt>
+  <dd>Observes (but does not execute) a collection of Tasks. These tasks do not have to be related in any way.</dd>
+</dl>
+
+<hr/>
+
+<h4>Tasks to help with controlling the flow of a program</h4>
+
+<dl>
+  <dt><a ui-sref="documentation.tr-Factory">tr.Factory</a></dt>
+  <dd>Use this type of task when an important decision needs to be deferred.</dd>
+  <dt><a ui-sref="documentation.tr-Failsafe">tr.Failsafe</a></dt>
+  <dd>Decorates a task and re-dispatches errors as successful completions.</dd>
+  <dt><a ui-sref="documentation.tr-Stub">tr.Stub</a></dt>
+  <dd>No-op task primarily useful for unit testing of default, op-op values (that can be replaced with meaningful tasks to customize behavior).</dd>
+  <dt><a ui-sref="documentation.tr-Retry">tr.Retry</a></dt>
+  <dd>Decorator for tasks that should be retried on error. This can be useful for tasks that might fail intermittently due to things like a temporary loss of Internet connectivity.</dd>
+  <dt><a ui-sref="documentation.tr-StopOnSuccess">tr.StopOnSuccess</a></dt>
+  <dd>Runs a series of tasks until one of them successfully completes.</dd>
+  <dt><a ui-sref="documentation.tr-Timeout">tr.Timeout</a></dt>
+  <dd>Decorates a Task and enforces a timeout. If the decorated task has not completed within the speci
+  fied time limits, the decorator errors.</li>
+  <dt><a ui-sref="documentation.tr-Sleep">tr.Sleep</a></dt>
+  <dd>Sleeps for an amount of time to pass before completing.</dd>
+</dl>
+
+<hr/>
+
+<h4>Tasks that can be used to create new custom tasks</h4>
+
+<dl>
+  <dt><a ui-sref="documentation.tr-Abstract">tr.Abstract</a></dt>
+  <dd>Abstract implementation of Task. Extend this task to create your own task with only a few lines of code.</dd>
+  <dt><a ui-sref="documentation.tr-Closure">tr.Closure</a></dt>
+  <dd>Invokes a callback function when run. Use this task when you want to do something custom but you don't want to implement a whole new type of task.</dd>
+</dl>
+
+<hr/>
+
+<h4>Application framework tasks</h4>
+
+<p>These tasks are only available in the <code>dist/task-runner-enginer</code> version of Task Runner.</p>
+
+<dl>
+  <dt><a ui-sref="documentation.tr-app-Application">tr.app.Application</a></dt>
+  <dd>Abstract application task. Use the enterState() method to start the application or to transition between states.</dd>
+  <dt><a ui-sref="documentation.tr-app-State">tr.app.State</a></dt>
+  <dd>Abstract application state. Extend this base class to implement your own application states.</dd>
+  <dt><a ui-sref="documentation.tr-app-TransitionState">tr.app.TransitionState</a></dt>
+  <dd>Special state used to resolve asynchronous dependencies when transitioning between other states.</dd>
+  <dt><a ui-sref="documentation.tr-app-ApplicationRouter">tr.app.ApplicationRouter</a></dt>
+  <dd>Watches for changes in the current URL and maps them to the appropriate application state.</dd>
+</dl>

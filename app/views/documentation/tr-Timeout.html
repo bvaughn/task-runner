@@ -1,0 +1,38 @@
+<h3>
+  tr.Timeout
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/timeout.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Decorates a Task and enforces a max-execution time limit.</p>
+
+<p>
+  If specified time interval elapses before the decorated Task has complete it is considered to be an error.
+  The decorated Task will be interrupted in that event.
+</p>
+
+<usage source="app/snippets/documentation/timeout.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (task, timeout, taskName)
+</h4>
+
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'The task to decorate.'},
+  {name: 'timeout', type: 'Number', description: 'Time in milliseconds to wait before timing out the decorated task.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance methods</h3>
+
+<!-- getDecoratedTask() -->
+<h4 class="page-header">
+  getDecoratedTask()
+</h4>
+<p>Returns the decorated Task.</p>
+<signature return="tr.Task"></signature>

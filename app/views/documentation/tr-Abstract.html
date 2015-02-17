@@ -1,0 +1,257 @@
+<h3>
+  tr.Abstract
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/abstract.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Abstract implementation of Task.</p>
+
+<p>
+To create a Task extend this class and override <code>runImpl</code>, <code>interruptImpl</code>, and <code>resetImpl</code>.
+Once it has been run, your Task should call <code>completeInternal</code> or <code>errorInternal</code> to indicate it is done.
+</p>
+
+<usage source="app/snippets/create-task-through-extension.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (taskName)
+</h4>
+
+<signature params="[{
+  name: 'taskName', type: 'String', description: 'Optional defaulttask name, useful for automated testing or debugging. Sub-classes should specify a default equal to the name of the class.'
+}]"></signature>
+
+<h3>Primary Methods</h3>
+
+<!-- run() -->
+<h4 class="page-header">
+  run()
+</h4>
+<p>Starts a task. This method may also be used to re-run a task that has errorred or to resume a task that has been interrupted.</p>
+<signature return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if task is already running.'}]"></throws>
+
+<!-- interrupt() -->
+<h4 class="page-header">
+  interrupt()
+</h4>
+<p>Interrupts a running task. An interrupted task can be resumed by calling <code>run()</code>.</p>
+<signature return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
+
+<!-- interruptFor() -->
+<h4 class="page-header">
+  interruptFor(task)
+</h4>
+<p>Interrupts a running task until another task has completed.
+There can only be 1 active interrupting Task at a time.
+Use a composite to interrupt for multiple tasks.</p>
+<p>This method will not start an interrupting task.
+It must be run by the caller.</p>
+<signature params="[{
+  name: 'task', type: 'tr.Task', description: 'Task to wait for.'
+}]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if task is already running.'}]"></throws>
+
+<!-- reset() -->
+<h4 class="page-header">
+  reset()
+</h4>
+<p>Resets the task to it's initialized TaskState so that it can be re-run.
+This method should not be called on a task that is running.</p>
+<signature return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
+
+<h3>Accessors</h3>
+
+<!-- getData() -->
+<h4 class="page-header">
+  getData()
+</h4>
+<p>If a task provides a data value upon completion or error, this method returns that data.</p>
+<signature return="Object | undefined"></signature>
+
+<!-- getErrorMessage() -->
+<h4 class="page-header">
+  getErrorMessage()
+</h4>
+<p>In the event that a task errors, this method may return additional information about the cause of the error.</p>
+<signature return="String | undefined"></signature>
+
+<!-- getOperationsCount() -->
+<h4 class="page-header">
+  getOperationsCount()
+</h4>
+<p>Number of internal operations conducted by this task.</p>
+<signature return="Number"></signature>
+
+<!-- getCompletedOperationsCount() -->
+<h4 class="page-header">
+  getCompletedOperationsCount()
+</h4>
+<p>Number of internal operations that have completed.</p>
+<signature return="Number"></signature>
+
+<!-- getCreationContext() -->
+<h4 class="page-header">
+  getCreationContext()
+</h4>
+<p>Context information about where this task was created.
+This information can help locate and debug errored tasks.</p>
+<p>This property is only available in the debug build of Task Runner.</p>
+<signature return="String"></signature>
+
+<!-- getName() -->
+<h4 class="page-header">
+  getName()
+</h4>
+<p>Optional human-readable name, typically useful for debug purposes.</p>
+<signature return="String | undefined"></signature>
+
+<!-- getState() -->
+<h4 class="page-header">
+  getState()
+</h4>
+<p>Returns the state of the task.</p>
+<signature return="tr.enums.State"></signature>
+
+<!-- getUniqueID() -->
+<h4 class="page-header">
+  getUniqueID()
+</h4>
+<p>Globally unique ID for the current Task-instance.</p>
+<p>Tasks should be assigned a unique ID when they are created.
+IDs remain with their Tasks as long as the Tasks exist and are not reused.</p>
+<signature return="Number"></signature>
+
+<h3>Callbacks &amp; Events</h3>
+
+<!-- started() -->
+<h4 class="page-header">
+  started(callback, scope)
+</h4>
+<p>This callback will be invoked when a task is started.</p>
+<signature params="[
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- interrupted() -->
+<h4 class="page-header">
+  interrupted(callback, scope)
+</h4>
+<p>This callback will be invoked whenever this task is interrupted.</p>
+<signature params="[
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- completed() -->
+<h4 class="page-header">
+  completed(callback, scope)
+</h4>
+<p>This callback will be invoked only upon successful completion of the task.
+Callbacks may be called multiple times (if the task is run more than once).
+Multiple callbacks may be registered with a task as well.</p>
+<signature params="[
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- errored() -->
+<h4 class="page-header">
+  errored(callback, scope)
+</h4>
+<p>This callback will be invoked only upon a task error.
+Callbacks may be called multiple times (if the task is run more than once).
+Multiple callbacks may be registered with a task as well.</p>
+<signature params="[
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- final() -->
+<h4 class="page-header">
+  final(callback, scope)
+</h4>
+<p>This callback will be invoked after a task has completed or errorred.</p>
+<signature params="[
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- on() -->
+<h4 class="page-header">
+  on(taskEvent, callback, scope)
+</h4>
+<p>Attach a callback function to a task event.</p>
+<signature params="[
+  {name: 'taskEvent', type: 'tr.enums.Event', description: 'Event-type to listen for.'},
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- off() -->
+<h4 class="page-header">
+  off(taskEvent, callback, scope)
+</h4>
+<p>Dettach a callback function from a task event.
+If a <em>scope</em> was provided when this callback was attached it must also be provided to detatch.</p>
+<signature params="[
+  {name: 'taskEvent', type: 'tr.enums.Event', description: 'Event-type to listen for.'},
+  {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
+  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<h3>Protected methods</h3>
+
+<!-- runImpl() -->
+<h4 class="page-header">
+  runImpl()
+</h4>
+<p>This method is called each time a task is run.
+Call <code>completeInternal()</code> or <code>errorInternal()</code> when the task is finished.</p>
+<p>Subclasses <strong>must</strong> override this method.</p>
+
+<!-- interruptImpl() -->
+<h4 class="page-header">
+  interruptImpl()
+</h4>
+<p>This method is called each time a task is interrupted.</p>
+<p>Subclasses are <em>strongly encouraged</em> override this method.</p>
+
+<!-- resetImpl() -->
+<h4 class="page-header">
+  resetImpl()
+</h4>
+<p>This method is called each time a task is reset.
+Override it to perform custom cleanup between task-runs.</p>
+<p>Subclasses are <em>strongly encouraged</em> override this method.</p>
+
+<!-- completeInternal() -->
+<h4 class="page-header">
+  completeInternal(data)
+</h4>
+<p>Call this method to mark the task as complete.
+It will ensure that the correct callbacks are triggered.</p>
+<signature params="[
+  {name: 'data', type: 'Object', description: 'Task data.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
+
+<!-- errorInternal() -->
+<h4 class="page-header">
+  errorInternal(data, errorMessage)
+</h4>
+<p>Call this method to mark the task as errored.
+It will ensure that the correct callbacks are triggered.</p>
+<signature params="[
+  {name: 'data', type: 'Object', description: 'Task data.'},
+  {name: 'errorMessage', type: 'String', description: 'Optional error message.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>

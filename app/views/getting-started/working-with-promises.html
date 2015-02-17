@@ -1,0 +1,36 @@
+<div class="bs-docs-header">
+  <div class="container">
+    <h1>Working with Promises</h1>
+  </div>
+</div>
+
+<div class="container bs-docs-container">
+  <p>
+    Tasks may be more useful than Promises, but they're not as popular.
+    That's okay! Task Runner provides built-in methods for working with Promises.
+    The following types of Promises are supported:
+  </p>
+
+  <ul>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">ES6 (Promise.prototype)</a></li>
+    <li><a href="https://github.com/kriskowal/q">Q</a></li>
+    <li><a href="https://docs.angularjs.org/api/ng/service/%24q">Angular $q</a></li>
+    <li><a href="http://api.jquery.com/promise/">jQuery</a></li>
+  </ul>
+
+  <p>
+    If you're working with a library that returns Promises (e.g. jQuery), you can convert them to tasks automatically like so:
+  </p>
+
+  <prism parser="javascript" source="app/snippets/promise-to-task.js"></prism>
+
+  <p>
+    If you're working with a library that expects Promises (e.g. Angular's UI Router), you can convert any Task to a Promise like so:
+  </p>
+
+  <prism parser="javascript" source="app/snippets/task-to-promise.js"></prism>
+  
+  <p>
+    For more information, refer to the <code>tr.Promise</code> task in the <a ui-sref="documentation.index">API documentation</a>.
+  </p>
+</div>

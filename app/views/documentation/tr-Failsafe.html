@@ -1,0 +1,34 @@
+<h3>
+  tr.Failsafe
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/failsafe.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Decorates a task and re-dispatches errors as successful completions.</p>
+
+<p>This can be used to decorate tasks that are not essential.</p>
+
+<usage source="app/snippets/documentation/failsafe.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (callback, synchronous, taskName)
+</h4>
+
+<signature params="[
+  {name: 'decoratedTask', type: 'tr.Task', description: 'Decorated task to be run when this task is run.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance methods</h3>
+
+<!-- getDecoratedTask() -->
+<h4 class="page-header">
+  getDecoratedTask()
+</h4>
+<p>Returns the decorated Task.</p>
+<signature return="tr.Task"></signature>

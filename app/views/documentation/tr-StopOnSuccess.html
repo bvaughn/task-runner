@@ -1,0 +1,78 @@
+<h3>
+  tr.StopOnSuccess
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/stop-on-success.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Runs a series of tasks until one of them successfully completes.</p>
+
+<p>
+  This type of task completes successfully if at least one of its children complete.
+  If all of its children error, this task will also error.
+</p>
+
+<p class="alert alert-warning">
+  This type of task has very limited use cases.
+  Consider <code>tr.Chain</code>, <code>tr.Composite</code> or <code>tr.Graph</code> before proceeding.
+</p>
+
+<usage source="app/snippets/documentation/stop-on-success.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (tasks, taskName)
+</h4>
+
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Initial set of child tasks.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- add() -->
+<h4 class="page-header">
+  add(task)
+</h4>
+<p>Adds a task to the list of child tasks.</p>
+<p>This method should only be called before the task is run.
+Adding child tasks while running is not a supported operation.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Child task to be run when this task is run.'}
+]" return="{type: 'tr.StopOnSuccess', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if the composite task has already been run.'},
+  {type: 'Error', description: 'if task has been added more than once'}
+]"></throws>
+
+<!-- addAll() -->
+<h4 class="page-header">
+  addAll(tasks)
+</h4>
+<p>Adds a set of tasks to the list of children.</p>
+<p>This method should only be called before the task is run.
+Adding child tasks while running is not a supported operation.</p>
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Child tasks to be run when this task is run.'}
+]" return="{type: 'tr.StopOnSuccess', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if the composite task has already been run.'},
+  {type: 'Error', description: 'if task has been added more than once'}
+]"></throws>
+
+<!-- remove() -->
+<h4 class="page-header">
+  remove(task)
+</h4>
+<p>Removes a task from the list of child tasks.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Child task to be removed from the graph.'}
+]" return="{type: 'tr.StopOnSuccess', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if the composite task has already been run.'},
+  {type: 'Error', description: 'if the task provided is not a child of this composite.'}
+]"></throws>

@@ -1,0 +1,83 @@
+<h3>
+  tr.Composite
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/composite.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Executes a set of Tasks either in parallel or one after another.</p>
+
+<p>This type of task enables multiple tasks to be bundled and treated as a single task.</p>
+
+<usage source="app/snippets/documentation/composite.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (parallel, tasks, taskName)
+</h4>
+
+<signature params="[
+  {name: 'parallel', type: 'Boolean', description: 'If TRUE, child tasks are run simultaneously; otherwise they are run serially, in the order they were added.'},
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Initial set of child tasks.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- add() -->
+<h4 class="page-header">
+  add(task)
+</h4>
+<p>Adds a task to the list of child tasks.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Child task to be run when this task is run.'},
+]" return="{type: 'tr.Composite', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if task has been added more than once.'}]"></throws>
+
+<!-- addAll() -->
+<h4 class="page-header">
+  addAll(tasks)
+</h4>
+<p>Call this method to mark the task as complete.</p>
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Child tasks to be added.'},
+]" return="{type: 'tr.Composite', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if tasks have been added more than once.'}]"></throws>
+
+<!-- remove() -->
+<h4 class="page-header">
+  remove(task)
+</h4>
+<p>Removes a task from the list of child tasks.</p>
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Child task to be removed.'},
+]" return="{type: 'tr.Composite', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if the task provided is not a child of this composite.'}]"></throws>
+
+<h3>Protected methods</h3>
+
+<!-- flushQueue() -->
+<h4 class="page-header">
+  flushQueue()
+</h4>
+<p class="alert alert-danger">
+ <strong>Warning</strong> This method is intended for a specific use-case.
+ Please read the documentation carefully to ensure that you understand that use-case before using the method.
+</p>
+<p>
+  Composite tasks may need to change direction while executing.
+  For instance, a user-input event may be received while a composite task is executing that changes what should happen next.
+  In that event this method can be used to interrupt any tasks that are running, flush the current queue, and reset the composite task to a pristine state.
+</p>
+<p>
+  Furthermore this method may be instructed to leave the composite task running once the queue has been flushed.
+  This allows a new set of child tasks to be added and run without triggering external callbacks.
+</p>
+<p>
+  This behavior should only be used if the composite is going to be re-populated and re-run (continued) immediately after flushing.
+</p>
+<signature params="[
+  {name: 'doNotComplete', type: 'Boolean', description: 'If TRUE, this task will not complete itself nor invoke any completion callbacks once the queue has been emptied.'}]"></signature>

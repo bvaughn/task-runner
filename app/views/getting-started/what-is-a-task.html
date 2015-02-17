@@ -1,0 +1,45 @@
+<div class="bs-docs-header">
+  <div class="container">
+    <h1>What is a Task?</h1>
+  </div>
+</div>
+
+<div class="container bs-docs-container">
+  <p>
+    A task encapsulates a unit of work.
+    Like a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">JavaScript Promise</a>, once a task is run it will eventually complete or error to indicate the outcome.
+    Unlike a Promise, tasks can also be <em>interrupted and resumed</em>, making them ideal for things like animations, sounds, etc.
+  </p>
+
+  <p>
+    Tasks can be as small as a console log message or as big as an entire application. They can be synchronous or asynchronous.
+  </p>
+
+  <p>
+    Tasks have many advantages over other methods of asynchronous programming, such as callbacks:
+  </p>
+
+  <ul>
+    <li>
+      Performing several tasks in a row will not create nested "pyramid" code as you would get when using only callbacks.
+    </li>
+    <li>
+      Tasks are fully composable, allowing you to perform branching, parallelism, and complex error handling, without the spaghetti code of having many named callbacks.
+    </li>
+    <li>
+      You can arrange task-based code in the order that it executes, rather than having to split your logic across scattered callback functions.
+    </li>
+  </ul>
+
+  <p>
+    For more information on the above benefits, see the <a ng-click="scrollTo('chaining-tasks')">chaining tasks</a> section below.
+  </p>
+
+  <p>
+    <strong>Next</strong>:
+    <a ui-sref="getting-started-creating-tasks" class="btn btn-outline btn-lg">
+      Creating Tasks
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </p>
+</div>

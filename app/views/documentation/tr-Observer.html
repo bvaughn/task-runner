@@ -1,0 +1,63 @@
+<h3>
+  tr.Observer
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/observer.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Observes (but does not execute) a collection of Tasks.</p>
+
+<p>
+  This task can be used to monitor the execution of 1 or more running Tasks.
+  These tasks do not have to be related in any way.
+  Tasks can be added (or removed) while the observer is running.
+  It will complete only once all observed Tasks has completed.
+</p>
+
+<p>
+  If this Task is executed with no observed Tasks it will instantly complete.
+  The same is true if all of its observed Tasks have already completed by the time it has been executed.
+</p>
+
+<usage source="app/snippets/documentation/observer.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (tasks, failUponFirstError, taskName)
+</h4>
+
+<signature params="[
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'The array of Tasks to observe.'},
+  {name: 'failUponFirstError', type: 'Boolean', description: 'Whether to error the observer task immediately when one of the observed tasks errors.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- getObservedTasks() -->
+<h4 class="page-header">
+  getObservedTasks()
+</h4>
+<p>Returns a list of observed tasks.</p>
+<signature return="Array<tr.Task>"></signature>
+
+<!-- observe() -->
+<h4 class="page-header">
+  observe(task)
+</h4>
+<p>Add an additional Task to observe.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Task to observe'},
+]" return="{type: 'tr.Observer', description:'A reference to the current task'}"></signature>
+
+<!-- stopObserving() -->
+<h4 class="page-header">
+  stopObserving(task)
+</h4>
+<p>Stops a Task from being observed.</p>
+<signature params="[
+  {name: 'task', type: 'tr.Task', description: 'Task to stop observing'},
+]" return="{type: 'tr.Observer', description:'A reference to the current task'}"></signature>

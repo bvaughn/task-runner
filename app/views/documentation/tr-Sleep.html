@@ -1,0 +1,26 @@
+<h3>
+  tr.Sleep
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/sleep.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Waits for an amount of time to pass before completing.</p>
+
+<p>Resuming an interrupted Sleep can either re-start the timer at the beginning or resume from the interrupted point.</p>
+
+<usage source="app/snippets/documentation/sleep.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (timeout, resetTimerAfterInterruption, taskName)
+</h4>
+
+<signature params="[
+  {name: 'timeout', type: 'Number', description: 'Time in milliseconds to wait before completing.'},
+  {name: 'resetTimerAfterInterruption', type: 'Number', description: '(Optional) Reset the timer after interruption; defaults to false.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>

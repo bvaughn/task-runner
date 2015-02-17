@@ -1,0 +1,55 @@
+p, div, table {
+  font-size: 15px;
+}
+
+pre {
+  font-size: 12px;
+}
+
+p, prism {
+  display: block;
+  margin-bottom: 30px;
+}
+
+.bs-callout-success {
+  border-left-color: #00a86b
+}
+.bs-callout-success h4{
+  color: #00a86b
+}
+
+section .method-header {
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+section:first-of-type .method-header {
+  margin-top: 0;
+}
+
+.bs-callout pre:last-of-type,
+.bs-callout table:last-of-type,
+.bs-callout ul:last-of-type,
+.bs-callout prism:last-of-type {
+  margin-bottom: 0;
+}
+
+.return-type-icon {
+  font-size: 20px;
+}
+
+.bs-docs-header .lead {
+  margin-bottom: 15px;
+  color: #FFFFFF;
+}
+.bs-docs-header a,
+.bs-docs-header strong {
+  color: #FFFFFF;
+}
+.bs-docs-header .version {
+  font-size: 14px;
+  color: #9783b9;
+}
+
+.task-runner-documentation p {
+  margin-bottom: 10px;
+}

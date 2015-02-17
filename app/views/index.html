@@ -1,144 +1,48 @@
-<!-- ******PROMO****** -->
-<section id="promo" class="promo section offset-header">
-    <div class="container text-center">
-        <h2 class="title">Task Runner <span class="highlight">JS</span></h2>
-        <p class="intro">JavaScript Promises on steroids- and more!</p>
-        <div class="btns">
-            <a class="btn btn-cta-secondary" ui-sref="samples">Samples &amp; Demos</a>
-            <a class="btn btn-cta-primary" href="https://github.com/bvaughn/task-runner/releases" target="_blank">Download</a>
-        </div>
-        <ul class="meta list-inline">
-            <li><a href="https://github.com/bvaughn/task-runner/" target="_blank">View on GitHub</a></li>
-            <li><a href="http://rawgit.com/bvaughn/task-runner/master/docs/index.html" target="_blank">Full Documentation</a></li>
-        </ul><!--//meta-->
-    </div><!--//container-->
-    <div class="social-media">
-        <div class="social-media-inner container text-center">
-            <ul class="list-inline">
-                <!--// Generate github buttons: https://github.com/bvaughn/task-runner -->
-                <li class="github-star"><iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&repo=task-runner&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe></li>
-                <li class="github-fork"><iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&repo=task-runner&type=fork" allowtransparency="true" frameborder="0" scrolling="0" width="53" height="20"></iframe></li>
-                <li class="github-follow"><iframe src="http://ghbtns.com/github-btn.html?user=bvaughn&type=follow&count=true"
-allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"></iframe></li>
-            </ul>
-        </div>
-    </div>
-</section><!--//promo-->
-
-<!-- ******ABOUT****** --> 
-<section id="about" class="about section">
+<main class="bs-docs-masthead">
   <div class="container">
-    <p class="intro lead">
-      Why use Task Runner?
+    <h1>Task Runner</h1>
+    <p class="lead">
+      Task Runner is a collection of low-level libraries designed to make JavaScript application development easier.
     </p>
-
-    <p class="intro">
-      Web programming requires coordinating a lot of parallel operations.
-      Let's call these <em>tasks</em>.
+    <p class="lead">
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/bvaughn/task-runner/releases">
+        Download Task Runner
+        <i class="fa fa-download"></i>
+      </a>
+      <a class="btn btn-outline-inverse btn-lg" ui-sref="getting-started-what-is-a-task">
+        Learn More
+        <i class="fa fa-chevron-right"></i>
+      </a>
     </p>
+    <p class="version">Currently v1.0.2</p>
+  </div>
+</main>
 
-    <p class="intro">
-      JavaScript applications have traditionally managed tasks by chaining together events or callbacks (often packaged as Promises).
-      This works when the number of tasks is small but what about larger applications?
-      Handling errors and interruptions can get very complicated when you have to track application state.
-      The code responsible for managing this is often larger and more complex than the meat of your application.
-    </p>
-
-    <p class="intro lead">
-      Task Runner can help you out with this.
-    </p>
-
-    <ul class="list">
-      <li>
-        First, it introduces <em>Task</em>.
-        Task is an interface that reprsents any kind of work your application may need to do.
-        It's kind of like a Promise.
-      </li>
-      <li>
-        Next it provides several building block tasks that your application can use.
-        (We'll learn more about these in a bit.)
-        It provives an abstract implementation of <em>Task</em> that you can extend to create your own custom tasks as well.
-      </li>
-      <li>
-        It also provides ways to compose and organize tasks.
-        If one task depends on another, Task Runner ensures that they're run in the correct order.
-      </li>
-      <li>
-        Lastly it gives you the ability to interrupt and resume your tasks.
-        If an error happens, Task Runner helps cleanup and restart where things went wrong.
-        This means you get to focus on the good stuff - your own application.
-      </li>
-    </ul>
-  </div><!--//container-->
-</section><!--//about-->
-
-<section id="features" class="features section">
-    <div class="container text-center">
-        <h2 class="title">Task Runner Features</h2>
-        <ul class="feature-list list-unstyled">
-            <li>
-              <i class="fa fa-check-circle"></i>
-              Has no external dependencies on any other JavaScript libraries.
-            </li>
-            <li>
-              <i class="fa fa-check-circle"></i>
-              Compatible with jQuery, Angular, React, Ember, and more.
-            </li>
-            <li>
-              <i class="fa fa-check-circle"></i>
-              Compatible with all modern browsers.
-            </li>
-            <li>
-              <i class="fa fa-check-circle"></i>
-              Well <a href="https://github.com/bvaughn/task-runner/tree/master/tests/tr">tested</a> and <a href="http://rawgit.com/bvaughn/task-runner/master/docs/index.html">documented</a>.
-            </li>
-        </ul>
-    </div><!--//container-->
-</section>
-
-<section id="docs" class="docs section">
+<!--
+<div class="bs-docs-featurette">
   <div class="container">
-      <div class="docs-inner">
-        <h2 class="title text-center">Task Lifecycle</h2>
-        <div class="block">
-          <p>
-            Tasks have 5 basic states.
-            The diagram below shows these states and how they are related.
-          </p>
+    <p class="lead">
+      Task Runner is available under <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.
+    </p>
+    <p>
+      You are free to use, modify, extend, and improve the library as you wish.
+    </p>
+    <a href="https://github.com/bvaughn/task-runner" class="btn btn-outline btn-lg">View the GitHub project</a>
+  </div>
+</div>
 
-          <img title="Task Runner: Task Lifecycle"
-               width="1250" height="660" style="max-width: 100%; height: auto"
-               data-canonical-src="https://s3.amazonaws.com/media.briandavidvaughn.com/images/task-runner-task-lifecycle.png"
-               src="https://camo.githubusercontent.com/1cb7b5922bffbbf2311da3b435184be4cf59436a/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d656469612e627269616e646176696476617567686e2e636f6d2f696d616765732f7461736b2d72756e6e65722d7461736b2d6c6966656379636c652e706e67">
-
-          <p>
-            To implement your own Task all you need to do is extend <code>tr.Abstract</code> and override the following methods:
-          </p>
-
-          <prism parser="javascript" source="app/snippets/abstract.js"></prism>
-
-          <p>
-            For an even lighter-weight approach, use <code>tr.Closure</code> task to wrap a function and <em>turn it into</em> a Task:
-          </p>
-
-          <prism parser="javascript" source="app/snippets/closure.js"></prism>
-        </div><!--//block-->
-      </div><!--//docs-inner-->         
-  </div><!--//container-->
-</section>
-
-<section id="contact" class="contact section has-pattern">
+<div class="bs-docs-featurette">
   <div class="container">
-    <div class="contact-inner">
-      <h2 class="title text-center">Task Runner Compatibility</h2>
-      <p class="intro">
-        This library is built with the Closure Compiler.
-        It uses a subset of the Closure Library runtime (included with the distro) so that it can be used with any JavaScript framework- Angular, React, jQuery, etc.
-      <p>
-      </p>
-        If your project uses the full Closure library, you should use the Task Runner source and let Closure compile it along with the rest of your application.
-        Otherwise you can use the built, compact version of Task Runner.
-      </p>
-    </div><!--//contact-inner-->
-  </div><!--//container-->
-</section>
+    <h2 class="bs-docs-featurette-title">No External Dependencies</h2>
+    <p>
+      Task Runner is built with the <a href="https://developers.google.com/closure/compiler/">Closure Compiler</a>,
+      but it has no runtime dependencies on closure libraries.
+      It can be used with any JavaScript framework- Angular, React, jQuery, etc.
+    </p>
+
+    <p>
+      If your project uses the Closure library, consider using the Task Runner source so that Closure can compile it along with the rest of your application.
+    </p>
+  </div>
+</div>
+-->

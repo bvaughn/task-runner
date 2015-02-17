@@ -1,0 +1,48 @@
+<h3>
+  tr.Chain
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/chain.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Lightweight interface to create a dependency-graph task.</p>
+
+<usage source="app/snippets/documentation/chain.js"></usage>
+
+<h4>Constructor</h4>
+
+<signature params="[
+  {name: 'completedCallback', type: 'function(tr.Task)', description: 'Optional on-complete callback method.'},
+  {name: 'erroredCallback', type: 'function(tr.Task)', description: 'Optional on-error callback method.'}
+]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- first() -->
+<h4 class="page-header">
+  first()
+</h4>
+<p>Add one or more tasks to the beginning of the chain.</p>
+<signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in parallel.'}]"
+           return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+<throws errors="[{type: 'Error', description: 'if this method is called once tasks have already been added to the chain.'}]"></throws>
+
+<!-- or() -->
+<h4 class="page-header">
+  or()
+</h4>
+<p>Add one or more tasks to be run only if one of the previously-added tasks fail.
+Tasks will be run in the order they are specified until/unless one of them succeeds.</p>
+<signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in serial.'}]"
+           return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
+
+<!-- then() -->
+<h4 class="page-header">
+  then()
+</h4>
+<p>Add one or more tasks to be run after the tasks already in this chain have been run.</p>
+<signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in parallel.'}]"
+           return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>

@@ -1,0 +1,62 @@
+<h3>
+  tr.Closure
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/closure.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Invokes a callback function when run.</p>
+
+<p>This type of Task can be asynchronous or asynchronous.</p>
+
+<ul>
+  <li>
+    Set <code>synchronous</code> to TRUE for synchronous tasks.
+    This type of task will automatically complete itself after the callback function is called.
+    If an error occurs in the callback function, this type of task will error.
+  </li>
+  <li>
+    Set <code>synchronous</code> to FALSE for asynchronous tasks.
+    In this case the task not complete until specifically instructed to do so.
+    To complete the task, your callback should call either <code>complete()</code> or <code>error()</code>.
+  </li>
+</ul>
+
+<usage source="app/snippets/create-task-through-composition.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (callback, synchronous, taskName)
+</h4>
+
+<signature params="[
+  {name: 'callback', type: 'function(tr.Closure)', description: 'Callback to be invoked when the task is run. tr.Closure will pass a reference to itself to the function.'},
+  {name: 'synchronous', type: 'Boolean', description: 'This task should auto-complete when run.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- complete() -->
+<h4 class="page-header">
+  complete(data)
+</h4>
+<p>Call this method to mark the task as complete.</p>
+<signature params="[
+  {name: 'data', type: 'Object', description: 'Task data.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
+
+<!-- error() -->
+<h4 class="page-header">
+  error(data, errorMessage)
+</h4>
+<p>Call this method to mark the task as errored.</p>
+<signature params="[
+  {name: 'data', type: 'Object', description: 'Task data.'},
+  {name: 'errorMessage', type: 'String', description: 'Optional error message.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>

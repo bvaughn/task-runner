@@ -1,0 +1,32 @@
+<h3>
+  tr.Tween
+
+  <small>
+    <a href="https://github.com/bvaughn/task-runner/blob/master/source/tr/tween.js">
+      Source <i class="fa fa-code"></i>
+    </a>
+  </small>
+</h3>
+
+<p class="lead">Animation-frame-based task for tweening properties.</p>
+
+<p>
+  This task invokes a callback on each animation frame and passes a 0..1 value representing the progress of the overall tween.
+</p>
+
+<usage source="app/snippets/documentation/tween.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (task, timeout, taskName)
+</h4>
+
+<signature params="[
+  {name: 'callback', type: 'Function', description: 'Callback invoked on animation frame with a number (0..1) representing the position of the tween.'},
+  {name: 'duration', type: 'Number', description: 'Duration of tween in milliseconds.'},
+  {name: 'easingFunction', type: 'Function', description: 'Optional easing function used to convert input time to an eased time. If no function is specified, a linear ease (no ease) will be used.'},
+  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+]"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if an invalid duration is provided'}
+]"></throws>

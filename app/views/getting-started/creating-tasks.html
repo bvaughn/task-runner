@@ -1,0 +1,36 @@
+<div class="bs-docs-header">
+  <div class="container">
+    <h1>Creating Tasks</h1>
+  </div>
+</div>
+
+<div class="container bs-docs-container">
+  <p>
+    Task Runner includes several reusable tasks but you can also create your own.
+    There are 2 basic approaches:
+  </p>
+
+  <h3>Creating Tasks via Inheritance</h3>
+
+  <p>
+    Extend <code>tr.Abstract</code> task and override the <code>runImpl</code>, <code>interruptImpl</code>, and <code>resetImpl</code> methods.
+  </p>
+
+  <prism parser="javascript" source="app/snippets/create-task-through-extension.js"></prism>
+
+  <h3>Creating Tasks via Composition</h3>
+
+  <p>
+    Use the built in <code>tr.Closure</code> task to decorate functions and automatically <em>turn them into</em> tasks.
+  </p>
+
+  <prism parser="javascript" source="app/snippets/create-task-through-composition.js"></prism>
+
+  <p>
+    <strong>Next</strong>:
+    <a ui-sref="getting-started-chaining-tasks" class="btn btn-outline btn-lg">
+      Chaining Tasks
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </p>
+</div>

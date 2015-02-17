@@ -43,7 +43,7 @@ function initDemo2() {
       function() {
         var data = getTextTask.getData();
 
-        document.getElementById('textLabel').innerText = data.substring(0, 100) + '...';
+        document.getElementById('textLabel').innerText = data.substring(0, 100).replace(/\n/g, "") + '...';
       }, true),
     [getTextTask]);
 
