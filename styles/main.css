@@ -6,7 +6,7 @@ pre {
   font-size: 12px;
 }
 
-p, prism {
+p, prism, ul, ol, dl {
   display: block;
   margin-bottom: 30px;
 }
