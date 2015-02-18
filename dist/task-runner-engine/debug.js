@@ -8318,11 +8318,11 @@ tr.Chain.prototype.first = function(a) {
 };
 tr.Chain.prototype.or = function(a) {
   this.graph_.removeAll(this.mostRecentTaskArgs_);
-  var b = new tr.Composite(!0, this.mostRecentTaskArgs_), c = new tr.StopOnSuccess;
-  c.add(b);
-  c.addAll(arguments);
-  this.graph_.addToEnd(c);
-  this.mostRecentTaskArgs_ = [c];
+  var b = new tr.StopOnSuccess;
+  b.add(new tr.Composite(!0, this.mostRecentTaskArgs_));
+  1 < arguments.length ? b.add(new tr.Composite(!0, arguments)) : b.add(arguments[0]);
+  this.graph_.addToEnd(b);
+  this.mostRecentTaskArgs_ = [b];
   return this;
 };
 tr.Chain.prototype.then = function(a) {

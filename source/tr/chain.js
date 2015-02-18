@@ -81,17 +81,25 @@ tr.Chain.prototype.or = function(varArgs) {
   // Remove the most recent batch of tasks (added with the previous call to or() or then()) from the Graph.
   this.graph_.removeAll(this.mostRecentTaskArgs_);
 
-  // Wrap them in a parallel group (to preserve then() behavior).
-  var composite = new tr.Composite(true, this.mostRecentTaskArgs_);
-
   // Use StopOnSuccess to ensure the correct continue-only-on-failure behavior.
   var stopOnSuccess = new tr.StopOnSuccess();
-  stopOnSuccess.add(composite);
-  stopOnSuccess.addAll(arguments);
+
+  // Wrap them in a parallel group (to preserve then() behavior).
+  stopOnSuccess.add(
+    new tr.Composite(true, this.mostRecentTaskArgs_));
+
+  // Wrap the new batch of tasks in a parallel group as well.
+  if (arguments.length > 1) {
+    stopOnSuccess.add(
+      new tr.Composite(true, arguments));
+  } else {
+    stopOnSuccess.add(arguments[0]);
+  }
 
   // Re-add the new composite to the end of the Graph.
   this.graph_.addToEnd(stopOnSuccess);
 
+  // Update our most-recent pointer to the newly-added composite in case an or() call follows.
   this.mostRecentTaskArgs_ = [stopOnSuccess];
 
   return this;

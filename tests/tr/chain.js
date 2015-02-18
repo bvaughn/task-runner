@@ -126,7 +126,7 @@ describe('tr.Chain', function() {
     expect(stubTaskC.getState()).toBe(tr.enums.State.COMPLETED);
   });
 
-  it('should execute the stubTask(s) passed to or() if the proceeding task fails', function() {
+  it('should execute all of the stubTask(s) passed to or() if the proceeding task fails', function() {
     var chain = new tr.Chain().first(stubTaskA).or(stubTaskB, stubTaskC).run();
 
     expect(chain.getState()).toBe(tr.enums.State.RUNNING);
@@ -139,18 +139,52 @@ describe('tr.Chain', function() {
     expect(chain.getState()).toBe(tr.enums.State.RUNNING);
     expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
     expect(stubTaskB.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.RUNNING);
+  });
+
+  it('should continue if all tasks passed to or() complete', function() {
+    var chain = new tr.Chain().first(stubTaskA).or(stubTaskB, stubTaskC).run();
+
+    expect(chain.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.INITIALIZED);
     expect(stubTaskC.getState()).toBe(tr.enums.State.INITIALIZED);
 
-    stubTaskB.error();
+    stubTaskA.error();
 
     expect(chain.getState()).toBe(tr.enums.State.RUNNING);
     expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
-    expect(stubTaskB.getState()).toBe(tr.enums.State.ERRORED);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.RUNNING);
     expect(stubTaskC.getState()).toBe(tr.enums.State.RUNNING);
 
+    stubTaskB.complete();
     stubTaskC.complete();
 
     expect(chain.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.COMPLETED);
+  });
+
+  it('should fail if some of the tasks passed to a single or() error', function() {
+    var chain = new tr.Chain().first(stubTaskA).or(stubTaskB, stubTaskC).run();
+
+    expect(chain.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.INITIALIZED);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    stubTaskA.error();
+
+    expect(chain.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.RUNNING);
+
+    stubTaskB.error();
+    stubTaskC.complete();
+
+    expect(chain.getState()).toBe(tr.enums.State.ERRORED);
     expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
     expect(stubTaskB.getState()).toBe(tr.enums.State.ERRORED);
     expect(stubTaskC.getState()).toBe(tr.enums.State.COMPLETED);
@@ -206,7 +240,7 @@ describe('tr.Chain', function() {
     expect(chain.getState()).toBe(tr.enums.State.RUNNING);
     expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
     expect(stubTaskB.getState()).toBe(tr.enums.State.RUNNING);
-    expect(stubTaskC.getState()).toBe(tr.enums.State.INITIALIZED);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.RUNNING);
 
     stubTaskB.error();
 
