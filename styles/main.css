@@ -77,3 +77,7 @@ section:first-of-type .method-header {
 .social-icons-list > a {
   display: inline-block;
 }
+
+.bs-docs-header, .bs-docs-masthead {
+  background-image: url(https://raw.githubusercontent.com/bvaughn/task-runner/gh-pages/images/header-background-tile.png);
+}
