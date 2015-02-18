@@ -11,13 +11,6 @@ p, prism {
   margin-bottom: 30px;
 }
 
-.bs-callout-success {
-  border-left-color: #00a86b
-}
-.bs-callout-success h4{
-  color: #00a86b
-}
-
 section .method-header {
   margin-top: 50px;
   margin-bottom: 20px;
@@ -45,10 +38,6 @@ section:first-of-type .method-header {
 .bs-docs-header strong {
   color: #FFFFFF;
 }
-.bs-docs-header .version {
-  font-size: 14px;
-  color: #9783b9;
-}
 
 .task-runner-documentation p {
   margin-bottom: 10px;
@@ -61,12 +50,30 @@ section:first-of-type .method-header {
 
 .bs-docs-sidebar .nav a.active {
   padding-left: 19px;
-  color: #563d7c;
+  color: #2b679b;
   text-decoration: none;
   background-color: transparent;
-  border-left: 1px solid #563d7c;
+  border-left: 1px solid #2b679b;
 }
 .bs-docs-sidebar .nav a.active:hover {
   padding-left: 18px;
-  border-left: 2px solid #563d7c;
+  border-left: 2px solid #2b679b;
+}
+
+.github-button {
+  height: 20px;
+  line-height: 17px;
+}
+.github-button-fork {
+  width: 50px;
+}
+.github-button-stars {
+  width: 80px;
+}
+
+.social-icons-list {
+  display: inline-block;
+}
+.social-icons-list > a {
+  display: inline-block;
 }
