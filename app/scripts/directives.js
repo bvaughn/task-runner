@@ -38,7 +38,6 @@ angular.module('taskRunner').directive('prism',
 angular.module('taskRunner').directive('markdown',
   function($http, $sanitize, markdownConverter) {
     var DOCS_BASE_URL = 'https://rawgit.com/bvaughn/task-runner/master/source/';
-    DOCS_BASE_URL = 'http://0.0.0.0:8080/docs/'; // TODO TESTING
     
     return {
       restrict: 'EA',
