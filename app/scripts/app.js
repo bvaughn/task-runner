@@ -2,8 +2,7 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
   config(function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('index', {
       url: '/',
-      templateUrl: 'app/views/index.html',
-      controller: 'IndexController'
+      templateUrl: 'app/views/index.html'
     });
 
     $stateProvider.state('getting-started-what-is-a-task', {
@@ -177,12 +176,9 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
     });
 
     $urlRouterProvider.otherwise('/');
-  });
-
-angular.module('taskRunner').controller('IndexController',
-  function($scope, $location, $anchorScroll) {
-     $scope.scrollTo = function(id) {
-        $location.hash(id);
-        $anchorScroll();
-     }
+  }).
+  run(function($rootScope) {
+    $rootScope.$on('$stateChangeSuccess', function() {
+       document.body.scrollTop = document.documentElement.scrollTop = 0;
+    });
   });
