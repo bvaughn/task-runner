@@ -23,7 +23,7 @@ Once it has been run, your Task should call <code>completeInternal</code> or <co
 </h4>
 
 <signature params="[{
-  name: 'taskName', type: 'String', description: 'Optional defaulttask name, useful for automated testing or debugging. Sub-classes should specify a default equal to the name of the class.'
+  name: 'taskName', optional: true, type: 'String', description: 'Optional defaulttask name, useful for automated testing or debugging. Sub-classes should specify a default equal to the name of the class.'
 }]"></signature>
 
 <h3>Primary Methods</h3>
@@ -138,7 +138,7 @@ IDs remain with their Tasks as long as the Tasks exist and are not reused.</p>
 <p>This callback will be invoked when a task is started.</p>
 <signature params="[
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <!-- interrupted() -->
@@ -148,7 +148,7 @@ IDs remain with their Tasks as long as the Tasks exist and are not reused.</p>
 <p>This callback will be invoked whenever this task is interrupted.</p>
 <signature params="[
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <!-- completed() -->
@@ -160,7 +160,7 @@ Callbacks may be called multiple times (if the task is run more than once).
 Multiple callbacks may be registered with a task as well.</p>
 <signature params="[
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <!-- errored() -->
@@ -172,7 +172,7 @@ Callbacks may be called multiple times (if the task is run more than once).
 Multiple callbacks may be registered with a task as well.</p>
 <signature params="[
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <!-- final() -->
@@ -182,7 +182,7 @@ Multiple callbacks may be registered with a task as well.</p>
 <p>This callback will be invoked after a task has completed or errorred.</p>
 <signature params="[
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <!-- on() -->
@@ -193,7 +193,7 @@ Multiple callbacks may be registered with a task as well.</p>
 <signature params="[
   {name: 'taskEvent', type: 'tr.enums.Event', description: 'Event-type to listen for.'},
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <!-- off() -->
@@ -205,7 +205,7 @@ If a <em>scope</em> was provided when this callback was attached it must also be
 <signature params="[
   {name: 'taskEvent', type: 'tr.enums.Event', description: 'Event-type to listen for.'},
   {name: 'callback', type: 'function(tr.Task)', description: 'Callback to trigger when the event-type occurs. This function can accept a single parameter (the task).'},
-  {name: 'scope', type: 'Object', description: 'Optional scope to invoke callback with.'}
+  {name: 'scope', optional: true, type: 'Object', description: 'Optional scope to invoke callback with.'}
 ]" return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
 <h3>Protected methods</h3>
@@ -240,7 +240,7 @@ Override it to perform custom cleanup between task-runs.</p>
 <p>Call this method to mark the task as complete.
 It will ensure that the correct callbacks are triggered.</p>
 <signature params="[
-  {name: 'data', type: 'Object', description: 'Task data.'}
+  {name: 'data', optional: true, type: 'Object', description: 'Task data.'}
 ]"></signature>
 <throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
 
@@ -251,7 +251,7 @@ It will ensure that the correct callbacks are triggered.</p>
 <p>Call this method to mark the task as errored.
 It will ensure that the correct callbacks are triggered.</p>
 <signature params="[
-  {name: 'data', type: 'Object', description: 'Task data.'},
-  {name: 'errorMessage', type: 'String', description: 'Optional error message.'}
+  {name: 'data', optional: true, type: 'Object', description: 'Task data.'},
+  {name: 'errorMessage', optional: true, type: 'String', description: 'Optional error message.'}
 ]"></signature>
 <throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>

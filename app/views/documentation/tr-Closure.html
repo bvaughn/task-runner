@@ -34,8 +34,8 @@
 
 <signature params="[
   {name: 'callback', type: 'function(tr.Closure)', description: 'Callback to be invoked when the task is run. tr.Closure will pass a reference to itself to the function.'},
-  {name: 'synchronous', type: 'Boolean', description: 'This task should auto-complete when run.'},
-  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+  {name: 'synchronous', optional: true, type: 'Boolean', description: 'This task should auto-complete when run; defaults to false.'},
+  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
 ]"></signature>
 
 <h3>Instance Methods</h3>
@@ -46,7 +46,7 @@
 </h4>
 <p>Call this method to mark the task as complete.</p>
 <signature params="[
-  {name: 'data', type: 'Object', description: 'Task data.'}
+  {name: 'data', optional: true, type: 'Object', description: 'Task data.'}
 ]"></signature>
 <throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
 
@@ -56,7 +56,7 @@
 </h4>
 <p>Call this method to mark the task as errored.</p>
 <signature params="[
-  {name: 'data', type: 'Object', description: 'Task data.'},
-  {name: 'errorMessage', type: 'String', description: 'Optional error message.'}
+  {name: 'data', optional: true, type: 'Object', description: 'Task data.'},
+  {name: 'errorMessage', optional: true, type: 'String', description: 'Optional error message.'}
 ]"></signature>
 <throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>

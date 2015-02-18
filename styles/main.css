@@ -53,3 +53,8 @@ section:first-of-type .method-header {
 .task-runner-documentation p {
   margin-bottom: 10px;
 }
+
+.table-params .optional {
+  color: #999;
+  font-style: italic;
+}

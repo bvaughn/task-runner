@@ -24,8 +24,8 @@
 <signature params="[
   {name: 'callback', type: 'Function', description: 'Callback invoked on animation frame with a number (0..1) representing the position of the tween.'},
   {name: 'duration', type: 'Number', description: 'Duration of tween in milliseconds.'},
-  {name: 'easingFunction', type: 'Function', description: 'Optional easing function used to convert input time to an eased time. If no function is specified, a linear ease (no ease) will be used.'},
-  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+  {name: 'easingFunction', optional: true, type: 'Function', description: 'Optional easing function used to convert input time to an eased time. If no function is specified, a linear ease (no ease) will be used.'},
+  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
 ]"></signature>
 <throws errors="[
   {type: 'Error', description: 'if an invalid duration is provided'}

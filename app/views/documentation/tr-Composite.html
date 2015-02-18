@@ -21,8 +21,8 @@
 
 <signature params="[
   {name: 'parallel', type: 'Boolean', description: 'If TRUE, child tasks are run simultaneously; otherwise they are run serially, in the order they were added.'},
-  {name: 'tasks', type: 'Array<tr.Task>', description: 'Initial set of child tasks.'},
-  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+  {name: 'tasks', optional: true, type: 'Array<tr.Task>', description: 'Initial set of child tasks.'},
+  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
 ]"></signature>
 
 <h3>Instance Methods</h3>
@@ -80,4 +80,4 @@
   This behavior should only be used if the composite is going to be re-populated and re-run (continued) immediately after flushing.
 </p>
 <signature params="[
-  {name: 'doNotComplete', type: 'Boolean', description: 'If TRUE, this task will not complete itself nor invoke any completion callbacks once the queue has been emptied.'}]"></signature>
+  {name: 'doNotComplete', optional: true, type: 'Boolean', description: 'If TRUE, this task will not complete itself nor invoke any completion callbacks once the queue has been emptied.'}]"></signature>

@@ -31,8 +31,8 @@
 
 <signature params="[
   {name: 'tasks', type: 'Array<tr.Task>', description: 'The array of Tasks to observe.'},
-  {name: 'failUponFirstError', type: 'Boolean', description: 'Whether to error the observer task immediately when one of the observed tasks errors.'},
-  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+  {name: 'failUponFirstError', optional: true, type: 'Boolean', description: 'Whether to error the observer task immediately when one of the observed tasks errors; defaults to false.'},
+  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
 ]"></signature>
 
 <h3>Instance Methods</h3>

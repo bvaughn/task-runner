@@ -28,7 +28,7 @@
   (taskName)
 </h4>
 
-<signature params="[{name: 'taskName', type: 'String', description: 'Optional task name.'}]"></signature>
+<signature params="[{name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}]"></signature>
 
 <h3>Instance Methods</h3>
 
@@ -39,7 +39,7 @@
 <p>Adds a child task to the dependency graph and ensures that its blocking dependencies (if any) are valid.</p>
 <signature params="[
   {name: 'task', type: 'tr.Task', description: 'Child task to be run when this task is run.'},
-  {name: 'blockers', type: 'Array<tr.Task>', description: 'Blocking tasks that must complete successfully before this task can be run. This parameter can be ommitted for tasks that do not have blocking dependencies.'}
+  {name: 'blockers', optional: true, type: 'Array<tr.Task>', description: 'Blocking tasks that must complete successfully before this task can be run. This parameter can be ommitted for tasks that do not have blocking dependencies.'}
 ]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
 <throws errors="[
   {type: 'Error', description: 'if task has been added more than once.'},
@@ -53,7 +53,7 @@
 <p>Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.</p>
 <signature params="[
   {name: 'tasks', type: 'Array<tr.Task>', description: 'Child tasks to be run when this task is run.'},
-  {name: 'blockers', type: 'Array<tr.Task>', description: 'Blocking tasks that must complete successfully before this task can be run. This parameter can be ommitted for tasks that do not have blocking dependencies.'}
+  {name: 'blockers', optional: true, type: 'Array<tr.Task>', description: 'Blocking tasks that must complete successfully before this task can be run. This parameter can be ommitted for tasks that do not have blocking dependencies.'}
 ]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
 <throws errors="[
   {type: 'Error', description: 'if task has been added more than once.'},

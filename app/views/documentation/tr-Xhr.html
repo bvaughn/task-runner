@@ -28,9 +28,9 @@
 
 <signature params="[
   {name: 'url', type: 'String', description: 'URL to load.'},
-  {name: 'data', type: 'Object', description: 'Object containing POST data; if undefined a GET request will be used.'},
-  {name: 'responseType', type: 'tr.Xhr.ResponseType', description: 'Expected reponse type. If undefined the static value set with tr.Xhr.setDefaultResponseType will be used. If no default response-type is set this value defaults to tr.Xhr.ResponseType.TEXT.'},
-  {name: 'taskName', type: 'String', description: 'Optional task name.'}
+  {name: 'data', optional: true, type: 'Object', description: 'Object containing POST data; if undefined a GET request will be used.'},
+  {name: 'responseType', optional: true, type: 'tr.Xhr.ResponseType', description: 'Expected reponse type. If undefined the static value set with tr.Xhr.setDefaultResponseType will be used. If no default response-type is set this value defaults to tr.Xhr.ResponseType.TEXT.'},
+  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
 ]"></signature>
 
 <h3>Static Methods</h3>
