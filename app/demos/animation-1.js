@@ -7,24 +7,29 @@ function initAnimation1() {
     });
   };
 
+  // These pieces will comprise the checkmark and T shapes.
   var tBottom = snap.rect(125, 0, 100, 0).attr("fill", "white");
   var tTopLeft = snap.rect(125, 0, 0, 100).attr("fill", "white");
   var tTopRight = snap.rect(350, 0, 1, 100).attr("fill", "white");
 
   var font = {fontFamily: "Arial Black", fontSize: 200, fill: "white"}; 
 
+  // These letters will fade in to form the rest of the word "TASK".
   var textA = snap.paper.text(240, 300, "A").attr(font).attr({opacity: 0});
   var textS = snap.paper.text(400, 300, "S").attr(font).attr({opacity: 0});
   var textK = snap.paper.text(550, 300, "K").attr(font).attr({opacity: 0});
 
+  // This group is used to rotate the SVG elements.
   var innerGroup = snap.paper.g();
   innerGroup.add(tBottom, tTopLeft, tTopRight);
   innerGroup.transform("rotate(-135 125 200);");
 
+  // This group is used to position the SVG elements.
   var outerGroup = snap.paper.g();
   outerGroup.add(innerGroup);
   outerGroup.transform("translate(200, 100);");
 
+  // Using a dependency graph task allows us a fine-grained level of control over the sequencing of our animation tasks.
   var graphTask = new tr.Graph();
   graphTask.addToEnd(
     createAnimationTask(tTopRight, {width: 225, x: 125}, 650, mina.backout));
