@@ -34,8 +34,11 @@
 <h4 class="page-header">
   or()
 </h4>
-<p>Add one or more tasks to be run only if one of the previously-added tasks fail.
-Tasks will be run in the order they are specified until/unless one of them succeeds.</p>
+<p>Add one or more tasks to be run only if one of the previously-added tasks fail.</p>
+<p>
+  Tasks passed to this method will be run in parallel.
+  To run fallback tasks in serial, chain multiple calls to <code>or()</code>.
+</p>
 <signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in serial.'}]"
            return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
