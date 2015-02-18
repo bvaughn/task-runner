@@ -256,14 +256,14 @@ tr.Composite.prototype.resetImpl = function() {
  * This behavior should only be used if the composite is going to be
  * re-populated and re-run (continued) immediately after flushing.
  *
- * @param {boolean=} doNotComplete If TRUE, this task will not complete itself
+ * @param {boolean=} opt_doNotComplete If TRUE, this task will not complete itself
  *     nor invoke any completion callbacks once the queue has been emptied.
  * @protected
  */
-tr.Composite.prototype.flushQueue = function(doNotComplete) {
+tr.Composite.prototype.flushQueue = function(opt_doNotComplete) {
   // Prevent completion callbacks from being invoked once the queue is empty.
   // See checkForTaskCompletion_() for more information.
-  this.flushQueueInProgress_ = !!doNotComplete;
+  this.flushQueueInProgress_ = !!opt_doNotComplete;
 
   // Manually interrupt any Task that are running.
   this.eachTaskInQueue_(
