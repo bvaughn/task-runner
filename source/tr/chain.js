@@ -106,6 +106,26 @@ tr.Chain.prototype.or = function(varArgs) {
 };
 
 /**
+ * Alias for "or".
+ *
+ * @param {...tr.Task} varArgs One or more tasks
+ * @return {tr.Chain}
+ */
+tr.Chain.prototype.else = function(varArgs) {
+  return this.or.apply(this, arguments);
+};
+
+/**
+ * Alias for "or".
+ *
+ * @param {...tr.Task} varArgs One or more tasks
+ * @return {tr.Chain}
+ */
+tr.Chain.prototype.otherwise = function(varArgs) {
+  return this.or.apply(this, arguments);
+};
+
+/**
  * Add one or more tasks to be run after the tasks already in this chain have been run.
  *
  * @param {...tr.Task} varArgs One or more tasks

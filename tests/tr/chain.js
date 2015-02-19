@@ -361,4 +361,27 @@ describe('tr.Chain', function() {
     expect(stubTaskB.getState()).toBe(tr.enums.State.RUNNING);
     expect(stubTaskC.getState()).toBe(tr.enums.State.INITIALIZED);
   });
+
+  it('should alias or() with else() and otherwise()', function() {
+    var chain = new tr.Chain().first(stubTaskA).else(stubTaskB).otherwise(stubTaskC).run();
+
+    expect(chain.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.INITIALIZED);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    stubTaskA.error();
+
+    expect(chain.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    stubTaskB.error();
+
+    expect(chain.getState()).toBe(tr.enums.State.RUNNING);
+    expect(stubTaskA.getState()).toBe(tr.enums.State.ERRORED);
+    expect(stubTaskB.getState()).toBe(tr.enums.State.ERRORED);
+    expect(stubTaskC.getState()).toBe(tr.enums.State.RUNNING);
+  });
 });
