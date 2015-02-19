@@ -19,22 +19,24 @@
 
 <usage source="app/snippets/create-task-by-wrapping-closure.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Closure(callback, synchronous, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Closure(callback, <em>synchronous</em>, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'callback', type: 'function(tr.Closure)', description: 'Callback to be invoked when the task is run. tr.Closure will pass a reference to itself to the function.'},
-  {name: 'synchronous', optional: true, type: 'Boolean', description: 'This task should auto-complete when run; defaults to false.'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
+  <signature params="[
+    {name: 'callback', type: 'function(tr.Closure)', description: 'Callback to be invoked when the task is run. tr.Closure will pass a reference to itself to the function.'},
+    {name: 'synchronous', optional: true, type: 'Boolean', description: 'This task should auto-complete when run; defaults to false.'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
 
 <h3>Instance Methods</h3>
 
 <!-- complete() -->
 <h4 class="page-header">
-  complete(data)
+  complete(<em>data</em>)
 </h4>
 <p>Call this method to mark the task as complete.</p>
 <signature params="[
@@ -44,7 +46,7 @@
 
 <!-- error() -->
 <h4 class="page-header">
-  error(data, errorMessage)
+  error(<em>data</em>, <em>errorMessage</em>)
 </h4>
 <p>Call this method to mark the task as errored.</p>
 <signature params="[

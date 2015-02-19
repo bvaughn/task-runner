@@ -13,17 +13,19 @@
 
 <usage source="app/snippets/documentation/xhr.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Xhr(url, data, responseType, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Xhr(url, <em>data</em>, <em>responseType</em>, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'url', type: 'String', description: 'URL to load.'},
-  {name: 'data', optional: true, type: 'Object', description: 'Object containing POST data; if undefined a GET request will be used.'},
-  {name: 'responseType', optional: true, type: 'tr.Xhr.ResponseType', description: 'Expected reponse type. If undefined the static value set with tr.Xhr.setDefaultResponseType will be used. If no default response-type is set this value defaults to tr.Xhr.ResponseType.TEXT.'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
+  <signature params="[
+    {name: 'url', type: 'String', description: 'URL to load.'},
+    {name: 'data', optional: true, type: 'Object', description: 'Object containing POST data; if undefined a GET request will be used.'},
+    {name: 'responseType', optional: true, type: 'tr.Xhr.ResponseType', description: 'Expected reponse type. If undefined the static value set with tr.Xhr.setDefaultResponseType will be used. If no default response-type is set this value defaults to tr.Xhr.ResponseType.TEXT.'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
 
 <h3>Static Methods</h3>
 

@@ -10,17 +10,19 @@
 
 <usage source="app/snippets/documentation/factory.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Factory(callback, synchronous, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Factory(taskFactoryFunction, <em>this</em>, <em>synchronous</em>, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'taskFactoryFunction', type: 'Function', description: 'The function to create an Task object.'},
-  {name: 'this', optional: true, type: 'Object', description: 'Optional scope to invoke the factory function with.'},
-  {name: 'argsArray', optional: true, type: 'Array', description: 'Optional args array to invoke the factory function with.'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
+  <signature params="[
+    {name: 'taskFactoryFunction', type: 'Function', description: 'The function to create an Task object.'},
+    {name: 'this', optional: true, type: 'Object', description: 'Optional scope to invoke the factory function with.'},
+    {name: 'argsArray', optional: true, type: 'Array', description: 'Optional args array to invoke the factory function with.'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
 
 <!-- getDecoratedTask() -->
 <h4 class="page-header">
@@ -31,7 +33,7 @@
 
 <!-- recreateDeferredTaskAfterError() -->
 <h4 class="page-header">
-  recreateDeferredTaskAfterError()
+  recreateDeferredTaskAfterError(value)
 </h4>
 <p>
   Set whether to recreate the deferred task after an error occured.

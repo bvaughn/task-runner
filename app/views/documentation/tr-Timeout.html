@@ -9,16 +9,18 @@
 
 <usage source="app/snippets/documentation/timeout.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Timeout(task, timeout, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Timeout(task, timeout, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'task', type: 'tr.Task', description: 'The task to decorate.'},
-  {name: 'timeout', type: 'Number', description: 'Time in milliseconds to wait before timing out the decorated task.'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
+  <signature params="[
+    {name: 'task', type: 'tr.Task', description: 'The task to decorate.'},
+    {name: 'timeout', type: 'Number', description: 'Time in milliseconds to wait before timing out the decorated task.'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
 
 <h3>Instance methods</h3>
 

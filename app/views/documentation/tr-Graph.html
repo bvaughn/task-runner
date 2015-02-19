@@ -15,18 +15,20 @@
 
 <usage source="app/snippets/documentation/graph.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Graph(taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Graph(<em>taskName</em>)
+  </h4>
 
-<signature params="[{name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}]"></signature>
+  <signature params="[{name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}]"></signature>
+</div>
 
 <h3>Instance Methods</h3>
 
 <!-- add() -->
 <h4 class="page-header">
-  add(task, blockers)
+  add(task, <em>blockers</em>)
 </h4>
 <p>Adds a child task to the dependency graph and ensures that its blocking dependencies (if any) are valid.</p>
 <signature params="[
@@ -40,7 +42,7 @@
 
 <!-- addAll() -->
 <h4 class="page-header">
-  addAll(tasks, blockers)
+  addAll(tasks, <em>blockers</em>)
 </h4>
 <p>Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.</p>
 <signature params="[

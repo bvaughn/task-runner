@@ -16,16 +16,18 @@
 
 <usage source="app/snippets/documentation/observer.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Observer(tasks, failUponFirstError, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Observer(tasks, <em>failUponFirstError</em>, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'tasks', type: 'Array<tr.Task>', description: 'The array of Tasks to observe.'},
-  {name: 'failUponFirstError', optional: true, type: 'Boolean', description: 'Whether to error the observer task immediately when one of the observed tasks errors; defaults to false.'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
+  <signature params="[
+    {name: 'tasks', type: 'Array<tr.Task>', description: 'The array of Tasks to observe.'},
+    {name: 'failUponFirstError', optional: true, type: 'Boolean', description: 'Whether to error the observer task immediately when one of the observed tasks errors; defaults to false.'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
 
 <h3>Instance Methods</h3>
 

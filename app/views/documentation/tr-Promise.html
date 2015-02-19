@@ -25,25 +25,27 @@
 
 <usage source="app/snippets/documentation/promise.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  (promise, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    (promise, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'promise', type: 'Promise', description: 'A Promise object'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
-<throws errors="[
-  {type: 'Error', description: 'if invalid Promise object provided.'},
-  {type: 'Error', description: 'if no supported Promise libraries are detected.'}
-]"></throws>
+  <signature params="[
+    {name: 'promise', type: 'Promise', description: 'A Promise object'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+  <throws errors="[
+    {type: 'Error', description: 'if invalid Promise object provided.'},
+    {type: 'Error', description: 'if no supported Promise libraries are detected.'}
+  ]"></throws>
+</div>
 
 <h3>Static Methods</h3>
 
 <!-- promiseToTask() -->
 <h4 class="page-header">
-  tr.Promise.promiseToTask(promise, taskName)
+  tr.Promise.promiseToTask(promise, <em>taskName</em>)
 </h4>
 <p>Wraps a Promise and returns a Task that will complete/error when the promise is resolved/rejected.</p>
 <p>If you're working with a library that returns Promises, you can convert any Promise to a Task using this method.</p>
@@ -58,7 +60,7 @@
 
 <!-- taskToPromise() -->
 <h4 class="page-header">
-  tr.Promise.taskToPromise(task, $q)
+  tr.Promise.taskToPromise(task, <em>$q</em>)
 </h4>
 <p>Wraps a Task and returns a Promise that will resolve/reject when the task is completed/errored.</p>
 <p>If you're working with a library that expects Promises (e.g. Angular's UI Router), you can convert any Task to a Promise using this method.</p>

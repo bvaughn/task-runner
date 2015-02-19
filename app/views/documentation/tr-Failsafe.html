@@ -6,15 +6,17 @@
 
 <usage source="app/snippets/documentation/failsafe.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Failsafe(callback, synchronous, taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Failsafe(decoratedTask, <em>taskName</em>)
+  </h4>
 
-<signature params="[
-  {name: 'decoratedTask', type: 'tr.Task', description: 'Decorated task to be run when this task is run.'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
-]"></signature>
+  <signature params="[
+    {name: 'decoratedTask', type: 'tr.Task', description: 'Decorated task to be run when this task is run.'},
+    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
 
 <h3>Instance methods</h3>
 

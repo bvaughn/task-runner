@@ -9,14 +9,16 @@ Once it has been run, your Task should call <code>completeInternal</code> or <co
 
 <usage source="app/snippets/create-task-through-extension.js"></usage>
 
-<h4>
-  <span class="label label-default">Constructor</span>
-  tr.Abstract(taskName)
-</h4>
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.Abstract(<em>taskName</em>)
+  </h4>
 
-<signature params="[{
-  name: 'taskName', optional: true, type: 'String', description: 'Optional defaulttask name, useful for automated testing or debugging. Sub-classes should specify a default equal to the name of the class.'
-}]"></signature>
+  <signature params="[{
+    name: 'taskName', optional: true, type: 'String', description: 'Optional defaulttask name, useful for automated testing or debugging. Sub-classes should specify a default equal to the name of the class.'
+  }]"></signature>
+</div>
 
 <h3>Primary Methods</h3>
 
@@ -125,7 +127,7 @@ IDs remain with their Tasks as long as the Tasks exist and are not reused.</p>
 
 <!-- started() -->
 <h4 class="page-header">
-  started(callback, scope)
+  started(callback, <em>scope</em>)
 </h4>
 <p>This callback will be invoked when a task is started.</p>
 <signature params="[
@@ -135,7 +137,7 @@ IDs remain with their Tasks as long as the Tasks exist and are not reused.</p>
 
 <!-- interrupted() -->
 <h4 class="page-header">
-  interrupted(callback, scope)
+  interrupted(callback, <em>scope</em>)
 </h4>
 <p>This callback will be invoked whenever this task is interrupted.</p>
 <signature params="[
@@ -145,7 +147,7 @@ IDs remain with their Tasks as long as the Tasks exist and are not reused.</p>
 
 <!-- completed() -->
 <h4 class="page-header">
-  completed(callback, scope)
+  completed(callback, <em>scope</em>)
 </h4>
 <p>This callback will be invoked only upon successful completion of the task.
 Callbacks may be called multiple times (if the task is run more than once).
@@ -157,7 +159,7 @@ Multiple callbacks may be registered with a task as well.</p>
 
 <!-- errored() -->
 <h4 class="page-header">
-  errored(callback, scope)
+  errored(callback, <em>scope</em>)
 </h4>
 <p>This callback will be invoked only upon a task error.
 Callbacks may be called multiple times (if the task is run more than once).
@@ -169,7 +171,7 @@ Multiple callbacks may be registered with a task as well.</p>
 
 <!-- final() -->
 <h4 class="page-header">
-  final(callback, scope)
+  final(callback, <em>scope</em>)
 </h4>
 <p>This callback will be invoked after a task has completed or errorred.</p>
 <signature params="[
@@ -179,7 +181,7 @@ Multiple callbacks may be registered with a task as well.</p>
 
 <!-- on() -->
 <h4 class="page-header">
-  on(taskEvent, callback, scope)
+  on(taskEvent, callback, <em>scope</em>)
 </h4>
 <p>Attach a callback function to a task event.</p>
 <signature params="[
@@ -190,7 +192,7 @@ Multiple callbacks may be registered with a task as well.</p>
 
 <!-- off() -->
 <h4 class="page-header">
-  off(taskEvent, callback, scope)
+  off(taskEvent, callback, <em>scope</em>)
 </h4>
 <p>Dettach a callback function from a task event.
 If a <em>scope</em> was provided when this callback was attached it must also be provided to detatch.</p>
@@ -208,7 +210,7 @@ If a <em>scope</em> was provided when this callback was attached it must also be
 </h4>
 <p>This method is called each time a task is run.
 Call <code>completeInternal()</code> or <code>errorInternal()</code> when the task is finished.</p>
-<p>Subclasses <strong>must</strong> override this method.</p>
+<p class="alert alert-danger">Subclasses <strong>must</strong> override this method.</p>
 
 <!-- interruptImpl() -->
 <h4 class="page-header">
@@ -227,7 +229,7 @@ Override it to perform custom cleanup between task-runs.</p>
 
 <!-- completeInternal() -->
 <h4 class="page-header">
-  completeInternal(data)
+  completeInternal(<em>data</em>)
 </h4>
 <p>Call this method to mark the task as complete.
 It will ensure that the correct callbacks are triggered.</p>
@@ -238,7 +240,7 @@ It will ensure that the correct callbacks are triggered.</p>
 
 <!-- errorInternal() -->
 <h4 class="page-header">
-  errorInternal(data, errorMessage)
+  errorInternal(<em>data</em>, <em>errorMessage</em>)
 </h4>
 <p>Call this method to mark the task as errored.
 It will ensure that the correct callbacks are triggered.</p>
