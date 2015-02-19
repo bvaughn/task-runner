@@ -24,7 +24,6 @@ goog.require('tr.enums.State');
  * @param {!Array=} opt_argsArray Optional arguments array to invoke taskFactoryFn with.
  * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {tr.Abstract}
- * @implements {tr.Decorator}
  * @constructor
  * @struct
  */
@@ -70,8 +69,9 @@ tr.Factory = function(taskFactoryFn, opt_thisArg, opt_argsArray, opt_taskName) {
 goog.inherits(tr.Factory, tr.Abstract);
 
 /**
- * @override
- * @inheritDoc
+ * Returns the decorated Task, created by the factory function.
+ *
+ * @return {tr.Task}
  */
 tr.Factory.prototype.getDecoratedTask = function() {
   return this.deferredTask_;

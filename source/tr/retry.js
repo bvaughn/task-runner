@@ -28,7 +28,6 @@ goog.require('tr.enums.State');
  *                             If not specified this defaults to 1000 ms.
  * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {tr.Abstract}
- * @implements {tr.Decorator}
  * @constructor
  * @struct
  */
@@ -85,8 +84,9 @@ tr.Retry.MAX_RETRIES_ = 5;
 tr.Retry.RETRY_DELAY_ = 5;
 
 /**
- * @override
- * @inheritDoc
+ * Returns the inner decorated Task.
+ *
+ * @return {tr.Task}
  */
 tr.Retry.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;

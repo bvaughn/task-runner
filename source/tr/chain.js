@@ -20,7 +20,6 @@ goog.require('tr.StopOnSuccess');
  * @param {function(!tr.Task)=} opt_completedCallback Optional on-complete callback method.
  * @param {function(!tr.Task)=} opt_erroredCallback Optional on-error callback method.
  * @extends {tr.Abstract}
- * @implements {tr.Decorator}
  * @constructor
  * @struct
  */
@@ -51,7 +50,11 @@ tr.Chain = function(opt_completedCallback, opt_erroredCallback, opt_taskName) {
 };
 goog.inherits(tr.Chain, tr.Abstract);
 
-/** @override */
+/**
+ * Returns the inner decorated Graph task.
+ *
+ * @return {tr.Graph}
+ */
 tr.Chain.prototype.getDecoratedTask = function() {
   return this.graph_;
 };

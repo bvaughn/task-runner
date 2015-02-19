@@ -19,7 +19,6 @@ goog.require('tr.enums.State');
  * @param {number} timeout Time in milliseconds to wait before timing out the decorated task.
  * @param {string=} opt_taskName Optional defaulttask name.
  * @extends {tr.Abstract}
- * @implements {tr.Decorator}
  * @constructor
  * @struct
  */
@@ -59,8 +58,9 @@ tr.Timeout = function(task, timeout, opt_taskName) {
 goog.inherits(tr.Timeout, tr.Abstract);
 
 /**
- * @override
- * @inheritDoc
+ * Returns the inner decorated Task.
+ *
+ * @return {tr.Task}
  */
 tr.Timeout.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;

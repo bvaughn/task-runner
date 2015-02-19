@@ -16,7 +16,6 @@ goog.require('tr.Abstract');
  * @param {!tr.Task} decoratedTask Decorated task to be run when this task is run.
  * @param {string=} opt_taskName Optional task name.
  * @extends {tr.Abstract}
- * @implements {tr.Decorator}
  * @constructor
  * @struct
  */
@@ -32,8 +31,9 @@ tr.Failsafe = function(decoratedTask, opt_taskName) {
 goog.inherits(tr.Failsafe, tr.Abstract);
 
 /**
- * @override
- * @inheritDoc
+ * Returns the inner decorated Task.
+ *
+ * @return {tr.Task}
  */
 tr.Failsafe.prototype.getDecoratedTask = function() {
   return this.decoratedTask_;

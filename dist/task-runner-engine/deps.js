@@ -1447,7 +1447,7 @@ goog.addDependency('tr/app/url-matcher.js', ['tr.app.UrlMatcher'], ['tr.app.Angu
 goog.addDependency('tr/chain.js', ['tr.Chain'], ['goog.asserts', 'tr.Abstract', 'tr.Composite', 'tr.Graph', 'tr.StopOnSuccess'], false);
 goog.addDependency('tr/closure.js', ['tr.Closure'], ['tr.Abstract'], false);
 goog.addDependency('tr/composite.js', ['tr.Composite'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);
-goog.addDependency('tr/decorator.js', ['tr.Decorator'], [], false);
+goog.addDependency('tr/decorator.js', ['tr.Decorator'], ['goog.asserts', 'tr.Abstract'], false);
 goog.addDependency('tr/enums/event.js', ['tr.enums.Event'], [], false);
 goog.addDependency('tr/enums/state.js', ['tr.enums.State'], [], false);
 goog.addDependency('tr/factory.js', ['tr.Factory'], ['tr.Abstract', 'tr.enums.Event', 'tr.enums.State'], false);

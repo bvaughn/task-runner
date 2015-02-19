@@ -15,7 +15,7 @@ describe('tr.Failsafe', function() {
     failsafeTask = new tr.Failsafe(nullTask);
   });
 
-  it('should implement the tr.Decorator interface', function() {
+  it('should explose its decorated task', function() {
     expect(failsafeTask.getDecoratedTask()).toBe(nullTask);
   });
 
