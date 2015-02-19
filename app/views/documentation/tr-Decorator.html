@@ -1,0 +1,49 @@
+<classname name="tr.Decorator" super="tr.Abstract" source="https://github.com/bvaughn/task-runner/blob/master/source/tr/decorator.js"></classname>
+
+<p class="lead">Provides a mechanism for creating tasks via composition rather than inheritance.</p>
+
+<p>
+  This task-type decorates an Object (<code>decorated</code>) that defines a 'run' method.
+  This run method should accept 2 parameters:
+</p>
+
+<ol>
+  <li>
+    <strong>complete</strong>:
+    A callback to be invoked upon successful completion of the task.
+    This callback accepts a parameter: data.
+  </li>
+  <li>
+    <strong>error</strong>:
+    A callback to be invoked upon task failure.
+    This callback accepts 2 parameters: data and error-message.
+  </li>
+  <li>
+    <strong>task</strong>:
+    A reference to the decorator task.
+  </li>
+</ol>
+
+<p>The decorated Object may also implement 'interrupt' and 'reset' methods, although they are not required.</p>
+
+<usage source="app/snippets/create-task-through-composition.js"></usage>
+
+<h4>
+  <span class="label label-default">Constructor</span>
+  (callback, synchronous, taskName)
+</h4>
+
+<signature params="[
+  {name: 'decorated', type: 'Object', description: 'Object to be decorated as a task; must implement a run() method.'},
+  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if required method run() not implemented by decorated.'}]"></throws>
+
+<h3>Instance Methods</h3>
+
+<!-- getDecorated() -->
+<h4 class="page-header">
+  getDecorated()
+</h4>
+<p>Returns the decorated object.</p>
+<signature return="Object"></signature>

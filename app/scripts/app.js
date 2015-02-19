@@ -74,6 +74,11 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
       url: '/tr-Composite',
       templateUrl: 'app/views/documentation/tr-Composite.html'
     });
+    $stateProvider.state('documentation.tr-Decorator', {
+      parent: 'documentation',
+      url: '/tr-Decorator',
+      templateUrl: 'app/views/documentation/tr-Decorator.html'
+    });
     $stateProvider.state('documentation.tr-Factory', {
       parent: 'documentation',
       url: '/tr-Factory',

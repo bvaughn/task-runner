@@ -56,6 +56,11 @@ section:first-of-type .method-header {
   font-style: italic;
 }
 
+.nav > li > a {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .bs-docs-sidebar .nav a.active {
   padding-left: 19px;
   color: #2b679b;
