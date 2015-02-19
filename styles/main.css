@@ -34,6 +34,10 @@ section:first-of-type .method-header {
   font-size: 20px;
 }
 
+.bs-docs-constructor {
+  margin: 30px 0;
+}
+
 .bs-docs-header .lead {
   margin-bottom: 15px;
   color: #FFFFFF;

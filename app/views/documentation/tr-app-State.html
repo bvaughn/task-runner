@@ -1,3 +1,37 @@
 <classname name="tr.app.State" super="tr.Graph" source="https://github.com/bvaughn/task-runner/blob/master/source/tr/app/state.js"></classname>
 
-<p class="lead">Coming soon.</p>
+<p class="lead">
+  A runtime state of an <code>tr.app.Application</code>.
+</p>
+
+<p>Extend this base class to implement custom application states.</p>
+
+<div ng-include="'app/views/documentation/partials/app-engine-warning.html'"></div>
+
+<usage source="app/snippets/documentation/state.js"></usage>
+
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.app.State(taskName)
+  </h4>
+</div>
+
+<signature params="[{name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}]"></signature>
+
+<h3>Instance Methods</h3>
+
+<!-- getApplication() -->
+<h4 class="page-header">
+  getApplication()
+</h4>
+<p>Returns a reference to the global application.</p>
+<signature return="tr.app.Application"></signature>
+
+<!-- Protected method (of sorts)
+<h4 class="page-header">
+  setApplication(application)
+</h4>
+<p>This method gets invoked by the <code>tr.app.Application</code> just prior to entering (running) this state.</p>
+<signature params="[{name: 'application', type: 'tr.app.Application', description: 'A reference to the application.'}]"></signature>
+-->

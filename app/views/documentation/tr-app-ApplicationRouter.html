@@ -1,3 +1,60 @@
 <classname name="tr.app.ApplicationRouter" source="https://github.com/bvaughn/task-runner/blob/master/source/tr/app/application-router.js"></classname>
 
-<p class="lead">Coming soon.</p>
+<p class="lead">Watches for changes in the current URL and maps them to the appropriate application state.</p>
+<p>
+  This router is based on <a href="https://github.com/angular-ui/ui-router/">UI Router</a> (and shares much of its code under the hood).
+  This means that UI Router's parameter formatting is supported.
+  For more information see the <a href="https://github.com/angular-ui/ui-router/wiki/URL-Routing">URL Routing</a> section of the docs.
+</p>
+
+<div ng-include="'app/views/documentation/partials/app-engine-warning.html'"></div>
+
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.app.ApplicationRouter()
+  </h4>
+
+  <p>
+    The router must be configured with a default route before being run.
+  </p>
+</div>
+
+<h3>Instance Methods</h3>
+
+<!-- addPath() -->
+<h4 class="page-header">
+  addPath(path, factoryFunction)
+</h4>
+<p>
+  Register an application route.
+  When this route is matched the provided factory function will be invoked to create an application state.
+</p>
+<signature params="[
+  {name: 'path', type: 'String', description: 'Expression describing the an application route and any URL parameters it accepts.'},
+  {name: 'factoryFunction', type: 'function(Object):tr.app.State', description: 'Factory function responsible for creating an application state task. This function should accept an object that will define keys for any URL paramters specified in the path.'}
+]"></signature>
+
+<!-- setDefaultRoute() -->
+<h4 class="page-header">
+  setDefaultRoute(factoryFunction)
+</h4>
+<p>
+  Factory function responsible for creating the default application state.
+  This factory function is invoked any time the user visits a URL that can't be matched.
+</p>
+<p>
+  The router must be configured with a default state before being run.
+  This state is entered if a URL cannot be matched with a route, or if a route fails to load a valid state.
+  It's improtant for this state to have no dependencies.
+</p>
+<signature params="[
+  {name: 'factoryFunction', type: 'function(tr.app.State)', description: 'Factory function responsible for creating an application state task.'}
+]"></signature>
+
+<!-- start() -->
+<h4 class="page-header">
+  start()
+</h4>
+<p>Start the router.</p>
+<throws errors="[{type: 'Error', description: 'if no default route has been provided.'}]"></throws>
