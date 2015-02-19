@@ -11,10 +11,6 @@ goog.require('tr.enums.State');
  * Use the enterState() method to start the application or to transition between states.
  *
  * @example
- * var application = new tr.app.Application();
- * application.enterState(initializationTask);
- *
- * @example
  * // Initialize the Application and then configure its routes.
  * var application = new tr.app.Application();
  * var router = application.getApplicationRouter();
@@ -43,7 +39,6 @@ goog.require('tr.enums.State');
  * // This will immediately process the current URL and load the appropriate state.
  * router.start();
  *
- * @extends {tr.CompositeTask}
  * @constructor
  * @struct
  */
@@ -65,7 +60,7 @@ tr.app.Application = function() {
 /**
  * Interrupt the current application-state and enter a new one.
  * 
- * @param {!State} stateTask State task to enter.
+ * @param {!tr.State} stateTask State task to enter.
  */
 tr.app.Application.prototype.enterState = function(stateTask) {
   if (this.stateTask_ === stateTask) {

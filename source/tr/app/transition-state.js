@@ -68,7 +68,7 @@ tr.app.TransitionState.prototype.beforeFirstRun = function() {
  * Add a target tr.app.State and its prerequisite blocking {@link tr.Task}s.
  * Multiple target states can be added; they should be added in the order of highest-to-lowest importance.
  * 
- * @param {!State} stateTask State task to be entered if all of the specified blockers succeed.
+ * @param {!tr.app.State} stateTask State task to be entered if all of the specified blockers succeed.
  * @param {Array.<!tr.Task>=} blockers Tasks that are pre-requisites to complete before the target state can be entered.
  * @return {!tr.app.StateTransitionTask}
  */
