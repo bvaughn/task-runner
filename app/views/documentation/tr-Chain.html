@@ -13,9 +13,15 @@
 
 <h3>Instance Methods</h3>
 
+<!-- else() -->
+<h4 class="page-header">
+  else(...tasks)
+</h4>
+<p>Alias for <code>or</code> method.</p>
+
 <!-- first() -->
 <h4 class="page-header">
-  first()
+  first(...tasks)
 </h4>
 <p>Add one or more tasks to the beginning of the chain.</p>
 <signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in parallel.'}]"
@@ -24,7 +30,7 @@
 
 <!-- or() -->
 <h4 class="page-header">
-  or()
+  or(...tasks)
 </h4>
 <p>Add one or more tasks to be run only if one of the previously-added tasks fail.</p>
 <p>
@@ -34,9 +40,15 @@
 <signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in serial.'}]"
            return="{type: 'tr.Task', description:'A reference to the current task'}"></signature>
 
+<!-- otherwise() -->
+<h4 class="page-header">
+  otherwise(...tasks)
+</h4>
+<p>Alias for <code>or</code> method.</p>
+
 <!-- then() -->
 <h4 class="page-header">
-  then()
+  then(...tasks)
 </h4>
 <p>Add one or more tasks to be run after the tasks already in this chain have been run.</p>
 <signature params="[{name: '...tasks', type: 'tr.Task', description: 'One or more tasks to be run in parallel.'}]"
