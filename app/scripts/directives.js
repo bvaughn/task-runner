@@ -92,3 +92,19 @@ angular.module('taskRunner').directive('throws',
       templateUrl: 'app/views/directives/throws.html'
     };
   });
+
+/**
+ * Renders a class type with a link to the source code and a docs issue button.
+ */
+angular.module('taskRunner').directive('classname',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        name: '@',
+        source: '@',
+        super: '@?'
+      },
+      templateUrl: 'app/views/directives/classname.html'
+    };
+  });
