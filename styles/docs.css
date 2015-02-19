@@ -23,7 +23,7 @@
 .btn-outline-inverse {
     color: #fff;
     background-color: transparent;
-    border-color: #cdbfe3;
+    border-color: #EEE;
 }
 .btn-outline-inverse:active, .btn-outline-inverse:focus, .btn-outline-inverse:hover {
     color: #2b679b;
@@ -57,7 +57,7 @@
 }
 .bs-docs-booticon-outline {
     background-color: transparent;
-    border: 1px solid #cdbfe3;
+    border: 1px solid #EEE;
 }
 #skippy {
     display: block;
@@ -152,7 +152,7 @@
 .bs-docs-header, .bs-docs-masthead {
     position: relative;
     padding: 30px 15px;
-    color: #cdbfe3;
+    color: #EEE;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
     background-color: #337ab7;
