@@ -60,6 +60,9 @@ section:first-of-type .method-header {
   padding-left: 10px;
   padding-right: 10px;
 }
+.nav > .dropdown {
+  cursor: pointer;
+}
 
 .bs-docs-sidebar .nav a.active {
   padding-left: 19px;
