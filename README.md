@@ -2,7 +2,7 @@
 # Task Runner
 ---
 **[Official website](http://bvaughn.github.io/task-runner/)** |
-**[API documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html)** |
+**[API documentation](http://bvaughn.github.io/task-runner/#/documentation/)** |
 **[Report an issue](https://github.com/bvaughn/task-runner/issues/new)**
 
 Task Runner is a collection of low-level libraries designed to make JavaScript application development easier. Check out the [Task Runner website](http://bvaughn.github.io/task-runner/) for information on working with tasks as well as sample code and demos.
