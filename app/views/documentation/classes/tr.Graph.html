@@ -54,6 +54,21 @@
   {type: 'Error', description: 'if cyclic dependencies are detected.'}
 ]"></throws>
 
+<!-- addBlockersTo() -->
+<h4 class="page-header">
+  addBlockersTo(blockers, tasks)
+</h4>
+<p>Adds blocking dependencies (tasks) to tasks in the graph.</p>
+<p>If the graph is running, blockers must not be added to tasks that are already running.</p>
+<signature params="[
+  {name: 'blockers', type: 'Array<tr.Task>', description: 'Blocking dependencies to add.'},
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Tasks from which to add the blockers.'}
+]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if either the blockers or the tasks are not in the graph.'},
+  {type: 'Error', description: 'if blockers have been added to tasks that are already running.'}
+]"></throws>
+
 <!-- addToEnd() -->
 <h4 class="page-header">
   addToEnd(task)
@@ -90,6 +105,20 @@
 <throws errors="[
   {type: 'Error', description: 'if the task provided is not within the depenency graph.'},
   {type: 'Error', description: 'if removing the task invalidates any other, blocked tasks.'}
+]"></throws>
+
+<!-- removeBlockersFrom() -->
+<h4 class="page-header">
+  removeBlockersFrom(blockers, tasks)
+</h4>
+<p>Removes blocking dependencies (tasks) from tasks in the graph.</p>
+<p>If the graph is running, any newly-unblocked tasks will be automatically run.</p>
+<signature params="[
+  {name: 'blockers', type: 'Array<tr.Task>', description: 'Blocking dependencies to remove.'},
+  {name: 'tasks', type: 'Array<tr.Task>', description: 'Tasks from which to remove the blockers.'}
+]" return="{type: 'tr.Graph', description:'A reference to the current task'}"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if either the blockers or the tasks are not in the graph.'}
 ]"></throws>
 
 <h3>Protected methods</h3>
