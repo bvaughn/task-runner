@@ -34,14 +34,10 @@ function initDemo1() {
   graphTask.add(waitForClickTask);
   graphTask.add(createFadeOutTweenTask(button3), [waitForClickTask]);
 
-  // Blocks on all of the above tasks
-  graphTask.addToEnd(
-    new tr.Closure(function() {
-      var logger = document.getElementById('logger');
-      logger.innerText = "Tasks run " + ++completedCount + " times.";
-    }, true));
-
   graphTask.completed(function() {
+    var logger = document.getElementById('logger');
+    logger.innerText = "Tasks run " + ++completedCount + " times.";
+
     graphTask.reset();
     graphTask.run();
   });

@@ -22,17 +22,17 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
       templateUrl: 'app/views/getting-started/working-with-promises.html'
     });
 
-    $stateProvider.state('sample-application-1', {
-      url: '/samples-and-demos/demo-1',
-      templateUrl: 'app/views/samples/demo-1.html'
+    $stateProvider.state('graph-and-tween-sample', {
+      url: '/samples-and-demos/graph-and-tween-sample',
+      templateUrl: 'app/views/samples/graph-and-tween-sample.html'
     });
-    $stateProvider.state('sample-application-2', {
-      url: '/samples-and-demos/demo-2',
-      templateUrl: 'app/views/samples/demo-2.html'
+    $stateProvider.state('composite-and-xhr-sample', {
+      url: '/samples-and-demos/composite-and-xhr-sample',
+      templateUrl: 'app/views/samples/composite-and-xhr-sample.html'
     });
-    $stateProvider.state('sample-animation', {
-      url: '/samples-and-demos/animation-1',
-      templateUrl: 'app/views/samples/animation-1.html'
+    $stateProvider.state('chain-and-closure-animation', {
+      url: '/samples-and-demos/chain-and-closure-animation',
+      templateUrl: 'app/views/samples/chain-and-closure-animation.html'
     });
 
     $stateProvider.state('contact', {
