@@ -75,7 +75,8 @@ tr.Graph.prototype.add = function(task, blockers) {
   goog.asserts.assert(index < 0, 'Cannot add task more than once.');
 
   this.tasks_.push(task);
-  this.taskIdToDependenciesMap_[task.getUniqueID()] = blockers;
+
+  this.updateBlockers_([task], blockers);
 
   this.validateDependencies_(task);
 
@@ -131,6 +132,23 @@ tr.Graph.prototype.addAllToEnd = function(tasks) {
 };
 
 /**
+ * Adds blocking dependencies (tasks) to tasks in the graph.
+ *
+ * <p>If the graph is running, blockers must not be added to tasks that are already running.
+ *
+ * @param {!Array.<!tr.Task>} blockers Blocking dependencies to add.
+ * @param {!Array.<!tr.Task>} tasks Tasks from which to add the blockers.
+ * @return {!tr.Graph} a reference to the current task.
+ * @throws {Error} if either the blockers or the tasks are not in the graph.
+ * @throws {Error} if blockers have been added to tasks that are already running.
+ */
+tr.Graph.prototype.addBlockersTo = function(blockers, tasks) {
+  this.updateBlockers_(tasks, blockers);
+
+  return this;
+};
+
+/**
  * Removes a child task from the dependency graph and ensures that the remaining dependencies are still valid.
  *
  * @param {!tr.Task} task Child task to be removed from the graph.
@@ -138,9 +156,7 @@ tr.Graph.prototype.addAllToEnd = function(tasks) {
  * @throws {Error} if the task provided is not within the depenency graph, or if removing the task invalidates any other, blocked tasks.
  */
 tr.Graph.prototype.remove = function(task) {
-  var index = this.tasks_.indexOf(task);
-
-  goog.asserts.assert(index >= 0, 'Cannot find the specified task.');
+  this.verifyInGraph_([task]);
 
   this.removeCallbacksFrom_(task);
 
@@ -169,6 +185,45 @@ tr.Graph.prototype.remove = function(task) {
 tr.Graph.prototype.removeAll = function(tasks) {
   for (var i = 0, length = tasks.length; i < length; i++) {
     this.remove(tasks[i]);
+  }
+
+  return this;
+};
+
+/**
+ * Removes blocking dependencies (tasks) from tasks in the graph.
+ *
+ * <p>If the graph is running, any newly-unblocked tasks will be automatically run.
+ *
+ * @param {!Array.<!tr.Task>} blockers Blocking dependencies to remove.
+ * @param {!Array.<!tr.Task>} tasks Tasks from which to remove the blockers.
+ * @return {!tr.Graph} a reference to the current task.
+ * @throws {Error} if either the blockers or the tasks are not in the graph.
+ */
+tr.Graph.prototype.removeBlockersFrom = function(blockers, tasks) {
+  this.verifyInGraph_(blockers);
+  this.verifyInGraph_(tasks);
+
+  var taskIdToDependenciesMap = this.taskIdToDependenciesMap_;
+
+  for (var i = 0, length = tasks.length; i < length; i++) {
+    var task = tasks[i];
+    var dependencies = taskIdToDependenciesMap[task.getUniqueID()] || [];
+
+    for (var i = 0, length = blockers.length; i < length; i++) {
+      var blocker = blockers[i];
+      var index = dependencies.indexOf(blocker);
+
+      if (index >= 0) {
+        dependencies.splice(index, 1);
+      }
+    }
+
+    taskIdToDependenciesMap[task.getUniqueID()] = dependencies;
+  }
+
+  if (this.getState() === tr.enums.State.RUNNING) {
+    this.completeOrRunNext_();
   }
 
   return this;
@@ -300,6 +355,42 @@ tr.Graph.prototype.isAnyTaskRunning_ = function() {
 };
 
 /**
+ * Helper function to updates blocking dependencies for the specified task.
+ *
+ * @param {!Array<!tr.Task>} tasks Array of tasks for which to add blockers.
+ * @param {!Array<!tr.Task>} blockers Array of blocking tasks to be added.
+ * @throws {Error} if either tasks or blockers are not already in the graph.
+ * @throws {Error} if blockers have been added to tasks that are already running.
+ * @private
+ */
+tr.Graph.prototype.updateBlockers_ = function(tasks, blockers) {
+  if (!blockers || blockers.length === 0) {
+    return;
+  }
+
+  this.verifyInGraph_(tasks);
+  this.verifyInGraph_(blockers);
+
+  for (var i = 0, length = tasks.length; i < length; i++) {
+    var task = tasks[i];
+
+    goog.asserts.assert(task.getState() !== tr.enums.State.RUNNING, 'Cannot add blocking dependency to running task.');
+
+    var dependencies = this.taskIdToDependenciesMap_[task.getUniqueID()] || [];
+
+    for (var i = 0, length = blockers.length; i < length; i++) {
+      var blocker = blockers[i];
+
+      if (dependencies.indexOf(blocker) < 0) {
+        dependencies.push(blocker);
+      }
+    }
+
+    this.taskIdToDependenciesMap_[task.getUniqueID()] = dependencies;
+  }
+};
+
+/**
  * Checks the specified task to ensure that it does not have any cyclic
  * dependencies (tasks that are mutually dependent) or dependencies on tasks
  * that are not in the current graph.
@@ -312,18 +403,24 @@ tr.Graph.prototype.validateDependencies_ = function(task) {
   var blockers = this.taskIdToDependenciesMap_[task.getUniqueID()];
 
   if (blockers) {
-
     // Task cannot depend on itself
-    goog.asserts.assert(blockers.indexOf(task) < 0,
-        'Cyclic dependency detected.');
+    goog.asserts.assert(blockers.indexOf(task) < 0, 'Cyclic dependency detected.');
 
-    for (var i in blockers) {
-      var blocker = blockers[i];
+    // Task cannot depend on blocking tasks that aren't within the graph
+    this.verifyInGraph_(blockers);
+  }
+};
 
-      // Blocking task must be within the graph
-      goog.asserts.assert(this.tasks_.indexOf(blocker) >= 0,
-          'Invalid dependency detected.');
-    }
+/**
+ * Verifies that all of the specified tasks are within the graph.
+ *
+ * @param {!Array<!tr.Task>} tasks Array of tasks.
+ * @throws {Error} if any of the tasks are not in the graph.
+ * @private
+ */
+tr.Graph.prototype.verifyInGraph_ = function(tasks) {
+  for (var i = 0, length = tasks.length; i < length; i++) {
+    goog.asserts.assert(this.tasks_.indexOf(tasks[i]) >= 0, 'Task not in graph.');
   }
 };
 

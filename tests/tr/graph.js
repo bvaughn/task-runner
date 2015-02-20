@@ -788,4 +788,132 @@ describe('tr.Graph', function() {
 
     expect(task.getState()).toBe(tr.enums.State.COMPLETED);
   });
+
+  it('should return the current graph from addBlockersTo', function() {
+    var task = new tr.Graph();
+
+    expect(task.addBlockersTo([], [])).toBe(task);
+  });
+
+  it('should return the current graph from removeBlockersFrom', function() {
+    var task = new tr.Graph();
+    
+    expect(task.removeBlockersFrom([], [])).toBe(task);
+  });
+
+  it('should error if blockers are added to tasks not in the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+
+    expect(function() {
+      task.addBlockersTo([nullTask1], [nullTask2]);
+    }).toThrow();
+  });
+
+  it('should error if adding blockers that are not in the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask2);
+
+    expect(function() {
+      task.addBlockersTo([nullTask1], [nullTask2]);
+    }).toThrow();
+  });
+
+  it('should error if blockers are added to tasks that are already running', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.addAll([nullTask1, nullTask2]);
+    task.run();
+
+    expect(function() {
+      task.addBlockersTo([nullTask1], [nullTask2]);
+    }).toThrow();
+  });
+
+  it('should allow blockers to be attached to tasks already in the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.addAll([nullTask1, nullTask2]);
+    task.addBlockersTo([nullTask1], [nullTask2]);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    nullTask1.complete();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+  });
+
+  it('should error if blockers are removed from tasks not in the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask2);
+
+    expect(function() {
+      task.removeBlockersFrom([nullTask1], [nullTask2]);
+    }).toThrow();
+  });
+
+  it('should error if removing blockers that are not in the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+
+    expect(function() {
+      task.removeBlockersFrom([nullTask1], [nullTask2]);
+    }).toThrow();
+  });
+
+  it('should allow blockers to be removed from tasks already in the graph', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.removeBlockersFrom([nullTask1], [nullTask2]);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+  });
+
+  it('should allow blockers to be removed from tasks while graph is running', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.run();
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.INITIALIZED);
+
+    task.removeBlockersFrom([nullTask1], [nullTask2]);
+
+    expect(task.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
+    expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
+  });
 });
