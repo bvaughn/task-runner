@@ -99,6 +99,7 @@ doclink > a:hover > code {
 
 .social-icons-list {
   display: inline-block;
+  margin-bottom: 0;
 }
 .social-icons-list > a {
   display: inline-block;
@@ -106,4 +107,4 @@ doclink > a:hover > code {
 
 .docs-list > dt {
   font-weight: normal;
-}
+} 
