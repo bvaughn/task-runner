@@ -1,7 +1,10 @@
 <h3 class="docs-classname">
   <span ng-bind="name"></span>
 
-  <small class="docs-super" ng-if="super" ng-bind="super"></small>
+  <small class="docs-super" ng-if="super">
+    <i class="fa fa-chevron-right"></i>
+    <doclink name="{{super}}"></doclink>
+  </small>
 
   <a class="btn btn-xs btn-primary" ng-href="{{source}}">
     View Source <i class="fa fa-code"></i>

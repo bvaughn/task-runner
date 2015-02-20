@@ -6,6 +6,9 @@ pre {
   font-size: 12px;
 }
 
+doclink, navdoclink {
+  display: inline-block;
+}
 classname, prism, signature, throws, usage {
   display: block;
 }
@@ -46,6 +49,13 @@ section:first-of-type .method-header {
 .bs-docs-header strong {
   color: #FFFFFF;
 }
+.bs-docs-header, .bs-docs-masthead {
+  background-image: url(https://raw.githubusercontent.com/bvaughn/task-runner/gh-pages/images/header-background-tile.png);
+}
+.bs-docs-header code {
+  background-color: transparent;
+  color: #FFF;
+}
 
 .task-runner-documentation p {
   margin-bottom: 10px;
@@ -68,27 +78,23 @@ section:first-of-type .method-header {
   cursor: pointer;
 }
 
-.bs-docs-sidebar .nav a.active {
-  padding-left: 19px;
-  color: #2b679b;
-  text-decoration: none;
-  background-color: transparent;
-  border-left: 1px solid #2b679b;
-}
-.bs-docs-sidebar .nav a.active:hover {
-  padding-left: 18px;
-  border-left: 2px solid #2b679b;
+code {
+  color: #666;
+  background: #EEE;
 }
 
-.github-button {
-  height: 20px;
-  line-height: 17px;
+doclink > a > code {
+  color: #c7254e;
+  background-color: #f9f2f4;
 }
-.github-button-fork {
-  width: 50px;
+doclink > a:hover,
+doclink > a:active,
+doclink > a.active {
+  color: #c7254e;
+  text-decoration: none;
 }
-.github-button-stars {
-  width: 80px;
+doclink > a:hover > code {
+  background-color: transparent;
 }
 
 .social-icons-list {
@@ -98,10 +104,6 @@ section:first-of-type .method-header {
   display: inline-block;
 }
 
-.bs-docs-header, .bs-docs-masthead {
-  background-image: url(https://raw.githubusercontent.com/bvaughn/task-runner/gh-pages/images/header-background-tile.png);
-}
-
-.docs-classname .docs-super:before {
-  content: "> ";
+.docs-list > dt {
+  font-weight: normal;
 }

@@ -108,3 +108,31 @@ angular.module('taskRunner').directive('classname',
       templateUrl: 'app/views/directives/classname.html'
     };
   });
+
+/**
+ * Renders a link to documentation for the specified class.
+ */
+angular.module('taskRunner').directive('doclink',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        name: '@'
+      },
+      templateUrl: 'app/views/directives/doclink.html'
+    };
+  });
+
+/**
+ * Renders a link to documentation for the specified class.
+ */
+angular.module('taskRunner').directive('navdoclink',
+  function() {
+    return {
+      restrict: 'EA',
+      scope: {
+        name: '@'
+      },
+      templateUrl: 'app/views/directives/navdoclink.html'
+    };
+  });
