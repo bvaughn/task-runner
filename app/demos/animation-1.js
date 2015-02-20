@@ -30,24 +30,18 @@ function initAnimation1() {
   outerGroup.transform("translate(200, 100);");
 
   // Using a dependency graph task allows us a fine-grained level of control over the sequencing of our animation tasks.
-  var graphTask = new tr.Graph();
-  graphTask.addToEnd(
-    createAnimationTask(tTopRight, {width: 225, x: 125}, 650, mina.backout));
-  var sleepTaskA = new tr.Sleep(750);
-  var sleepTaskB = new tr.Sleep(1150);
-  graphTask.addAllToEnd([
-    sleepTaskA,
-    sleepTaskB,
-    createAnimationTask(tBottom, {height: 400}, 1500, mina.elastic)]);
-  graphTask.addAll([
-      createAnimationTask(innerGroup, {transform: "rotate(0 125 200); scale(.5, .5);"}, 500, easing.easeInOut),
-      createAnimationTask(outerGroup, {transform: "translate(100, 100);"}, 500, easing.easeInOut),
-      createAnimationTask(tTopLeft, {width: 175, x: 0}, 350, mina.backout)
-    ], [sleepTaskA]);
-  graphTask.addAll([
-      createAnimationTask(textA, {opacity: 1}, 1500, mina.easeInOut),
-      createAnimationTask(textS, {opacity: 1}, 3000, mina.easeInOut),
-      createAnimationTask(textK, {opacity: 1}, 5000, mina.easeInOut)
-    ], [sleepTaskB]);
-  graphTask.run();
+  var chain = new tr.Chain()
+    .first(
+      createAnimationTask(tTopRight, {width: 225, x: 125}, 650, mina.backout))
+    .then(
+      createAnimationTask(tBottom, {height: 400}, 1500, mina.elastic))
+    .then(
+        createAnimationTask(innerGroup, {transform: "rotate(0 125 200); scale(.5, .5);"}, 500, easing.easeInOut),
+        createAnimationTask(outerGroup, {transform: "translate(100, 100);"}, 500, easing.easeInOut),
+        createAnimationTask(tTopLeft, {width: 175, x: 0}, 350, mina.backout))
+    .then(
+        createAnimationTask(textA, {opacity: 1}, 1500, mina.easeInOut),
+        createAnimationTask(textS, {opacity: 1}, 3000, mina.easeInOut),
+        createAnimationTask(textK, {opacity: 1}, 5000, mina.easeInOut))
+    .run();
 };

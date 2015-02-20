@@ -38,7 +38,7 @@ function initDemo1() {
   graphTask.addToEnd(
     new tr.Closure(function() {
       var logger = document.getElementById('logger');
-      logger.innerText = "Task completed " + ++completedCount + " times";
+      logger.innerText = "Tasks run " + ++completedCount + " times.";
     }, true));
 
   graphTask.completed(function() {
