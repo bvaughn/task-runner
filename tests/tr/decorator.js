@@ -1,9 +1,3 @@
-goog.provide('tr.Decorator.test');
-goog.setTestOnly('tr.Decorator.test');
-
-goog.require('tr.Decorator');
-goog.require('tr.enums.State');
-
 describe('tr.Decorator', function() {
 
   var decorator;
@@ -54,8 +48,8 @@ describe('tr.Decorator', function() {
     expect(fullImplementation.run).toHaveBeenCalled();
     expect(fullImplementation.run.calls.count()).toEqual(1);
     expect(fullImplementation.run.calls.mostRecent().args.length).toEqual(2);
-    expect(goog.isFunction(fullImplementation.run.calls.mostRecent().args[0])).toBeTruthy();
-    expect(goog.isFunction(fullImplementation.run.calls.mostRecent().args[1])).toBeTruthy();
+    expect(typeof fullImplementation.run.calls.mostRecent().args[0]).toBe("function");
+    expect(typeof fullImplementation.run.calls.mostRecent().args[1]).toBe("function");
   });
 
   it('should interrupt decorated when interrupted', function() {
@@ -102,7 +96,7 @@ describe('tr.Decorator', function() {
 
     var data = {foo:'bar'};
 
-    expect(goog.isFunction(fullImplementation.run.calls.mostRecent().args[0])).toBeTruthy();
+    expect(typeof fullImplementation.run.calls.mostRecent().args[0]).toBe("function");
     completedCallback = fullImplementation.run.calls.mostRecent().args[0];
     completedCallback(data);
 
@@ -119,7 +113,7 @@ describe('tr.Decorator', function() {
     var data = {foo:'bar'};
     var errorMessage = "foobar";
 
-    expect(goog.isFunction(fullImplementation.run.calls.mostRecent().args[1])).toBeTruthy();
+    expect(typeof fullImplementation.run.calls.mostRecent().args[1]).toBe("function");
     erroredCallback = fullImplementation.run.calls.mostRecent().args[1];
     erroredCallback(data, errorMessage);
 

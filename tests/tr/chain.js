@@ -1,11 +1,3 @@
-goog.provide('tr.Chain.test');
-goog.setTestOnly('tr.Chain.test');
-
-goog.require('tr.Chain');
-goog.require('tr.Closure');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Chain', function() {
 
   var stubTaskA, stubTaskB, stubTaskC, stubTaskD, stubTaskE, stubTaskF;

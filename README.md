@@ -1,4 +1,3 @@
-
 # Task Runner
 ---
 **[Official website](http://bvaughn.github.io/task-runner/)** |
@@ -21,9 +20,9 @@ Get Task Runner can be installed in any of the following ways:
 Task Runner is available in two flavors:
 
 * `dist/task-runner`: This is the base, task library. It's compatible with all browsers (as well as Node JS) and can be used with any JavaScript frameworks (Angular, React, Ember, etc.).
-* `dist/task-runner-enginer`: This includes all of the above features *in addition to* an application engine that can be used to create single-page-apps. Tasks that are only in this package are explicitly marked in [the documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
+* `dist/task-runner-engine`: This includes all of the above features *in addition to* an application engine that can be used to create single-page-apps. Tasks that are only in this package are explicitly marked in [the documentation](http://rawgit.com/bvaughn/task-runner/master/docs/index.html).
 
-Each of the above bundles includes both a `debug.js` and a `compressed.js`. The debug build is pretty-printed for easier debugging and also logs task state-change events to the console. The compressed version is minified and does not include logging.
+Debug logging can be enabled for Task Runner by setting a `window.DEBUG` environment variable to `TRUE`. If debug mode is enabled, tasks will also track the context (stack) when they are created. This information can be accessed using the `getCreationContext()` method.
 
 ## Building
 
@@ -32,20 +31,20 @@ Each of the above bundles includes both a `debug.js` and a `compressed.js`. The 
 Begin by running `npm install` to install [Karma](https://karma-runner.github.io) and other dependencies.
 
 You can then run tests once using:
+
 ```bash
 gulp test
 ```
 
 Or you can run tests each time a file in the `source` or `tests` directory changes using:
+
 ```bash
 gulp test:watch
 ```
 
 ### Building Task Runner
 
-Begin by running `bower install` to install the [Closure Compiler](https://github.com/google/closure-compiler) and [Closure Library](https://github.com/google/closure-library) components and `npm install` to install gulp dependencies.
-
-Then run the following command from the root of the Task Runner checkout:
+Begin by running `npm install` to install the [TypeScript compiler](http://www.typescriptlang.org/) and gulp dependencies. Then run the following command from the root of the Task Runner checkout:
 
 ```bash
 gulp build

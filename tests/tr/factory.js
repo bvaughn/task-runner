@@ -1,10 +1,3 @@
-goog.provide('tr.Factory.test');
-goog.setTestOnly('tr.Factory.test');
-
-goog.require('tr.Factory');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Factory', function() {
 
   var stubTask;
@@ -20,23 +13,23 @@ describe('tr.Factory', function() {
   it('should work without any arguments or scope', function() {
     var deferredFactoryTask = new tr.Factory(method);
 
-    expect(deferredFactoryTask.getDecoratedTask()).toBeNull();
+    expect(deferredFactoryTask.getDecoratedTask()).toBeFalsy();
 
     deferredFactoryTask.run();
 
-    expect(deferredFactoryTask.getDecoratedTask()).not.toBeNull();
+    expect(deferredFactoryTask.getDecoratedTask()).toBeTruthy();
   });
 
   it('should work with arguments and scope', function() {
     var deferredFactoryTask = new tr.Factory(method, {}, [1, 2, 3]);
 
-    expect(deferredFactoryTask.getDecoratedTask()).toBeNull();
+    expect(deferredFactoryTask.getDecoratedTask()).toBeFalsy();
 
     deferredFactoryTask.run();
 
     expect(method).toHaveBeenCalled();
     expect(method.calls.argsFor(0)).toEqual([1, 2, 3]);
-    expect(deferredFactoryTask.getDecoratedTask()).not.toBeNull();
+    expect(deferredFactoryTask.getDecoratedTask()).toBeTruthy();
   });
 
   it('should complete when deferred task completes it', function() {

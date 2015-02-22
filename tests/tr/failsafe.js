@@ -1,10 +1,3 @@
-goog.provide('tr.Failsafe.test');
-goog.setTestOnly('tr.Failsafe.test');
-
-goog.require('tr.Failsafe');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Failsafe', function() {
 
   var nullTask;

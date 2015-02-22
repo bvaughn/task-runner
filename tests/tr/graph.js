@@ -1,10 +1,3 @@
-goog.provide('tr.Graph.test');
-goog.setTestOnly('tr.Graph.test');
-
-goog.require('tr.Graph');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Graph', function() {
 
   // These mock functions are shared between the test methods below.
@@ -14,13 +7,6 @@ describe('tr.Graph', function() {
   var completedCallback;
   var erroredCallback;
   var interruptedCallback;
-
-  beforeEach(function() {
-    startedCallback = jasmine.createSpy();
-    completedCallback = jasmine.createSpy();
-    erroredCallback = jasmine.createSpy();
-    interruptedCallback = jasmine.createSpy();
-  });
 
   /**
    * Helper function for attaching task callbacks to be used by later expectations.
@@ -35,39 +21,40 @@ describe('tr.Graph', function() {
     return task;
   };
 
-
   /**
    * Test task that errors immediately (synchronously) after running.
-   * @extends {tr.Closure}
-   * @constructor
-   * @struct
    */
-  tr.TestSynchrousErrorTask = function() {
-    goog.base(this, goog.bind(function() {
-      this.error();
-    }, this));
-  };
-  goog.inherits(tr.TestSynchrousErrorTask, tr.Closure);
-
+  var TestSynchrousErrorTask;
 
   /**
    * Test task that tracks the number of times 'beforeFirstRun' has been run.
-   * @extends {tr.Graph}
-   * @constructor
-   * @struct
    */
-  tr.TestGraph = function() {
-    goog.base(this);
+  var TestGraph;
 
-    this.beforeFirstRunCount_ = 0;
-  };
-  goog.inherits(tr.TestGraph, tr.Graph);
+  beforeEach(function() {
+    startedCallback = jasmine.createSpy();
+    completedCallback = jasmine.createSpy();
+    erroredCallback = jasmine.createSpy();
+    interruptedCallback = jasmine.createSpy();
 
-  /** @override */
-  tr.TestGraph.prototype.beforeFirstRun = function() {
-    this.beforeFirstRunCount_++;
-  };
+    TestSynchrousErrorTask = function() {
+      tr.Closure.call(this,
+        function(task) {
+          task.error();
+        });
+    };
+    TestSynchrousErrorTask.prototype = Object.create(tr.Closure.prototype);
 
+    TestGraph = function() {
+      tr.Graph.call(this);
+
+      this.beforeFirstRunCount_ = 0;
+    };
+    TestGraph.prototype = Object.create(tr.Graph.prototype);
+    TestGraph.prototype.beforeFirstRun = function() {
+      this.beforeFirstRunCount_++;
+    };
+  });
 
   it('should complete when run without children', function() {
     var task = new tr.Graph();
@@ -590,7 +577,7 @@ describe('tr.Graph', function() {
 
   it('should not proceed after synchronous errors', function() {
     var nullTask1 = new tr.Stub(true); // Succeeds immediately
-    var nullTask2 = new tr.TestSynchrousErrorTask(); // Fails immediately
+    var nullTask2 = new TestSynchrousErrorTask(); // Fails immediately
     var nullTask3 = new tr.Stub(true); // Succeeds immediately
 
     var task = new tr.Graph();
@@ -628,7 +615,7 @@ describe('tr.Graph', function() {
   });
 
   it('should invoke beforeFirstRun before running', function() {
-    var task = new tr.TestGraph();
+    var task = new TestGraph();
     task.add(new tr.Stub());
     task.run();
 
@@ -636,7 +623,7 @@ describe('tr.Graph', function() {
   });
 
   it('should only invoke beforeFirstRun once', function() {
-    var task = new tr.TestGraph();
+    var task = new TestGraph();
     task.add(new tr.Stub());
     task.run();
 

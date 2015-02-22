@@ -1,21 +1,12 @@
-goog.provide('tr.Timeout.test');
-goog.setTestOnly('tr.Timeout.test');
-
-goog.require('goog.testing.MockClock');
-goog.require('tr.Stub');
-goog.require('tr.Timeout');
-goog.require('tr.enums.State');
-
 describe('tr.Timeout', function() {
 
-  var mockClock;
-  
   beforeEach(function() {
-    mockClock = new goog.testing.MockClock(true);
+    jasmine.clock().mockDate(new Date(2015, 01, 01));
+    jasmine.clock().install();
   });
-  
+
   afterEach(function() {
-    mockClock.uninstall();
+    jasmine.clock().uninstall();
   });
 
   it('should complete if decorated task completes within timeout', function() {
@@ -26,7 +17,7 @@ describe('tr.Timeout', function() {
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(timeoutTask.getState()).toBe(tr.enums.State.RUNNING);
 
-    mockClock.tick(500);
+    jasmine.clock().tick(500);
 
     decoratedTask.complete();
     expect(decoratedTask.getState()).toBe(tr.enums.State.COMPLETED);
@@ -41,7 +32,7 @@ describe('tr.Timeout', function() {
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(timeoutTask.getState()).toBe(tr.enums.State.RUNNING);
 
-    mockClock.tick(500);
+    jasmine.clock().tick(500);
 
     decoratedTask.error();
     expect(decoratedTask.getState()).toBe(tr.enums.State.ERRORED);
@@ -56,7 +47,7 @@ describe('tr.Timeout', function() {
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(timeoutTask.getState()).toBe(tr.enums.State.RUNNING);
 
-    mockClock.tick(1500);
+    jasmine.clock().tick(1500);
     expect(decoratedTask.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(timeoutTask.getState()).toBe(tr.enums.State.ERRORED);
   });
@@ -69,11 +60,11 @@ describe('tr.Timeout', function() {
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(timeoutTask.getState()).toBe(tr.enums.State.RUNNING);
 
-    mockClock.tick(500);
+    jasmine.clock().tick(500);
     timeoutTask.interrupt();
 
     timeoutTask.run();
-    mockClock.tick(500);
+    jasmine.clock().tick(500);
     expect(decoratedTask.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(timeoutTask.getState()).toBe(tr.enums.State.ERRORED);
   });

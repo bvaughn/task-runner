@@ -1,11 +1,3 @@
-goog.provide('tr.Abstract.test');
-goog.setTestOnly('tr.Abstract.test');
-
-goog.require('tr.Abstract');
-goog.require('tr.Stub');
-goog.require('tr.enums.Event');
-goog.require('tr.enums.State');
-
 describe('tr.Abstract', function() {
 
   it('should report the correct name', function() {

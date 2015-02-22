@@ -1,10 +1,3 @@
-goog.provide('tr.Listener.test');
-goog.setTestOnly('tr.Listener.test');
-
-goog.require('goog.events.EventTarget');
-goog.require('tr.Listener');
-goog.require('tr.enums.State');
-
 describe('tr.Listener', function() {
 
   var eventTarget;
@@ -12,17 +5,24 @@ describe('tr.Listener', function() {
   var waitForEventTask;
 
   beforeEach(function() {
-    eventTarget = new goog.events.EventTarget();
+    eventTarget = document.createElement("div");
 
     waitForEventTask = new tr.Listener(eventTarget, eventType);
   });
+
+  var dispatchEventType = function(type) {
+    var event = document.createEvent('Event');
+    event.initEvent(type, true, true);
+
+    eventTarget.dispatchEvent(event);
+  };
 
   it('should complete when an event of the correct type is received', function() {
     waitForEventTask.run();
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.RUNNING);
 
-    eventTarget.dispatchEvent(eventType);
+    dispatchEventType(eventType);
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.COMPLETED);
     expect(waitForEventTask.getData()).toBeTruthy();
@@ -33,7 +33,7 @@ describe('tr.Listener', function() {
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.RUNNING);
 
-    eventTarget.dispatchEvent('incorrect-type');
+    dispatchEventType('incorrect-type');
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.RUNNING);
   });
@@ -41,15 +41,15 @@ describe('tr.Listener', function() {
   it('should only complete once even if multiple matching events are dispatched', function() {
     waitForEventTask.run();
 
-    eventTarget.dispatchEvent(eventType);
+    dispatchEventType(eventType);
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.COMPLETED);
 
-    eventTarget.dispatchEvent(eventType); // Will error if task tries to complete again
+    dispatchEventType(eventType); // Will error if task tries to complete again
   });
 
   it('should not complete when an event is dispatched before running', function() {
-    eventTarget.dispatchEvent(eventType);
+    dispatchEventType(eventType);
 
     waitForEventTask.run();
     
@@ -62,7 +62,7 @@ describe('tr.Listener', function() {
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.INTERRUPTED);
 
-    eventTarget.dispatchEvent(eventType);
+    dispatchEventType(eventType);
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.INTERRUPTED);
   });
@@ -75,7 +75,7 @@ describe('tr.Listener', function() {
 
     waitForEventTask.run();
 
-    eventTarget.dispatchEvent(eventType);
+    dispatchEventType(eventType);
 
     expect(waitForEventTask.getState()).toBe(tr.enums.State.COMPLETED);
   });

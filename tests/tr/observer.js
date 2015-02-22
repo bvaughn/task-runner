@@ -1,11 +1,3 @@
-goog.provide('tr.Observer.test');
-goog.setTestOnly('tr.Observer.test');
-
-goog.require('tr.Composite');
-goog.require('tr.Observer');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Observer', function() {
 
   it('should fail immediately when fail-upon-first-error is true', function() {

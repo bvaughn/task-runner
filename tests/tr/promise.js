@@ -1,17 +1,13 @@
-goog.provide('tr.Promise.test');
-goog.setTestOnly('tr.Promise.test');
-
-goog.require('tr.Promise');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Promise', function() {
 
   var mockPromise;
   var stubTask;
 
   beforeEach(function() {
-    mockPromise = jasmine.createSpyObj('mockPromise', ['then']);
+    mockPromise = {
+      then: function() {}
+    };
+    spyOn(mockPromise, 'then');
 
     stubTask = new tr.Stub();
   });

@@ -1,24 +1,16 @@
 module.exports = function(config) {
+  var sources = 'dist/task-runner-engine/task-runner.js';
+  var testMocks = 'tests/mocks/*.js';
+  var testPolyfills = 'tests/polyfills/*.js';
+  var tests = 'tests/tr/*.js';
+
   config.set({
-    frameworks: ['jasmine', 'closure'],
+    frameworks: ['jasmine-ajax', 'jasmine'],
 
-    files: [
-      // Closure Library base.
-      'bower_components/closure-library/closure/goog/base.js',
-
-      // Tests.
-      'tests/**/*.js',
-
-      // Source files are watched and served, but not parsed for tests.
-      {pattern: 'source/**/*.js', included: false},
-
-      // Closure Library dependencies, neither served nor watched.
-      {pattern: 'bower_components/closure-library/closure/goog/deps.js', included: false, served: false}
-    ],
+    files: [tests, testPolyfills, testMocks, sources],
 
     //what kinda reports one wants to see
     reporters: [
-      'coverage',
       'progress'
     ],
 
@@ -36,21 +28,13 @@ module.exports = function(config) {
     reportSlowerThan: 500,
 
     preprocessors: {
-      // preprocessed for dependencies (closure) and for iits
-      'tests/**/*.js': [
-        'closure',
-        'closure-iit'
-      ],
+      // preprocessed for dependencies
+      tests: [],
+
+      testDependencies: [],
 
       // preprocessed for dependencies
-      'source/**/*.js': [
-        'closure'
-      ],
-
-      // external deps
-      'bower_components/closure-library/closure/goog/deps.js': [
-        'closure-deps'
-      ]
+      sources: []
     }
   });
 };

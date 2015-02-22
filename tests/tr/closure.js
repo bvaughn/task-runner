@@ -1,9 +1,3 @@
-goog.provide('tr.Closure.test');
-goog.setTestOnly('tr.Closure.test');
-
-goog.require('tr.Closure');
-goog.require('tr.enums.State');
-
 describe('tr.Closure', function() {
 
   it('should auto completing upon running when enabled', function() {

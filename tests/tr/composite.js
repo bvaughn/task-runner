@@ -1,10 +1,3 @@
-goog.provide('tr.Composite.test');
-goog.setTestOnly('tr.Composite.test');
-
-goog.require('tr.Composite');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Composite', function() {
 
   // These mock functions are shared between the test methods below.
@@ -15,12 +8,10 @@ describe('tr.Composite', function() {
   var erroredCallback;
   var interruptedCallback;
 
-  beforeEach(function() {
-    startedCallback = jasmine.createSpy();
-    completedCallback = jasmine.createSpy();
-    erroredCallback = jasmine.createSpy();
-    interruptedCallback = jasmine.createSpy();
-  });
+  /**
+   * Composite sub-class used to expose protected methods for testing.
+   */
+  var TestComposite;
 
   /**
    * Helper function for attaching task callbacks to be used by later expectations.
@@ -35,23 +26,24 @@ describe('tr.Composite', function() {
     return task;
   };
 
-  /**
-   * Composite sub-class used to expose protected methods for testing.
-   * @extends {tr.Composite}
-   * @constructor
-   * @struct
-   */
-  tr.TestComposite = function(parallel, opt_tasks) {
-    goog.base(this, parallel, opt_tasks);
-  };
-  goog.inherits(tr.TestComposite, tr.Composite);
+  beforeEach(function() {
+    startedCallback = jasmine.createSpy();
+    completedCallback = jasmine.createSpy();
+    erroredCallback = jasmine.createSpy();
+    interruptedCallback = jasmine.createSpy();
 
-  /**
-   * Exposes flushQueue() method for testing.
-   */
-  tr.TestComposite.prototype.flushForTest = function(doNotComplete) {
-    this.flushQueue(doNotComplete);
-  };
+    TestComposite = function(parallel, opt_tasks) {
+      tr.Composite.call(this, parallel, opt_tasks);
+    };
+    TestComposite.prototype = Object.create(tr.Composite.prototype);
+
+    /**
+     * Exposes flushQueue() method for testing.
+     */
+    TestComposite.prototype.flushForTest = function(doNotComplete) {
+      this.flushQueue(doNotComplete);
+    };
+  });
 
   it('should automatically complete when run with no children', function() {
     var task = new tr.Composite(true);
@@ -624,7 +616,7 @@ describe('tr.Composite', function() {
     var nullTask1 = new tr.Stub();
     var nullTask2 = new tr.Stub();
 
-    var task = new tr.TestComposite(false, [nullTask1, nullTask2]);
+    var task = new TestComposite(false, [nullTask1, nullTask2]);
 
     attachMockCallbacks(task);
     attachMockCallbacks(nullTask1);
@@ -654,7 +646,7 @@ describe('tr.Composite', function() {
     var nullTask1 = new tr.Stub();
     var nullTask2 = new tr.Stub();
 
-    var task = new tr.TestComposite(false, [nullTask1, nullTask2]);
+    var task = new TestComposite(false, [nullTask1, nullTask2]);
 
     attachMockCallbacks(task);
     attachMockCallbacks(nullTask1);
@@ -680,7 +672,7 @@ describe('tr.Composite', function() {
     var nullTask1 = new tr.Stub();
     var nullTask2 = new tr.Stub();
 
-    var task = new tr.TestComposite(false, [nullTask1, nullTask2]);
+    var task = new TestComposite(false, [nullTask1, nullTask2]);
 
     attachMockCallbacks(task);
 
@@ -701,7 +693,7 @@ describe('tr.Composite', function() {
     var nullTask3 = new tr.Stub();
     var nullTask4 = new tr.Stub();
 
-    var task = new tr.TestComposite(false, [nullTask1, nullTask2]);
+    var task = new TestComposite(false, [nullTask1, nullTask2]);
 
     attachMockCallbacks(nullTask1);
     attachMockCallbacks(nullTask2);
@@ -752,7 +744,7 @@ describe('tr.Composite', function() {
     var nullTask2 = new tr.Stub();
     var nullTask3 = new tr.Stub();
 
-    var task = new tr.TestComposite(false, [nullTask1, nullTask2, nullTask3]);
+    var task = new TestComposite(false, [nullTask1, nullTask2, nullTask3]);
 
     attachMockCallbacks(nullTask1);
     attachMockCallbacks(nullTask2);
@@ -798,7 +790,7 @@ describe('tr.Composite', function() {
     var nullTask2 = new tr.Stub();
     var nullTask3 = new tr.Stub();
 
-    var task = new tr.TestComposite(true, [nullTask1, nullTask2, nullTask3]);
+    var task = new TestComposite(true, [nullTask1, nullTask2, nullTask3]);
 
     attachMockCallbacks(nullTask1);
     attachMockCallbacks(nullTask2);
@@ -849,7 +841,7 @@ describe('tr.Composite', function() {
     });
     var nullTask2 = new tr.Stub();
 
-    var task = new tr.TestComposite(true, [nullTask1, nullTask2]);
+    var task = new TestComposite(true, [nullTask1, nullTask2]);
     task.run();
 
     expect(task.getState()).toBe(tr.enums.State.INTERRUPTED);

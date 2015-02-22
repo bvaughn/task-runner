@@ -1,21 +1,11 @@
-goog.provide('tr.Retry.test');
-goog.setTestOnly('tr.Retry.test');
-
-goog.require('goog.testing.MockClock');
-goog.require('tr.Retry');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.Retry', function() {
 
-  var mockClock;
-  
   beforeEach(function() {
-    mockClock = new goog.testing.MockClock(true);
+    jasmine.clock().install();
   });
-  
+
   afterEach(function() {
-    mockClock.uninstall();
+    jasmine.clock().uninstall();
   });
 
   it('should (synchronously) retry in the event of errors when configured to be synchronous', function() {
@@ -59,10 +49,10 @@ describe('tr.Retry', function() {
     decoratedTask.error();
     expect(decoratedTask.getState()).toBe(tr.enums.State.ERRORED);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
-    mockClock.tick(5);
+    jasmine.clock().tick(5);
     expect(decoratedTask.getState()).toBe(tr.enums.State.ERRORED);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
-    mockClock.tick(5);
+    jasmine.clock().tick(5);
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
 
@@ -70,7 +60,7 @@ describe('tr.Retry', function() {
     decoratedTask.error();
     expect(decoratedTask.getState()).toBe(tr.enums.State.ERRORED);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
-    mockClock.tick(10);
+    jasmine.clock().tick(10);
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
 
@@ -87,16 +77,17 @@ describe('tr.Retry', function() {
     retryOnErrorTask.run();
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
+    expect(retryOnErrorTask.getRetries()).toBe(0);
 
     decoratedTask.error();
-    expect(retryOnErrorTask.getRetries()).toBe(1);
     expect(decoratedTask.getState()).toBe(tr.enums.State.RUNNING);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.RUNNING);
+    expect(retryOnErrorTask.getRetries()).toBe(1);
 
     retryOnErrorTask.interrupt();
-    expect(retryOnErrorTask.getRetries()).toBe(0);
     expect(decoratedTask.getState()).toBe(tr.enums.State.INTERRUPTED);
     expect(retryOnErrorTask.getState()).toBe(tr.enums.State.INTERRUPTED);
+    expect(retryOnErrorTask.getRetries()).toBe(0);
   });
 
   it('should not complete if decorated task completes while retry task is interrupted', function() {

@@ -1,11 +1,3 @@
-goog.provide('tr.StopOnSuccess.test');
-goog.setTestOnly('tr.StopOnSuccess.test');
-
-goog.require('tr.StopOnSuccess');
-goog.require('tr.Closure');
-goog.require('tr.Stub');
-goog.require('tr.enums.State');
-
 describe('tr.StopOnSuccess', function() {
 
   var stubTaskA, stubTaskB, stubTaskC;

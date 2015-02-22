@@ -26,13 +26,13 @@ goog.require('tr.enums.State');
  * };
  * goog.inherits(tr.InitializationState, tr.app.State);
  *
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_name Optional semantically meaningful task name.
  * @extends {tr.DepdencyGraph}
  * @constructor
  * @struct
  */
-tr.app.State = function(opt_taskName) {
-  goog.base(this, opt_taskName || "State");
+tr.app.State = function(opt_name) {
+  goog.base(this, opt_name || "State");
 
   /**
    * @type {tr.app.Application|undefined}

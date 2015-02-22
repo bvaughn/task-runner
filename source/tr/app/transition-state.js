@@ -25,13 +25,13 @@ goog.require('tr.enums.State');
  * // Change application-state to initiate the transition.
  * application.enterState(goToUserProfileTask);
  * 
- * @param {string=} opt_taskName Optional semantically meaningful task name.
+ * @param {string=} opt_name Optional semantically meaningful task name.
  * @extends {tr.app.State}
  * @constructor
  * @struct
  */
-tr.app.TransitionState = function(opt_taskName) {
-  goog.base(this, opt_taskName || "TransitionState");
+tr.app.TransitionState = function(opt_name) {
+  goog.base(this, opt_name || "TransitionState");
 
   /**
    * @type {Array.<!tr.Task>=} 
