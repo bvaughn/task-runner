@@ -82,7 +82,7 @@ module tr {
      *
      * @param data Task data to be later accessible via getData().
      */
-    complete_(data):void {
+    private complete_(data):void {
       this.completeInternal(data);
     }
 
@@ -92,7 +92,7 @@ module tr {
      * @param data Error data to be later accessible via getData().
      * @param errorMessage Error message to be later accessible via getErrorMessage()
      */
-    error_(data, errorMessage):void {
+    private error_(data, errorMessage):void {
       this.errorInternal(data, errorMessage);
     }
 

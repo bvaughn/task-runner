@@ -93,7 +93,7 @@ module tr {
      * @param {!tr.Task} task
      * @private
      */
-    private onDecoratedTaskCompleted_(task):void {
+    private onDecoratedTaskCompleted_(task:tr.Task):void {
       this.stopTimer_();
       this.removeCallbacks_();
 
@@ -105,7 +105,7 @@ module tr {
      * @param {!tr.Task} task
      * @private
      */
-    private onDecoratedTaskErrored_(task):void {
+    private onDecoratedTaskErrored_(task:tr.Task):void {
       this.stopTimer_();
       this.removeCallbacks_();
 

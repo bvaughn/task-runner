@@ -9,7 +9,7 @@ module tr {
    */
   export class Factory extends tr.Abstract {
 
-    private taskFactoryFn_:Function;
+    private taskFactoryFn_:(...args:any[]) => tr.Task;
     private thisArg_:any;
     private argsArray_:Array<any>;
     private deferredTask_:tr.Task;
@@ -24,7 +24,7 @@ module tr {
      * @param argsArray Optional arguments array to invoke taskFactoryFn with.
      * @param name Optional task name.
      */
-    constructor(taskFactoryFunction:Function, thisArg?:any, argsArray?:Array<any>, name?:string) {
+    constructor(taskFactoryFunction:(...args:any[]) => tr.Task, thisArg?:any, argsArray?:Array<any>, name?:string) {
       super(name || "Factory");
 
       this.argsArray_ = argsArray;

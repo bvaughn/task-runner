@@ -18,7 +18,7 @@ module tr {
   export class Closure extends tr.Abstract {
 
     autoCompleteUponRun_:boolean;
-    protected runImplFn_:Function;
+    protected runImplFn_:(task:tr.Closure) => void;
 
     /**
      * Constructor.
@@ -28,7 +28,7 @@ module tr {
      * @param synchronous This task should auto-complete when run.
      * @param name Optional task name.
      */
-    constructor(runImplFn:Function, synchronous?:boolean, name?:string) {
+    constructor(runImplFn:(task:tr.Closure) => void, synchronous?:boolean, name?:string) {
       super(name || "Closure");
 
       this.runImplFn_ = runImplFn;

@@ -118,11 +118,11 @@ module tr {
 
       var deferred = $q.defer();
       task.completed(
-        function(task) {
+        function(task:tr.Task) {
           deferred.resolve(task.getData());
         });
       task.errored(
-        function(task) {
+        function(task:tr.Task) {
           deferred.reject(task.getErrorMessage());
         });
 
@@ -135,11 +135,11 @@ module tr {
     static createES6PromisePromise_ = function(task:tr.Task):es6.Promise {
       return new window["Promise"](function(resolve, reject) {
         task.completed(
-          function(task) {
+          function(task:tr.Task) {
             resolve(task.getData());
           });
         task.errored(
-          function(task) {
+          function(task:tr.Task) {
             reject(task.getErrorMessage());
           });
       });
@@ -151,11 +151,11 @@ module tr {
     static createJQueryPromise_ = function(task:tr.Task):JQueryPromise<any> {
       var deferred:JQueryDeferred<any> = new window["jQuery"]["Deferred"]();
       task.completed(
-        function(task) {
+        function(task:tr.Task) {
           deferred.resolve(task.getData());
         });
       task.errored(
-        function(task) {
+        function(task:tr.Task) {
           deferred.reject(task.getErrorMessage());
         });
 
@@ -168,11 +168,11 @@ module tr {
     static createQPromise_ = function(task:tr.Task):Object {
       var deferred = window["Q"].defer();
       task.completed(
-        function(task) {
+        function(task:tr.Task) {
           deferred.resolve(task.getData());
         });
       task.errored(
-        function(task) {
+        function(task:tr.Task) {
           deferred.reject(task.getErrorMessage());
         });
 
@@ -233,7 +233,7 @@ module tr {
      * @param errorMessage Error message
      * @private
      */
-    errorIfRunning_(data, errorMessage):void {
+    private errorIfRunning_(data, errorMessage):void {
       if (this.getState() === tr.enums.State.RUNNING) {
         this.errorInternal(data, errorMessage);
       } else {
@@ -249,7 +249,7 @@ module tr {
     /**
      * @see https://docs.angularjs.org/api/ng/service/$q
      */
-    observeForAngular_(promise:ng.IPromise<any>):void {
+    private observeForAngular_(promise:ng.IPromise<any>):void {
       var that = this;
 
       promise.then(
@@ -263,7 +263,7 @@ module tr {
     /**
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
      */
-    observeForES6_(promise:es6.Promise):void {
+    private observeForES6_(promise:es6.Promise):void {
       var that = this;
 
       promise.then(
@@ -277,7 +277,7 @@ module tr {
     /**
      * @see http://api.jquery.com/deferred.promise/
      */
-    observeForJQuery_(promise:JQueryPromise<any>):void {
+    private observeForJQuery_(promise:JQueryPromise<any>):void {
       var that = this;
 
       promise.then(
@@ -291,7 +291,7 @@ module tr {
     /**
      * @see https://github.com/kriskowal/q
      */
-    observeForQ_(promise:Q.Promise):void {
+    private observeForQ_(promise:Q.Promise):void {
       var that = this;
 
       promise.then(

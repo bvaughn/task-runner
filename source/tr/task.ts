@@ -130,7 +130,7 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    on(event:tr.enums.Event, callback:Function, scope?:any):tr.Task;
+    on(event:tr.enums.Event, callback:(task:tr.Task) => void, scope?:any):tr.Task;
 
     /**
      * Dettach a callback function from a task event.
@@ -140,7 +140,7 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    off(event:tr.enums.Event, callback:Function, scope?:any):tr.Task;
+    off(event:tr.enums.Event, callback:(task:tr.Task) => void, scope?:any):tr.Task;
 
     /**
      * This callback will be invoked when a task is started.
@@ -149,7 +149,7 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    started(callback:Function, scope?:any):tr.Task;
+    started(callback:(task:tr.Task) => void, scope?:any):tr.Task;
 
     /**
      * This callback will be invoked whenever this task is interrupted.
@@ -158,7 +158,7 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    interrupted(callback:Function, scope?:any):tr.Task;
+    interrupted(callback:(task:tr.Task) => void, scope?:any):tr.Task;
 
     /**
      * This callback will be invoked only upon successful completion of the task.
@@ -169,7 +169,7 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    completed(callback:Function, scope?:any):tr.Task;
+    completed(callback:(task:tr.Task) => void, scope?:any):tr.Task;
 
     /**
      * This callback will be invoked only upon a task error.
@@ -180,7 +180,7 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    errored(callback:Function, scope?:any):tr.Task;
+    errored(callback:(task:tr.Task) => void, scope?:any):tr.Task;
 
     /**
      * This callback will be invoked after a task has completed or errored.
@@ -189,6 +189,6 @@ module tr {
      * @param optional Optional scope
      * @return A reference to the current task.
      */
-    final(callback:Function, scope?:any):tr.Task;
+    final(callback:(task:tr.Task) => void, scope?:any):tr.Task;
   }
 };

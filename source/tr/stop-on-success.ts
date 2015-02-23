@@ -113,7 +113,7 @@ module tr {
         var completedOperationsCount = 0;
 
         this.eachTaskInQueue_(
-          function(task) {
+          function(task:tr.Task) {
             completedOperationsCount += task.getCompletedOperationsCount();
           });
 
@@ -126,7 +126,7 @@ module tr {
       var operationsCount = 0;
 
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           operationsCount += task.getOperationsCount();
         });
 
@@ -151,7 +151,7 @@ module tr {
     /** @inheritDoc */
     protected interruptImpl():void {
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           if (task.getState() == tr.enums.State.RUNNING) {
             task.interrupt();
           }
@@ -165,7 +165,7 @@ module tr {
       this.erroredTasks_ = [];
 
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           task.reset();
         });
     }
@@ -185,7 +185,7 @@ module tr {
     /**
      * Are all child tasks completed?
      */
-    allTasksAreCompleted_():boolean {
+    private allTasksAreCompleted_():boolean {
       for (var i = 0; i < this.taskQueue_.length; i++) {
         var task = this.taskQueue_[i];
 
@@ -243,7 +243,7 @@ module tr {
      *
      * @param callback Callback function
      */
-    private eachTaskInQueue_(callback:Function):void {
+    private eachTaskInQueue_(callback:(task:tr.Task) => void):void {
       for (var i = 0; i < this.taskQueue_.length; i++) {
         var task = this.taskQueue_[i];
 
@@ -266,7 +266,7 @@ module tr {
      *
      * @param task Task that has either been removed from the queue or has completed successfully.
      */
-    taskCompletedOrRemoved_(task:tr.Task):void {
+    private taskCompletedOrRemoved_(task:tr.Task):void {
       this.taskQueueIndex_++;
 
       // TRICKY Ensure we are still running before continuing.

@@ -115,7 +115,7 @@ module tr {
       var completedOperationsCount = 0;
 
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           completedOperationsCount += task.getCompletedOperationsCount();
         });
 
@@ -127,7 +127,7 @@ module tr {
       var operationsCount = 0;
 
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           operationsCount += task.getOperationsCount();
         });
 
@@ -137,7 +137,7 @@ module tr {
     /** @inheritDoc */
     protected interruptImpl():void {
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           if (task.getState() == tr.enums.State.RUNNING) {
             task.interrupt();
           }
@@ -151,7 +151,7 @@ module tr {
       this.erroredTasks_ = [];
 
       this.eachTaskInQueue_(
-        function(task) {
+        function(task:tr.Task) {
           task.reset();
         });
     }
@@ -165,7 +165,7 @@ module tr {
 
         if (this.parallel_) {
           this.eachTaskInQueue_(
-            function(task) {
+            function(task:tr.Task) {
               // TRICKY: Check to ensure we're still running.
               // It's possible that a child task takes an action that interrupts the graph.
               if (this.getState() !== tr.enums.State.RUNNING) {
@@ -270,7 +270,7 @@ module tr {
      *
      * @param callback Callback function
      */
-    private eachTaskInQueue_(callback:Function):void {
+    private eachTaskInQueue_(callback:(task:tr.Task) => void):void {
       for (var i = 0; i < this.taskQueue_.length; i++) {
         var task = this.taskQueue_[i];
 

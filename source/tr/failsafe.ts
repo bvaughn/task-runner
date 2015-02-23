@@ -41,12 +41,12 @@ module tr {
     /** @inheritDoc */
     protected runImpl():void {
       this.decoratedTask_.completed(
-          function(task) {
+          function(task:tr.Task) {
             this.completeInternal();
           }.bind(this));
 
       this.decoratedTask_.errored(
-          function(task) {
+          function(task:tr.Task) {
             this.completeInternal();
           }.bind(this));
 

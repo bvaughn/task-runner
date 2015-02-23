@@ -117,17 +117,17 @@ module tr {
     // Interface methods ///////////////////////////////////////////////////////////////////////////////////////////////
 
     /** @inheritDoc */
-    completed(callback:Function, scope?:any):tr.Task {
+    completed(callback:(task:tr.Task) => void, scope?:any):tr.Task {
       return this.on(tr.enums.Event.COMPLETED, callback, scope);
     }
 
     /** @inheritDoc */
-    errored(callback:Function, scope?:any):tr.Task {
+    errored(callback:(task:tr.Task) => void, scope?:any):tr.Task {
       return this.on(tr.enums.Event.ERRORED, callback, scope);
     }
 
     /** @inheritDoc */
-    final(callback:Function, scope?:any):tr.Task {
+    final(callback:(task:tr.Task) => void, scope?:any):tr.Task {
       return this.on(tr.enums.Event.FINAL, callback, scope);
     }
 
@@ -149,7 +149,7 @@ module tr {
     }
 
     /** @inheritDoc */
-    interrupted(callback:Function, scope?:Object):tr.Task {
+    interrupted(callback:(task:tr.Task) => void, scope?:Object):tr.Task {
       return this.on(tr.enums.Event.INTERRUPTED, callback, scope);
     }
 
@@ -163,14 +163,14 @@ module tr {
       var that = this;
 
       interruptingTask.completed(
-        function (task) {
+        function (task:tr.Task) {
           if (task == that.interruptingTask_) {
             that.interruptingTask_ = null;
             that.run();
           }
         }, this);
       interruptingTask.errored(
-        function (task) {
+        function (task:tr.Task) {
           if (task == that.interruptingTask_) {
             that.interruptingTask_ = null;
 
@@ -185,7 +185,7 @@ module tr {
     }
 
     /** @inheritDoc */
-    off(event:tr.enums.Event, callback:Function, scope?:any):tr.Task {
+    off(event:tr.enums.Event, callback:(task:tr.Task) => void, scope?:any):tr.Task {
       this.taskCallbackMap_[event] = this.taskCallbackMap_[event] || [];
 
       var taskCallbacks:Array<TaskCallback> = this.taskCallbackMap_[event];
@@ -204,7 +204,7 @@ module tr {
     }
 
     /** @inheritDoc */
-    on(event:tr.enums.Event, callback:Function, scope?:any):tr.Task {
+    on(event:tr.enums.Event, callback:(task:tr.Task) => void, scope?:any):tr.Task {
       this.taskCallbackMap_[event] = this.taskCallbackMap_[event] || [];
 
       var taskCallbacks:Array<TaskCallback> = this.taskCallbackMap_[event];
@@ -264,7 +264,7 @@ module tr {
     }
 
     /** @inheritDoc */
-    started(callback:Function, scope?:any):tr.Task {
+    started(callback:(task:tr.Task) => void, scope?:any):tr.Task {
       return this.on(tr.enums.Event.STARTED, callback, scope);
     }
 
@@ -347,10 +347,10 @@ module tr {
    * @private
    */
   class TaskCallback {
-    callback_:Function;
+    callback_:(task:tr.Task) => void;
     scope_:Object;
 
-    constructor(callback:Function, scope?:Object) {
+    constructor(callback:(task:tr.Task) => void, scope?:Object) {
       this.callback_ = callback;
       this.scope_ = scope;
     }
@@ -369,7 +369,7 @@ module tr {
     /**
      * This object contains the specified callback and scope.
      */
-    matches(callback:Function, scope?:Object):Boolean {
+    matches(callback:(task:tr.Task) => void, scope?:Object):Boolean {
       return this.callback_ === callback && this.scope_ === scope;
     }
   }

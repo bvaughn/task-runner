@@ -273,7 +273,7 @@ module tr {
      *
      * @param task Child task
      */
-    addCallbacksTo_(task:tr.Task):void {
+    private addCallbacksTo_(task:tr.Task):void {
       task.completed(this.childTaskCompleted_, this);
       task.errored(this.childTaskErrored_, this);
     }
@@ -282,7 +282,7 @@ module tr {
      * @return {boolean} All child tasks have completed.
      * @private
      */
-    areAllTasksCompleted_() {
+    private areAllTasksCompleted_():boolean {
       for (var i in this.tasks_) {
         if (this.tasks_[i].getState() != tr.enums.State.COMPLETED) {
           return false;
@@ -297,7 +297,7 @@ module tr {
      *
      * @param task Task that has just completed.
      */
-    childTaskCompleted_(task:tr.Task):void {
+    private childTaskCompleted_(task:tr.Task):void {
       this.removeCallbacksFrom_(task);
 
       this.completeOrRunNext_();
@@ -308,7 +308,7 @@ module tr {
      *
      * @param task Task that has just errored.
      */
-    childTaskErrored_(task:tr.Task):void {
+    private childTaskErrored_(task:tr.Task):void {
       this.removeCallbacksFrom_(task);
 
       this.erroredTasks_.push(task);
@@ -320,7 +320,7 @@ module tr {
      * Check child tasks to see if the graph has completed or errored.
      * If not, this method will run the next task(s).
      */
-    completeOrRunNext_():void {
+    private completeOrRunNext_():void {
 
       // Handle edge-case where :started handler results in an interruption of this Graph
       if (this.getState() !== tr.enums.State.RUNNING) {
@@ -350,7 +350,7 @@ module tr {
      * @param task Child task
      * @return The specified task has incomplete blocking tasks.
      */
-    hasIncompleteBlockers_(task:tr.Task):boolean {
+    private hasIncompleteBlockers_(task:tr.Task):boolean {
       var blockers = this.taskIdToDependenciesMap_[task.getUniqueID()];
 
       if (blockers) {
@@ -369,7 +369,7 @@ module tr {
     /**
      * Is at least one child task is running?
      */
-    isAnyTaskRunning_():boolean {
+    private isAnyTaskRunning_():boolean {
       for (var i in this.tasks_) {
         if (this.tasks_[i].getState() == tr.enums.State.RUNNING) {
           return true;
@@ -384,7 +384,7 @@ module tr {
      *
      * @param task Child task
      */
-    removeCallbacksFrom_(task:tr.Task):void {
+    private removeCallbacksFrom_(task:tr.Task):void {
       task.off(tr.enums.Event.COMPLETED, this.childTaskCompleted_, this);
       task.off(tr.enums.Event.ERRORED, this.childTaskErrored_, this);
     }
@@ -392,7 +392,7 @@ module tr {
     /**
      * Run every non-running task that is not blocked by another incomplete task.
      */
-    runAllReadyTasks_():void {
+    private runAllReadyTasks_():void {
       for (var i in this.tasks_) {
         var task = this.tasks_[i];
 
@@ -433,7 +433,7 @@ module tr {
      * @throws Error if either tasks or blockers are not already in the graph.
      * @throws Error if blockers have been added to tasks that are already running.
      */
-    updateBlockers_(tasks:Array<tr.Task>, blockers:Array<tr.Task>):void {
+    private updateBlockers_(tasks:Array<tr.Task>, blockers:Array<tr.Task>):void {
       if (!blockers || blockers.length === 0) {
         return;
       }
@@ -470,7 +470,7 @@ module tr {
      * @param task Child task
      * @throws Error if cyclic or invalid dependencies are detected.
      */
-    validateDependencies_(task:tr.Task):void {
+    private validateDependencies_(task:tr.Task):void {
       var blockers = this.taskIdToDependenciesMap_[task.getUniqueID()];
 
       if (blockers) {
@@ -490,7 +490,7 @@ module tr {
      * @param tasks Array of tasks.
      * @throws Error if any of the tasks are not in the graph.
      */
-    verifyInGraph_(tasks:Array<tr.Task>):void {
+    private verifyInGraph_(tasks:Array<tr.Task>):void {
       for (var i = 0, length = tasks.length; i < length; i++) {
         if (this.tasks_.indexOf(tasks[i]) < 0) {
           throw Error("Task not in graph.");
@@ -498,5 +498,4 @@ module tr {
       }
     }
   }
-}
-;
+};

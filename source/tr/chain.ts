@@ -15,7 +15,7 @@ module tr {
      * @param erroredCallback Optional on-error callback method.
      * @param name Optional task name.
      */
-    constructor(completedCallback?:Function, erroredCallback?:Function, name?:string) {
+    constructor(completedCallback?:(task:tr.Task) => void, erroredCallback?:(task:tr.Task) => void, name?:string) {
       super(name || "Chain");
 
       this.graph_ = new tr.Graph();
