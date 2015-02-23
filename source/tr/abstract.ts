@@ -19,7 +19,7 @@ module tr {
     private logger_:(text:string) => void;
     private name_:string;
     private state_:tr.enums.State;
-    private taskCallbackMap_:{ [event: string]: Array<TaskCallback>; };
+    private taskCallbackMap_:{[event:string]:Array<TaskCallback>};
     private uniqueID_:number;
 
     /**

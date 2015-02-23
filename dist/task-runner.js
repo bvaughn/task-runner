@@ -1946,6 +1946,86 @@ var tr;
 var tr;
 (function (tr) {
     /**
+     * Runs a series of tasks and chooses the highest priority resolution based on their outcome.
+     */
+    var Resolver = (function (_super) {
+        __extends(Resolver, _super);
+        /**
+         * Constructor.
+         *
+         * @param name Optional task name.
+         */
+        function Resolver(name) {
+            _super.call(this, name || "Resolver");
+            this.blockers_ = [];
+            this.prioritizedResolutions_ = [];
+            this.taskIdToBlockingTasksMap_ = {};
+        }
+        /**
+         * Returns the highest priority resolution that was able to be matched once the blockers finished running.
+         */
+        Resolver.prototype.getChosenResolution = function () {
+            return this.getData();
+        };
+        /**
+         * Add a resolution (a {@link tr.Task}) and its prerequisite blocking {@link tr.Task}s.
+         * Resolutions should be added in the order of highest-to-lowest priority.
+         *
+         * @param resolution Task to be chosen if all of the specified blockers succeed.
+         * @param blockers Tasks that are pre-requisites to complete before the resolution can be entered.
+         * @return A reference to the resolver.
+         */
+        Resolver.prototype.addResolution = function (resolution, blockers) {
+            blockers = blockers || [];
+            this.prioritizedResolutions_.push(resolution);
+            this.taskIdToBlockingTasksMap_[resolution.getUniqueID()] = blockers;
+            for (var i = 0, length = blockers.length; i < length; i++) {
+                var task = blockers[i];
+                if (this.blockers_.indexOf(task) >= 0) {
+                    continue;
+                }
+                this.blockers_.push(task);
+                // Wrap it in a Failsafe so that a blocking-task failure won't interrupt the other blocking tasks.
+                this.add(new tr.Failsafe(task));
+            }
+            return this;
+        };
+        /** @inheritDoc */
+        Resolver.prototype.beforeFirstRun = function () {
+            // Once all of the blocker-tasks have completed, choose the most appropriate state.
+            this.addToEnd(new tr.Closure(this.chooseState_.bind(this), false, "Closure - state-chooser"));
+        };
+        /**
+         * Picks the highest priority resolution (task) that meets all blocking dependencies.
+         * @private
+         */
+        Resolver.prototype.chooseState_ = function () {
+            for (var i = 0; i < this.prioritizedResolutions_.length; i++) {
+                var resolution = this.prioritizedResolutions_[i];
+                var blockers = this.taskIdToBlockingTasksMap_[resolution.getUniqueID()];
+                var blockersSatisfied = true;
+                for (var x = 0; x < blockers.length; x++) {
+                    var blockingTask = blockers[x];
+                    if (blockingTask.getState() === tr.enums.State.ERRORED) {
+                        blockersSatisfied = false;
+                        break;
+                    }
+                }
+                if (blockersSatisfied) {
+                    this.completeInternal(resolution);
+                    return;
+                }
+            }
+            this.errorInternal("No valid resolutions found.");
+        };
+        return Resolver;
+    })(tr.Graph);
+    tr.Resolver = Resolver;
+})(tr || (tr = {}));
+;
+var tr;
+(function (tr) {
+    /**
      * Decorator for tasks that should be retried on error.
      *
      * <p>For example, you may wish to decorator a Task that relies on Internet connectivity in order to complete.

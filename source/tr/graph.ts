@@ -262,7 +262,7 @@ module tr {
     /**
      * Subclasses may override this method to just-in-time add child Tasks before the composite is run.
      */
-    beforeFirstRun():void {
+    protected beforeFirstRun():void {
       // No-op
     }
 
