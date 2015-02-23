@@ -51,8 +51,7 @@ module tr {
 
         this.logger_ = console.log.bind(console);
       } else {
-        this.logger_ = function (text:string):void {
-        };
+        this.logger_ = function(text:string):void {};
       }
     }
 

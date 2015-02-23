@@ -2,23 +2,12 @@ var gulp = require('gulp');
 var karma = require('gulp-karma');
 
 var sources = [
-  'source/*.ts',
-  'source/tr/*.ts',
-  'source/tr/enums/*.ts'
-];
-var sourcesWithApps = [
-  'source/*.ts',
-  'source/tr/*.ts',
-  'source/tr/app/*.ts',
-  'source/tr/enums/*.ts'
+  'source/**/*.ts'
 ];
 var testFiles = []; // Declared in the karma.conf.js
 
-gulp.task('all', ['test', 'build']);
- 
 gulp.task('build', function() {
-  buildHelper(sources, 'dist/task-runner', 'task-runner.js');
-  buildHelper(sourcesWithApps, 'dist/task-runner-engine', 'task-runner.js');
+  buildHelper(sources, 'dist', 'task-runner.js');
 });
 
 /* Disabled for now due to poor formatting
@@ -36,7 +25,7 @@ gulp.task('docs', function() {
 });
 */
 
-gulp.task('test', function() {
+gulp.task('test', ['build'], function() {
   // Be sure to return the stream 
   return gulp.src(testFiles)
     .pipe(karma({

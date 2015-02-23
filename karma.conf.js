@@ -1,8 +1,8 @@
 module.exports = function(config) {
-  var sources = 'dist/task-runner-engine/task-runner.js';
+  var sources = 'dist/task-runner.js';
   var testMocks = 'tests/mocks/*.js';
   var testPolyfills = 'tests/polyfills/*.js';
-  var tests = 'tests/tr/*.js';
+  var tests = 'tests/tr/**/*.js';
 
   config.set({
     frameworks: ['jasmine-ajax', 'jasmine'],
