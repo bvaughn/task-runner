@@ -41,6 +41,8 @@
   <dd>Executes of a set of Tasks with dependencies on each other in the correct order.</dd>
   <dt><doclink name="tr.Observer"></doclink></dt>
   <dd>Observes (but does not execute) a collection of Tasks. These tasks do not have to be related in any way.</dd>
+  <dt><doclink name="tr.Resolver"></doclink></dt>
+  <dd>Runs a series of tasks and chooses the highest priority resolution based on their outcome.</dd>
 </dl>
 
 <hr/>
@@ -66,23 +68,4 @@
   fied time limits, the decorator errors.</li>
   <dt><doclink name="tr.Sleep"></doclink></dt>
   <dd>Sleeps for an amount of time to pass before completing.</dd>
-</dl>
-
-<hr/>
-
-<h4>Application framework tasks</h4>
-
-<p class="alert alert-info" role="alert">
-  These tasks are only available in the <code>dist/task-runner-enginer</code> version of Task Runner.
-</p>
-
-<dl class="docs-list">
-  <dt><doclink name="tr.app.Application"></doclink></dt>
-  <dd>Abstract application task. Use the enterState() method to start the application or to transition between states.</dd>
-  <dt><doclink name="tr.app.State"></doclink></dt>
-  <dd>Abstract application state. Extend this base class to implement your own application states.</dd>
-  <dt><doclink name="tr.app.TransitionState"></doclink></dt>
-  <dd>Special state used to resolve asynchronous dependencies when transitioning between other states.</dd>
-  <dt><doclink name="tr.app.ApplicationRouter"></doclink></dt>
-  <dd>Watches for changes in the current URL and maps them to the appropriate application state.</dd>
 </dl>

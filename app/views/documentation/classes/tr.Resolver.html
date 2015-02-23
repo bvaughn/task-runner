@@ -1,0 +1,46 @@
+<classname name="tr.Resolver" super="tr.Graph" source="https://github.com/bvaughn/task-runner/blob/master/source/tr/resolver.js"></classname>
+
+<p class="lead">Runs a series of tasks and chooses the highest priority resolution based on their outcome.</p>
+
+<p>
+  This type of task can be used to implement things like application routers, where one or more dependencies are required.
+  It provides an easy way to specify fallback behavior in the event that some of the dependencies fail.
+</p>
+
+<p>
+  Once the task completes, the chosen resolution will be accessible via the <code>getResolution()</code> method.
+</p>
+
+<usage source="app/snippets/documentation/resolver.js"></usage>
+
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    (<em>name</em>)
+  </h4>
+
+  <signature params="[
+    {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
+
+<h3>Instance Methods</h3>
+
+<!-- addResolution() -->
+<h4 class="page-header">
+  addResolution()
+</h4>
+<p>Add a resolution (a task) and its prerequisite blocking tasks.
+Resolutions should be added in the order of highest-to-lowest priority.</p>
+  <signature params="[
+    {name: 'resolution', type: 'tr.Task', description: 'Task to be chosen if all of the specified blockers succeed.'},
+    {name: 'blockers', type: 'Array<tr.Task>', optional: true, description: 'Tasks that are pre-requisites to complete before the resolution can be entered.'}
+  ]" return="{type: 'tr.Resolver', description:'A reference to the resolver'}"></signature>
+
+<!-- getChosenResolution() -->
+<h4 class="page-header">
+  getChosenResolution()
+</h4>
+<p>Returns the highest priority resolution that was able to be selected based on the outcome of the blocking tasks.
+This method should only be called once the resolver has finished running.</p>
+<signature return="tr.Task"></signature>

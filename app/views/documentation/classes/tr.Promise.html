@@ -28,12 +28,12 @@
 <div class="bs-docs-constructor">
   <h4>
     <span class="label label-default">Constructor</span>
-    (promise, <em>taskName</em>)
+    (promise, <em>name</em>)
   </h4>
 
   <signature params="[
     {name: 'promise', type: 'Promise', description: 'A Promise object'},
-    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+    {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
   ]"></signature>
   <throws errors="[
     {type: 'Error', description: 'if invalid Promise object provided.'},
@@ -45,13 +45,13 @@
 
 <!-- promiseToTask() -->
 <h4 class="page-header">
-  tr.Promise.promiseToTask(promise, <em>taskName</em>)
+  tr.Promise.promiseToTask(promise, <em>name</em>)
 </h4>
 <p>Wraps a Promise and returns a Task that will complete/error when the promise is resolved/rejected.</p>
 <p>If you're working with a library that returns Promises, you can convert any Promise to a Task using this method.</p>
 <signature params="[
   {name: 'promise', type: 'Promise', description: 'A Promise object'},
-  {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+  {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
 ]"></signature>
 <throws errors="[
   {type: 'Error', description: 'if invalid Promise object provided.'},

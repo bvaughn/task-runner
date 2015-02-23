@@ -3,5 +3,5 @@ var task = new tr.Xhr("returns-json", {bar: 1, baz: "two"});
 task.run();
 
 // Sends a GET request to that returns XML
-var task = new tr.Xhr("returns-xml", null, tr.Xhr.ResponseType.XML);
+var task = new tr.Xhr("returns-xml", null, tr.enums.XhrResponseType.XML);
 task.run();

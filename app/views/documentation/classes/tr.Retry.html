@@ -17,14 +17,14 @@
 <div class="bs-docs-constructor">
   <h4>
     <span class="label label-default">Constructor</span>
-    tr.Retry(task, <em>maxRetries</em>, <em>retryDelay</em>, <em>taskName</em>)
+    tr.Retry(task, <em>maxRetries</em>, <em>retryDelay</em>, <em>name</em>)
   </h4>
 
   <signature params="[
     {name: 'task', type: 'tr.Task', description: 'The task to decorate.'},
     {name: 'maxRetries', optional: true, type: 'Number', description: 'Number of times to reset and re-run the decorated Task before erroring the retry task. If not specified this defaults to 5.'},
     {name: 'retryDelay', optional: true, type: 'Number', description: 'The amount of time to delay before resetting and re-running the decorated Task. A value < 0 seconds will result in a synchronous retry. If not specified this defaults to 1000 ms.'},
-    {name: 'taskName', optional: true, type: 'String', description: 'Optional task name.'}
+    {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
   ]"></signature>
 </div>
 

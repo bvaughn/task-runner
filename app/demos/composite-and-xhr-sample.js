@@ -4,7 +4,7 @@ function initDemo2() {
   var ipComposite =
     new tr.Composite(false, [
       new tr.Listener(document.getElementById('loadIpButton'), 'click'),
-      new tr.Xhr('http://httpbin.org/ip', undefined, tr.Xhr.ResponseType.JSON)
+      new tr.Xhr('http://httpbin.org/ip', undefined, tr.enums.XhrResponseType.JSON)
         .completed(
           function(xhrTask) {
             document.getElementById('ipLabel').innerText = xhrTask.getData()['origin'];
@@ -15,7 +15,7 @@ function initDemo2() {
   var userAgentComposite =
     new tr.Composite(false, [
       new tr.Listener(document.getElementById('loadUserAgentButton'), 'click'),
-      new tr.Xhr('http://httpbin.org/user-agent', undefined, tr.Xhr.ResponseType.JSON)
+      new tr.Xhr('http://httpbin.org/user-agent', undefined, tr.enums.XhrResponseType.JSON)
         .completed(
           function(xhrTask) {
             document.getElementById('userAgentLabel').innerText = xhrTask.getData()['user-agent'];
@@ -26,7 +26,7 @@ function initDemo2() {
   var textComposite =
     new tr.Composite(false, [
       new tr.Listener(document.getElementById('loadTextButton'), 'click'),
-      new tr.Xhr('http://httpbin.org/html', undefined, tr.Xhr.ResponseType.TEXT)
+      new tr.Xhr('http://httpbin.org/html', undefined, tr.enums.XhrResponseType.TEXT)
         .completed(
           function(xhrTask) {
             var data = xhrTask.getData();
@@ -39,7 +39,7 @@ function initDemo2() {
   var xmlComposite =
     new tr.Composite(false, [
       new tr.Listener(document.getElementById('loadXmlButton'), 'click'),
-      new tr.Xhr('http://httpbin.org/xml', undefined, tr.Xhr.ResponseType.XML)
+      new tr.Xhr('http://httpbin.org/xml', undefined, tr.enums.XhrResponseType.XML)
         .completed(
           function(xhrTask) {
           var data = xhrTask.getData();
