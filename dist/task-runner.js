@@ -1818,7 +1818,7 @@ var tr;
             else {
                 var callback = function () {
                     this.completeInternal(data);
-                    this.off(callback, "started");
+                    this.off(callback, tr.enums.Event.STARTED);
                 }.bind(this);
                 this.started(callback);
             }
@@ -1836,7 +1836,7 @@ var tr;
             else {
                 var callback = function () {
                     this.errorInternal(data, errorMessage);
-                    this.off(callback, "started");
+                    this.off(callback, tr.enums.Event.STARTED);
                 }.bind(this);
                 this.started(callback);
             }
