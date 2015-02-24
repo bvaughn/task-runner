@@ -1,6 +1,6 @@
 {
   "name": "task-runner-js",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "JavaScript Promises on steroids- and more!",
   "author": "Brian Vaughn <briandavidvaughn@gmail.com>",
   "license": "Apache 2.0",
