@@ -54,7 +54,12 @@ describe('tr.app.TransitionState', function() {
     blockerC.complete();
 
     expect(resolver.getChosenResolution()).toBe(resolutionA);
-    expect(resolver.getData()).toBe(resolutionA);
+    expect(resolutionA.getState()).toBe(tr.enums.State.RUNNING);
+
+    resolutionA.complete();
+
+    expect(resolver.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(resolutionA.getState()).toBe(tr.enums.State.COMPLETED);
   });
 
   it('should choose the next highest priority state if some blocking tasks fail', function() {
@@ -73,7 +78,12 @@ describe('tr.app.TransitionState', function() {
     blockerC.complete();
 
     expect(resolver.getChosenResolution()).toBe(resolutionB);
-    expect(resolver.getData()).toBe(resolutionB);
+    expect(resolutionB.getState()).toBe(tr.enums.State.RUNNING);
+
+    resolutionB.complete();
+
+    expect(resolver.getState()).toBe(tr.enums.State.COMPLETED);
+    expect(resolutionB.getState()).toBe(tr.enums.State.COMPLETED);
   });
 
   it('should fail when no target states can be transitioned to due to errored blockers', function() {

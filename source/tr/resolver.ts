@@ -1,12 +1,18 @@
 module tr {
 
   /**
-   * Runs a series of tasks and chooses the highest priority resolution based on their outcome.
+   * Runs a series of tasks and chooses the highest priority resolution (task) based on their outcome.
+   *
+   * <p>Once a resolution is chosen, it is added to the graph and run (last) before completion.
+   * This type of task can be used to creating branching logic within the flow or a larger sequence of tasks.
+   *
+   * <p>If no resolutions are valid, this task will error.
    */
   export class Resolver extends tr.Graph {
 
     private blockers_:Array<tr.Task> = [];
     private prioritizedResolutions_:Array<tr.Task> = [];
+    private resolution_:tr.Task;
     private taskIdToBlockingTasksMap_:{[id:number]:Array<tr.Task>} = {};
 
     /**
@@ -22,7 +28,7 @@ module tr {
      * Returns the highest priority resolution that was able to be matched once the blockers finished running.
      */
     getChosenResolution():tr.Task {
-      return <tr.Task>this.getData();
+      return this.resolution_;
     }
 
     /**
@@ -57,17 +63,17 @@ module tr {
 
     /** @inheritDoc */
     protected beforeFirstRun():void {
-      // Once all of the blocker-tasks have completed, choose the most appropriate state.
+      // Once all of the blocker-tasks have completed, choose the most appropriate resolution.
       this.addToEnd(
         new tr.Closure(
-          this.chooseState_.bind(this), false, "Closure - state-chooser"));
+          this.chooseResolution_.bind(this), true, "Closure - state-chooser"));
     }
 
     /**
      * Picks the highest priority resolution (task) that meets all blocking dependencies.
      * @private
      */
-    private chooseState_():void {
+    private chooseResolution_():void {
       for (var i = 0; i < this.prioritizedResolutions_.length; i++) {
         var resolution = this.prioritizedResolutions_[i];
         var blockers = this.taskIdToBlockingTasksMap_[resolution.getUniqueID()];
@@ -84,7 +90,9 @@ module tr {
         }
 
         if (blockersSatisfied) {
-          this.completeInternal(resolution);
+          this.resolution_ = resolution;
+
+          this.addToEnd(resolution);
 
           return;
         }
