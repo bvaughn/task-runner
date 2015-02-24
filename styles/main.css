@@ -56,6 +56,9 @@ section:first-of-type .method-header {
   background-color: transparent;
   color: #FFF;
 }
+.bs-docs-masthead prism {
+  display: inline-block;
+}
 
 .task-runner-documentation p {
   margin-bottom: 10px;
@@ -108,3 +111,7 @@ doclink > a:hover > code {
 .docs-list > dt {
   font-weight: normal;
 } 
+
+.bs-docs-masthead .secondary {
+  font-size: 22px;
+}

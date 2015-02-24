@@ -6,7 +6,7 @@ angular.module('taskRunner').directive('prism',
     return {
       restrict: 'EA',
       link: function($scope, $element, $attributes) {
-        var parser = $attributes.hasOwnProperty('parser') ? $attributes['parser'] : 'markup';
+        var parser = $attributes.hasOwnProperty('parser') ? $attributes['parser'] : 'javascript';
 
         var highlight = function(text) {
           var html = Prism.highlight(text, Prism.languages[parser]);
