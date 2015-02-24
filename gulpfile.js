@@ -48,6 +48,7 @@ gulp.task('test:watch', function() {
 
 var buildHelper = function(sources, directory, outputFile) {
   var typeScriptCompiler = require('gulp-tsc');
+  var umd = require('gulp-umd');
 
   gulp
     .src(sources)
@@ -57,6 +58,15 @@ var buildHelper = function(sources, directory, outputFile) {
       sourceRoot: "../../source/tr/",
       emitError: false,
       out: outputFile
+    }))
+    .pipe(umd({
+      exports: function(file) {
+        return 'tr';
+      },
+      namespace: function(file) {
+        return 'tr';
+      },
+      //template: path.join(__dirname, 'templates/returnExports.js')
     }))
     .pipe(gulp.dest(directory));
 };

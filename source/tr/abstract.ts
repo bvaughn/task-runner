@@ -49,9 +49,7 @@ module tr {
               .slice(2);
         }
 
-        // In some browsers, console.log function will error if the receiver (this) is not the console.
-        // In others (like Phantom JS) console.log.bind will itself cause an error.
-        this.logger_ = console.log.hasOwnProperty("bind") ? console.log.bind(console) : console.log;
+        this.logger_ = console.log;
       } else {
         this.logger_ = function(text:string):void {};
       }
@@ -66,7 +64,7 @@ module tr {
      * @param text String to log to the console (if in debug mode)
      */
     protected log(text:string):void {
-      this.logger_(text + " :: " + this);
+      this.logger_.call(console, text + " :: " + this);
     }
 
     // Accessor methods ////////////////////////////////////////////////////////////////////////////////////////////////

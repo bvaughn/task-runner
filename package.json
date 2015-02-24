@@ -1,6 +1,6 @@
 {
   "name": "task-runner-js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "JavaScript Promises on steroids- and more!",
   "author": "Brian Vaughn <briandavidvaughn@gmail.com>",
   "license": "Apache 2.0",
@@ -17,6 +17,7 @@
     "karma-jasmine": "~0.3.5",
     "karma-phantomjs-launcher": "~0.1.4",
     "phantomjs": "~1.9.13",
-    "karma-jasmine-ajax": "~0.1.11"
+    "karma-jasmine-ajax": "~0.1.11",
+    "gulp-umd": "~0.1.3"
   }
 }
