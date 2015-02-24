@@ -17,6 +17,8 @@ Task Runner can be installed in any of the following ways:
 * Bia Bower, by running `bower install task-runner`.
 * Via NPM, by running `npm install task-runner-js`.
 
+Task Runner can be loaded via a `<script>` tag or used with AMD or CommonJS. If a `<script>` tag is used the library is registered under a global `tr` variable.
+
 ## Debugging Task Runner
 
 Debug logging can be enabled for Task Runner by setting a `window.DEBUG` environment variable to `TRUE`.
