@@ -10,18 +10,27 @@ module tr {
    */
   export class Resolver extends tr.Graph {
 
+    private blockerIdsToFailsafeWrappersMap_:{[id:number]:tr.Failsafe} = {};
     private blockers_:Array<tr.Task> = [];
+    private final_:tr.Closure;
     private prioritizedResolutions_:Array<tr.Task> = [];
     private resolution_:tr.Task;
+    private runFirstAvailableResolution_:boolean;
     private taskIdToBlockingTasksMap_:{[id:number]:Array<tr.Task>} = {};
 
     /**
      * Constructor.
      *
+     * @param runFirstAvailableResolution If TRUE, a resolution will be run as soon as it is valid.
+     *                                    All remaining blockers will be interrupted.
+     *                                    All remaining resolutions will be ignored.
+     *                                    Defaults to FALSE.
      * @param name Optional task name.
      */
-    constructor(name?:string) {
+    constructor(runFirstAvailableResolution?:boolean, name?:string) {
       super(name || "Resolver");
+
+      this.runFirstAvailableResolution_ = !!runFirstAvailableResolution;
     }
 
     /**
@@ -52,21 +61,72 @@ module tr {
           continue;
         }
 
-        this.blockers_.push(task);
+        if (this.runFirstAvailableResolution_) {
+          task.completed(this.checkForEarlyResolution_, this);
+        }
 
         // Wrap it in a Failsafe so that a blocking-task failure won't interrupt the other blocking tasks.
-        this.add(new tr.Failsafe(task));
+        var failsafe:tr.Failsafe = new tr.Failsafe(task);
+
+        // @see checkForEarlyResolution_ for why we store these references
+        this.blockerIdsToFailsafeWrappersMap_[task.getUniqueID()] = failsafe;
+        this.blockers_.push(task);
+
+        this.add(failsafe);
       }
 
       return this;
     }
 
+    private allBlockersFinalized_():void {
+      this.chooseResolution_();
+
+      if (this.resolution_) {
+        this.addToEnd(this.resolution_);
+      } else {
+        this.errorInternal("No valid resolutions found.");
+      }
+    }
+
     /** @inheritDoc */
     protected beforeFirstRun():void {
-      // Once all of the blocker-tasks have completed, choose the most appropriate resolution.
-      this.addToEnd(
+      this.final_ =
         new tr.Closure(
-          this.chooseResolution_.bind(this), true, "Closure - state-chooser"));
+          this.allBlockersFinalized_.bind(this), true, "Closure - state-chooser");
+
+      // Once all of the blocker-tasks have completed, choose the most appropriate resolution.
+      // This task may be short-circuited if the first available resolution is chosen.
+      this.addToEnd(this.final_);
+    }
+
+    private checkForEarlyResolution_():void {
+      this.chooseResolution_();
+
+      if (this.resolution_) {
+        var placeholder = new tr.Stub();
+
+        // Interrupt and remove all blockers before running the the resolution.
+        // Add a temporary placeholder stub to prevent the Graph from auto-completing once blockers are removed.
+        this.add(placeholder);
+
+        // Remove Closure task first to avoid any invalid dependencies below.
+        this.remove(this.final_);
+
+        for (var i = 0, length = this.blockers_.length; i < length; i++) {
+          var blocker:tr.Task = this.blockers_[i];
+
+          if (blocker.getState() === tr.enums.State.RUNNING) {
+            blocker.off(tr.enums.Event.COMPLETED, this.checkForEarlyResolution_, this);
+            blocker.interrupt();
+          }
+
+          var failsafeWrapper:tr.Failsafe = this.blockerIdsToFailsafeWrappersMap_[blocker.getUniqueID()];
+          this.remove(failsafeWrapper);
+        }
+
+        this.add(this.resolution_);
+        this.remove(placeholder);
+      }
     }
 
     /**
@@ -92,13 +152,9 @@ module tr {
         if (blockersSatisfied) {
           this.resolution_ = resolution;
 
-          this.addToEnd(resolution);
-
           return;
         }
       }
-
-      this.errorInternal("No valid resolutions found.");
     }
   }
 };

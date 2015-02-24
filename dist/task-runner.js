@@ -26,7 +26,9 @@ var tr;
                     var stack = error["stack"];
                     this.creationContext_ = stack.replace(/^\s+at\s+/gm, '').replace(/\s$/gm, '').split("\n").slice(2);
                 }
-                this.logger_ = console.log.bind(console);
+                // In some browsers, console.log function will error if the receiver (this) is not the console.
+                // In others (like Phantom JS) console.log.bind will itself cause an error.
+                this.logger_ = console.log.hasOwnProperty("bind") ? console.log.bind(console) : console.log;
             }
             else {
                 this.logger_ = function (text) {
@@ -46,7 +48,7 @@ var tr;
         };
         // Accessor methods ////////////////////////////////////////////////////////////////////////////////////////////////
         /** @inheritDoc */
-        Abstract.prototype.tostring = function () {
+        Abstract.prototype.toString = function () {
             return this.name_ + ' [id: ' + this.uniqueID_ + ']';
         };
         /** @inheritDoc */
@@ -1105,16 +1107,7 @@ var tr;
          * @throws Error if cyclic dependencies are detected.
          */
         Graph.prototype.add = function (task, blockers) {
-            if (this.tasks_.indexOf(task) >= 0) {
-                throw Error("Cannot add task more than once.");
-            }
-            this.tasks_.push(task);
-            this.updateBlockers_([task], blockers);
-            this.validateDependencies_(task);
-            if (this.getState() == tr.enums.State.RUNNING) {
-                this.runAllReadyTasks_();
-            }
-            return this;
+            return this.addAll([task], blockers);
         };
         /**
          * Adds child tasks to the dependency graph and ensures that their blocking dependencies (if any) are valid.
@@ -1128,7 +1121,16 @@ var tr;
          */
         Graph.prototype.addAll = function (tasks, blockers) {
             for (var i = 0, length = tasks.length; i < length; i++) {
-                this.add(tasks[i], blockers);
+                var task = tasks[i];
+                if (this.tasks_.indexOf(task) >= 0) {
+                    throw Error("Cannot add task more than once.");
+                }
+                this.tasks_.push(task);
+                this.updateBlockers_([task], blockers);
+                this.validateDependencies_(task);
+            }
+            if (this.getState() == tr.enums.State.RUNNING) {
+                this.runAllReadyTasks_();
             }
             return this;
         };
@@ -1179,17 +1181,7 @@ var tr;
          *         or if removing the task invalidates any other, blocked tasks.
          */
         Graph.prototype.remove = function (task) {
-            this.verifyInGraph_([task]);
-            this.removeCallbacksFrom_(task);
-            this.tasks_.splice(this.tasks_.indexOf(task), 1);
-            delete this.taskIdToDependenciesMap_[task.getUniqueID()];
-            for (var i in this.tasks_) {
-                this.validateDependencies_(this.tasks_[i]);
-            }
-            if (this.getState() == tr.enums.State.RUNNING) {
-                this.completeOrRunNext_();
-            }
-            return this;
+            return this.removeAll([task]);
         };
         /**
          * Removes child tasks from the dependency graph and ensures that the remaining dependencies are still valid.
@@ -1200,8 +1192,18 @@ var tr;
          *         or if removing them invalidates any other, blocked tasks.
          */
         Graph.prototype.removeAll = function (tasks) {
+            this.verifyInGraph_(tasks, "Cannot remove tasks not in graph.");
             for (var i = 0, length = tasks.length; i < length; i++) {
-                this.remove(tasks[i]);
+                var task = tasks[i];
+                this.removeCallbacksFrom_(task);
+                this.tasks_.splice(this.tasks_.indexOf(task), 1);
+                delete this.taskIdToDependenciesMap_[task.getUniqueID()];
+            }
+            for (var i = 0, length = this.tasks_.length; i < length; i++) {
+                this.validateDependencies_(this.tasks_[i]);
+            }
+            if (this.getState() == tr.enums.State.RUNNING) {
+                this.completeOrRunNext_();
             }
             return this;
         };
@@ -1216,8 +1218,8 @@ var tr;
          * @throws Error if either the blockers or the tasks are not in the graph.
          */
         Graph.prototype.removeBlockersFrom = function (blockers, tasks) {
-            this.verifyInGraph_(blockers);
-            this.verifyInGraph_(tasks);
+            this.verifyInGraph_(blockers, "Cannot remove blockers not in graph.");
+            this.verifyInGraph_(tasks, "Cannot remove tasks not in graph.");
             var taskIdToDependenciesMap = this.taskIdToDependenciesMap_;
             for (var i = 0, length = tasks.length; i < length; i++) {
                 var task = tasks[i];
@@ -1431,8 +1433,8 @@ var tr;
             if (!blockers || blockers.length === 0) {
                 return;
             }
-            this.verifyInGraph_(tasks);
-            this.verifyInGraph_(blockers);
+            this.verifyInGraph_(tasks, "Cannot add blockers to tasks not in graph.");
+            this.verifyInGraph_(blockers, "Cannot block on tasks not in graph.");
             for (var i = 0, length = tasks.length; i < length; i++) {
                 var task = tasks[i];
                 if (task.getState() !== tr.enums.State.INITIALIZED) {
@@ -1464,19 +1466,20 @@ var tr;
                     throw Error("Cyclic dependency detected.");
                 }
                 // Task cannot depend on blocking tasks that aren't within the graph
-                this.verifyInGraph_(blockers);
+                this.verifyInGraph_(blockers, "Task depends on blocker that is not in the graph");
             }
         };
         /**
          * Verifies that all of the specified tasks are within the graph.
          *
          * @param tasks Array of tasks.
+         * @param errorMessage Error message if one or more tasks not in graph.
          * @throws Error if any of the tasks are not in the graph.
          */
-        Graph.prototype.verifyInGraph_ = function (tasks) {
+        Graph.prototype.verifyInGraph_ = function (tasks, errorMessage) {
             for (var i = 0, length = tasks.length; i < length; i++) {
                 if (this.tasks_.indexOf(tasks[i]) < 0) {
-                    throw Error("Task not in graph.");
+                    throw Error(errorMessage);
                 }
             }
         };
@@ -1950,19 +1953,27 @@ var tr;
      *
      * <p>Once a resolution is chosen, it is added to the graph and run (last) before completion.
      * This type of task can be used to creating branching logic within the flow or a larger sequence of tasks.
+     *
+     * <p>If no resolutions are valid, this task will error.
      */
     var Resolver = (function (_super) {
         __extends(Resolver, _super);
         /**
          * Constructor.
          *
+         * @param runFirstAvailableResolution If TRUE, a resolution will be run as soon as it is valid.
+         *                                    All remaining blockers will be interrupted.
+         *                                    All remaining resolutions will be ignored.
+         *                                    Defaults to FALSE.
          * @param name Optional task name.
          */
-        function Resolver(name) {
+        function Resolver(runFirstAvailableResolution, name) {
             _super.call(this, name || "Resolver");
+            this.blockerIdsToFailsafeWrappersMap_ = {};
             this.blockers_ = [];
             this.prioritizedResolutions_ = [];
             this.taskIdToBlockingTasksMap_ = {};
+            this.runFirstAvailableResolution_ = !!runFirstAvailableResolution;
         }
         /**
          * Returns the highest priority resolution that was able to be matched once the blockers finished running.
@@ -1987,16 +1998,55 @@ var tr;
                 if (this.blockers_.indexOf(task) >= 0) {
                     continue;
                 }
-                this.blockers_.push(task);
+                if (this.runFirstAvailableResolution_) {
+                    task.completed(this.checkForEarlyResolution_, this);
+                }
                 // Wrap it in a Failsafe so that a blocking-task failure won't interrupt the other blocking tasks.
-                this.add(new tr.Failsafe(task));
+                var failsafe = new tr.Failsafe(task);
+                // @see checkForEarlyResolution_ for why we store these references
+                this.blockerIdsToFailsafeWrappersMap_[task.getUniqueID()] = failsafe;
+                this.blockers_.push(task);
+                this.add(failsafe);
             }
             return this;
         };
+        Resolver.prototype.allBlockersFinalized_ = function () {
+            this.chooseResolution_();
+            if (this.resolution_) {
+                this.addToEnd(this.resolution_);
+            }
+            else {
+                this.errorInternal("No valid resolutions found.");
+            }
+        };
         /** @inheritDoc */
         Resolver.prototype.beforeFirstRun = function () {
+            this.final_ = new tr.Closure(this.allBlockersFinalized_.bind(this), true, "Closure - state-chooser");
             // Once all of the blocker-tasks have completed, choose the most appropriate resolution.
-            this.addToEnd(new tr.Closure(this.chooseResolution_.bind(this), true, "Closure - state-chooser"));
+            // This task may be short-circuited if the first available resolution is chosen.
+            this.addToEnd(this.final_);
+        };
+        Resolver.prototype.checkForEarlyResolution_ = function () {
+            this.chooseResolution_();
+            if (this.resolution_) {
+                var placeholder = new tr.Stub();
+                // Interrupt and remove all blockers before running the the resolution.
+                // Add a temporary placeholder stub to prevent the Graph from auto-completing once blockers are removed.
+                this.add(placeholder);
+                // Remove Closure task first to avoid any invalid dependencies below.
+                this.remove(this.final_);
+                for (var i = 0, length = this.blockers_.length; i < length; i++) {
+                    var blocker = this.blockers_[i];
+                    if (blocker.getState() === tr.enums.State.RUNNING) {
+                        blocker.off(tr.enums.Event.COMPLETED, this.checkForEarlyResolution_, this);
+                        blocker.interrupt();
+                    }
+                    var failsafeWrapper = this.blockerIdsToFailsafeWrappersMap_[blocker.getUniqueID()];
+                    this.remove(failsafeWrapper);
+                }
+                this.add(this.resolution_);
+                this.remove(placeholder);
+            }
         };
         /**
          * Picks the highest priority resolution (task) that meets all blocking dependencies.
@@ -2016,11 +2066,9 @@ var tr;
                 }
                 if (blockersSatisfied) {
                     this.resolution_ = resolution;
-                    this.addToEnd(resolution);
                     return;
                 }
             }
-            this.errorInternal("No valid resolutions found.");
         };
         return Resolver;
     })(tr.Graph);

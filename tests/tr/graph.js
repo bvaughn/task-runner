@@ -903,4 +903,26 @@ describe('tr.Graph', function() {
     expect(nullTask1.getState()).toBe(tr.enums.State.RUNNING);
     expect(nullTask2.getState()).toBe(tr.enums.State.RUNNING);
   });
+
+  it('should remove tasks in batches so as to avoid temporarily invalidating dependencies', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+    var nullTask3 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.add(nullTask3, [nullTask1, nullTask2]);
+    task.removeAll([nullTask1, nullTask2, nullTask3]);
+  });
+
+  it('should allow a task with blockers to be removed so long as it does not block other tasks', function() {
+    var nullTask1 = new tr.Stub();
+    var nullTask2 = new tr.Stub();
+
+    var task = new tr.Graph();
+    task.add(nullTask1);
+    task.add(nullTask2, [nullTask1]);
+    task.remove(nullTask2);
+  });
 });

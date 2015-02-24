@@ -49,7 +49,9 @@ module tr {
               .slice(2);
         }
 
-        this.logger_ = console.log.bind(console);
+        // In some browsers, console.log function will error if the receiver (this) is not the console.
+        // In others (like Phantom JS) console.log.bind will itself cause an error.
+        this.logger_ = console.log.hasOwnProperty("bind") ? console.log.bind(console) : console.log;
       } else {
         this.logger_ = function(text:string):void {};
       }
@@ -70,7 +72,7 @@ module tr {
     // Accessor methods ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** @inheritDoc */
-    tostring():string {
+    toString():string {
       return this.name_ + ' [id: ' + this.uniqueID_ + ']';
     }
 

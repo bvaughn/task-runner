@@ -40,20 +40,7 @@ module tr {
      * @throws Error if cyclic dependencies are detected.
      */
     add(task:tr.Task, blockers?:Array<tr.Task>):tr.Graph {
-      if (this.tasks_.indexOf(task) >= 0) {
-        throw Error("Cannot add task more than once.");
-      }
-
-      this.tasks_.push(task);
-
-      this.updateBlockers_([task], blockers);
-      this.validateDependencies_(task);
-
-      if (this.getState() == tr.enums.State.RUNNING) {
-        this.runAllReadyTasks_();
-      }
-
-      return this;
+      return this.addAll([task], blockers);
     }
 
     /**
@@ -68,7 +55,20 @@ module tr {
      */
     addAll(tasks:Array<tr.Task>, blockers?:Array<tr.Task>):tr.Graph {
       for (var i = 0, length = tasks.length; i < length; i++) {
-        this.add(tasks[i], blockers);
+        var task:tr.Task = tasks[i];
+
+        if (this.tasks_.indexOf(task) >= 0) {
+          throw Error("Cannot add task more than once.");
+        }
+
+        this.tasks_.push(task);
+
+        this.updateBlockers_([task], blockers);
+        this.validateDependencies_(task);
+      }
+
+      if (this.getState() == tr.enums.State.RUNNING) {
+        this.runAllReadyTasks_();
       }
 
       return this;
@@ -125,23 +125,7 @@ module tr {
      *         or if removing the task invalidates any other, blocked tasks.
      */
     remove(task:tr.Task):tr.Graph {
-      this.verifyInGraph_([task]);
-
-      this.removeCallbacksFrom_(task);
-
-      this.tasks_.splice(this.tasks_.indexOf(task), 1);
-
-      delete this.taskIdToDependenciesMap_[task.getUniqueID()];
-
-      for (var i in this.tasks_) {
-        this.validateDependencies_(this.tasks_[i]);
-      }
-
-      if (this.getState() == tr.enums.State.RUNNING) {
-        this.completeOrRunNext_();
-      }
-
-      return this;
+      return this.removeAll([task]);
     }
 
     /**
@@ -153,8 +137,24 @@ module tr {
      *         or if removing them invalidates any other, blocked tasks.
      */
     removeAll(tasks:Array<tr.Task>):tr.Graph {
+      this.verifyInGraph_(tasks, "Cannot remove tasks not in graph.");
+
       for (var i = 0, length = tasks.length; i < length; i++) {
-        this.remove(tasks[i]);
+        var task:tr.Task = tasks[i];
+
+        this.removeCallbacksFrom_(task);
+
+        this.tasks_.splice(this.tasks_.indexOf(task), 1);
+
+        delete this.taskIdToDependenciesMap_[task.getUniqueID()];
+      }
+
+      for (var i = 0, length = this.tasks_.length; i < length; i++) {
+        this.validateDependencies_(this.tasks_[i]);
+      }
+
+      if (this.getState() == tr.enums.State.RUNNING) {
+        this.completeOrRunNext_();
       }
 
       return this;
@@ -171,8 +171,8 @@ module tr {
      * @throws Error if either the blockers or the tasks are not in the graph.
      */
     removeBlockersFrom(blockers:Array<tr.Task>, tasks:Array<tr.Task>):tr.Graph {
-      this.verifyInGraph_(blockers);
-      this.verifyInGraph_(tasks);
+      this.verifyInGraph_(blockers, "Cannot remove blockers not in graph.");
+      this.verifyInGraph_(tasks, "Cannot remove tasks not in graph.");
 
       var taskIdToDependenciesMap = this.taskIdToDependenciesMap_;
 
@@ -438,8 +438,8 @@ module tr {
         return;
       }
 
-      this.verifyInGraph_(tasks);
-      this.verifyInGraph_(blockers);
+      this.verifyInGraph_(tasks, "Cannot add blockers to tasks not in graph.");
+      this.verifyInGraph_(blockers, "Cannot block on tasks not in graph.");
 
       for (var i = 0, length = tasks.length; i < length; i++) {
         var task = tasks[i];
@@ -480,7 +480,7 @@ module tr {
         }
 
         // Task cannot depend on blocking tasks that aren't within the graph
-        this.verifyInGraph_(blockers);
+        this.verifyInGraph_(blockers, "Task depends on blocker that is not in the graph");
       }
     }
 
@@ -488,12 +488,13 @@ module tr {
      * Verifies that all of the specified tasks are within the graph.
      *
      * @param tasks Array of tasks.
+     * @param errorMessage Error message if one or more tasks not in graph.
      * @throws Error if any of the tasks are not in the graph.
      */
-    private verifyInGraph_(tasks:Array<tr.Task>):void {
+    private verifyInGraph_(tasks:Array<tr.Task>, errorMessage:string):void {
       for (var i = 0, length = tasks.length; i < length; i++) {
         if (this.tasks_.indexOf(tasks[i]) < 0) {
-          throw Error("Task not in graph.");
+          throw Error(errorMessage);
         }
       }
     }
