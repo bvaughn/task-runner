@@ -3,12 +3,13 @@
 <p class="lead">Runs a series of tasks and chooses the highest priority resolution based on their outcome.</p>
 
 <p>
-  This type of task can be used to implement things like application routers, where one or more dependencies are required.
-  It provides an easy way to specify fallback behavior in the event that some of the dependencies fail.
+  Once a resolution is chosen, it is added to the graph and run (last) before completion.
+  The chosen resolution will will be accessible via the <code>getResolution()</code> method.
+  If no resolutions are valid, this task will error.
 </p>
 
 <p>
-  Once the task completes, the chosen resolution will be accessible via the <code>getResolution()</code> method.
+  This type of task can be used to creating branching logic within the flow or a larger sequence of tasks.
 </p>
 
 <usage source="app/snippets/documentation/resolver.js"></usage>
@@ -16,10 +17,11 @@
 <div class="bs-docs-constructor">
   <h4>
     <span class="label label-default">Constructor</span>
-    (<em>name</em>)
+    (<em>runFirstAvailableResolution</em>, <em>name</em>)
   </h4>
 
   <signature params="[
+    {name: 'runFirstAvailableResolution', optional: true, type: 'Boolean', description: 'If TRUE, a resolution will be run as soon as it is valid. All remaining blockers will be interrupted. All remaining resolutions will be ignored. Defaults to FALSE.'},
     {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
   ]"></signature>
 </div>
@@ -34,7 +36,7 @@
 Resolutions should be added in the order of highest-to-lowest priority.</p>
   <signature params="[
     {name: 'resolution', type: 'tr.Task', description: 'Task to be chosen if all of the specified blockers succeed.'},
-    {name: 'blockers', type: 'Array<tr.Task>', optional: true, description: 'Tasks that are pre-requisites to complete before the resolution can be entered.'}
+    {name: 'blockers', type: 'Array<tr.Task>', optional: true, description: 'Tasks that are pre-requisites to complete before the resolution can be entered. If this value is undefined or empty, the associated resolution will behave as a fallback if all blockers fail.'}
   ]" return="{type: 'tr.Resolver', description:'A reference to the resolver'}"></signature>
 
 <!-- getChosenResolution() -->
