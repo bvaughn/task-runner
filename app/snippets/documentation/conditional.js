@@ -5,9 +5,9 @@
 // If loadUserProfile fails the user is redirected to a profile setup state.
 // Otherwise the ELSE condition is run and the user is sent to the sign-in state.
 var resolver = new tr.Conditional();
-resolver.addResolution(userHomePage, [loadSession, loadUserProfile]);
-resolver.addResolution(setupProfileState, [loadSession]);
-resolver.addResolution(signInState);
+resolver.addOutcome(userHomePage, [loadSession, loadUserProfile]);
+resolver.addOutcome(setupProfileState, [loadSession]);
+resolver.addOutcome(signInState);
 resolver.run();
 
 // Here is an example of a mutually-exclusive conditional.
@@ -15,6 +15,6 @@ resolver.run();
 // The first one to succeed will cause the Conditional to continue.
 // The conditional will fail if neither precondition succeeds.
 var resolver = new tr.Conditional(true);
-resolver.addResolution(restartActivity, [listenForRestart]);
-resolver.addResolution(returnToHome, [listenForContinue]);
+resolver.addOutcome(restartActivity, [listenForRestart]);
+resolver.addOutcome(returnToHome, [listenForContinue]);
 resolver.run();

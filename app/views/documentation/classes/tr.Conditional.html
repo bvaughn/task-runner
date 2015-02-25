@@ -14,20 +14,20 @@
 <div class="bs-docs-constructor">
   <h4>
     <span class="label label-default">Constructor</span>
-    (<em>runFirstAvailableResolution</em>, <em>name</em>)
+    (<em>chooseFirstAvailableOutcome</em>, <em>name</em>)
   </h4>
 
   <signature params="[
-    {name: 'runFirstAvailableResolution', optional: true, type: 'Boolean', description: 'If TRUE, the first available outcome will be run. All remaining conditions will be interrupted and ignored. This value defaults to FALSE, meaning that all pre-conditions will be allowed to finish before an outcome is chosen.'},
+    {name: 'chooseFirstAvailableOutcome', optional: true, type: 'Boolean', description: 'If TRUE, the first available outcome will be chosen and run. All remaining conditions will be interrupted and ignored. This value defaults to FALSE, meaning that all pre-conditions will be allowed to finish before an outcome is chosen.'},
     {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
   ]"></signature>
 </div>
 
 <h3>Instance Methods</h3>
 
-<!-- addConditional() -->
+<!-- addOutcome() -->
 <h4 class="page-header">
-  addConditional()
+  addOutcome()
 </h4>
 <p>
   Adds a conditional outcome to the task.
@@ -39,11 +39,11 @@
   Also like an IF/ELSE block, only one outcome is chosen as a result of this task.
 </p>
 <p class="alert alert-info">
-  Note that priority (order) will be ignored if <code>runFirstAvailableResolution</code> is set to true.
+  Note that priority (order) will be ignored if <code>chooseFirstAvailableOutcome</code> is set to true.
 </p>
 <signature params="[
   {name: 'outcome', type: 'tr.Task', description: 'Task to be chosen if all of the specified conditions succeed.'},
-  {name: 'conditions', type: 'Array<tr.Task>', optional: true, description: 'Tasks that are pre-requisites to complete before the condition can be entered. If this value is undefined or empty, the associated condition will behave as a fallback (an ELSE) if all other conditions fail.'}
+  {name: 'conditions', type: 'Array<tr.Task>', optional: true, description: 'Tasks that are pre-requisites to complete before the outcome can be chosen. If this value is undefined or empty, the associated outcome will behave as a fallback (an ELSE) if no other outcomes can be chosen.'}
 ]" return="{type: 'tr.Conditional', description:'A reference to the conditional'}"></signature>
 
 <!-- getChosenOutcome() -->
@@ -53,7 +53,7 @@
 <p>
   The outcome that was chosen based on the result of the condition tasks.
 </p>
-<p class="alert alert-danger">
+<p class="alert alert-warning">
   This method may return <code>undefined</code> if no outcome has been chosen.
 </p>
 </p>
