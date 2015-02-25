@@ -24,6 +24,7 @@ gulp.task('build', function(callback) {
     'compile',
     'uglify',
     'umdify',
+    'map',
     callback);
 });
 
@@ -35,6 +36,17 @@ gulp.task('clean', function() {
   var clean = require('gulp-clean');
 
   return gulp.src(distDirectory ).pipe(clean());
+});
+
+gulp.task('map', function() {
+  var shell = require('gulp-shell');
+
+  console.log('CWD: ' + process.cwd() + '/dist');
+
+  return shell.task(
+    'uglifyjs --compress --mangle --source-map task-runner.min.js.map --source-map-root . -o task-runner.min.js -- task-runner.js',
+    {cwd: process.cwd() + '/dist'}
+  )();
 });
 
 gulp.task('test', function() {
@@ -91,8 +103,6 @@ var buildHelper = function(sources, directory, outputFile) {
     .src(sources)
     .pipe(typeScriptCompiler({
       module: "CommonJS",
-      sourcemap: true,
-      sourceRoot: "../../source/tr/",
       emitError: false,
       out: outputFile
     }))
