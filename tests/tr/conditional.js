@@ -32,7 +32,7 @@ describe('tr.app.TransitionState', function() {
 
   describe('wait until all blockers finished', function() {
     beforeEach(function() {
-      resolver = new tr.Resolver(false);
+      resolver = new tr.Conditional(false);
     });
 
     it('should fail if not provided a target state', function() {
@@ -42,8 +42,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should choose the highest priority resolution if all blockers succeed', function() {
-      resolver.addResolution(resolutionA, [blockerA, blockerB]);
-      resolver.addResolution(resolutionB, [blockerC]);
+      resolver.addOutcome(resolutionA, [blockerA, blockerB]);
+      resolver.addOutcome(resolutionB, [blockerC]);
       resolver.run();
 
       expect(resolver.getState()).toBe(tr.enums.State.RUNNING);
@@ -55,7 +55,7 @@ describe('tr.app.TransitionState', function() {
       blockerB.complete();
       blockerC.complete();
 
-      expect(resolver.getChosenResolution()).toBe(resolutionA);
+      expect(resolver.getChosenOutcome()).toBe(resolutionA);
       expect(resolutionA.getState()).toBe(tr.enums.State.RUNNING);
 
       resolutionA.complete();
@@ -65,8 +65,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should choose the next highest priority state if some blocking tasks fail', function() {
-      resolver.addResolution(resolutionA, [blockerA, blockerB]);
-      resolver.addResolution(resolutionB, [blockerC]);
+      resolver.addOutcome(resolutionA, [blockerA, blockerB]);
+      resolver.addOutcome(resolutionB, [blockerC]);
       resolver.run();
 
       expect(resolver.getState()).toBe(tr.enums.State.RUNNING);
@@ -78,7 +78,7 @@ describe('tr.app.TransitionState', function() {
       blockerB.error();
       blockerC.complete();
 
-      expect(resolver.getChosenResolution()).toBe(resolutionB);
+      expect(resolver.getChosenOutcome()).toBe(resolutionB);
       expect(resolutionB.getState()).toBe(tr.enums.State.RUNNING);
 
       resolutionB.complete();
@@ -88,8 +88,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should fail when no target states can be transitioned to due to errored blockers', function() {
-      resolver.addResolution(resolutionA, [blockerA, blockerB]);
-      resolver.addResolution(resolutionB, [blockerC]);
+      resolver.addOutcome(resolutionA, [blockerA, blockerB]);
+      resolver.addOutcome(resolutionB, [blockerC]);
       resolver.run();
 
       expect(resolver.getState()).toBe(tr.enums.State.RUNNING);
@@ -105,8 +105,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should interrupt blockers when interrupted and resume them later', function() {
-      resolver.addResolution(resolutionA, [blockerA, blockerB]);
-      resolver.addResolution(resolutionB, [blockerC]);
+      resolver.addOutcome(resolutionA, [blockerA, blockerB]);
+      resolver.addOutcome(resolutionB, [blockerC]);
 
       resolver.run();
 
@@ -135,12 +135,12 @@ describe('tr.app.TransitionState', function() {
 
   describe('choose a resolution as soon as one becomes valid', function() {
     beforeEach(function() {
-      resolver = new tr.Resolver(true);
+      resolver = new tr.Conditional(true);
     });
 
     it('should error if all blockers complete and no resolutions are valid', function() {
-      resolver.addResolution(resolutionA, [blockerA]);
-      resolver.addResolution(resolutionB, [blockerB]);
+      resolver.addOutcome(resolutionA, [blockerA]);
+      resolver.addOutcome(resolutionB, [blockerB]);
       resolver.run();
 
       blockerA.error();
@@ -152,8 +152,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should run the first valid resolution as soon as its dependencies are satisfied', function() {
-      resolver.addResolution(resolutionA, [blockerA, blockerB]);
-      resolver.addResolution(resolutionB, [blockerC]);
+      resolver.addOutcome(resolutionA, [blockerA, blockerB]);
+      resolver.addOutcome(resolutionB, [blockerC]);
       resolver.run();
 
       blockerA.error();
@@ -164,8 +164,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should interrupt incomplete blockers once a resolution has been chosen', function() {
-      resolver.addResolution(resolutionA, [blockerA]);
-      resolver.addResolution(resolutionB, [blockerB]);
+      resolver.addOutcome(resolutionA, [blockerA]);
+      resolver.addOutcome(resolutionB, [blockerB]);
       resolver.run();
 
       blockerA.complete();
@@ -174,8 +174,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should ignore completions in blockers after a resolution has been chosen', function() {
-      resolver.addResolution(resolutionA, [blockerA]);
-      resolver.addResolution(resolutionB, [blockerB]);
+      resolver.addOutcome(resolutionA, [blockerA]);
+      resolver.addOutcome(resolutionB, [blockerB]);
       resolver.run();
 
       blockerB.complete();
@@ -193,8 +193,8 @@ describe('tr.app.TransitionState', function() {
     });
 
     it('should ignore errors in blockers after a resolution has been chosen', function() {
-      resolver.addResolution(resolutionA, [blockerA]);
-      resolver.addResolution(resolutionB, [blockerB]);
+      resolver.addOutcome(resolutionA, [blockerA]);
+      resolver.addOutcome(resolutionB, [blockerB]);
       resolver.run();
 
       blockerB.complete();

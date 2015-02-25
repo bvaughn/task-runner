@@ -56,9 +56,9 @@ gulp.task('test', function() {
       configFile: 'karma.conf.js',
       action: 'run'
     }))
-    .on('error', function(err) {
+    .on('error', function(error) {
       // Make sure failed tests cause gulp to exit non-zero 
-      throw err;
+      throw error;
     });
 });
 

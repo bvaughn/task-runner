@@ -819,266 +819,6 @@ var tr;
 var tr;
 (function (tr) {
     /**
-     * Provides a mechanism for creating tasks via composition rather than inheritance.
-     *
-     * <p>This task-type decorates an Object ("decorated") that defines a 'run' method.
-     * This method will be passed 3 parameters:
-     *
-     * <ol>
-     *   <li>
-     *     <strong>complete</strong>:
-     *     A callback to be invoked upon successful completion of the task.
-     *     This callback accepts a parameter: data.
-     *   <li>
-     *     <strong>error</strong>:
-     *     A callback to be invoked upon task failure.
-     *     This callback accepts 2 parameters: data and error-message.
-     *   <li>
-     *     <strong>task</strong>:
-     *     A reference to the decorator.
-     * </ol>
-     *
-     * <p>The decorated Object may also implement 'interrupt' and 'reset' methods, although they are not required.
-     */
-    var Decorator = (function (_super) {
-        __extends(Decorator, _super);
-        /**
-         * Constructor.
-         *
-         * @param decorated JavaScript object to decorate with task functionality.
-         * @param name Optional task name.
-         * @throws Error if required method "run" not implemented by "decorated".
-         */
-        function Decorator(decorated, name) {
-            _super.call(this, name || "Decorator");
-            this.decorated_ = decorated;
-            if (!this.isFunction_("run")) {
-                throw Error("Required method run() not implemented.");
-            }
-        }
-        /**
-         * Returns the decorated object.
-         *
-         * @return {Object}
-         */
-        Decorator.prototype.getDecorated = function () {
-            return this.decorated_;
-        };
-        // Overrides ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        /** @override */
-        Decorator.prototype.runImpl = function () {
-            this.decorated_.run(this.complete_.bind(this), this.error_.bind(this));
-        };
-        /** @override */
-        Decorator.prototype.interruptImpl = function () {
-            if (this.isFunction_("interrupt")) {
-                this.decorated_.interrupt();
-            }
-        };
-        /** @override */
-        Decorator.prototype.resetImpl = function () {
-            if (this.isFunction_("reset")) {
-                this.decorated_.reset();
-            }
-        };
-        // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
-        /**
-         * Complete this task.
-         *
-         * @param data Task data to be later accessible via getData().
-         */
-        Decorator.prototype.complete_ = function (data) {
-            this.completeInternal(data);
-        };
-        /**
-         * Error this task.
-         *
-         * @param data Error data to be later accessible via getData().
-         * @param errorMessage Error message to be later accessible via getErrorMessage()
-         */
-        Decorator.prototype.error_ = function (data, errorMessage) {
-            this.errorInternal(data, errorMessage);
-        };
-        /**
-         * Is the specified decorated property a function?
-         * @param property Name of property on decorated object
-         */
-        Decorator.prototype.isFunction_ = function (property) {
-            return this.decorated_.hasOwnProperty(property) && typeof this.decorated_[property] === "function";
-        };
-        return Decorator;
-    })(tr.Abstract);
-    tr.Decorator = Decorator;
-})(tr || (tr = {}));
-;
-var tr;
-(function (tr) {
-    /**
-     * Creates and decorates a task returned by the callback.
-     *
-     * <p>Use this type of task when an important decision needs to be deferred.
-     * For example if you need a task to load some data, but the specifics aren't known when your application is initialized.
-     * This type of task allows for just-in-time evaluation of data resolved by previous Tasks.
-     */
-    var Factory = (function (_super) {
-        __extends(Factory, _super);
-        /**
-         * Constructor.
-         *
-         * @param taskFactoryFunction The function to create an Task object.
-         * @param thisArg Optional 'this' argument to invoke taskFactoryFn with.
-         * @param argsArray Optional arguments array to invoke taskFactoryFn with.
-         * @param name Optional task name.
-         */
-        function Factory(taskFactoryFunction, thisArg, argsArray, name) {
-            _super.call(this, name || "Factory");
-            this.recreateDeferredTaskAfterError_ = false;
-            this.deferredTaskErrored_ = false;
-            this.argsArray_ = argsArray;
-            this.taskFactoryFn_ = taskFactoryFunction;
-            this.thisArg_ = this;
-        }
-        /**
-         * Returns the decorated Task, created by the factory function.
-         */
-        Factory.prototype.getDecoratedTask = function () {
-            return this.deferredTask_;
-        };
-        /**
-         * Set whether to recreate the deferred task after an error occurred.
-         * This property is sticky for all consecutive reruns until set again.
-         */
-        Factory.prototype.recreateDeferredTaskAfterError = function (value) {
-            this.recreateDeferredTaskAfterError_ = value;
-        };
-        // Overrides ///////////////////////////////////////////////////////////////////////////////////////////////////////
-        /** @inheritDoc */
-        Factory.prototype.resetImpl = function () {
-            this.removeCallbacks_();
-            if (this.deferredTask_) {
-                this.deferredTask_ = null;
-            }
-        };
-        /** @inheritDoc */
-        Factory.prototype.interruptImpl = function () {
-            if (!this.deferredTask_) {
-                return;
-            }
-            this.removeCallbacks_();
-            this.deferredTask_.interrupt();
-        };
-        /** @inheritDoc */
-        Factory.prototype.runImpl = function () {
-            if (!this.deferredTask_ || this.recreateDeferredTaskAfterError_ && this.deferredTaskErrored_) {
-                if (this.thisArg_) {
-                    this.deferredTask_ = this.taskFactoryFn_.apply(this.thisArg_, this.argsArray_ || []);
-                }
-                else {
-                    this.deferredTask_ = this.taskFactoryFn_();
-                }
-            }
-            if (this.deferredTask_.getState() == tr.enums.State.COMPLETED) {
-                this.onDeferredTaskCompleted_(this.deferredTask_);
-            }
-            else if (this.deferredTask_.getState() == tr.enums.State.ERRORED) {
-                this.onDeferredTaskErrored_(this.deferredTask_);
-            }
-            else {
-                this.deferredTask_.completed(this.onDeferredTaskCompleted_, this);
-                this.deferredTask_.errored(this.onDeferredTaskErrored_, this);
-                this.deferredTask_.interrupted(this.onDeferredTaskInterrupted_, this);
-                this.deferredTask_.run();
-            }
-        };
-        // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
-        /**
-         * Event handler for when the deferred task is complete.
-         */
-        Factory.prototype.onDeferredTaskCompleted_ = function (task) {
-            this.removeCallbacks_();
-            this.completeInternal(task.getData());
-        };
-        /**
-         * Event handler for when the deferred task errored.
-         */
-        Factory.prototype.onDeferredTaskErrored_ = function (task) {
-            this.removeCallbacks_();
-            this.deferredTaskErrored_ = true;
-            this.errorInternal(task.getData(), task.getErrorMessage());
-        };
-        /**
-         * Event handler for when the deferred task is interrupted.
-         */
-        Factory.prototype.onDeferredTaskInterrupted_ = function (task) {
-            this.interrupt();
-        };
-        /**
-         * Removes the deferred task callbacks.
-         */
-        Factory.prototype.removeCallbacks_ = function () {
-            if (!this.deferredTask_) {
-                return;
-            }
-            this.deferredTask_.off(tr.enums.Event.COMPLETED, this.onDeferredTaskCompleted_, this);
-            this.deferredTask_.off(tr.enums.Event.ERRORED, this.onDeferredTaskErrored_, this);
-            this.deferredTask_.off(tr.enums.Event.INTERRUPTED, this.onDeferredTaskInterrupted_, this);
-        };
-        return Factory;
-    })(tr.Abstract);
-    tr.Factory = Factory;
-})(tr || (tr = {}));
-;
-var tr;
-(function (tr) {
-    /**
-     * Decorates a task and re-dispatches errors as successful completions.
-     *
-     * <p>This can be used to decorate tasks that are not essential.
-     */
-    var Failsafe = (function (_super) {
-        __extends(Failsafe, _super);
-        /**
-         * Constructor.
-         *
-         * @param decoratedTask Decorated task to be run when this task is run.
-         * @param name Optional task name.
-         */
-        function Failsafe(decoratedTask, name) {
-            _super.call(this, name || "Failsafe for " + decoratedTask.getName());
-            this.decoratedTask_ = decoratedTask;
-        }
-        /**
-         * Returns the inner decorated Task.
-         */
-        Failsafe.prototype.getDecoratedTask = function () {
-            return this.decoratedTask_;
-        };
-        /** @inheritDoc */
-        Failsafe.prototype.interruptImpl = function () {
-            this.decoratedTask_.interrupt();
-        };
-        /** @inheritDoc */
-        Failsafe.prototype.resetImpl = function () {
-            this.decoratedTask_.reset();
-        };
-        /** @inheritDoc */
-        Failsafe.prototype.runImpl = function () {
-            this.decoratedTask_.completed(function (task) {
-                this.completeInternal();
-            }.bind(this));
-            this.decoratedTask_.errored(function (task) {
-                this.completeInternal();
-            }.bind(this));
-            this.decoratedTask_.run();
-        };
-        return Failsafe;
-    })(tr.Abstract);
-    tr.Failsafe = Failsafe;
-})(tr || (tr = {}));
-;
-var tr;
-(function (tr) {
-    /**
      * Executes of a set of Tasks in a specific order.
      *
      * <p>This type of task allows a dependency graph (of child tasks) to be created.
@@ -1493,6 +1233,403 @@ var tr;
         return Graph;
     })(tr.Abstract);
     tr.Graph = Graph;
+})(tr || (tr = {}));
+;
+/// <reference path="graph.ts" />
+var tr;
+(function (tr) {
+    /**
+     * Runs a series of tasks and chooses the highest priority resolution (task) based on their outcome.
+     *
+     * <p>Once a resolution is chosen, it is added to the graph and run (last) before completion.
+     * This type of task can be used to creating branching logic within the flow or a larger sequence of tasks.
+     *
+     * <p>If no resolutions are valid, this task will error.
+     */
+    var Conditional = (function (_super) {
+        __extends(Conditional, _super);
+        /**
+         * Constructor.
+         *
+         * @param chooseFirstAvailableOutcome If TRUE, the first available outcome will be run.
+         *                                    All remaining conditions will be interrupted and ignored.
+         *                                    This value defaults to FALSE,
+         *                                    Meaning that all pre-conditions will be allowed to finish before an outcome is chosen.
+         * @param name Optional task name.
+         */
+        function Conditional(chooseFirstAvailableOutcome, name) {
+            _super.call(this, name || "Conditional");
+            this.conditionIdsToFailsafeWrappersMap_ = {};
+            this.conditions_ = [];
+            this.prioritizedOutcomes_ = [];
+            this.taskIdToBlockingTasksMap_ = {};
+            this.chooseFirstAvailableOutcome_ = !!chooseFirstAvailableOutcome;
+        }
+        /**
+         * The outcome that was chosen based on the result of the condition tasks.
+         * This method may return `undefined` if no outcome has been chosen.
+         */
+        Conditional.prototype.getChosenOutcome = function () {
+            return this.chosenOutcome_;
+        };
+        /**
+         * Adds a conditional outcome to the task.
+         * The outcome's conditions are in the form of {@link tr.Task}.
+         * If all of the specified conditions succeed, the outcome will be run.
+         *
+         L* ike an IF/ELSE block, conditions should be added in the order of highest-to-lowest priority.
+         * Also like an IF/ELSE block, only one outcome is chosen as a result of this task.
+         *
+         * Note that priority (order) will be ignored if `runFirstAvailableResolution` is set to true.
+         *
+         * @param outcome Task to be chosen if all of the specified conditions succeed.
+         * @param conditions Tasks that are pre-requisites to complete before the outcome can be entered.
+         * @return A reference to the resolver.
+         */
+        Conditional.prototype.addOutcome = function (outcome, conditions) {
+            conditions = conditions || [];
+            this.prioritizedOutcomes_.push(outcome);
+            this.taskIdToBlockingTasksMap_[outcome.getUniqueID()] = conditions;
+            for (var i = 0, length = conditions.length; i < length; i++) {
+                var condition = conditions[i];
+                if (this.conditions_.indexOf(condition) >= 0) {
+                    continue;
+                }
+                if (this.chooseFirstAvailableOutcome_) {
+                    condition.completed(this.maybeChooseEarlyOutcome_, this);
+                }
+                // Wrap it in a Failsafe so that a condition-failure won't interrupt the other conditions tasks.
+                var failsafe = new tr.Failsafe(condition);
+                // @see maybeChooseEarlyOutcome_ for why we store these references
+                this.conditionIdsToFailsafeWrappersMap_[condition.getUniqueID()] = failsafe;
+                this.conditions_.push(condition);
+                this.add(failsafe);
+            }
+            return this;
+        };
+        Conditional.prototype.allConditionsHaveCompleted_ = function () {
+            this.chooseOutcomeIfValid_();
+            if (this.chosenOutcome_) {
+                this.addToEnd(this.chosenOutcome_);
+            }
+            else {
+                this.errorInternal("No valid outcomes found.");
+            }
+        };
+        /** @inheritDoc */
+        Conditional.prototype.beforeFirstRun = function () {
+            this.allConditionsHaveCompletedClosure_ = new tr.Closure(this.allConditionsHaveCompleted_.bind(this), true, "Outcome-choosing-Closure");
+            // Once all of the blocker-tasks have completed, choose the most appropriate resolution.
+            // This task may be short-circuited if the first available resolution is chosen.
+            this.addToEnd(this.allConditionsHaveCompletedClosure_);
+        };
+        /**
+         * Picks the highest priority resolution (task) that meets all blocking dependencies.
+         * @private
+         */
+        Conditional.prototype.chooseOutcomeIfValid_ = function () {
+            for (var i = 0; i < this.prioritizedOutcomes_.length; i++) {
+                var resolution = this.prioritizedOutcomes_[i];
+                var blockers = this.taskIdToBlockingTasksMap_[resolution.getUniqueID()];
+                var blockersSatisfied = true;
+                for (var x = 0; x < blockers.length; x++) {
+                    var blockingTask = blockers[x];
+                    if (blockingTask.getState() === tr.enums.State.ERRORED) {
+                        blockersSatisfied = false;
+                        break;
+                    }
+                }
+                if (blockersSatisfied) {
+                    this.chosenOutcome_ = resolution;
+                    return;
+                }
+            }
+        };
+        Conditional.prototype.maybeChooseEarlyOutcome_ = function () {
+            this.chooseOutcomeIfValid_();
+            if (this.chosenOutcome_) {
+                var placeholder = new tr.Stub();
+                // Interrupt and remove all blockers before running the the resolution.
+                // Add a temporary placeholder stub to prevent the Graph from auto-completing once blockers are removed.
+                this.add(placeholder);
+                // Remove Closure task first to avoid any invalid dependencies below.
+                this.remove(this.allConditionsHaveCompletedClosure_);
+                for (var i = 0, length = this.conditions_.length; i < length; i++) {
+                    var blocker = this.conditions_[i];
+                    if (blocker.getState() === tr.enums.State.RUNNING) {
+                        blocker.off(tr.enums.Event.COMPLETED, this.maybeChooseEarlyOutcome_, this);
+                        blocker.interrupt();
+                    }
+                    var failsafeWrapper = this.conditionIdsToFailsafeWrappersMap_[blocker.getUniqueID()];
+                    this.remove(failsafeWrapper);
+                }
+                this.add(this.chosenOutcome_);
+                this.remove(placeholder);
+            }
+        };
+        return Conditional;
+    })(tr.Graph);
+    tr.Conditional = Conditional;
+})(tr || (tr = {}));
+;
+var tr;
+(function (tr) {
+    /**
+     * Provides a mechanism for creating tasks via composition rather than inheritance.
+     *
+     * <p>This task-type decorates an Object ("decorated") that defines a 'run' method.
+     * This method will be passed 3 parameters:
+     *
+     * <ol>
+     *   <li>
+     *     <strong>complete</strong>:
+     *     A callback to be invoked upon successful completion of the task.
+     *     This callback accepts a parameter: data.
+     *   <li>
+     *     <strong>error</strong>:
+     *     A callback to be invoked upon task failure.
+     *     This callback accepts 2 parameters: data and error-message.
+     *   <li>
+     *     <strong>task</strong>:
+     *     A reference to the decorator.
+     * </ol>
+     *
+     * <p>The decorated Object may also implement 'interrupt' and 'reset' methods, although they are not required.
+     */
+    var Decorator = (function (_super) {
+        __extends(Decorator, _super);
+        /**
+         * Constructor.
+         *
+         * @param decorated JavaScript object to decorate with task functionality.
+         * @param name Optional task name.
+         * @throws Error if required method "run" not implemented by "decorated".
+         */
+        function Decorator(decorated, name) {
+            _super.call(this, name || "Decorator");
+            this.decorated_ = decorated;
+            if (!this.isFunction_("run")) {
+                throw Error("Required method run() not implemented.");
+            }
+        }
+        /**
+         * Returns the decorated object.
+         *
+         * @return {Object}
+         */
+        Decorator.prototype.getDecorated = function () {
+            return this.decorated_;
+        };
+        // Overrides ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        /** @override */
+        Decorator.prototype.runImpl = function () {
+            this.decorated_.run(this.complete_.bind(this), this.error_.bind(this));
+        };
+        /** @override */
+        Decorator.prototype.interruptImpl = function () {
+            if (this.isFunction_("interrupt")) {
+                this.decorated_.interrupt();
+            }
+        };
+        /** @override */
+        Decorator.prototype.resetImpl = function () {
+            if (this.isFunction_("reset")) {
+                this.decorated_.reset();
+            }
+        };
+        // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Complete this task.
+         *
+         * @param data Task data to be later accessible via getData().
+         */
+        Decorator.prototype.complete_ = function (data) {
+            this.completeInternal(data);
+        };
+        /**
+         * Error this task.
+         *
+         * @param data Error data to be later accessible via getData().
+         * @param errorMessage Error message to be later accessible via getErrorMessage()
+         */
+        Decorator.prototype.error_ = function (data, errorMessage) {
+            this.errorInternal(data, errorMessage);
+        };
+        /**
+         * Is the specified decorated property a function?
+         * @param property Name of property on decorated object
+         */
+        Decorator.prototype.isFunction_ = function (property) {
+            return this.decorated_.hasOwnProperty(property) && typeof this.decorated_[property] === "function";
+        };
+        return Decorator;
+    })(tr.Abstract);
+    tr.Decorator = Decorator;
+})(tr || (tr = {}));
+;
+var tr;
+(function (tr) {
+    /**
+     * Creates and decorates a task returned by the callback.
+     *
+     * <p>Use this type of task when an important decision needs to be deferred.
+     * For example if you need a task to load some data, but the specifics aren't known when your application is initialized.
+     * This type of task allows for just-in-time evaluation of data resolved by previous Tasks.
+     */
+    var Factory = (function (_super) {
+        __extends(Factory, _super);
+        /**
+         * Constructor.
+         *
+         * @param taskFactoryFunction The function to create an Task object.
+         * @param thisArg Optional 'this' argument to invoke taskFactoryFn with.
+         * @param argsArray Optional arguments array to invoke taskFactoryFn with.
+         * @param name Optional task name.
+         */
+        function Factory(taskFactoryFunction, thisArg, argsArray, name) {
+            _super.call(this, name || "Factory");
+            this.recreateDeferredTaskAfterError_ = false;
+            this.deferredTaskErrored_ = false;
+            this.argsArray_ = argsArray;
+            this.taskFactoryFn_ = taskFactoryFunction;
+            this.thisArg_ = this;
+        }
+        /**
+         * Returns the decorated Task, created by the factory function.
+         */
+        Factory.prototype.getDecoratedTask = function () {
+            return this.deferredTask_;
+        };
+        /**
+         * Set whether to recreate the deferred task after an error occurred.
+         * This property is sticky for all consecutive reruns until set again.
+         */
+        Factory.prototype.recreateDeferredTaskAfterError = function (value) {
+            this.recreateDeferredTaskAfterError_ = value;
+        };
+        // Overrides ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        /** @inheritDoc */
+        Factory.prototype.resetImpl = function () {
+            this.removeCallbacks_();
+            if (this.deferredTask_) {
+                this.deferredTask_ = null;
+            }
+        };
+        /** @inheritDoc */
+        Factory.prototype.interruptImpl = function () {
+            if (!this.deferredTask_) {
+                return;
+            }
+            this.removeCallbacks_();
+            this.deferredTask_.interrupt();
+        };
+        /** @inheritDoc */
+        Factory.prototype.runImpl = function () {
+            if (!this.deferredTask_ || this.recreateDeferredTaskAfterError_ && this.deferredTaskErrored_) {
+                if (this.thisArg_) {
+                    this.deferredTask_ = this.taskFactoryFn_.apply(this.thisArg_, this.argsArray_ || []);
+                }
+                else {
+                    this.deferredTask_ = this.taskFactoryFn_();
+                }
+            }
+            if (this.deferredTask_.getState() == tr.enums.State.COMPLETED) {
+                this.onDeferredTaskCompleted_(this.deferredTask_);
+            }
+            else if (this.deferredTask_.getState() == tr.enums.State.ERRORED) {
+                this.onDeferredTaskErrored_(this.deferredTask_);
+            }
+            else {
+                this.deferredTask_.completed(this.onDeferredTaskCompleted_, this);
+                this.deferredTask_.errored(this.onDeferredTaskErrored_, this);
+                this.deferredTask_.interrupted(this.onDeferredTaskInterrupted_, this);
+                this.deferredTask_.run();
+            }
+        };
+        // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Event handler for when the deferred task is complete.
+         */
+        Factory.prototype.onDeferredTaskCompleted_ = function (task) {
+            this.removeCallbacks_();
+            this.completeInternal(task.getData());
+        };
+        /**
+         * Event handler for when the deferred task errored.
+         */
+        Factory.prototype.onDeferredTaskErrored_ = function (task) {
+            this.removeCallbacks_();
+            this.deferredTaskErrored_ = true;
+            this.errorInternal(task.getData(), task.getErrorMessage());
+        };
+        /**
+         * Event handler for when the deferred task is interrupted.
+         */
+        Factory.prototype.onDeferredTaskInterrupted_ = function (task) {
+            this.interrupt();
+        };
+        /**
+         * Removes the deferred task callbacks.
+         */
+        Factory.prototype.removeCallbacks_ = function () {
+            if (!this.deferredTask_) {
+                return;
+            }
+            this.deferredTask_.off(tr.enums.Event.COMPLETED, this.onDeferredTaskCompleted_, this);
+            this.deferredTask_.off(tr.enums.Event.ERRORED, this.onDeferredTaskErrored_, this);
+            this.deferredTask_.off(tr.enums.Event.INTERRUPTED, this.onDeferredTaskInterrupted_, this);
+        };
+        return Factory;
+    })(tr.Abstract);
+    tr.Factory = Factory;
+})(tr || (tr = {}));
+;
+var tr;
+(function (tr) {
+    /**
+     * Decorates a task and re-dispatches errors as successful completions.
+     *
+     * <p>This can be used to decorate tasks that are not essential.
+     */
+    var Failsafe = (function (_super) {
+        __extends(Failsafe, _super);
+        /**
+         * Constructor.
+         *
+         * @param decoratedTask Decorated task to be run when this task is run.
+         * @param name Optional task name.
+         */
+        function Failsafe(decoratedTask, name) {
+            _super.call(this, name || "Failsafe for " + decoratedTask.getName());
+            this.decoratedTask_ = decoratedTask;
+        }
+        /**
+         * Returns the inner decorated Task.
+         */
+        Failsafe.prototype.getDecoratedTask = function () {
+            return this.decoratedTask_;
+        };
+        /** @inheritDoc */
+        Failsafe.prototype.interruptImpl = function () {
+            this.decoratedTask_.interrupt();
+        };
+        /** @inheritDoc */
+        Failsafe.prototype.resetImpl = function () {
+            this.decoratedTask_.reset();
+        };
+        /** @inheritDoc */
+        Failsafe.prototype.runImpl = function () {
+            this.decoratedTask_.completed(function (task) {
+                this.completeInternal();
+            }.bind(this));
+            this.decoratedTask_.errored(function (task) {
+                this.completeInternal();
+            }.bind(this));
+            this.decoratedTask_.run();
+        };
+        return Failsafe;
+    })(tr.Abstract);
+    tr.Failsafe = Failsafe;
 })(tr || (tr = {}));
 ;
 var tr;
@@ -1951,135 +2088,6 @@ var tr;
         return Promise;
     })(tr.Abstract);
     tr.Promise = Promise;
-})(tr || (tr = {}));
-;
-var tr;
-(function (tr) {
-    /**
-     * Runs a series of tasks and chooses the highest priority resolution (task) based on their outcome.
-     *
-     * <p>Once a resolution is chosen, it is added to the graph and run (last) before completion.
-     * This type of task can be used to creating branching logic within the flow or a larger sequence of tasks.
-     *
-     * <p>If no resolutions are valid, this task will error.
-     */
-    var Resolver = (function (_super) {
-        __extends(Resolver, _super);
-        /**
-         * Constructor.
-         *
-         * @param runFirstAvailableResolution If TRUE, a resolution will be run as soon as it is valid.
-         *                                    All remaining blockers will be interrupted.
-         *                                    All remaining resolutions will be ignored.
-         *                                    Defaults to FALSE.
-         * @param name Optional task name.
-         */
-        function Resolver(runFirstAvailableResolution, name) {
-            _super.call(this, name || "Resolver");
-            this.blockerIdsToFailsafeWrappersMap_ = {};
-            this.blockers_ = [];
-            this.prioritizedResolutions_ = [];
-            this.taskIdToBlockingTasksMap_ = {};
-            this.runFirstAvailableResolution_ = !!runFirstAvailableResolution;
-        }
-        /**
-         * Returns the highest priority resolution that was able to be matched once the blockers finished running.
-         */
-        Resolver.prototype.getChosenResolution = function () {
-            return this.resolution_;
-        };
-        /**
-         * Add a resolution (a {@link tr.Task}) and its prerequisite blocking {@link tr.Task}s.
-         * Resolutions should be added in the order of highest-to-lowest priority.
-         *
-         * @param resolution Task to be chosen if all of the specified blockers succeed.
-         * @param blockers Tasks that are pre-requisites to complete before the resolution can be entered.
-         * @return A reference to the resolver.
-         */
-        Resolver.prototype.addResolution = function (resolution, blockers) {
-            blockers = blockers || [];
-            this.prioritizedResolutions_.push(resolution);
-            this.taskIdToBlockingTasksMap_[resolution.getUniqueID()] = blockers;
-            for (var i = 0, length = blockers.length; i < length; i++) {
-                var task = blockers[i];
-                if (this.blockers_.indexOf(task) >= 0) {
-                    continue;
-                }
-                if (this.runFirstAvailableResolution_) {
-                    task.completed(this.checkForEarlyResolution_, this);
-                }
-                // Wrap it in a Failsafe so that a blocking-task failure won't interrupt the other blocking tasks.
-                var failsafe = new tr.Failsafe(task);
-                // @see checkForEarlyResolution_ for why we store these references
-                this.blockerIdsToFailsafeWrappersMap_[task.getUniqueID()] = failsafe;
-                this.blockers_.push(task);
-                this.add(failsafe);
-            }
-            return this;
-        };
-        Resolver.prototype.allBlockersFinalized_ = function () {
-            this.chooseResolution_();
-            if (this.resolution_) {
-                this.addToEnd(this.resolution_);
-            }
-            else {
-                this.errorInternal("No valid resolutions found.");
-            }
-        };
-        /** @inheritDoc */
-        Resolver.prototype.beforeFirstRun = function () {
-            this.final_ = new tr.Closure(this.allBlockersFinalized_.bind(this), true, "Closure - state-chooser");
-            // Once all of the blocker-tasks have completed, choose the most appropriate resolution.
-            // This task may be short-circuited if the first available resolution is chosen.
-            this.addToEnd(this.final_);
-        };
-        Resolver.prototype.checkForEarlyResolution_ = function () {
-            this.chooseResolution_();
-            if (this.resolution_) {
-                var placeholder = new tr.Stub();
-                // Interrupt and remove all blockers before running the the resolution.
-                // Add a temporary placeholder stub to prevent the Graph from auto-completing once blockers are removed.
-                this.add(placeholder);
-                // Remove Closure task first to avoid any invalid dependencies below.
-                this.remove(this.final_);
-                for (var i = 0, length = this.blockers_.length; i < length; i++) {
-                    var blocker = this.blockers_[i];
-                    if (blocker.getState() === tr.enums.State.RUNNING) {
-                        blocker.off(tr.enums.Event.COMPLETED, this.checkForEarlyResolution_, this);
-                        blocker.interrupt();
-                    }
-                    var failsafeWrapper = this.blockerIdsToFailsafeWrappersMap_[blocker.getUniqueID()];
-                    this.remove(failsafeWrapper);
-                }
-                this.add(this.resolution_);
-                this.remove(placeholder);
-            }
-        };
-        /**
-         * Picks the highest priority resolution (task) that meets all blocking dependencies.
-         * @private
-         */
-        Resolver.prototype.chooseResolution_ = function () {
-            for (var i = 0; i < this.prioritizedResolutions_.length; i++) {
-                var resolution = this.prioritizedResolutions_[i];
-                var blockers = this.taskIdToBlockingTasksMap_[resolution.getUniqueID()];
-                var blockersSatisfied = true;
-                for (var x = 0; x < blockers.length; x++) {
-                    var blockingTask = blockers[x];
-                    if (blockingTask.getState() === tr.enums.State.ERRORED) {
-                        blockersSatisfied = false;
-                        break;
-                    }
-                }
-                if (blockersSatisfied) {
-                    this.resolution_ = resolution;
-                    return;
-                }
-            }
-        };
-        return Resolver;
-    })(tr.Graph);
-    tr.Resolver = Resolver;
 })(tr || (tr = {}));
 ;
 var tr;
