@@ -1,31 +1,43 @@
 var gulp = require('gulp');
 var karma = require('gulp-karma');
+var runSequence = require('run-sequence');
 
 var sources = [
   'source/**/*.ts'
 ];
 var testFiles = []; // Declared in the karma.conf.js
+var distDirectory = 'dist';
 
-gulp.task('build', function() {
-  buildHelper(sources, 'dist', 'task-runner.js');
+/**
+ * Main task: cleans, builds, run tests, and bundles up for distribution.
+ */
+gulp.task('all', function(callback) {
+  runSequence(
+    'clean',
+    'build',
+    'test',
+    callback);
 });
 
-/* Disabled for now due to poor formatting
-gulp.task('docs', function() {
-  var gulpDoxx = require('gulp-doxx');
- 
-  gulp.src([
-      'source/tr/*.ts'
-    ])
-    .pipe(gulpDoxx({
-      urlPrefix: 'http://rawgit.com/bvaughn/task-runner/master/docs/',
-      title: 'Task Runner'
-    }))
-    .pipe(gulp.dest('docs'));
+gulp.task('build', function(callback) {
+  runSequence(
+    'compile',
+    'uglify',
+    'umdify',
+    callback);
 });
-*/
 
-gulp.task('test', ['build'], function() {
+gulp.task('compile', function() {
+  return buildHelper(sources, distDirectory , 'task-runner.js');
+});
+
+gulp.task('clean', function() {
+  var clean = require('gulp-clean');
+
+  return gulp.src(distDirectory ).pipe(clean());
+});
+
+gulp.task('test', function() {
   // Be sure to return the stream 
   return gulp.src(testFiles)
     .pipe(karma({
@@ -39,18 +51,43 @@ gulp.task('test', ['build'], function() {
 });
 
 gulp.task('test:watch', function() {
-  gulp.src(testFiles)
+  return gulp.src(testFiles)
     .pipe(karma({
       configFile: 'karma.conf.js',
       action: 'watch'
     }));
 });
 
+gulp.task('uglify', function() {
+  var fs = require('fs');
+  var uglifyJs = require('uglify-js2');
+
+  var code = fs.readFileSync('dist/task-runner.js', 'utf8');
+
+  var parsed = uglifyJs.parse(code);
+  parsed.figure_out_scope();
+
+  var compressed = parsed.transform(uglifyJs.Compressor());
+  compressed.figure_out_scope();
+  compressed.compute_char_frequency();
+  compressed.mangle_names();
+
+  var finalCode = compressed.print_to_string();
+
+  fs.writeFileSync('dist/task-runner.min.js', finalCode);
+});
+
+gulp.task('umdify', function() {
+  umdHelper('dist/task-runner.js', 'dist');
+  umdHelper('dist/task-runner.min.js', 'dist');
+});
+
 var buildHelper = function(sources, directory, outputFile) {
   var typeScriptCompiler = require('gulp-tsc');
-  var umd = require('gulp-umd');
+  var uglify = require('gulp-uglify');
+  var rename = require('gulp-rename');
 
-  gulp
+  return gulp
     .src(sources)
     .pipe(typeScriptCompiler({
       module: "CommonJS",
@@ -59,13 +96,21 @@ var buildHelper = function(sources, directory, outputFile) {
       emitError: false,
       out: outputFile
     }))
+    .pipe(gulp.dest(directory));
+};
+
+var umdHelper = function(sources, directory) {
+  var umd = require('gulp-umd');
+
+  return gulp
+    .src(sources)
     .pipe(umd({
       exports: function(file) {
         return 'tr';
       },
       namespace: function(file) {
         return 'tr';
-      },
+      }
       //template: path.join(__dirname, 'templates/returnExports.js')
     }))
     .pipe(gulp.dest(directory));
