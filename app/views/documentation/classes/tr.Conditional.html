@@ -25,9 +25,34 @@
 
 <h3>Instance Methods</h3>
 
+<!-- getChosenOutcome() -->
+<h4 class="page-header">
+  getChosenOutcome()
+</h4>
+<p>
+  The outcome that was chosen based on the result of the condition tasks.
+</p>
+<p class="alert alert-warning">
+  This method may return <code>undefined</code> if no outcome has been chosen.
+</p>
+</p>
+<signature return="tr.Task"></signature>
+
+<!-- addElse() -->
+<h4 class="page-header">
+  addElse(outcome)
+</h4>
+<p>Alias for <code>addOutcome</code> method.</p>
+
+<!-- addIf() -->
+<h4 class="page-header">
+  addIf(outcome, conditions)
+</h4>
+<p>Alias for <code>addOutcome</code> method.</p>
+
 <!-- addOutcome() -->
 <h4 class="page-header">
-  addOutcome()
+  addOutcome(outcome, conditions)
 </h4>
 <p>
   Adds a conditional outcome to the task.
@@ -45,16 +70,7 @@
   {name: 'outcome', type: 'tr.Task', description: 'Task to be chosen if all of the specified conditions succeed.'},
   {name: 'conditions', type: 'Array<tr.Task>', optional: true, description: 'Tasks that are pre-requisites to complete before the outcome can be chosen. If this value is undefined or empty, the associated outcome will behave as a fallback (an ELSE) if no other outcomes can be chosen.'}
 ]" return="{type: 'tr.Conditional', description:'A reference to the conditional'}"></signature>
-
-<!-- getChosenOutcome() -->
-<h4 class="page-header">
-  getChosenOutcome()
-</h4>
-<p>
-  The outcome that was chosen based on the result of the condition tasks.
-</p>
-<p class="alert alert-warning">
-  This method may return <code>undefined</code> if no outcome has been chosen.
-</p>
-</p>
-<signature return="tr.Task"></signature>
+<throws errors="[
+  {type: 'Error', description: 'if chooseFirstAvailableOutcome is TRUE and no conditions are specified.'},
+  {type: 'Error', description: 'if more than one outcome is added without conditions.'}
+]"></throws>
