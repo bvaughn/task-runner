@@ -60,6 +60,11 @@ section:first-of-type .method-header {
   display: inline-block;
 }
 
+.bs-docs-masthead .prism {
+  display: inline-block;
+  margin: 0;
+}
+
 .task-runner-documentation p {
   margin-bottom: 10px;
 }
