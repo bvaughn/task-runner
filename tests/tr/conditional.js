@@ -131,6 +131,14 @@ describe('tr.app.TransitionState', function() {
       expect(blockerB.getState()).toBe(tr.enums.State.RUNNING);
       expect(blockerC.getState()).toBe(tr.enums.State.RUNNING);
     });
+
+    it('should error if more than one outcome is added without any conditions (ELSE)', function() {
+      resolver.addElse(resolutionA);
+
+      expect(function() {
+        resolver.addElse(resolutionB);
+      }).toThrow();
+    });
   });
 
   describe('choose a resolution as soon as one becomes valid', function() {
@@ -209,6 +217,12 @@ describe('tr.app.TransitionState', function() {
       expect(resolver.getState()).toBe(tr.enums.State.RUNNING);
       expect(resolutionA.getState()).toBe(tr.enums.State.RUNNING);
       expect(resolutionB.getState()).toBe(tr.enums.State.INITIALIZED);
+    });
+
+    it('should error if an outcome is added without any conditions (ELSE)', function() {
+      expect(function() {
+        resolver.addElse(resolutionA);
+      }).toThrow();
     });
   });
 });

@@ -13,12 +13,12 @@ module tr {
   export class Conditional extends tr.Graph {
 
     private allConditionsHaveCompletedClosure_:tr.Closure;
+    private chooseFirstAvailableOutcome_:boolean;
+    private chosenOutcome_:tr.Task;
     private conditionIdsToFailsafeWrappersMap_:{[id:number]:tr.Failsafe} = {};
     private conditions_:Array<tr.Task> = [];
-    private chosenOutcome_:tr.Task;
+    private outcomeIdToBlockingTasksMap_:{[id:number]:Array<tr.Task>} = {};
     private prioritizedOutcomes_:Array<tr.Task> = [];
-    private chooseFirstAvailableOutcome_:boolean;
-    private taskIdToBlockingTasksMap_:{[id:number]:Array<tr.Task>} = {};
 
     /**
      * Constructor.
@@ -56,12 +56,30 @@ module tr {
      * @param outcome Task to be chosen if all of the specified conditions succeed.
      * @param conditions Tasks that are pre-requisites to complete before the outcome can be entered.
      * @return A reference to the resolver.
+     * @throws Error if more than one outcome is added without conditions.
+     * @throws Error if chooseFirstAvailableOutcome is TRUE and no conditions are specified.
      */
-    addOutcome(outcome:tr.Task, conditions:Array<tr.Task>):tr.Conditional {
+    addOutcome(outcome:tr.Task, conditions?:Array<tr.Task>):tr.Conditional {
       conditions = conditions || [];
 
+      if (conditions.length === 0) {
+        if (this.chooseFirstAvailableOutcome_) {
+          throw Error('Cannot added outcome without conditions while chooseFirstAvailableOutcome is TRUE');
+        }
+
+        for (var i = 0, length = this.prioritizedOutcomes_.length; i < length; i++) {
+          var preexistingOutcome:tr.Task = this.prioritizedOutcomes_[i];
+          var preexistingConditions:Array<tr.Task> =
+            this.outcomeIdToBlockingTasksMap_[preexistingOutcome.getUniqueID()];
+
+          if (preexistingConditions.length === 0) {
+            throw Error('Cannot add more than one outcome without conditions');
+          }
+        }
+      }
+
       this.prioritizedOutcomes_.push(outcome);
-      this.taskIdToBlockingTasksMap_[outcome.getUniqueID()] = conditions;
+      this.outcomeIdToBlockingTasksMap_[outcome.getUniqueID()] = conditions;
 
       for (var i = 0, length = conditions.length; i < length; i++) {
         var condition = conditions[i];
@@ -86,6 +104,26 @@ module tr {
 
       return this;
     }
+
+    /**
+     * Alias for addOutcome().
+     *
+     * @see addOutcome()
+     */
+    addIf(outcome:tr.Task, conditions:Array<tr.Task>):tr.Conditional {
+      return this.addOutcome(outcome, conditions);
+    }
+
+    /**
+     * Alias for addOutcome().
+     *
+     * @see addOutcome()
+     */
+    addElse(outcome:tr.Task):tr.Conditional {
+      return this.addOutcome(outcome);
+    }
+
+    // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
 
     private allConditionsHaveCompleted_():void {
       this.chooseOutcomeIfValid_();
@@ -115,7 +153,7 @@ module tr {
     private chooseOutcomeIfValid_():void {
       for (var i = 0; i < this.prioritizedOutcomes_.length; i++) {
         var resolution = this.prioritizedOutcomes_[i];
-        var blockers = this.taskIdToBlockingTasksMap_[resolution.getUniqueID()];
+        var blockers = this.outcomeIdToBlockingTasksMap_[resolution.getUniqueID()];
         var blockersSatisfied = true;
 
         for (var x = 0; x < blockers.length; x++) {

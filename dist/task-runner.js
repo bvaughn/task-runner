@@ -1261,8 +1261,8 @@ var tr;
             _super.call(this, name || "Conditional");
             this.conditionIdsToFailsafeWrappersMap_ = {};
             this.conditions_ = [];
+            this.outcomeIdToBlockingTasksMap_ = {};
             this.prioritizedOutcomes_ = [];
-            this.taskIdToBlockingTasksMap_ = {};
             this.chooseFirstAvailableOutcome_ = !!chooseFirstAvailableOutcome;
         }
         /**
@@ -1285,11 +1285,25 @@ var tr;
          * @param outcome Task to be chosen if all of the specified conditions succeed.
          * @param conditions Tasks that are pre-requisites to complete before the outcome can be entered.
          * @return A reference to the resolver.
+         * @throws Error if more than one outcome is added without conditions.
+         * @throws Error if chooseFirstAvailableOutcome is TRUE and no conditions are specified.
          */
         Conditional.prototype.addOutcome = function (outcome, conditions) {
             conditions = conditions || [];
+            if (conditions.length === 0) {
+                if (this.chooseFirstAvailableOutcome_) {
+                    throw Error('Cannot added outcome without conditions while chooseFirstAvailableOutcome is TRUE');
+                }
+                for (var i = 0, length = this.prioritizedOutcomes_.length; i < length; i++) {
+                    var preexistingOutcome = this.prioritizedOutcomes_[i];
+                    var preexistingConditions = this.outcomeIdToBlockingTasksMap_[preexistingOutcome.getUniqueID()];
+                    if (preexistingConditions.length === 0) {
+                        throw Error('Cannot add more than one outcome without conditions');
+                    }
+                }
+            }
             this.prioritizedOutcomes_.push(outcome);
-            this.taskIdToBlockingTasksMap_[outcome.getUniqueID()] = conditions;
+            this.outcomeIdToBlockingTasksMap_[outcome.getUniqueID()] = conditions;
             for (var i = 0, length = conditions.length; i < length; i++) {
                 var condition = conditions[i];
                 if (this.conditions_.indexOf(condition) >= 0) {
@@ -1307,6 +1321,23 @@ var tr;
             }
             return this;
         };
+        /**
+         * Alias for addOutcome().
+         *
+         * @see addOutcome()
+         */
+        Conditional.prototype.addIf = function (outcome, conditions) {
+            return this.addOutcome(outcome, conditions);
+        };
+        /**
+         * Alias for addOutcome().
+         *
+         * @see addOutcome()
+         */
+        Conditional.prototype.addElse = function (outcome) {
+            return this.addOutcome(outcome);
+        };
+        // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
         Conditional.prototype.allConditionsHaveCompleted_ = function () {
             this.chooseOutcomeIfValid_();
             if (this.chosenOutcome_) {
@@ -1330,7 +1361,7 @@ var tr;
         Conditional.prototype.chooseOutcomeIfValid_ = function () {
             for (var i = 0; i < this.prioritizedOutcomes_.length; i++) {
                 var resolution = this.prioritizedOutcomes_[i];
-                var blockers = this.taskIdToBlockingTasksMap_[resolution.getUniqueID()];
+                var blockers = this.outcomeIdToBlockingTasksMap_[resolution.getUniqueID()];
                 var blockersSatisfied = true;
                 for (var x = 0; x < blockers.length; x++) {
                     var blockingTask = blockers[x];
