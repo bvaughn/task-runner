@@ -58,6 +58,7 @@ section:first-of-type .method-header {
 }
 .bs-docs-masthead prism {
   display: inline-block;
+  max-width: 100%;
 }
 
 .bs-docs-masthead .prism {
