@@ -56,14 +56,11 @@ section:first-of-type .method-header {
   background-color: transparent;
   color: #FFF;
 }
-.bs-docs-masthead prism {
-  display: inline-block;
-  max-width: 100%;
-}
-
+.bs-docs-masthead prism,
 .bs-docs-masthead .prism {
   display: inline-block;
   margin: 0;
+  max-width: 100%;
 }
 
 .task-runner-documentation p {
