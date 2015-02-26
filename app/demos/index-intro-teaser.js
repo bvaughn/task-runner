@@ -1,6 +1,6 @@
 var prismTeasers = document.getElementById('prismTeasers');
 
-new tr.Xhr('/app/snippets/index-intro-teaser.js')
+new tr.Xhr('app/snippets/index-intro-teaser.js')
   .completed(function(xhr) {
     var lines = xhr.getData().split("\n");
     var elements = [];
