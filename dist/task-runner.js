@@ -2728,6 +2728,93 @@ var tr;
 var tr;
 (function (tr) {
     /**
+     * Invokes a callback at an interval until instructed to stop.
+     *
+     * <p>This type of task can be used to perform open-ended or non-deterministic actions.
+     * It will run until instructed to complete (or error) by the provided callback.
+     */
+    var TimerTick = (function (_super) {
+        __extends(TimerTick, _super);
+        /**
+         * Constructor.
+         *
+         * @param callback Callback invoked once per timer tick.
+         * @param interval Time in milliseconds between ticks.
+         * @param name Optional task name.
+         */
+        function TimerTick(callback, interval, name) {
+            _super.call(this, name || "TimerTick");
+            this.callback_ = callback;
+            this.interval_ = interval;
+        }
+        /**
+         * Complete this task.
+         *
+         * @param data Task data to be later accessible via getData().
+         */
+        TimerTick.prototype.complete = function (data) {
+            this.completeInternal(data);
+        };
+        /**
+         * Error this task.
+         *
+         * @param data Error data to be later accessible via getData().
+         * @param errorMessage Error message to be later accessible via getErrorMessage()
+         */
+        TimerTick.prototype.error = function (data, errorMessage) {
+            this.errorInternal(data, errorMessage);
+        };
+        /**
+         * Adjust the interval between timer ticks.
+         */
+        TimerTick.prototype.setInterval = function (interval) {
+            this.interval_ = interval;
+        };
+        // Overrides ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        /** @inheritDoc */
+        TimerTick.prototype.interruptImpl = function () {
+            this.stopTimer_();
+        };
+        /** @inheritDoc */
+        TimerTick.prototype.resetImpl = function () {
+        };
+        /** @inheritDoc */
+        TimerTick.prototype.runImpl = function () {
+            this.queueNextTick_();
+        };
+        // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
+        TimerTick.prototype.queueNextTick_ = function () {
+            this.timeoutId_ = setTimeout(this.onTimeout_.bind(this), this.interval_);
+        };
+        TimerTick.prototype.stopTimer_ = function () {
+            if (this.timeoutId_) {
+                clearTimeout(this.timeoutId_);
+                this.timeoutId_ = null;
+            }
+        };
+        // Event handlers //////////////////////////////////////////////////////////////////////////////////////////////////
+        TimerTick.prototype.onTimeout_ = function () {
+            try {
+                this.callback_(this);
+                if (this.getState() === tr.enums.State.RUNNING) {
+                    this.queueNextTick_();
+                }
+            }
+            catch (error) {
+                // Edge case that could be triggered if callback interrupts/completes this task, but synchronously errors.
+                if (this.getState() === tr.enums.State.RUNNING) {
+                    this.errorInternal(error, error.message);
+                }
+            }
+        };
+        return TimerTick;
+    })(tr.Abstract);
+    tr.TimerTick = TimerTick;
+})(tr || (tr = {}));
+;
+var tr;
+(function (tr) {
+    /**
      * Animation-frame-based task for tweening properties.
      *
      * <p>This task invokes a callback on each animation frame and passes a 0..1 value representing the progress of the overall tween.
