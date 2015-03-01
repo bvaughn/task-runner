@@ -1,5 +1,7 @@
 angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford.markdown']).
-  config(function($stateProvider, $urlRouterProvider) {
+  config(function($locationProvider, $stateProvider, $urlRouterProvider) {
+    $locationProvider.html5Mode(true);
+
     $stateProvider.state('index', {
       url: '/',
       templateUrl: 'app/views/index.html'
