@@ -6,9 +6,9 @@ module tr {
    * <p>This type of task can be used to perform open-ended or non-deterministic actions.
    * It will run until instructed to complete (or error) by the provided callback.
    */
-  export class TimerTick extends tr.Abstract {
+  export class Interval extends tr.Abstract {
 
-    protected callback_:(task:tr.TimerTick) => void;
+    protected callback_:(task:tr.Interval) => void;
     private interval_:number;
     private timeoutId_:number;
 
@@ -19,8 +19,8 @@ module tr {
      * @param interval Time in milliseconds between ticks.
      * @param name Optional task name.
      */
-    constructor(callback:(task:tr.TimerTick) => void, interval:number, name?:string) {
-      super(name || "TimerTick");
+    constructor(callback:(task:tr.Interval) => void, interval:number, name?:string) {
+      super(name || "Interval");
 
       this.callback_ = callback;
       this.interval_ = interval;

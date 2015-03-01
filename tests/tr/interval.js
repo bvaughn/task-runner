@@ -1,16 +1,14 @@
-describe('tr.TimerTick', function() {
+describe('tr.Interval', function() {
 
   var callback;
   var interval;
-  var timerTick;
 
   beforeEach(function() {
     jasmine.clock().mockDate(new Date(2015, 01, 01));
     jasmine.clock().install();
 
     callback = jasmine.createSpy();
-    interval = 50;
-    timerTick = new tr.TimerTick(callback, interval);
+    interval = new tr.Interval(callback, 50);
   });
 
   afterEach(function() {
@@ -18,7 +16,7 @@ describe('tr.TimerTick', function() {
   });
 
   it('should invoke the callback after the specified interval', function () {
-    timerTick.run();
+    interval.run();
 
     expect(callback).not.toHaveBeenCalled();
 
@@ -32,8 +30,8 @@ describe('tr.TimerTick', function() {
   });
 
   it('should not invoke the callback when interrupted', function () {
-    timerTick.run();
-    timerTick.interrupt();
+    interval.run();
+    interval.interrupt();
 
     jasmine.clock().tick(100);
 
@@ -41,20 +39,20 @@ describe('tr.TimerTick', function() {
   });
 
   it('should resume invoking the callback when resumed', function () {
-    timerTick.run();
+    interval.run();
 
     jasmine.clock().tick(50);
 
     expect(callback).toHaveBeenCalled();
     expect(callback.calls.count()).toEqual(1);
 
-    timerTick.interrupt();
+    interval.interrupt();
 
     jasmine.clock().tick(50);
 
     expect(callback.calls.count()).toEqual(1);
 
-    timerTick.run();
+    interval.run();
 
     jasmine.clock().tick(50);
 
@@ -62,8 +60,8 @@ describe('tr.TimerTick', function() {
   });
 
   it('should allow the interval to be updated while running', function () {
-    timerTick.run();
-    timerTick.setInterval(100); // Will not affect the in-flight interval
+    interval.run();
+    interval.setInterval(100); // Will not affect the in-flight interval
 
     jasmine.clock().tick(50);
 
@@ -80,15 +78,15 @@ describe('tr.TimerTick', function() {
   });
 
   it('should complete when completed', function () {
-    timerTick.run();
-    timerTick.complete();
-    expect(timerTick.getState()).toBe(tr.enums.State.COMPLETED);
+    interval.run();
+    interval.complete();
+    expect(interval.getState()).toBe(tr.enums.State.COMPLETED);
   });
 
   it('should not invoke callback after completion', function () {
     var numTimesCalled = 0;
 
-    var timerTick = new tr.TimerTick(
+    var timerTick = new tr.Interval(
       function(task) {
         numTimesCalled++;
         task.complete();
@@ -105,13 +103,13 @@ describe('tr.TimerTick', function() {
   });
 
   it('should error when errored', function () {
-    timerTick.run();
-    timerTick.error();
-    expect(timerTick.getState()).toBe(tr.enums.State.ERRORED);
+    interval.run();
+    interval.error();
+    expect(interval.getState()).toBe(tr.enums.State.ERRORED);
   });
 
   it('should handle runtime errors in the callback by erroring', function () {
-    var timerTick = new tr.TimerTick(
+    var timerTick = new tr.Interval(
       function() {
         throw Error("Whoops!");
       }, 50).run();
@@ -124,7 +122,7 @@ describe('tr.TimerTick', function() {
   });
 
   it('should ignore runtime errors in the callback if not running', function () {
-    var timerTick = new tr.TimerTick(
+    var timerTick = new tr.Interval(
       function(task) {
         task.complete();
         throw Error("Whoops!");
