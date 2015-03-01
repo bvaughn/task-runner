@@ -9,6 +9,8 @@ new tr.Xhr('/path/to/load')
       task.getData(); // Contains response data.
     })
   .errored(
-    function(error, message) {
+    function(task) {
       // Called in the event of an error!
+      task.getError(); // Error context.
+      task.getErrorMessage(); // Additional error info.
     });

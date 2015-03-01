@@ -3,7 +3,7 @@ var paragraph = document.getElementById('paragraph');
 // Erases the text within a <p> as though it were being deleted via the backspace key.
 // The callback will be executed once every 50ms (approximately),
 // And will run until all text has been removed from the paragraph.
-new tr.TimerTick(
+new tr.Interval(
   function(task) {
     var text = paragraph.innerText;
 

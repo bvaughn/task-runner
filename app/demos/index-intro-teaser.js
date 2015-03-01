@@ -26,7 +26,7 @@ function createTypeTask(domElement, textToWrite) {
   var length = textToWrite.length;
   var index = -1;
 
-  return new tr.TimerTick(
+  return new tr.Interval(
     function(task) {
       if (++index < length) {
         domElement.innerText = textToWrite.substring(0, index + 1);
@@ -46,7 +46,7 @@ function createEraseTask(domElement) {
     return Math.round(Math.random() * 40); 
   };
   
-  return new tr.TimerTick(
+  return new tr.Interval(
     function(task) {
       var text = domElement.innerText;
 
