@@ -1,8 +1,10 @@
-function createFadeInTask(element) {
+function createFadeInTask(element, duration) {
+  duration = duration || 1000;
+
   return new tr.Tween(
     function(value) {
       element.style.opacity = value;  
-    }, 1000).started(
+    }, duration).started(
     function() {
       element.style.display = 'block';
     });
@@ -37,6 +39,8 @@ function createTypeTask(domElement, textToWrite) {
         task.setInterval(getInterval(isWhitespace));
       } else {
         task.complete();
+
+        index = -1;
       }
     }, getInterval());
 };
@@ -65,16 +69,44 @@ function insertCodeExample(chain, text, textContainingDomElement, prismDomElemen
 }
 
 var typedHeader = document.getElementById('typedHeader');
+var taskFlowButton = document.getElementById('taskFlowButton');
+var introCallsToAction = document.getElementById('introCallsToAction');
 
-var chain = new tr.Chain();
+var chain = new tr.Chain()
+  .first(
+    new tr.Closure(function() {
+      introCallsToAction.style.display = "none";
+    }, true));
 
 insertCodeExample(chain, "With just a few characters you can chain together asynchronous operations.", typedHeader, document.getElementById('prism1'));
 insertCodeExample(chain, "Sequences of tasks can be interrupted easily while running.", typedHeader, document.getElementById('prism2'));
 insertCodeExample(chain, "Interrupted tasks can be resumed where they were interrupted.", typedHeader, document.getElementById('prism3'));
 insertCodeExample(chain, "Your code can easily listen for changes in task state.", typedHeader, document.getElementById('prism4'));
 
-chain.then(
-  createTypeTask(typedHeader, "But that's only the beginning. Keep reading to learn more..."),
-  createFadeInTask(document.getElementById('introCallsToAction')))
+chain
+  .then(
+    createTypeTask(typedHeader, "But that's only the beginning. Keep reading to learn more..."),
+    createFadeInTask(introCallsToAction, 5000))
+  .completed(
+    function() {
+      taskFlowButton.innerText = "Restart it.";
+    })
+  .run();
 
-chain.run();
+taskFlowButton.onclick = function() {
+  switch (chain.getState()) {
+    case tr.enums.State.RUNNING:
+      chain.interrupt();
+      taskFlowButton.innerText = "Resume it.";
+      break;
+    case tr.enums.State.INTERRUPTED:
+      chain.run();
+      taskFlowButton.innerText = "Pause it.";
+      break;
+    case tr.enums.State.COMPLETED:
+      chain.reset();
+      chain.run();
+      taskFlowButton.innerText = "Pause it.";
+      break;
+  }
+};

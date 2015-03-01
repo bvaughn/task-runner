@@ -50,7 +50,7 @@ section:first-of-type .method-header {
   color: #FFFFFF;
 }
 .bs-docs-header, .bs-docs-masthead {
-  background-image: url(https://raw.githubusercontent.com/bvaughn/task-runner/gh-pages/images/header-background-tile.png);
+  /*background-image: url(https://raw.githubusercontent.com/bvaughn/task-runner/gh-pages/images/header-background-tile.png);*/
 }
 .bs-docs-header code {
   background-color: transparent;
@@ -60,6 +60,13 @@ section:first-of-type .method-header {
 .bs-docs-masthead .prism {
   margin: 0;
   max-width: 100%;
+}
+.bs-docs-masthead .demo-interrupt-paragraph {
+  margin-bottom: 20px;
+}
+.bs-docs-masthead .demo-interrupt-paragraph > .btn {
+  padding: 5px 10px;
+  font-size: 14px;
 }
 
 .task-runner-documentation p {

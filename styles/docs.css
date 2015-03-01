@@ -155,8 +155,13 @@
     color: #EEE;
     /*text-align: center;*/
     text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
-    background-color: #337ab7;
-    background-repeat: repeat;
+    background-color: #4790cf;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#2c699d),to(#4790cf));
+    background-image: -webkit-linear-gradient(top,#2c699d 0,#4790cf 100%);
+    background-image: -o-linear-gradient(top,#2c699d 0,#4790cf 100%);
+    background-image: linear-gradient(to bottom,#2c699d 0,#4790cf 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2c699d', endColorstr='#6F5499', GradientType=0);
+    background-repeat: repeat-x;
 }
 .bs-docs-masthead .bs-docs-booticon {
     margin: 0 auto 30px;
@@ -188,7 +193,7 @@
 }
 @media (min-width:768px) {
     .bs-docs-masthead {
-        padding: 80px 0;
+        padding: 40px 0 80px;
     }
     .bs-docs-masthead h1 {
         font-size: 60px;
