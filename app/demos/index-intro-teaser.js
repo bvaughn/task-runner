@@ -42,29 +42,23 @@ function createTypeTask(domElement, textToWrite) {
 };
 
 function createEraseTask(domElement) {
-  var getInterval = function() {
-    return Math.round(Math.random() * 40); 
-  };
-  
   return new tr.Interval(
     function(task) {
       var text = domElement.innerText;
 
       if (text.length > 0) {
         domElement.innerText = text.substring(0, text.length - 1);
-
-        task.setInterval(getInterval());
       } else {
         task.complete();
       }
-    }, getInterval());
+    }, 25);
 };
 
 function insertCodeExample(chain, text, textContainingDomElement, prismDomElement) {
   chain.then(
       createTypeTask(textContainingDomElement, text),
       createFadeInTask(prismDomElement))
-    .then(new tr.Sleep(3500))
+    .then(new tr.Sleep(5000))
     .then(
       createEraseTask(textContainingDomElement),
       createFadeOutTask(prismDomElement))
