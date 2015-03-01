@@ -35,10 +35,14 @@ var tr;
                     var stack = error["stack"];
                     this.creationContext_ = stack.replace(/^\s+at\s+/gm, '').replace(/\s$/gm, '').split("\n").slice(2);
                 }
-                this.logger_ = console.log;
+                this.console_ = console;
             }
             else {
-                this.logger_ = function (text) {
+                this.console_ = {
+                    error: function (message) {
+                    },
+                    log: function (message) {
+                    }
                 };
             }
         }
@@ -51,7 +55,7 @@ var tr;
          * @param text String to log to the console (if in debug mode)
          */
         Abstract.prototype.log = function (text) {
-            this.logger_.call(console, text + " :: " + this);
+            this.console_['log'].call(this.console_, text + " :: " + this);
         };
         // Accessor methods ////////////////////////////////////////////////////////////////////////////////////////////////
         /** @inheritDoc */
@@ -206,7 +210,7 @@ var tr;
          */
         Abstract.prototype.completeInternal = function (data) {
             if (this.state_ !== tr.enums.State.RUNNING) {
-                throw 'Cannot complete an inactive task.';
+                throw Error('Cannot complete an inactive task.');
             }
             this.log('Internal complete');
             this.data_ = data;
@@ -219,12 +223,19 @@ var tr;
          */
         Abstract.prototype.errorInternal = function (data, errorMessage) {
             if (this.state_ != tr.enums.State.RUNNING) {
-                throw 'Cannot error an inactive task.';
+                throw Error('Cannot complete an inactive task.');
             }
             this.log('Internal error');
             this.data_ = data;
             this.errorMessage_ = errorMessage;
             this.state_ = tr.enums.State.ERRORED;
+            var taskCallbacks = this.taskCallbackMap_[tr.enums.Event.ERRORED];
+            if (!taskCallbacks || taskCallbacks.length === 0) {
+                this.console_['error'].call(this.console_, errorMessage || 'An uncaught Error has been thrown');
+                if (data) {
+                    this.console_['error'].call(this.console_, data);
+                }
+            }
             this.executeCallbacks(tr.enums.Event.ERRORED);
             this.executeCallbacks(tr.enums.Event.FINAL);
         };
@@ -1989,7 +2000,7 @@ var tr;
                 this.observeForQ_(promise);
             }
             else {
-                throw 'No supported Promise libraries detected.';
+                throw Error('No supported Promise libraries detected.');
             }
         }
         /** @inheritDoc */
@@ -2380,7 +2391,7 @@ var tr;
         /** @inheritDoc */
         Sleep.prototype.runImpl = function () {
             if (this.timeoutId_) {
-                throw 'A timeout for this task already exists.';
+                throw Error('A timeout for this task already exists.');
             }
             var timeout = this.timeout_;
             // Increment counter unless the task has been configured to restart after interruptions.
@@ -2476,7 +2487,7 @@ var tr;
             }
             var index = this.taskQueue_.indexOf(task);
             if (index >= 0) {
-                throw 'Cannot add task more than once.';
+                throw Error('Cannot add task more than once.');
             }
             this.taskQueue_.push(task);
             return this;
@@ -2739,7 +2750,7 @@ var tr;
         /** @inheritDoc */
         Timeout.prototype.runImpl = function () {
             if (this.timeoutId_) {
-                throw 'A timeout for this task already exists.';
+                throw Error('A timeout for this task already exists.');
             }
             var timeout = this.timeout_;
             if (this.timeoutStart_ > -1 && this.timeoutPause_ > -1) {

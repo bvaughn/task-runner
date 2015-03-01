@@ -61,7 +61,7 @@ module tr {
     /** @inheritDoc */
     protected runImpl():void {
       if (this.timeoutId_) {
-        throw 'A timeout for this task already exists.';
+        throw Error('A timeout for this task already exists.');
       }
 
       var timeout = this.timeout_;

@@ -16,7 +16,7 @@ module tr {
     private data_:any;
     private errorMessage_:string;
     private interruptingTask_:tr.Task;
-    private logger_:(text:string) => void;
+    private console_:Object;
     private name_:string;
     private state_:tr.enums.State;
     private taskCallbackMap_:{[event:string]:Array<TaskCallback>};
@@ -49,9 +49,12 @@ module tr {
               .slice(2);
         }
 
-        this.logger_ = console.log;
+        this.console_ = console;
       } else {
-        this.logger_ = function(text:string):void {};
+        this.console_ = {
+          error: function(message:String):void {},
+          log: function(message:String):void {}
+        };
       }
     }
 
@@ -64,7 +67,7 @@ module tr {
      * @param text String to log to the console (if in debug mode)
      */
     protected log(text:string):void {
-      this.logger_.call(console, text + " :: " + this);
+      this.console_['log'].call(this.console_, text + " :: " + this);
     }
 
     // Accessor methods ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -275,7 +278,7 @@ module tr {
      */
     protected completeInternal(data?:any):void {
       if (this.state_ !== tr.enums.State.RUNNING) {
-        throw 'Cannot complete an inactive task.';
+        throw Error('Cannot complete an inactive task.');
       }
 
       this.log('Internal complete');
@@ -292,7 +295,7 @@ module tr {
      */
     protected errorInternal(data?:any, errorMessage?:string):void {
       if (this.state_ != tr.enums.State.RUNNING) {
-        throw 'Cannot error an inactive task.';
+        throw Error('Cannot complete an inactive task.');
       }
 
       this.log('Internal error');
@@ -300,6 +303,16 @@ module tr {
       this.data_ = data;
       this.errorMessage_ = errorMessage;
       this.state_ = tr.enums.State.ERRORED;
+
+      var taskCallbacks = this.taskCallbackMap_[tr.enums.Event.ERRORED];
+
+      if (!taskCallbacks || taskCallbacks.length === 0) {
+        this.console_['error'].call(this.console_, errorMessage || 'An uncaught Error has been thrown');
+
+        if (data) {
+          this.console_['error'].call(this.console_, data);
+        }
+      }
 
       this.executeCallbacks(tr.enums.Event.ERRORED);
       this.executeCallbacks(tr.enums.Event.FINAL);

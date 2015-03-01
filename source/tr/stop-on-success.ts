@@ -67,7 +67,7 @@ module tr {
       var index = this.taskQueue_.indexOf(task);
 
       if (index >= 0) {
-        throw 'Cannot add task more than once.';
+        throw Error('Cannot add task more than once.');
       }
 
       this.taskQueue_.push(task);

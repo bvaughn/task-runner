@@ -49,7 +49,7 @@ module tr {
       } else if (Promise.isQDetected()) {
         this.observeForQ_(promise);
       } else {
-        throw 'No supported Promise libraries detected.'
+        throw Error('No supported Promise libraries detected.');
       }
     }
 

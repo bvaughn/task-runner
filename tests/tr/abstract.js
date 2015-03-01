@@ -454,4 +454,68 @@ describe('tr.Abstract', function() {
 
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
   });
+
+  describe('log errors for tasks without errored callbacks', function() {
+    var mockConsole;
+    var originalConsole;
+    var originalDEBUG;
+
+    beforeEach(function() {
+      originalDEBUG = window.DEBUG;
+      window.DEBUG = true;
+
+      originalConsole = window.console;
+      window.console = mockConsole = {
+        error: jasmine.createSpy(),
+        log: jasmine.createSpy()
+      };
+    });
+
+    afterEach(function() {
+      window.console = originalConsole;
+      window.DEBUG = originalDEBUG;
+    });
+
+
+    it('should re-throw Error objects', function () {
+      new tr.Closure(
+        function(task) {
+          task.error(new Error('I am an error'));
+        }).run();
+
+      expect(mockConsole.error).toHaveBeenCalled();
+      expect(mockConsole.error.calls.count()).toEqual(2);
+    });
+
+    it('should throw Errors with errorMessage', function () {
+      new tr.Closure(
+        function(task) {
+          task.error(null, "I am an error message");
+        }).run();
+
+      expect(mockConsole.error).toHaveBeenCalled();
+      expect(mockConsole.error.calls.count()).toEqual(1);
+    });
+
+    it('should throw Errors with default error message', function () {
+      new tr.Closure(
+        function(task) {
+          task.error({data: 'Not a real Error'});
+        }).run();
+
+      expect(mockConsole.error).toHaveBeenCalled();
+      expect(mockConsole.error.calls.count()).toEqual(2);
+    });
+
+    it('should not throw Errors when errored callbacks are present', function () {
+      new tr.Closure(
+        function(task) {
+          task.error(new Error('I am an error'));
+        }).errored(function() {
+          // No-op
+        }).run();
+
+      expect(mockConsole.error).not.toHaveBeenCalled();
+    });
+  });
 });
