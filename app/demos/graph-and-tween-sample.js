@@ -1,15 +1,3 @@
-function createFadeInTweenTask(element) {
-  return new tr.Tween(function(value) {
-    element.style.opacity = value;  
-  }, 1000);
-};
-
-function createFadeOutTweenTask(element) {
-  return new tr.Tween(function(value) {
-    element.style.opacity = 1 - value;  
-  }, 1000);
-};
-
 function initDemo1() {
   var graphTask = new tr.Graph();
 
@@ -18,21 +6,21 @@ function initDemo1() {
 
   var button1 = document.getElementById('button1');
   waitForClickTask = new tr.Listener(button1, "click");
-  graphTask.add(createFadeInTweenTask(button1));
+  graphTask.add(new Fade(button1, true));
   graphTask.add(waitForClickTask);
-  graphTask.add(createFadeOutTweenTask(button1), [waitForClickTask]);
+  graphTask.add(new Fade(button1, false), [waitForClickTask]);
 
   var button2 = document.getElementById('button2');
   waitForClickTask = new tr.Listener(button2, "click");
-  graphTask.add(createFadeInTweenTask(button2));
+  graphTask.add(new Fade(button2, true));
   graphTask.add(waitForClickTask);
-  graphTask.add(createFadeOutTweenTask(button2), [waitForClickTask]);
+  graphTask.add(new Fade(button2, false), [waitForClickTask]);
 
   var button3 = document.getElementById('button3');
   waitForClickTask = new tr.Listener(button3, "click");
-  graphTask.add(createFadeInTweenTask(button3));
+  graphTask.add(new Fade(button3, true));
   graphTask.add(waitForClickTask);
-  graphTask.add(createFadeOutTweenTask(button3), [waitForClickTask]);
+  graphTask.add(new Fade(button3, false), [waitForClickTask]);
 
   graphTask.completed(function() {
     var logger = document.getElementById('logger');

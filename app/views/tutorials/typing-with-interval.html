@@ -1,0 +1,86 @@
+<div class="bs-docs-header">
+  <div class="container">
+    <h1>
+      Create a Typing effect
+    </h1>
+  </div>
+</div>
+
+<div class="container bs-docs-container">
+  <p class="lead secondary">
+    <span id="typedHeader"></span><span class="typing-cursor">|</span>
+  </p>
+
+  <script type="text/javascript" src="app/snippets/tutorials/type-demo.js"></script>
+
+  <p>
+    Perhaps you've seen animated text like this before?
+    If so, there's a good chance it was built with a jQuery plugin like <a href="http://www.mattboldt.com/demos/typed-js/">Typed.js</a>.
+    Typed is a great library, but it relies on callbacks for event notification.
+    Unfortunately callbacks can get <em>messy</em>.
+  </p>
+
+  <p class="lead">
+    Good news!
+    It's very simple to create this type of effect with Task Runner.
+  </p>
+
+  <p>
+    Task Runner provides a <a ui-sref="documentation.index">large selection of built-in tasks</a>,
+    but for the purposes of an animation like the one shown above we'll only need to use one: <doclink name="tr.Interval"></doclink>.
+  </p>
+
+  <p>
+    The <code>tr.Interval</code> task accepts a callback and a duration (in milliseconds).
+    The specified callback is then invoked at intervals until it informs the task that it is done.
+    This approach allows us to create a wide range of custom effects while writing very little code.
+    Once our custom tasks are written, they automatically inherit the full benefits of the Task Runner framework (interruptibility, error handling, etc.).
+  </p>
+
+  <h3>Creating the Type task</h3>
+
+  <p>
+    To create the effect shown above, we'll need to step through a string of text one character at a time and append it our DOM element.
+    Essentially we'll be doing something like what is shown below, except that our code won't be executing synchronously.
+    Instead we'll use the <code>tr.Interval</code> task to trigger run algorith once per timer-tick.
+  </p>
+
+  <h5>Basic typing algorithm</h5>
+  <prism language="javascript" source="app/snippets/tutorials/type-algorithm.js"></prism>
+
+  <p>
+    There are two basic approaches that we could use to tap into <code>tr.Interval</code>.
+    We could instantiate an <code>tr.Interval</code> and pass it a closure (function) that defines our algorithm above.
+    Or we could use inheritance (see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create">Object.create</a>).
+    Since we may want to resuse our task later, let's do the latter.
+  </p>
+
+  <p>
+    Using the approach we described above, we can extend <code>tr.Interval</code> with only 25 lines long- (excluding comments or white-space).
+    The result is a task that can be paused and resumed, rewinded and restarted, and run within a larger series of tasks.
+  </p>
+
+  <h5>Finished typing task</h5>
+  <prism language="javascript" source="app/scripts/tasks/type.js"></prism>
+
+  <h3>Creating the Un-type task</h3>
+
+  <p>
+    To implement the animation above, we also need to be able to erase text.
+    Perhaps unsuprisingly, this is even easier than writing the text.
+    Let's use the same basic approach (extending <code>tr.Interval</code>).
+  </p>
+
+  <h5>Finished un-typing task</h5>
+  <prism language="javascript" source="app/scripts/tasks/untype.js"></prism>
+
+  <h3>Next steps</h3>
+
+  <p>
+    Now that we've created some custom tasks, we can use them with any of Task Runner other built-in tasks.
+    In fact that's exactly what we did at the beginning of this tutorial.
+    The code used to create the animated header at the top of this page is shown below:
+  </p>
+
+  <prism language="javascript" source="app/snippets/tutorials/type-demo.js"></prism>
+</div>

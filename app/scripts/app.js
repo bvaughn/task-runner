@@ -5,6 +5,7 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
       templateUrl: 'app/views/index.html'
     });
 
+    // Getting started
     $stateProvider.state('getting-started-what-is-a-task', {
       url: '/getting-started/what-is-a-task',
       templateUrl: 'app/views/getting-started/what-is-a-task.html'
@@ -22,29 +23,27 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
       templateUrl: 'app/views/getting-started/working-with-promises.html'
     });
 
+    // Tutorials
+    $stateProvider.state('tutorial-typing-with-interval', {
+      url: '/tutorials/typing-with-interval',
+      templateUrl: 'app/views/tutorials/typing-with-interval.html'
+    });
+
+    // Demos
     $stateProvider.state('graph-and-tween-sample', {
-      url: '/samples-and-demos/graph-and-tween-sample',
-      templateUrl: 'app/views/samples/graph-and-tween-sample.html'
+      url: '/demos/graph-and-tween-sample',
+      templateUrl: 'app/views/demos/graph-and-tween-sample.html'
     });
     $stateProvider.state('composite-and-xhr-sample', {
-      url: '/samples-and-demos/composite-and-xhr-sample',
-      templateUrl: 'app/views/samples/composite-and-xhr-sample.html'
+      url: '/demos/composite-and-xhr-sample',
+      templateUrl: 'app/views/demos/composite-and-xhr-sample.html'
     });
     $stateProvider.state('chain-and-closure-animation', {
-      url: '/samples-and-demos/chain-and-closure-animation',
-      templateUrl: 'app/views/samples/chain-and-closure-animation.html'
+      url: '/demos/chain-and-closure-animation',
+      templateUrl: 'app/views/demos/chain-and-closure-animation.html'
     });
 
-    $stateProvider.state('contact', {
-      url: '/contact',
-      templateUrl: 'app/views/contact.html'
-    });
-
-    $stateProvider.state('license', {
-      url: '/license',
-      templateUrl: 'app/views/license.html'
-    });
-
+    // API docuumentation
     $stateProvider.state('documentation', {
       url: '/documentation',
       templateUrl: 'app/views/documentation/layout.html'
@@ -65,6 +64,16 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
           $scope.templateUrl = 'app/views/documentation/index.html';
         }
       }
+    });
+
+    $stateProvider.state('contact', {
+      url: '/contact',
+      templateUrl: 'app/views/contact.html'
+    });
+
+    $stateProvider.state('license', {
+      url: '/license',
+      templateUrl: 'app/views/license.html'
     });
 
     $urlRouterProvider.otherwise('/');

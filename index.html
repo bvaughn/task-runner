@@ -69,6 +69,9 @@
     <script type="text/javascript" src="app/scripts/services.js"></script>
     <script type="text/javascript" src="app/scripts/controllers.js"></script>
     <script type="text/javascript" src="app/scripts/directives.js"></script>
+    <script type="text/javascript" src="app/scripts/tasks/fade.js"></script>
+    <script type="text/javascript" src="app/scripts/tasks/type.js"></script>
+    <script type="text/javascript" src="app/scripts/tasks/untype.js"></script>
   </head>
   <body data-spy="scroll" data-target=".bs-docs-sidebar" ng-init="navbarCollapsed = true">
     <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
@@ -97,7 +100,15 @@
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                Samples &amp; Demos <i class="fa fa-caret-down"></i>
+                Tutorials <i class="fa fa-caret-down"></i>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ui-sref="tutorial-typing-with-interval">Create a typing effect with <code>Interval</code></a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Demos <i class="fa fa-caret-down"></i>
               </a>
               <ul class="dropdown-menu" role="menu">
                 <li><a ui-sref="graph-and-tween-sample">Graph and Tween</a></li>
@@ -108,7 +119,10 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li ui-sref="documentation.index" ui-sref-active="active">
-              <a ui-sref="documentation.index">Documentation <i class="fa fa-book"></i></a>
+              <a ui-sref="documentation.index">
+                <span class="hidden-sm">Documentation <i class="fa fa-book"></i></span>
+                <span class="visible-sm">Docs <i class="fa fa-book"></i></span>
+              </a>
             </li>
             <li>
               <a href="https://github.com/bvaughn/task-runner">Source <i class="fa fa-github"></i></a>
