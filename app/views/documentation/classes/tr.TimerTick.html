@@ -1,0 +1,57 @@
+<classname name="tr.TimerTick" super="tr.Abstract" source="https://github.com/bvaughn/task-runner/blob/master/source/tr/timer-tick.ts"></classname>
+
+<p class="lead">Invokes a callback at an interval until instructed to stop.</p>
+
+<p>
+  This type of task can be used to perform open-ended or non-deterministic actions.
+  It will run until instructed to complete (or error) by the provided callback.
+</p>
+
+<p class="alert alert-danger">
+  Note that you are recommended to use <doclink name="tr.Tween"></doclink> task for animations and DOM manipulation.
+</p>
+
+<usage source="app/snippets/documentation/timer-ticket.js"></usage>
+
+<div class="bs-docs-constructor">
+  <h4>
+    <span class="label label-default">Constructor</span>
+    tr.TimerTick(callback, interval, <em>name</em>)
+  </h4>
+
+  <signature params="[
+    {name: 'callback', type: 'Function', description: 'Callback invoked once per timer tick.'},
+    {name: 'interval', type: 'Number', description: 'Time in milliseconds between ticks.'},
+    {name: 'name', optional: true, type: 'String', description: 'Optional task name.'}
+  ]"></signature>
+</div>
+
+<h3>Instance methods</h3>
+
+<!-- complete() -->
+<h4 class="page-header">
+  complete(<em>data</em>)
+</h4>
+<p>Call this method to mark the task as complete.</p>
+<signature params="[
+  {name: 'data', optional: true, type: 'Object', description: 'Task data.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
+
+<!-- error() -->
+<h4 class="page-header">
+  error(<em>data</em>, <em>errorMessage</em>)
+</h4>
+<p>Call this method to mark the task as errored.</p>
+<signature params="[
+  {name: 'data', optional: true, type: 'Object', description: 'Task data.'},
+  {name: 'errorMessage', optional: true, type: 'String', description: 'Optional error message.'}
+]"></signature>
+<throws errors="[{type: 'Error', description: 'if called while a task is not running.'}]"></throws>
+
+<!-- setInterval() -->
+<h4 class="page-header">
+  setInterval(interval)
+</h4>
+<p>Adjust the interval between timer ticks.</p>
+<signature params="[{name: 'interval', type: 'Number', description: 'Time in milliseconds between ticks.'}]"></signature>

@@ -1,33 +1,86 @@
-var prismTeasers = document.getElementById('prismTeasers');
+function createFadeInTask(element) {
+  return new tr.Tween(
+    function(value) {
+      element.style.opacity = value;  
+    }, 1000).started(
+    function() {
+      element.style.display = 'block';
+    });
+};
 
-new tr.Xhr('app/snippets/index-intro-teaser.js')
-  .completed(function(xhr) {
-    var lines = xhr.getData().split("\n");
-    var elements = [];
+function createFadeOutTask(element) {
+  return new tr.Tween(
+    function(value) {
+      element.style.opacity = 1 - value;  
+    }, 1000).completed(
+    function() {
+      element.style.display = 'none';
+    });
+};
 
-    for (var i = 0, length = lines.length; i < length; i++) {
-      var element = document.createElement("code");
-      element.innerText = lines[i];
-      element.style.opacity = 0;
+function createTypeTask(domElement, textToWrite) {
+  var getInterval = function(isWhitespace) {
+    return isWhitespace ? Math.round(Math.random() * 125) + 50 : Math.round(Math.random() * 50) + 25; 
+  };
 
-      prismTeasers.appendChild(element);
-      prismTeasers.appendChild(document.createElement("br"));
+  var length = textToWrite.length;
+  var index = -1;
 
-      Prism.highlightElement(element);
+  return new tr.TimerTick(
+    function(task) {
+      if (++index < length) {
+        domElement.innerText = textToWrite.substring(0, index + 1);
 
-      elements.push(element);
-    }
+        var character = textToWrite.charAt(index);
+        var isWhitespace = character.match(/\s/);
 
-    var chain = new tr.Chain();
+        task.setInterval(getInterval(isWhitespace));
+      } else {
+        task.complete();
+      }
+    }, getInterval());
+};
 
-    for (var i = 0, length = elements.length; i < length; i++) {
-      chain.then(
-        new tr.Tween(
-          function(opacity) {
-            this.style.opacity = opacity;
-          }.bind(elements[i]), 1000 + (length - i) / length * 1000));
-    }
+function createEraseTask(domElement) {
+  var getInterval = function() {
+    return Math.round(Math.random() * 40); 
+  };
+  
+  return new tr.TimerTick(
+    function(task) {
+      var text = domElement.innerText;
 
-    chain.run();
-  })
-  .run();
+      if (text.length > 0) {
+        domElement.innerText = text.substring(0, text.length - 1);
+
+        task.setInterval(getInterval());
+      } else {
+        task.complete();
+      }
+    }, getInterval());
+};
+
+function insertCodeExample(chain, text, textContainingDomElement, prismDomElement) {
+  chain.then(
+      createTypeTask(textContainingDomElement, text),
+      createFadeInTask(prismDomElement))
+    .then(new tr.Sleep(3500))
+    .then(
+      createEraseTask(textContainingDomElement),
+      createFadeOutTask(prismDomElement))
+}
+
+var typedHeader = document.getElementById('typedHeader');
+
+var chain = new tr.Chain();
+
+insertCodeExample(chain, "With just a few characters you can chain together asynchronous operations.", typedHeader, document.getElementById('prism1'));
+insertCodeExample(chain, "Sequences of tasks can be interrupted easily while running.", typedHeader, document.getElementById('prism2'));
+insertCodeExample(chain, "Interrupted tasks can be resumed where they were interrupted.", typedHeader, document.getElementById('prism3'));
+insertCodeExample(chain, "Your code can easily listen for changes in task state.", typedHeader, document.getElementById('prism4'));
+
+chain.then(
+  createTypeTask(typedHeader, "But that's only the beginning. Keep reading to learn more..."),
+  createFadeInTask(document.getElementById('introCallsToAction')))
+
+chain.run();

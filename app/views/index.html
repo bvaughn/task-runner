@@ -7,16 +7,17 @@
     </p>
 
     <p class="lead secondary">
-      With just a few characters you can chain together asynchronous operations.
+      <span id="typedHeader"></span><span class="typing-cursor">|</span>
     </p>
 
-    <prism language="javascript" source="app/snippets/index-intro-teaser.js"></prism>
+    <dic class="intro-code-samples">
+      <prism id="prism1" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-0.js"></prism>
+      <prism id="prism2" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-1.js"></prism>
+      <prism id="prism3" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-2.js"></prism>
+      <prism id="prism4" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-3.js"></prism>
+    </dic>
 
-    <p class="lead secondary">
-      But that's only the beginning. Keep reading to learn more...
-    </p>
-
-    <p class="lead">
+    <p id="introCallsToAction" class="lead" style="display: none">
       <a class="btn btn-outline-inverse btn-lg" href="https://github.com/bvaughn/task-runner#installing-task-runner">
         View Source
         <i class="fa fa-github"></i>
@@ -27,6 +28,9 @@
         <i class="fa fa-chevron-right"></i>
       </a>
     </p>
+
+    <script type="text/javascript" src="app/demos/index-intro-teaser.js"></script>
+
   </div>
 </main>
 
@@ -34,18 +38,18 @@
   <div class="container">
     <h2 class="tagline">Works with your favorite frameworks!</h2>
 
-    <p class="lead">
+    <p class="lead secondary">
       Task Runner has no runtime dependencies on any external libraries.
       It can be used with any JavaScript framework- Angular, React, jQuery, etc.
     </p>
 
-    <p class="lead">
+    <p class="lead secondary">
       It's also built with <a href="http://www.typescriptlang.org/">TypeScript</a>-
       so if your project uses TypeScript, you'll have an even easier integration.
     </p>
 
     <a class="btn btn-outline btn-lg" ui-sref="getting-started-what-is-a-task">
-      Keep Reading
+      Get Started
       <i class="fa fa-chevron-right"></i>
     </a>
   </div>
