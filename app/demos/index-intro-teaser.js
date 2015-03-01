@@ -1,23 +1,22 @@
-function createFadeInTask(element, duration) {
+function createFadeTask(element, fadeIn, duration) {
   duration = duration || 1000;
 
   return new tr.Tween(
-    function(value) {
-      element.style.opacity = value;  
-    }, duration).started(
-    function() {
-      element.style.display = 'block';
-    });
-};
-
-function createFadeOutTask(element) {
-  return new tr.Tween(
-    function(value) {
-      element.style.opacity = 1 - value;  
-    }, 1000).completed(
-    function() {
-      element.style.display = 'none';
-    });
+      function(value) {
+        element.style.opacity = fadeIn ? value : 1 - value;
+      }, duration)
+    .started(
+      function() {
+        if (fadeIn) {
+          element.style.display = 'block';
+        }
+      })
+    .completed(
+      function() {
+        if (!fadeIn) {
+          element.style.display = 'none';
+        }
+      });;
 };
 
 function createTypeTask(domElement, textToWrite) {
@@ -61,15 +60,16 @@ function createEraseTask(domElement) {
 function insertCodeExample(chain, text, textContainingDomElement, prismDomElement) {
   chain.then(
       createTypeTask(textContainingDomElement, text),
-      createFadeInTask(prismDomElement))
+      createFadeTask(prismDomElement, true))
     .then(new tr.Sleep(5000))
     .then(
       createEraseTask(textContainingDomElement),
-      createFadeOutTask(prismDomElement))
-}
+      createFadeTask(prismDomElement, false));
+};
+
+// Below code assembles a task sequence using the above task factory functions.
 
 var typedHeader = document.getElementById('typedHeader');
-var taskFlowButton = document.getElementById('taskFlowButton');
 var introCallsToAction = document.getElementById('introCallsToAction');
 
 var chain = new tr.Chain()
@@ -86,27 +86,57 @@ insertCodeExample(chain, "Your code can easily listen for changes in task state.
 chain
   .then(
     createTypeTask(typedHeader, "But that's only the beginning. Keep reading to learn more..."),
-    createFadeInTask(introCallsToAction, 5000))
-  .completed(
-    function() {
-      taskFlowButton.innerText = "Restart it.";
-    })
-  .run();
+    createFadeTask(introCallsToAction, true, 2500))
 
-taskFlowButton.onclick = function() {
+// Below code focuses on enabling interactivity with the demo.
+
+var pauseChainButton = document.getElementById('pauseChainButton');
+var resumeChainButton = document.getElementById('resumeChainButton');
+var restartChainButton = document.getElementById('restartChainButton');
+
+var PAUSE = 1, RESUME = 2, RESTART = 3;
+
+function showButton(button) {
+  pauseChainButton.style.display = resumeChainButton.style.display = restartChainButton.style.display = "none";
+
+  switch (button) {
+    case PAUSE:
+      pauseChainButton.style.display = "";
+      break;
+    case RESUME:
+      resumeChainButton.style.display = "";
+      break;
+    case RESTART:
+      restartChainButton.style.display = "";
+      break;
+  }
+};
+
+chain.started(function() {
+  showButton(PAUSE);
+}).interrupted(function() {
+  showButton(RESUME);
+}).completed(function() {
+  showButton(RESTART);
+});
+
+function onClickHandler() {
   switch (chain.getState()) {
     case tr.enums.State.RUNNING:
       chain.interrupt();
-      taskFlowButton.innerText = "Resume it.";
       break;
     case tr.enums.State.INTERRUPTED:
       chain.run();
-      taskFlowButton.innerText = "Pause it.";
       break;
     case tr.enums.State.COMPLETED:
       chain.reset();
       chain.run();
-      taskFlowButton.innerText = "Pause it.";
       break;
   }
 };
+
+pauseChainButton.onclick = resumeChainButton.onclick = restartChainButton.onclick = onClickHandler;
+
+// Last but not lease, run the task...
+
+chain.run();

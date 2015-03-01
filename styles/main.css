@@ -129,3 +129,26 @@ doclink > a:hover > code {
   font-size: 18px;
   margin-bottom: 25px;
 }
+
+.btn-pulse {
+  -webkit-animation: glow 2s ease-in-out infinite;
+  animation: glow 2s ease-in-out infinite;
+}
+.btn-pulse:hover {
+  -webkit-animation: none;
+  animation: none;
+}
+
+@-webkit-keyframes glow {
+  50% {
+    background-color: rgba(255, 255, 255, .1);
+    box-shadow: 0 0 5px #FFF;
+  }
+}
+
+@keyframes glow {
+  50% {
+    background-color: rgba(255, 255, 255, .1);
+    box-shadow: 0 0 5px #FFF;
+  }
+}
