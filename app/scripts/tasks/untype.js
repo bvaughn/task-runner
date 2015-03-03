@@ -9,10 +9,10 @@ Untype.prototype = Object.create(tr.Interval.prototype);
 
 // Callback to be invoked each timer-tick.
 Untype.prototype.eraseACharacter_ = function() {
-  var text = this.domElement_.innerText;
+  var text = this.domElement_.innerHTML;
   
   if (text.length > 0) {
-    this.domElement_.innerText = text.substring(0, text.length - 1);
+    this.domElement_.innerHTML = text.substring(0, text.length - 1);
   } else {
     this.complete();
   }

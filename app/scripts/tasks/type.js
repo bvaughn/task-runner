@@ -18,7 +18,7 @@ Type.prototype.getHumanizedInterval_ = function(isWhitespace) {
 // Callback to be invoked each timer-tick.
 Type.prototype.typeNextCharacter_ = function() {
   if (++this.index_ < this.length_) {
-    this.domElement_.innerText = this.textToWrite_.substring(0, this.index_ + 1);
+    this.domElement_.innerHTML = this.textToWrite_.substring(0, this.index_ + 1);
 
     var character = this.textToWrite_.charAt(this.index_);
     var isWhitespace = character.match(/\s/);
