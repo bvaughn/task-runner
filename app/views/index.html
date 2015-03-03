@@ -26,24 +26,24 @@
       <span id="typedHeader"></span><span class="typing-cursor">|</span>
     </p>
 
-    <dic class="intro-code-samples">
+    <dic class="intro-code-samples-and-calls-to-action">
       <prism id="prism1" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-0.js"></prism>
       <prism id="prism2" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-1.js"></prism>
       <prism id="prism3" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-2.js"></prism>
       <prism id="prism4" style="display: none" language="javascript" source="app/snippets/index-intro-teaser-3.js"></prism>
+
+      <p id="introCallsToAction" class="lead" style="display: none">
+        <a class="btn btn-outline-inverse btn-lg" href="https://github.com/bvaughn/task-runner#installing-task-runner">
+          View Source
+          <i class="fa fa-github"></i>
+        </a>
+
+        <a class="btn btn-outline-inverse btn-lg" ui-sref="getting-started-what-is-a-task">
+          Get Started
+          <i class="fa fa-chevron-right"></i>
+        </a>
+      </p>
     </dic>
-
-    <p id="introCallsToAction" class="lead" style="display: none">
-      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/bvaughn/task-runner#installing-task-runner">
-        View Source
-        <i class="fa fa-github"></i>
-      </a>
-
-      <a class="btn btn-outline-inverse btn-lg" ui-sref="getting-started-what-is-a-task">
-        Get Started
-        <i class="fa fa-chevron-right"></i>
-      </a>
-    </p>
 
     <script type="text/javascript" src="app/demos/index-intro-teaser.js"></script>
   </div>
@@ -51,17 +51,43 @@
 
 <div class="bs-docs-featurette">
   <div class="container">
-    <h2 class="tagline">Works with your favorite frameworks!</h2>
+    <h2 class="tagline">Why another async framework? Why not just use promises?</h2>
 
-    <p class="lead secondary">
-      Task Runner has no runtime dependencies on any external libraries.
-      It can be used with any JavaScript framework- Angular, React, jQuery, etc.
+    <div class="lead secondary">
+      There are many async JavaScript frameworks but Task Runner offers a few advantages:
+    </div>
+
+    <ul class="lead secondary">
+      <li>It focuses on interruptability (pause and resume) which makes it particularly useful for things like animations.</li>
+      <li>It provides robust ways to compose tasks (treating groups of tasks the same way you would treat a single task).</li>
+      <li>Tasks can be converted to and from Promises, making it easy to use integrate with other libraries.</li>
+    </ul>
+
+    <p>
+      <a class="btn btn-outline btn-lg" ui-sref="getting-started-chaining-tasks">
+        About Composition
+        <i class="fa fa-chevron-right"></i>
+      </a>
+
+      <a class="btn btn-outline btn-lg" ui-sref="getting-started-working-with-promises">
+        Working With Promises
+        <i class="fa fa-chevron-right"></i>
+      </a>
     </p>
+  </div>
+  <div class="container">
+    <h2 class="tagline">Will it work with other frameworks?</h2>
 
-    <p class="lead secondary">
+    <div class="lead secondary">
+      Yes!
+      Task Runner does not depend on any other libraries.
+      It's small (7.5k compressed) and can be used with any JavaScript framework- Angular, React, jQuery, etc.
+    </div>
+
+    <div class="lead secondary">
       It's also built with <a href="http://www.typescriptlang.org/">TypeScript</a>-
       so if your project uses TypeScript, you'll have an even easier integration.
-    </p>
+    </div>
 
     <a class="btn btn-outline btn-lg" ui-sref="getting-started-what-is-a-task">
       Get Started

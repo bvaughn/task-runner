@@ -121,13 +121,13 @@ doclink > a:hover > code {
   font-weight: normal;
 } 
 
-.bs-docs-masthead p.secondary {
+.bs-docs-masthead .secondary {
   font-size: 22px;
   margin-bottom: 20px;
 }
-.bs-docs-featurette p.secondary {
+.bs-docs-featurette .secondary {
   font-size: 18px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .btn-pulse {
@@ -151,4 +151,9 @@ doclink > a:hover > code {
     background-color: rgba(255, 255, 255, .1);
     box-shadow: 0 0 5px #FFF;
   }
+}
+
+.intro-code-samples-and-calls-to-action {
+  display: block;
+  min-height: 275px;
 }
