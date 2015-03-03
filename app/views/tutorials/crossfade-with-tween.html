@@ -1,0 +1,55 @@
+<div class="bs-docs-header">
+  <div class="container">
+    <h1>
+      Create a Crossfade
+    </h1>
+  </div>
+</div>
+
+<div class="container bs-docs-container">
+  <div id="crossFadeContainer" style="position: relative; width: 200px; height: 50px; margin-bottom: 20px;">
+    <div id="crossFadeElementA" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: red;"></div>
+    <div id="crossFadeElementB" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: blue;"></div>
+    <div style="line-height: 50px; text-align: center; color: #FFF; position: relative; z-index: 2;">Click to Pause &amp; Resume</div>
+  </div>
+
+  <script type="text/javascript" src="app/snippets/tutorials/crossfade-demo.js"></script>
+
+  <p>
+    Task Runner provides a <a ui-sref="documentation.index">large selection of built-in tasks</a>.
+    One of these is the <doclink name="tr.Tween"></doclink> task.
+    Tween allows you to tap into <code>requestAnimationFrame</code> and create optimized tween effects.
+    This tutorial shows you how simple it is to create these effects.
+  </p>
+
+  <p>
+    The Interval task accepts a callback and a duration (in milliseconds).
+    The callback is where you describe your animation.
+    Interval runs this callback once per animation-frame and passes it a 0-1 value, indicating how far your animation should have progressed.
+  </p>
+
+  <p>
+    What does this mean in practical terms?
+    It's simple.
+    Let's take a look at a few example tweens below.
+  </p>
+
+  <prism language="javascript" source="app/snippets/tutorials/example-tween-callbacks.js"></prism>
+
+  <p>
+    Your callback will first be called with a value of (roughly) zero.
+    Over time the value will increase.
+    All your callback needs to do is apply that value to the properties you are tweening.
+    Building on top of this example we can create a crossfade tween like so:
+  </p>
+
+  <prism language="javascript" source="app/scripts/tasks/crossfade.js"></prism>
+
+  <p>
+    Our crossfade can now bt used with any of Task Runner's other built-in tasks.
+    This means the tween can be paused and resumed or chained together with other tasks.
+    The code used to create the looping animation at the top of this page is shown below:
+  </p>
+
+  <prism language="javascript" source="app/snippets/tutorials/crossfade-demo.js"></prism>
+</div>

@@ -30,6 +30,10 @@ angular.module('taskRunner', ['ui.bootstrap', 'ui.router', 'ngSanitize', 'btford
       url: '/tutorials/typing-with-interval',
       templateUrl: 'app/views/tutorials/typing-with-interval.html'
     });
+    $stateProvider.state('tutorial-crossfade-with-tween', {
+      url: '/tutorials/crossfade-with-tween',
+      templateUrl: 'app/views/tutorials/crossfade-with-tween.html'
+    });
 
     // Demos
     $stateProvider.state('graph-and-tween-sample', {
