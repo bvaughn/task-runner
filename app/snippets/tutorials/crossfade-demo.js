@@ -14,7 +14,7 @@ var chain = new tr.Chain()
 
 // And this pauses and resumes our crossfade.
 crossFadeContainer.onclick = function() {
-  if (chain.getState() === tr.enums.State.RUNNING) {
+  if (chain.isRunning()) {
     chain.interrupt();
   } else {
     chain.run();
