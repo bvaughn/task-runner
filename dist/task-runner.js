@@ -204,6 +204,22 @@ var tr;
         Abstract.prototype.started = function (callback, scope) {
             return this.on(tr.enums.Event.STARTED, callback, scope);
         };
+        // Convenience state getters ///////////////////////////////////////////////////////////////////////////////////////
+        Abstract.prototype.isCompleted = function () {
+            return this.getState() === tr.enums.State.COMPLETED;
+        };
+        Abstract.prototype.isErrored = function () {
+            return this.getState() === tr.enums.State.ERRORED;
+        };
+        Abstract.prototype.isInitialized = function () {
+            return this.getState() === tr.enums.State.INITIALIZED;
+        };
+        Abstract.prototype.isInterrupted = function () {
+            return this.getState() === tr.enums.State.INTERRUPTED;
+        };
+        Abstract.prototype.isRunning = function () {
+            return this.getState() === tr.enums.State.RUNNING;
+        };
         // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
         /**
          * Call this method to mark the task as complete.

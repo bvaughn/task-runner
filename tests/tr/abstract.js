@@ -455,6 +455,40 @@ describe('tr.Abstract', function() {
     expect(task.getState()).toBe(tr.enums.State.RUNNING);
   });
 
+  describe('exposes convenience functions for shared state enums', function() {
+    it('should return TRUE for isInitialized when getState() === tr.enums.State.INITIALIZED', function() {
+      var task = new tr.Stub();
+      expect(task.isInitialized()).toBeTruthy();
+    });
+
+    it('should return TRUE for isRunning when getState() === tr.enums.State.RUNNING', function() {
+      var task = new tr.Stub();
+      task.run();
+      expect(task.isRunning()).toBeTruthy();
+    });
+
+    it('should return TRUE for isInterrupted when getState() === tr.enums.State.INTERRUPTED', function() {
+      var task = new tr.Stub();
+      task.run();
+      task.interrupt();
+      expect(task.isInterrupted()).toBeTruthy();
+    });
+
+    it('should return TRUE for isCompleted when getState() === tr.enums.State.COMPLETED', function() {
+      var task = new tr.Stub();
+      task.run();
+      task.complete({});
+      expect(task.isCompleted()).toBeTruthy();
+    });
+
+    it('should return TRUE for isErrored when getState() === tr.enums.State.ERRORED', function() {
+      var task = new tr.Stub();
+      task.run();
+      task.error({});
+      expect(task.isErrored()).toBeTruthy();
+    });
+  });
+
   describe('log errors for tasks without errored callbacks', function() {
     var mockConsole;
     var originalConsole;

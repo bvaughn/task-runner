@@ -271,6 +271,28 @@ module tr {
       return this.on(tr.enums.Event.STARTED, callback, scope);
     }
 
+    // Convenience state getters ///////////////////////////////////////////////////////////////////////////////////////
+
+    isCompleted():boolean {
+      return this.getState() === tr.enums.State.COMPLETED;
+    }
+
+    isErrored():boolean {
+      return this.getState() === tr.enums.State.ERRORED;
+    }
+
+    isInitialized():boolean {
+      return this.getState() === tr.enums.State.INITIALIZED;
+    }
+
+    isInterrupted():boolean {
+      return this.getState() === tr.enums.State.INTERRUPTED;
+    }
+
+    isRunning():boolean {
+      return this.getState() === tr.enums.State.RUNNING;
+    }
+
     // Helper methods //////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
