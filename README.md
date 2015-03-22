@@ -1,4 +1,4 @@
-# Task Runner
+# Task Runner [![Build Status](https://travis-ci.org/bvaughn/task-runner.svg)](https://travis-ci.org/bvaughn/task-runner) [![Join the chat at https://gitter.im/bvaughn/task-runner](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bvaughn/task-runner?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ---
 **[Official website](http://bvaughn.github.io/task-runner/)** |
 **[API documentation](http://bvaughn.github.io/task-runner/#/documentation/)** |
